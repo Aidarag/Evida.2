@@ -1,26 +1,78 @@
-/* src/app/globals.css */
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 
-/* Design Tokens */
-:root {
-  /* Backgrounds */
-  --bg-primary: #08080B; /* pure black */
-  --bg-secondary: #111118; /* dark charcoal */
-  --bg-surface: #171722;
-  /* Text */
-  --text-primary: #FFFFFF;
-  --text-secondary: #B8BBC8;
-  /* Brand Colors */
-  --color-electric: #80B0EC;
+/* ───────────────────────────────────────────────
+   Evida Design Tokens (Tailwind CSS v4 @theme)
+   ─────────────────────────────────────────────── */
+@theme {
+  /* Colors – Core dark backgrounds */
+  --color-primary-bg: #08080B;
+  --color-secondary-bg: #111118;
+  --color-surface: #171722;
+
+  /* Colors – Text */
+  --color-primary-text: #FFFFFF;
+  --color-secondary-text: #B8BBC8;
+
+  /* Colors – Brand accents */
+  --color-electric-blue: #80B0EC;
   --color-coral: #EE3D5A;
-  --color-neon: #DAFB71;
-  /* Border */
-  --border: rgba(255,255,255,0.08);
+  --color-neon-lime: #DAFB71;
+  --color-neon-green: #B7FF2D;
+
+  /* Colors – Borders */
+  --color-border: rgba(255, 255, 255, 0.08);
+
+  /* Colors – Gradients */
+  --color-gradient-purple: #7A2CFF;
+  --color-gradient-pink: #FF2D7A;
+  --color-gradient-blue: #166BFF;
+
+  /* Border radius */
+  --radius-large: 28px;
+  --radius-pill: 9999px;
+  --radius-default: 8px;
+
+  /* Box shadows */
+  --shadow-glass: 0 4px 12px rgba(0, 0, 0, 0.25);
+  --shadow-card: 0 8px 20px rgba(0, 0, 0, 0.45);
+  --shadow-card-hover: 0 12px 30px rgba(0, 0, 0, 0.65);
+
+  /* Font family */
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+
+  /* Animations */
+  --animate-fade-up: fade-up 0.35s ease-out forwards;
 }
 
-/* Global Styles */
+/* ───────────────────────────────────────────────
+   Keyframes
+   ─────────────────────────────────────────────── */
+@keyframes fade-up {
+  0% {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ───────────────────────────────────────────────
+   Global Styles
+   ─────────────────────────────────────────────── */
+:root {
+  --bg-primary: #08080B;
+  --bg-secondary: #111118;
+  --bg-surface: #171722;
+  --text-primary: #FFFFFF;
+  --text-secondary: #B8BBC8;
+  --color-electric: #80B0EC;
+  --color-coral-var: #EE3D5A;
+  --color-neon: #DAFB71;
+  --border-color: rgba(255, 255, 255, 0.08);
+}
+
 html, body {
   height: 100%;
   background: var(--bg-primary);
@@ -29,86 +81,172 @@ html, body {
   overflow-x: hidden;
 }
 
-/* Glassmorphism utility */
+/* ───────────────────────────────────────────────
+   Glassmorphism
+   ─────────────────────────────────────────────── */
 .glass {
   background: rgba(17, 17, 24, 0.45);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border: 1px solid var(--border);
+  border: 1px solid var(--border-color);
 }
 
-/* Button utilities */
+.glass-heavy {
+  background: rgba(17, 17, 24, 0.65);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid var(--border-color);
+}
+
+/* ───────────────────────────────────────────────
+   Button Styles (pure CSS – no @apply)
+   ─────────────────────────────────────────────── */
 .btn-primary {
-  @apply rounded-full px-6 py-2 text-white font-medium bg-gradient-to-r from-electric-blue to-neon-lime;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 24px;
+  border-radius: 9999px;
+  font-weight: 600;
+  font-size: 14px;
+  color: #08080B;
+  background: linear-gradient(135deg, #80B0EC, #DAFB71);
+  border: none;
+  cursor: pointer;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 .btn-primary:hover {
-  @apply shadow-lg;
-  transform: scale(1.02);
+  transform: scale(1.03);
+  box-shadow: 0 8px 24px rgba(128, 176, 236, 0.3);
 }
 
 .btn-secondary {
-  @apply rounded-full px-6 py-2 text-white font-medium bg-gradient-to-r from-coral to-electric-blue;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 24px;
+  border-radius: 9999px;
+  font-weight: 600;
+  font-size: 14px;
+  color: #FFFFFF;
+  background: linear-gradient(135deg, #EE3D5A, #80B0EC);
+  border: none;
+  cursor: pointer;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 .btn-secondary:hover {
-  @apply shadow-lg;
-  transform: scale(1.02);
+  transform: scale(1.03);
+  box-shadow: 0 8px 24px rgba(238, 61, 90, 0.3);
+}
+
+.btn-neon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 24px;
+  border-radius: 9999px;
+  font-weight: 600;
+  font-size: 14px;
+  color: #08080B;
+  background: #DAFB71;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.btn-neon:hover {
+  transform: scale(1.03);
+  box-shadow: 0 8px 24px rgba(218, 251, 113, 0.35);
 }
 
 .btn-ghost {
-  @apply rounded-full px-6 py-2 text-white font-medium bg-transparent border border-white/20;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 24px;
+  border-radius: 9999px;
+  font-weight: 500;
+  font-size: 14px;
+  color: #FFFFFF;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.15);
   backdrop-filter: blur(10px);
+  cursor: pointer;
+  transition: background 0.2s ease;
 }
 .btn-ghost:hover {
-  @apply bg-white/10;
+  background: rgba(255, 255, 255, 0.08);
 }
 
-/* Chip utility */
+/* ───────────────────────────────────────────────
+   Chip
+   ─────────────────────────────────────────────── */
 .chip {
-  @apply inline-flex items-center rounded-full px-3 py-1 text-sm font-medium bg-white/10 text-white;
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 12px;
+  border-radius: 9999px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #FFFFFF;
+  background: rgba(255, 255, 255, 0.08);
 }
 
-/* Scrollbar */
+/* ───────────────────────────────────────────────
+   Card Styles
+   ─────────────────────────────────────────────── */
+.card-base {
+  position: relative;
+  overflow: hidden;
+  border-radius: 28px;
+  background: #171722;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.45);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s ease;
+}
+.card-base:hover {
+  transform: translateY(-4px) scale(1.02);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.65);
+  border-color: rgba(128, 176, 236, 0.2);
+}
+
+/* ───────────────────────────────────────────────
+   Hero Gradient Backgrounds
+   ─────────────────────────────────────────────── */
+.bg-hero-primary {
+  background: linear-gradient(135deg, #80B0EC, #DAFB71);
+}
+.bg-hero-secondary {
+  background: linear-gradient(135deg, #EE3D5A, #80B0EC);
+}
+.bg-hero-accent {
+  background: linear-gradient(135deg, #EE3D5A, #DAFB71);
+}
+
+/* ───────────────────────────────────────────────
+   Scrollbar
+   ─────────────────────────────────────────────── */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: var(--bg-primary);
+  background: #08080B;
 }
 ::-webkit-scrollbar-thumb {
-  background: var(--border);
+  background: rgba(255, 255, 255, 0.08);
   border-radius: 9999px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--color-electric);
+  background: #80B0EC;
 }
 
-/* Card base style */
-.card-base {
-  @apply rounded-large bg-surface shadow-card overflow-hidden relative;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-.card-base:hover {
-  @apply shadow-card-hover;
-  transform: translateY(-4px) scale(1.02);
-}
-
-/* Gradient utilities for hero sections */
-.bg-hero-primary {
-  @apply bg-gradient-to-r from-electric-blue to-neon-lime;
-}
-.bg-hero-secondary {
-  @apply bg-gradient-to-r from-coral to-electric-blue;
-}
-
-/* Animation utilities */
+/* ───────────────────────────────────────────────
+   Utility Animations
+   ─────────────────────────────────────────────── */
 .fade-up {
   animation: fade-up 0.35s ease-out forwards;
-}
-
-@keyframes fade-up {
-  0% { opacity: 0; transform: translateY(6px); }
-  100% { opacity: 1; transform: translateY(0); }
 }

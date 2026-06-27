@@ -1,3 +1,33 @@
+// ─────────────────────────────────────────────────
+// Evida Data Models
+// ─────────────────────────────────────────────────
+
+export interface User {
+  username: string;
+  name: string;
+  email?: string;
+  role: 'admin' | 'student_leader' | 'student';
+  organizations: string[]; // Organization IDs
+  major?: string;
+  gradYear?: string;
+  graduationYear?: string;
+  school?: string;
+  avatar?: string;
+}
+
+export interface Organization {
+  id: string;
+  name: string;
+  description: string;
+  verified: boolean;
+  members: string[]; // student names
+  logoColor: string;
+  schoolId?: string;
+  views?: number;
+  saves?: number;
+  rsvps?: number;
+}
+
 export interface Event {
   id: string;
   title: string;
@@ -7,23 +37,25 @@ export interface Event {
   complexityType: 'quick' | 'standard' | 'complex';
   status: 'pending' | 'approved' | 'rejected';
   date: string;
-  time: string; // Start time
+  time: string;
   endTime?: string;
   location: string;
   locationType: 'indoor' | 'outdoor' | 'offcampus';
-  attendees: string[]; // List of student names
-  interested: string[]; // List of student names
-  savedBy: string[]; // List of student names who saved it
-  organizer: string; // Creator name
+  attendees: string[];
+  interested: string[];
+  savedBy: string[];
+  organizer: string;
   organizationId?: string;
   organizationName?: string;
-  feedback?: string; // Reason for approval/rejection
+  feedback?: string;
   featured: boolean;
+  isFeatured?: boolean;
   views: number;
   fundingRequested?: boolean;
   transportationNeeded?: boolean;
   estimatedAttendance: number;
-  coverImage: string; // Tailwind gradient descriptor or URL
+  coverImage: string;
+  flyerImage?: string;
   free: boolean;
   capacity?: number;
   visibility: 'public' | 'private';
@@ -36,7 +68,7 @@ export interface Notification {
   type: 'rsvp' | 'update' | 'cancel' | 'approve' | 'reject' | 'reminder';
   timestamp: string;
   read: boolean;
-  username: string; // Recipient username
+  username: string;
 }
 
 export interface Promotion {
@@ -49,27 +81,6 @@ export interface Promotion {
   organizer: string;
   contactInfo: string;
   feedback?: string;
-}
-
-export interface Organization {
-  id: string;
-  name: string;
-  description: string;
-  verified: boolean;
-  members: string[]; // student names
-  logoColor: string; // Tailwind color name like indigo, emerald, rose, amber, violet, sky
-  views?: number;
-  saves?: number;
-  rsvps?: number;
-}
-
-export interface User {
-  username: string;
-  name: string;
-  role: 'admin' | 'student_leader' | 'student';
-  organizations: string[]; // Organization IDs
-  major?: string;
-  gradYear?: string;
-  school?: string;
-  avatar?: string;
+  image?: string;
+  createdAt?: string;
 }
