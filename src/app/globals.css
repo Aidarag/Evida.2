@@ -1,76 +1,58 @@
 @import "tailwindcss";
 
 /* ───────────────────────────────────────────────
-   Evida Design Tokens (Tailwind CSS v4 @theme)
+   Evida Light Theme Design Tokens
    ─────────────────────────────────────────────── */
 @theme {
-  /* Colors – Core dark backgrounds */
-  --color-primary-bg: #08080B;
-  --color-secondary-bg: #111118;
-  --color-surface: #171722;
+  /* Colors – Core light backgrounds */
+  --color-primary-bg: #FFFFFF;
+  --color-secondary-bg: #F9FAFB;
+  --color-surface: #FFFFFF;
 
   /* Colors – Text */
-  --color-primary-text: #FFFFFF;
-  --color-secondary-text: #B8BBC8;
+  --color-primary-text: #111827;
+  --color-secondary-text: #6B7280;
+  --color-tertiary-text: #9CA3AF;
 
-  /* Colors – Brand accents */
-  --color-electric-blue: #80B0EC;
-  --color-coral: #EE3D5A;
-  --color-neon-lime: #DAFB71;
-  --color-neon-green: #B7FF2D;
+  /* Colors – Brand accents (From Screenshot) */
+  --color-brand-purple: #4C1D95; /* Deep purple */
+  --color-brand-purple-light: #6D28D9;
+  --color-brand-blue: #3B82F6;
+  --color-brand-blue-light: #DBEAFE;
+  
+  /* Badges & Accents */
+  --color-accent-green: #10B981;
+  --color-accent-pink: #EC4899;
 
   /* Colors – Borders */
-  --color-border: rgba(255, 255, 255, 0.08);
+  --color-border: #E5E7EB;
 
   /* Colors – Gradients */
-  --color-gradient-purple: #7A2CFF;
-  --color-gradient-pink: #FF2D7A;
-  --color-gradient-blue: #166BFF;
+  --color-gradient-hero: linear-gradient(135deg, #4C1D95, #EC4899);
 
   /* Border radius */
-  --radius-large: 28px;
+  --radius-large: 32px;
   --radius-pill: 9999px;
-  --radius-default: 8px;
+  --radius-default: 12px;
 
   /* Box shadows */
-  --shadow-glass: 0 4px 12px rgba(0, 0, 0, 0.25);
-  --shadow-card: 0 8px 20px rgba(0, 0, 0, 0.45);
-  --shadow-card-hover: 0 12px 30px rgba(0, 0, 0, 0.65);
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  --shadow-floating: 0 12px 40px rgba(0, 0, 0, 0.08);
 
   /* Font family */
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
-
-  /* Animations */
-  --animate-fade-up: fade-up 0.35s ease-out forwards;
-}
-
-/* ───────────────────────────────────────────────
-   Keyframes
-   ─────────────────────────────────────────────── */
-@keyframes fade-up {
-  0% {
-    opacity: 0;
-    transform: translateY(6px);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0);
-  }
 }
 
 /* ───────────────────────────────────────────────
    Global Styles
    ─────────────────────────────────────────────── */
 :root {
-  --bg-primary: #08080B;
-  --bg-secondary: #111118;
-  --bg-surface: #171722;
-  --text-primary: #FFFFFF;
-  --text-secondary: #B8BBC8;
-  --color-electric: #80B0EC;
-  --color-coral-var: #EE3D5A;
-  --color-neon: #DAFB71;
-  --border-color: rgba(255, 255, 255, 0.08);
+  --bg-primary: #FFFFFF;
+  --text-primary: #111827;
+  --text-secondary: #6B7280;
 }
 
 html, body {
@@ -82,24 +64,7 @@ html, body {
 }
 
 /* ───────────────────────────────────────────────
-   Glassmorphism
-   ─────────────────────────────────────────────── */
-.glass {
-  background: rgba(17, 17, 24, 0.45);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid var(--border-color);
-}
-
-.glass-heavy {
-  background: rgba(17, 17, 24, 0.65);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
-  border: 1px solid var(--border-color);
-}
-
-/* ───────────────────────────────────────────────
-   Button Styles (pure CSS – no @apply)
+   Button Styles
    ─────────────────────────────────────────────── */
 .btn-primary {
   display: inline-flex;
@@ -110,55 +75,34 @@ html, body {
   border-radius: 9999px;
   font-weight: 600;
   font-size: 14px;
-  color: #08080B;
-  background: linear-gradient(135deg, #80B0EC, #DAFB71);
+  color: #FFFFFF;
+  background: #4C1D95;
   border: none;
   cursor: pointer;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition: all 0.2s ease;
 }
 .btn-primary:hover {
-  transform: scale(1.03);
-  box-shadow: 0 8px 24px rgba(128, 176, 236, 0.3);
+  background: #6D28D9;
+  box-shadow: 0 4px 12px rgba(76, 29, 149, 0.3);
 }
 
-.btn-secondary {
+.btn-outline {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
   padding: 10px 24px;
   border-radius: 9999px;
-  font-weight: 600;
+  font-weight: 500;
   font-size: 14px;
-  color: #FFFFFF;
-  background: linear-gradient(135deg, #EE3D5A, #80B0EC);
-  border: none;
+  color: #4C1D95;
+  background: transparent;
+  border: 1px solid #4C1D95;
   cursor: pointer;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition: all 0.2s ease;
 }
-.btn-secondary:hover {
-  transform: scale(1.03);
-  box-shadow: 0 8px 24px rgba(238, 61, 90, 0.3);
-}
-
-.btn-neon {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  padding: 10px 24px;
-  border-radius: 9999px;
-  font-weight: 600;
-  font-size: 14px;
-  color: #08080B;
-  background: #DAFB71;
-  border: none;
-  cursor: pointer;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-.btn-neon:hover {
-  transform: scale(1.03);
-  box-shadow: 0 8px 24px rgba(218, 251, 113, 0.35);
+.btn-outline:hover {
+  background: #F5F3FF;
 }
 
 .btn-ghost {
@@ -170,60 +114,21 @@ html, body {
   border-radius: 9999px;
   font-weight: 500;
   font-size: 14px;
-  color: #FFFFFF;
+  color: #4C1D95;
   background: transparent;
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  backdrop-filter: blur(10px);
+  border: 1px solid transparent;
   cursor: pointer;
   transition: background 0.2s ease;
 }
 .btn-ghost:hover {
-  background: rgba(255, 255, 255, 0.08);
+  background: #F3F4F6;
 }
 
 /* ───────────────────────────────────────────────
-   Chip
-   ─────────────────────────────────────────────── */
-.chip {
-  display: inline-flex;
-  align-items: center;
-  padding: 4px 12px;
-  border-radius: 9999px;
-  font-size: 13px;
-  font-weight: 500;
-  color: #FFFFFF;
-  background: rgba(255, 255, 255, 0.08);
-}
-
-/* ───────────────────────────────────────────────
-   Card Styles
-   ─────────────────────────────────────────────── */
-.card-base {
-  position: relative;
-  overflow: hidden;
-  border-radius: 28px;
-  background: #171722;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.45);
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s ease;
-}
-.card-base:hover {
-  transform: translateY(-4px) scale(1.02);
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.65);
-  border-color: rgba(128, 176, 236, 0.2);
-}
-
-/* ───────────────────────────────────────────────
-   Hero Gradient Backgrounds
+   Hero Background
    ─────────────────────────────────────────────── */
 .bg-hero-primary {
-  background: linear-gradient(135deg, #80B0EC, #DAFB71);
-}
-.bg-hero-secondary {
-  background: linear-gradient(135deg, #EE3D5A, #80B0EC);
-}
-.bg-hero-accent {
-  background: linear-gradient(135deg, #EE3D5A, #DAFB71);
+  background: linear-gradient(135deg, #4C1D95, #EC4899);
 }
 
 /* ───────────────────────────────────────────────
@@ -234,19 +139,12 @@ html, body {
   height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #08080B;
+  background: #F9FAFB;
 }
 ::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.08);
+  background: #D1D5DB;
   border-radius: 9999px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #80B0EC;
-}
-
-/* ───────────────────────────────────────────────
-   Utility Animations
-   ─────────────────────────────────────────────── */
-.fade-up {
-  animation: fade-up 0.35s ease-out forwards;
+  background: #9CA3AF;
 }

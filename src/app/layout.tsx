@@ -18,10 +18,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${inter.variable} dark h-full antialiased`}>
-      <body className="min-h-full flex flex-col bg-[#08080B] text-white">
+    <html lang="en">
+      <body className={`${inter.variable} antialiased bg-white text-gray-900 min-h-screen selection:bg-[#4C1D95] selection:text-white`}>
         <UserProvider>
-          <EventProvider>{children}</EventProvider>
+          <EventProvider>
+            {children}
+          </EventProvider>
         </UserProvider>
       </body>
     </html>
