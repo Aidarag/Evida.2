@@ -9,7 +9,7 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        // Primary dark backgrounds
+        // Core dark backgrounds
         "primary-bg": "#08080B",
         "secondary-bg": "#111118",
         "surface": "#171722",
@@ -20,7 +20,11 @@ module.exports = {
         "border": "rgba(255,255,255,0.08)",
         // Neon accent (reserved for CTA, FAB, QR)
         "neon-green": "#B7FF2D",
-        // Gradient colors
+        // Brand accent colors
+        "electric-blue": "#80B0EC",
+        "coral": "#EE3D5A",
+        "neon-lime": "#DAFB71",
+        // Gradient colors (for utilities)
         "gradient-primary-start": "#584BFF",
         "gradient-primary-end": "#7A2CFF",
         "gradient-secondary": "#166BFF",

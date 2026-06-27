@@ -1,5 +1,7 @@
-// src/app/globals.css
-@import "tailwindcss";
+/* src/app/globals.css */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 /* Design Tokens */
 :root {
@@ -29,7 +31,7 @@ html, body {
 
 /* Glassmorphism utility */
 .glass {
-  background: rgba(17, 17, 24, 0.45); /* default opacity – matches secondary-bg */
+  background: rgba(17, 17, 24, 0.45);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   border: 1px solid var(--border);
