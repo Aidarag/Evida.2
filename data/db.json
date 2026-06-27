@@ -1,0 +1,307 @@
+{
+  "events": [
+    {
+      "id": "evt-1",
+      "title": "Fall Term Welcome Orientation",
+      "description": "Kickstart your campus experience with the official welcome orientation. Learn about campus resources, meet faculty, and connect with fellow students.",
+      "ownershipType": "school",
+      "complexityType": "complex",
+      "status": "approved",
+      "date": "2026-09-08",
+      "time": "09:00",
+      "location": "Main Quad & Auditorium",
+      "locationType": "outdoor",
+      "attendees": [
+        "Sarah Jenkins",
+        "Alex Rivera",
+        "Michael Chen",
+        "David Kim"
+      ],
+      "interested": [
+        "Sarah Jenkins",
+        "Michael Chen"
+      ],
+      "organizer": "Office of Student Affairs",
+      "featured": true,
+      "views": 342,
+      "estimatedAttendance": 800,
+      "fundingRequested": false,
+      "transportationNeeded": false
+    },
+    {
+      "id": "evt-2",
+      "title": "Annual Campus Career Fair",
+      "description": "Meet recruiters from over 50 leading companies. Bring your resume, dress in professional attire, and explore internships and full-time careers.",
+      "ownershipType": "school",
+      "complexityType": "complex",
+      "status": "approved",
+      "date": "2026-10-15",
+      "time": "11:00",
+      "location": "Campus Gymnasium",
+      "locationType": "indoor",
+      "attendees": [
+        "Sarah Jenkins",
+        "Alex Rivera",
+        "David Kim"
+      ],
+      "interested": [
+        "Michael Chen"
+      ],
+      "organizer": "Career Services",
+      "featured": true,
+      "views": 289,
+      "estimatedAttendance": 500,
+      "fundingRequested": false,
+      "transportationNeeded": false
+    },
+    {
+      "id": "evt-3",
+      "title": "Robotics Demo & Coding Workshop",
+      "description": "Get hands-on experience building lightweight robots and learning Python scripting. Open to all majors, no coding experience required!",
+      "ownershipType": "organization",
+      "complexityType": "standard",
+      "status": "approved",
+      "date": "2026-07-12",
+      "time": "14:00",
+      "location": "Engineering Lab 302",
+      "locationType": "indoor",
+      "attendees": [
+        "Sarah Jenkins",
+        "Alex Rivera",
+        "Michael Chen"
+      ],
+      "interested": [
+        "David Kim"
+      ],
+      "organizer": "Sarah Jenkins",
+      "organizationId": "org-stem",
+      "organizationName": "STEM Club",
+      "featured": false,
+      "views": 120,
+      "estimatedAttendance": 40,
+      "fundingRequested": true,
+      "transportationNeeded": false
+    },
+    {
+      "id": "evt-4",
+      "title": "CS 101 Midterm Study Session",
+      "description": "Studying for the upcoming Computer Science 101 midterm? Let's meet up to solve practice problems, review algorithms, and share snacks.",
+      "ownershipType": "student",
+      "complexityType": "quick",
+      "status": "approved",
+      "date": "2026-07-05",
+      "time": "18:00",
+      "location": "Science Library Study Room C",
+      "locationType": "indoor",
+      "attendees": [
+        "Michael Chen",
+        "Sarah Jenkins"
+      ],
+      "interested": [
+        "Alex Rivera"
+      ],
+      "organizer": "Michael Chen",
+      "featured": false,
+      "views": 45,
+      "estimatedAttendance": 8,
+      "fundingRequested": false,
+      "transportationNeeded": false
+    },
+    {
+      "id": "evt-5",
+      "title": "Varsity Tennis Open Practice",
+      "description": "Come watch the varsity team practice, meet the coaches, and join us for recreational rally games. Racquets provided.",
+      "ownershipType": "organization",
+      "complexityType": "quick",
+      "status": "approved",
+      "date": "2026-07-09",
+      "time": "16:00",
+      "location": "Campus Tennis Courts",
+      "locationType": "outdoor",
+      "attendees": [
+        "Sarah Jenkins",
+        "Michael Chen"
+      ],
+      "interested": [
+        "David Kim"
+      ],
+      "organizer": "Sarah Jenkins",
+      "organizationId": "org-tennis",
+      "organizationName": "Varsity Tennis Team",
+      "featured": false,
+      "views": 52,
+      "estimatedAttendance": 15,
+      "fundingRequested": false,
+      "transportationNeeded": false
+    },
+    {
+      "id": "evt-6",
+      "title": "Underground Campus Music Festival",
+      "description": "A large-scale outdoor concert featuring student bands and guest artists. We need funding for staging and transport for equipment.",
+      "ownershipType": "student",
+      "complexityType": "complex",
+      "status": "pending",
+      "date": "2026-08-20",
+      "time": "17:00",
+      "location": "Lower Athletic Fields",
+      "locationType": "outdoor",
+      "attendees": [],
+      "interested": [
+        "Sarah Jenkins",
+        "Alex Rivera",
+        "Michael Chen",
+        "David Kim"
+      ],
+      "organizer": "David Kim",
+      "featured": false,
+      "views": 18,
+      "estimatedAttendance": 250,
+      "fundingRequested": true,
+      "transportationNeeded": true
+    },
+    {
+      "id": "evt-7",
+      "title": "Charity Bake Sale",
+      "description": "Raising funds for the local shelter. Cupcakes, brownies, cookies, and vegan snacks will be available for purchase.",
+      "ownershipType": "organization",
+      "complexityType": "standard",
+      "status": "pending",
+      "date": "2026-07-18",
+      "time": "10:00",
+      "location": "Student Union Lobby",
+      "locationType": "indoor",
+      "attendees": [],
+      "interested": [
+        "Michael Chen"
+      ],
+      "organizer": "Michael Chen",
+      "organizationId": "org-film",
+      "organizationName": "Campus Film Society",
+      "featured": false,
+      "views": 9,
+      "estimatedAttendance": 50,
+      "fundingRequested": false,
+      "transportationNeeded": false
+    }
+  ],
+  "promotions": [
+    {
+      "id": "promo-1",
+      "title": "Physics & Calc I Peer Tutoring",
+      "description": "Struggling with mechanics or integration? I am a senior engineering student offering high-quality 1-on-1 tutoring sessions at student-friendly rates.",
+      "category": "tutoring",
+      "status": "approved",
+      "date": "2026-06-25",
+      "organizer": "Sarah Jenkins",
+      "contactInfo": "sarah.j@school.edu"
+    },
+    {
+      "id": "promo-2",
+      "title": "Graduation & Portrait Photography",
+      "description": "Professional graduation photo sessions around campus. Affordable rates, high-quality edits, and quick turnaround. Book your slot now!",
+      "category": "photography",
+      "status": "approved",
+      "date": "2026-06-26",
+      "organizer": "David Kim",
+      "contactInfo": "d.kim@school.edu"
+    },
+    {
+      "id": "promo-3",
+      "title": "Midnight Cookie Delivery",
+      "description": "Craving freshly baked warm cookies during late-night study sessions? Text us your dorm room number! Chocolate chip and snickerdoodles available.",
+      "category": "food",
+      "status": "pending",
+      "date": "2026-06-27",
+      "organizer": "Michael Chen",
+      "contactInfo": "cookies@school.edu"
+    }
+  ],
+  "organizations": [
+    {
+      "id": "org-stem",
+      "name": "STEM Club",
+      "description": "Promoting science, technology, engineering, and mathematics education and activities.",
+      "verified": true,
+      "members": [
+        "Sarah Jenkins",
+        "Alex Rivera"
+      ],
+      "logoColor": "emerald"
+    },
+    {
+      "id": "org-tennis",
+      "name": "Varsity Tennis Team",
+      "description": "The official campus tennis team for competitive play and recreational tournaments.",
+      "verified": true,
+      "members": [
+        "Sarah Jenkins",
+        "Michael Chen"
+      ],
+      "logoColor": "sky"
+    },
+    {
+      "id": "org-sg",
+      "name": "Student Government Association",
+      "description": "Representing student interests, organizing initiatives, and allocating campus funds.",
+      "verified": true,
+      "members": [
+        "Alex Rivera",
+        "David Kim"
+      ],
+      "logoColor": "indigo"
+    },
+    {
+      "id": "org-film",
+      "name": "Campus Film Society",
+      "description": "A student group for film enthusiasts, screening classics, indie films, and hosting discussions.",
+      "verified": false,
+      "members": [
+        "Michael Chen"
+      ],
+      "logoColor": "rose"
+    }
+  ],
+  "users": [
+    {
+      "username": "sarah_j",
+      "name": "Sarah Jenkins",
+      "role": "student_leader",
+      "organizations": [
+        "org-stem",
+        "org-tennis"
+      ]
+    },
+    {
+      "username": "alex_r",
+      "name": "Alex Rivera",
+      "role": "student_leader",
+      "organizations": [
+        "org-stem",
+        "org-sg"
+      ]
+    },
+    {
+      "username": "michael_c",
+      "name": "Michael Chen",
+      "role": "student",
+      "organizations": [
+        "org-tennis",
+        "org-film"
+      ]
+    },
+    {
+      "username": "david_k",
+      "name": "David Kim",
+      "role": "student",
+      "organizations": [
+        "org-sg"
+      ]
+    },
+    {
+      "username": "admin_dean",
+      "name": "Dean Henderson",
+      "role": "admin",
+      "organizations": []
+    }
+  ]
+}
