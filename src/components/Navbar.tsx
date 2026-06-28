@@ -18,7 +18,7 @@ export function DesktopNav({ variant = 'student' }: { variant?: 'student' | 'sch
     { label: 'Our Mission', href: '/#our-mission' },
     { label: 'FAQ', href: '/#faq' },
     { label: 'Featured Events', href: '/#explore-categories' },
-    { label: 'How It Works', href: '/#how-it-works' },
+    { label: 'Get Started', href: '/login' },
     { label: 'Calendar', href: '/#calendar' },
   ];
 
