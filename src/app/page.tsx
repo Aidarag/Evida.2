@@ -59,7 +59,60 @@ export default function LandingPage() {
   ];
 
   const approvedEvents = events.filter(e => e.status === 'approved');
-  
+
+  const [selectedCategory, setSelectedCategory] = React.useState('Sports');
+
+  const mockEventsByCategory: Record<string, Array<any>> = {
+    'Sports': [
+      { id: 'mock-sports-1', title: 'Blue Bears Basketball Game', category: 'Sports', date: 'Oct 12, 2026', time: '7:00 PM', location: 'Campus Arena', coverImage: '/pexels-nick-rush-2508183-11211233.jpg' },
+      { id: 'mock-sports-2', title: 'Varsity Tennis Match', category: 'Sports', date: 'Oct 18, 2026', time: '3:00 PM', location: 'Tennis Courts', coverImage: '/pexels-gasparzaldo-13464806.jpg' },
+      { id: 'mock-sports-3', title: 'Intramural Soccer Finals', category: 'Sports', date: 'Oct 24, 2026', time: '5:00 PM', location: 'Athletic Field', coverImage: '/pexels-maorattias-5191958.jpg' },
+    ],
+    'Homecoming': [
+      { id: 'mock-home-1', title: 'Homecoming Football Game', category: 'Homecoming', date: 'Oct 15, 2026', time: '2:00 PM', location: 'Memorial Stadium', coverImage: '/pexels-maorattias-5191958.jpg' },
+      { id: 'mock-home-2', title: 'Homecoming Concert & Dance', category: 'Homecoming', date: 'Oct 16, 2026', time: '8:00 PM', location: 'Main Plaza', coverImage: '/pexels-amar-20025867.jpg' },
+      { id: 'mock-home-3', title: 'Alumni Tailgate Party', category: 'Homecoming', date: 'Oct 15, 2026', time: '11:00 AM', location: 'West Lot', coverImage: '/pexels-maorattias-5191958.jpg' },
+    ],
+    'Career Fair': [
+      { id: 'mock-career-1', title: 'Annual Fall Career Fair', category: 'Career Fair', date: 'Oct 20, 2026', time: '10:00 AM', location: 'Student Union Ballroom', coverImage: '/pexels-rdne-7648057.jpg' },
+      { id: 'mock-career-2', title: 'Tech Resume Review', category: 'Career Fair', date: 'Oct 21, 2026', time: '2:00 PM', location: 'Science Hall 101', coverImage: '/pexels-rdne-7648057.jpg' },
+      { id: 'mock-career-3', title: 'Mock Interview Blitz', category: 'Career Fair', date: 'Oct 22, 2026', time: '1:00 PM', location: 'Career Center', coverImage: '/pexels-rdne-7648057.jpg' },
+    ],
+    'Workshops': [
+      { id: 'mock-work-1', title: 'STEM Club Code & Coffee', category: 'Workshops', date: 'Oct 10, 2026', time: '9:00 AM', location: 'Engineering Lab B', coverImage: '/pexels-rdne-7648057.jpg' },
+      { id: 'mock-work-2', title: 'Creative Writing Workshop', category: 'Workshops', date: 'Oct 14, 2026', time: '4:00 PM', location: 'Library Room 302', coverImage: '/pexels-amar-20025867.jpg' },
+      { id: 'mock-work-3', title: 'UI/UX Design Masterclass', category: 'Workshops', date: 'Oct 19, 2026', time: '6:00 PM', location: 'Design Studio', coverImage: '/pexels-rdne-7648057.jpg' },
+    ],
+    'Orientation': [
+      { id: 'mock-ori-1', title: 'Freshman Welcome Rally', category: 'Orientation', date: 'Oct 1, 2026', time: '9:00 AM', location: 'Quad', coverImage: '/pexels-amar-20025867.jpg' },
+      { id: 'mock-ori-2', title: 'Campus Scavenger Hunt', category: 'Orientation', date: 'Oct 2, 2026', time: '2:00 PM', location: 'Student Center', coverImage: '/pexels-maorattias-5191958.jpg' },
+      { id: 'mock-ori-3', title: 'President\'s Ice Cream Social', category: 'Orientation', date: 'Oct 3, 2026', time: '4:00 PM', location: 'President\'s Lawn', coverImage: '/pexels-amar-20025867.jpg' },
+    ],
+    'Concerts': [
+      { id: 'mock-concert-1', title: 'Acoustic Sunset Session', category: 'Concerts', date: 'Oct 9, 2026', time: '6:00 PM', location: 'Amphitheater', coverImage: '/pexels-amar-20025867.jpg' },
+      { id: 'mock-concert-2', title: 'Battle of the Bands', category: 'Concerts', date: 'Oct 23, 2026', time: '8:00 PM', location: 'Campus Theatre', coverImage: '/pexels-amar-20025867.jpg' },
+      { id: 'mock-concert-3', title: 'Jazz Ensemble Fall Show', category: 'Concerts', date: 'Oct 30, 2026', time: '7:30 PM', location: 'Music Hall', coverImage: '/pexels-amar-20025867.jpg' },
+    ],
+    'Parties': [
+      { id: 'mock-party-1', title: 'Welcome Back Neon Rave', category: 'Parties', date: 'Oct 5, 2026', time: '9:00 PM', location: 'Student Plaza', coverImage: '/pexels-amar-20025867.jpg' },
+      { id: 'mock-party-2', title: 'Halloween Costume Ball', category: 'Parties', date: 'Oct 31, 2026', time: '8:00 PM', location: 'Gymnasium', coverImage: '/pexels-maorattias-5191958.jpg' },
+    ],
+    'Clubs': [
+      { id: 'mock-club-1', title: 'Astronomy Club Stargazing', category: 'Clubs', date: 'Oct 12, 2026', time: '9:00 PM', location: 'Observatory Hill', coverImage: '/pexels-maorattias-5191958.jpg' },
+      { id: 'mock-club-2', title: 'Chess Club Open Tournament', category: 'Clubs', date: 'Oct 17, 2026', time: '1:00 PM', location: 'Student Union', coverImage: '/pexels-rdne-7648057.jpg' },
+    ],
+    'Academic Events': [
+      { id: 'mock-acad-1', title: 'Distinguished Lecture Series', category: 'Academic Events', date: 'Oct 8, 2026', time: '4:00 PM', location: 'Auditorium A', coverImage: '/pexels-rdne-7648057.jpg' },
+      { id: 'mock-acad-2', title: 'Undergraduate Research Symposium', category: 'Academic Events', date: 'Oct 22, 2026', time: '10:00 AM', location: 'Science Center Lobby', coverImage: '/pexels-rdne-7648057.jpg' },
+    ],
+  };
+
+  const filteredEvents = approvedEvents.filter(
+    (event) => event.category?.toLowerCase() === selectedCategory.toLowerCase()
+  );
+
+  const categoryEvents = [...filteredEvents, ...(mockEventsByCategory[selectedCategory] || [])].slice(0, 3);
+
   const displayEvents = featuredEventsData.map((data, i) => {
     // Pick a base event to copy details from
     const baseEvent = approvedEvents[i % approvedEvents.length] || {};
@@ -535,6 +588,61 @@ export default function LandingPage() {
             </div>
 
           </div>
+        </div>
+      </section>
+
+      {/* 5.5 Explore by Category Section */}
+      <section id="explore-categories" className="relative w-full bg-[#0F0F13] py-24 border-t border-white/5">
+        <div className="max-w-6xl mx-auto px-6 md:px-12 z-20 space-y-12">
+          
+          <div className="text-center space-y-4">
+            <span className="text-[var(--color-evida-lime)] font-bold uppercase text-xs tracking-[0.2em]">
+              Interactive Discovery
+            </span>
+            <h2 className="text-white font-extrabold text-3xl md:text-5xl uppercase tracking-tight" style={{ fontFamily: 'var(--font-display)' }}>
+              Explore by Category
+            </h2>
+            <p className="text-white/70 text-sm md:text-base max-w-2xl mx-auto">
+              Click on a category to filter campus events instantly. Discover what interests you the most.
+            </p>
+          </div>
+
+          {/* Category Selector (Pills) */}
+          <div className="flex flex-wrap justify-center gap-3 md:gap-4">
+            {Object.keys(mockEventsByCategory).map((category) => {
+              const isActive = selectedCategory === category;
+              return (
+                <button
+                  key={category}
+                  onClick={() => setSelectedCategory(category)}
+                  className={`px-6 py-2.5 rounded-full text-xs font-bold uppercase tracking-wider transition-all duration-300 transform hover:scale-105 cursor-pointer border ${
+                    isActive
+                      ? 'bg-[var(--color-evida-lime)] text-[#111827] border-transparent shadow-lg shadow-[var(--color-evida-lime)]/10'
+                      : 'bg-[#16161A] text-white/70 border-white/5 hover:text-white hover:border-white/20'
+                  }`}
+                  style={{ fontFamily: 'var(--font-display)' }}
+                >
+                  {category}
+                </button>
+              );
+            })}
+          </div>
+
+          {/* Event Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pt-4">
+            {categoryEvents.map((event) => (
+              <div 
+                key={event.id}
+                className="transform transition-all duration-500 animate-fade-in"
+              >
+                <FeaturedEventCard 
+                  event={event}
+                  onClick={() => {}}
+                />
+              </div>
+            ))}
+          </div>
+
         </div>
       </section>
 
