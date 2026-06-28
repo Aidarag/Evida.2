@@ -277,7 +277,18 @@ export default function OurVisionSection() {
 
                       {/* Middle: Title, Tagline & Description */}
                       <div className="my-auto text-left space-y-2.5">
-                        <h3 className="text-black font-extrabold text-2xl sm:text-3xl tracking-tighter leading-none uppercase" style={{ fontFamily: 'var(--font-display)' }}>
+                        <h3 
+                          className={`text-black font-extrabold tracking-[-0.06em] leading-none uppercase ${
+                            item === 'Connection'
+                              ? 'text-[18px] xs:text-[20px] sm:text-2xl md:text-[26px]'
+                              : item === 'Community'
+                              ? 'text-[19px] xs:text-[21px] sm:text-[23px] md:text-[28px]'
+                              : item === 'Discovery'
+                              ? 'text-[20px] xs:text-[22px] sm:text-[24px] md:text-[29px]'
+                              : 'text-[24px] sm:text-[28px] md:text-3xl'
+                          }`}
+                          style={{ fontFamily: 'var(--font-display)' }}
+                        >
                           {item}
                         </h3>
                         <p className="text-gray-900 text-xs sm:text-sm font-extrabold leading-tight tracking-tight">
