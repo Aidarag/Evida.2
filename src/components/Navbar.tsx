@@ -17,7 +17,7 @@ export function DesktopNav({ variant = 'student' }: { variant?: 'student' | 'sch
     { label: 'About Evida', href: '#about-evida' },
     { label: 'Our Mission', href: '#our-mission' },
     { label: 'FAQ', href: '#faq' },
-    { label: 'Featured Events', href: '#featured-events' },
+    { label: 'Featured Events', href: '#explore-categories' },
     { label: 'How It Works', href: '#how-it-works' },
     { label: 'Calendar', href: '#calendar' },
   ];

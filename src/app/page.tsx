@@ -139,27 +139,6 @@ export default function LandingPage() {
     "Career Development", "Campus Life"
   ];
 
-  // Map the specific featured events and their uploaded images
-  const featuredEventsData = [
-    { title: "Fall Welcome Orientation", image: "/pexels-amar-20025867.jpg" },
-    { title: "Homecoming Football Game", image: "/pexels-maorattias-5191958.jpg" },
-    { title: "Annual Career Fair", image: "/pexels-rdne-7648057.jpg" },
-    { title: "Blue Bears Basketball Game", image: "/pexels-nick-rush-2508183-11211233.jpg" },
-    { title: "STEM Club Workshop", image: "/pexels-rdne-7648057.jpg" },
-    { title: "Varsity Tennis Match", image: "/pexels-gasparzaldo-13464806.jpg" }
-  ];
-
-  const displayEvents = featuredEventsData.map((data, i) => {
-    // Pick a base event to copy details from
-    const baseEvent = approvedEvents[i % approvedEvents.length] || {};
-    return {
-      ...baseEvent,
-      id: `featured-${i}`,
-      title: data.title,
-      coverImage: data.image,
-    };
-  });
-
   return (
     <div className="min-h-screen bg-white text-gray-900 flex flex-col font-sans overflow-x-hidden">
       <DesktopNav variant="public" />
@@ -392,48 +371,11 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* 4. Featured Events Section (Grungy Dark Theme) */}
-      <section id="featured-events" className="relative w-full bg-[#0F0F13] py-24 mt-20 mb-12">
+      {/* 5. Explore by Category Section */}
+      <section id="explore-categories" className="relative w-full bg-[#0F0F13] py-24 mt-20">
         {/* Torn Paper Edges - Top Transition Only */}
         <div className="absolute top-[-10px] left-0 w-full h-10 bg-[#0F0F13] edge-top z-10" />
 
-        <div className="relative max-w-7xl mx-auto px-6 md:px-12 z-20">
-          {/* Header Row */}
-          <div className="flex flex-col md:flex-row justify-between mb-8 gap-4">
-            <div>
-              <h2 className="text-white font-extrabold text-3xl md:text-5xl uppercase tracking-tight leading-none mb-2" style={{ fontFamily: 'var(--font-display)' }}>College end, memories don't</h2>
-              <p className="text-subtitle text-white/70">Discover the biggest events happening this week on your campus.</p>
-            </div>
-            <Link href="/student/events" className="flex items-center gap-2 text-[12px] font-bold text-white hover:text-[var(--color-evida-lime)] transition-colors uppercase tracking-widest self-start md:self-center mt-2 md:mt-0">
-              View All Events <ArrowRight className="h-4 w-4" />
-            </Link>
-          </div>
-
-          {/* Search Bar */}
-          <div className="relative max-w-sm mb-12">
-            <input 
-              type="text" 
-              placeholder="Search events" 
-              className="w-full bg-[#1A1A1E] border border-white/10 text-white placeholder-gray-500 text-sm px-4 py-3 rounded-none focus:outline-none focus:border-[var(--color-evida-lime)] transition-colors"
-            />
-            <Search className="absolute right-4 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
-          </div>
-
-          {/* Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {displayEvents.map((event, i) => (
-              <FeaturedEventCard 
-                key={`${event.id}-${i}`}
-                event={event}
-                onClick={() => {}}
-              />
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* 5. Explore by Category Section */}
-      <section id="explore-categories" className="relative w-full bg-[#0F0F13] py-24 border-t border-white/5">
         <div className="max-w-6xl mx-auto px-6 md:px-12 z-20 space-y-12">
           
           <div className="text-center space-y-4">
