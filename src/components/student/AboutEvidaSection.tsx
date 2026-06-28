@@ -3,6 +3,7 @@
 import React from 'react';
 import Image from 'next/image';
 import { GraduationCap, Music, Globe, CalendarDays, Users, Trophy } from 'lucide-react';
+import EvidaLogo from '@/components/ui/EvidaLogo';
 
 export default function AboutEvidaSection() {
   return (
@@ -24,9 +25,7 @@ export default function AboutEvidaSection() {
           {/* Center Logo */}
           <div className="absolute left-1/2 -translate-x-1/2 top-0 flex flex-col items-center">
             <div className="flex items-center justify-center">
-              <span className="text-[var(--color-evida-lime)] font-extrabold text-2xl tracking-[0.3em] uppercase">
-                EVIDA
-              </span>
+              <EvidaLogo size={40} showText={true} lightMode={false} />
             </div>
             {/* Campus Icons row */}
             <div className="flex items-center gap-6 md:gap-12 mt-8 text-white/50">

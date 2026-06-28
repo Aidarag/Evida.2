@@ -6,6 +6,8 @@ import { usePathname } from 'next/navigation';
 import { Home, Compass, Plus, Bookmark, User, Settings, BarChart3, Shield, Star, ClipboardList, Building2, Menu, X } from 'lucide-react';
 import { motion } from 'framer-motion';
 
+import EvidaLogo from '@/components/ui/EvidaLogo';
+
 // ─────────────────────────────────────────────────
 // Desktop Top Bar (Light mode)
 // ─────────────────────────────────────────────────
@@ -35,18 +37,9 @@ export function DesktopNav({ variant = 'student' }: { variant?: 'student' | 'sch
             {/* Logo */}
             <Link href="/" className="flex items-center gap-2 group">
               {variant === 'public' ? (
-                <span className="text-3xl font-extrabold tracking-widest text-white uppercase" style={{ fontFamily: 'var(--font-display)' }}>
-                  Evida.
-                </span>
+                <EvidaLogo size={36} lightMode={false} />
               ) : (
-                <>
-                  <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-[var(--color-evida-coral)] to-[var(--color-evida-blue)] flex items-center justify-center">
-                    <span className="text-white font-bold text-sm">E</span>
-                  </div>
-                  <span className="text-xl font-bold tracking-tight text-gray-900" style={{ fontFamily: 'var(--font-display)' }}>
-                    Evida.
-                  </span>
-                </>
+                <EvidaLogo size={32} lightMode={true} />
               )}
             </Link>
             

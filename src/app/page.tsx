@@ -10,6 +10,7 @@ import FeaturedEventCard from '@/components/student/FeaturedEventCard';
 import AboutEvidaSection from '@/components/student/AboutEvidaSection';
 import OurVisionSection from '@/components/student/OurVisionSection';
 import { useEvents } from '@/lib/context/EventContext';
+import EvidaLogo from '@/components/ui/EvidaLogo';
 
 export default function LandingPage() {
   const router = useRouter();
@@ -765,9 +766,7 @@ export default function LandingPage() {
           
           {/* Logo / Title */}
           <div className="mb-12 flex justify-center w-full">
-             <span className="text-4xl font-bold tracking-widest text-white uppercase" style={{ fontFamily: 'var(--font-display)' }}>
-               Evida.
-             </span>
+             <EvidaLogo size={44} lightMode={false} />
           </div>
 
 

@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { Search, Calendar, MapPin, Users, Heart, Star, Sparkles, Plus, Home, Compass, Bookmark, Shield, Bell, X, Check, Eye } from 'lucide-react';
 import { Event, User, Notification, Organization } from '@/lib/types';
 import { motion, AnimatePresence } from 'framer-motion';
+import EvidaLogo from '@/components/ui/EvidaLogo';
 
 interface StudentDashboardProps {
   events: Event[];
@@ -91,11 +92,8 @@ export default function StudentDashboard({
       <aside className="hidden md:flex md:w-64 bg-black/60 backdrop-blur-xl border-r border-white/5 flex-col justify-between p-6 sticky top-0 h-screen shrink-0">
         <div className="space-y-8">
           {/* Logo */}
-          <div className="flex items-center gap-2">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-tr from-[#FF7A1A] to-[#FFD214]">
-              <Sparkles className="h-4.5 w-4.5 text-black" />
-            </div>
-            <span className="text-base font-bold tracking-wider text-white">EVIDA</span>
+          <div className="flex items-center">
+            <EvidaLogo size={32} lightMode={false} />
           </div>
 
           {/* Nav List */}
@@ -153,11 +151,8 @@ export default function StudentDashboard({
         
         {/* Top Header (Mobile & Desktop Header Toolbar) */}
         <header className="sticky top-0 z-30 h-16 w-full border-b border-white/5 bg-slate-950/60 backdrop-blur-md px-6 flex items-center justify-between">
-          <div className="flex items-center gap-2 md:hidden">
-            <div className="h-7 w-7 rounded-lg bg-[#FF7A1A] flex items-center justify-center">
-              <Sparkles className="h-4 w-4 text-black" />
-            </div>
-            <span className="text-sm font-bold text-white">EVIDA</span>
+          <div className="flex items-center md:hidden">
+            <EvidaLogo size={28} lightMode={false} />
           </div>
 
           <div className="hidden md:block">
