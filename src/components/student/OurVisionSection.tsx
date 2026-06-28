@@ -234,7 +234,7 @@ export default function OurVisionSection() {
               {/* Tape Decorator at the top of the stack */}
               <div className="absolute -top-3 left-1/2 -translate-x-1/2 w-16 h-7 bg-yellow-200/30 border border-yellow-300/20 backdrop-blur-[1px] rotate-[-2deg] shadow-sm z-30 pointer-events-none" />
 
-              <div className="relative w-[280px] h-[340px] sm:w-[320px] sm:h-[380px] select-none">
+              <div className="relative w-[295px] h-[355px] sm:w-[320px] sm:h-[380px] select-none">
                 {sortedKeys.map((item) => {
                   const isExiting = item === exitingItem;
                   const depth = getDepth(item);
@@ -246,7 +246,7 @@ export default function OurVisionSection() {
                   return (
                     <motion.div
                       key={item}
-                      className="absolute inset-0 bg-white border-4 border-black p-6 flex flex-col justify-between shadow-[8px_8px_0px_rgba(0,0,0,1)] rounded-sm cursor-grab active:cursor-grabbing"
+                      className="absolute inset-0 bg-white border-4 border-black p-5 sm:p-6 flex flex-col justify-between shadow-[8px_8px_0px_rgba(0,0,0,1)] rounded-sm cursor-grab active:cursor-grabbing"
                       style={{
                         backgroundImage: 'radial-gradient(#e5e7eb 1.5px, transparent 1.5px)',
                         backgroundSize: '16px 16px',
@@ -298,7 +298,7 @@ export default function OurVisionSection() {
 
                       {/* Middle: Title & Tagline */}
                       <div className="my-auto text-left space-y-2">
-                        <h3 className="text-black font-extrabold text-3xl tracking-tight leading-none uppercase" style={{ fontFamily: 'var(--font-display)' }}>
+                        <h3 className="text-black font-extrabold text-2xl sm:text-3xl tracking-tighter leading-none uppercase" style={{ fontFamily: 'var(--font-display)' }}>
                           {item}
                         </h3>
                         <p className="text-gray-400 text-[10px] font-mono font-bold uppercase tracking-wider">
@@ -311,8 +311,8 @@ export default function OurVisionSection() {
 
                       {/* Bottom Row: Barcode & Link */}
                       <div className="flex justify-between items-center pt-4 border-t border-dashed border-gray-200">
-                        {/* Barcode SVG */}
-                        <svg className="h-6 w-20 text-gray-300" viewBox="0 0 100 20" fill="currentColor">
+                        {/* Barcode SVG - hidden on mobile/tablet to make space for Next button */}
+                        <svg className="h-6 w-20 text-gray-300 hidden md:block" viewBox="0 0 100 20" fill="currentColor">
                           <rect x="0" width="3" height="20" />
                           <rect x="5" width="1" height="20" />
                           <rect x="8" width="2" height="20" />
@@ -337,13 +337,28 @@ export default function OurVisionSection() {
                           <rect x="89" width="3" height="20" />
                         </svg>
 
-                        <Link 
-                          href={linkUrl}
-                          onClick={(e) => e.stopPropagation()}
-                          className={`inline-flex items-center gap-1 text-[9px] font-bold uppercase tracking-widest px-3 py-1.5 border-2 border-black bg-black text-white ${colors.hoverBg} hover:text-black transition-colors rounded-sm shadow-[2px_2px_0px_rgba(0,0,0,1)] cursor-pointer`}
-                        >
-                          Open <ArrowUpRight className="h-3.5 w-3.5" />
-                        </Link>
+                        <div className="flex items-center gap-2.5 w-full md:w-auto justify-between md:justify-end">
+                          {isTop && (
+                            <button
+                              type="button"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleSwipe('right');
+                              }}
+                              className="inline-flex items-center gap-1.5 text-[9px] font-bold uppercase tracking-widest px-3 py-1.5 border-2 border-black bg-[var(--color-evida-lime)] text-[#111827] hover:bg-black hover:text-white transition-colors rounded-sm shadow-[2px_2px_0px_rgba(0,0,0,1)] cursor-pointer shrink-0"
+                            >
+                              Next <ArrowRight className="h-3.5 w-3.5" />
+                            </button>
+                          )}
+                          
+                          <Link 
+                            href={linkUrl}
+                            onClick={(e) => e.stopPropagation()}
+                            className={`inline-flex items-center gap-1.5 text-[9px] font-bold uppercase tracking-widest px-3 py-1.5 border-2 border-black bg-black text-white ${colors.hoverBg} hover:text-black transition-colors rounded-sm shadow-[2px_2px_0px_rgba(0,0,0,1)] cursor-pointer shrink-0 ${!isTop ? 'ml-auto' : ''}`}
+                          >
+                            Open <ArrowUpRight className="h-3.5 w-3.5" />
+                          </Link>
+                        </div>
                       </div>
                     </motion.div>
                   );
