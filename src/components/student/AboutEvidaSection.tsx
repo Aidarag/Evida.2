@@ -70,7 +70,7 @@ export default function AboutEvidaSection() {
             <div className="lg:absolute lg:-top-12 lg:-left-6 xl:-left-16 z-30 lg:rotate-[-8deg] hover:lg:rotate-[-2deg] transition-transform duration-300">
               <div className="bg-white p-2.5 pb-8 rounded-sm shadow-2xl w-36 sm:w-44 md:w-48 lg:w-40 xl:w-48 border border-gray-200">
                 <div className="relative aspect-square w-full overflow-hidden bg-gray-200">
-                  <Image src="/pexels-amar-20025867.jpg" alt="Campus Concert" fill className="object-cover grayscale hover:grayscale-0 transition-all duration-500" />
+                  <Image src="/pexels-ron-lach-8576102.jpg" alt="Campus Concert" fill className="object-cover grayscale hover:grayscale-0 transition-all duration-500" />
                 </div>
                 <p className="absolute bottom-2.5 left-0 w-full text-center text-black font-bold text-[10px] sm:text-xs uppercase tracking-wider handwritten-font">Welcome Week</p>
               </div>
@@ -80,7 +80,7 @@ export default function AboutEvidaSection() {
             <div className="lg:absolute lg:-top-6 lg:-right-6 xl:-right-16 z-30 lg:rotate-[6deg] hover:lg:rotate-[0deg] transition-transform duration-300">
               <div className="bg-white p-2.5 pb-8 rounded-sm shadow-2xl w-32 sm:w-40 md:w-44 lg:w-36 xl:w-44 border border-gray-200">
                 <div className="relative aspect-square w-full overflow-hidden bg-gray-200">
-                  <Image src="/pexels-nick-rush-2508183-11211233.jpg" alt="Basketball Game" fill className="object-cover grayscale hover:grayscale-0 transition-all duration-500" />
+                  <Image src="/pexels-marwen-larafa-2159807713-37714941.jpg" alt="Basketball Game" fill className="object-cover grayscale hover:grayscale-0 transition-all duration-500" />
                 </div>
                 <p className="absolute bottom-2.5 left-0 w-full text-center text-black font-bold text-[10px] sm:text-xs uppercase tracking-wider handwritten-font">Game Day</p>
               </div>
@@ -90,7 +90,7 @@ export default function AboutEvidaSection() {
             <div className="hidden md:block lg:absolute lg:bottom-4 lg:-left-4 xl:-left-8 z-30 lg:rotate-[4deg] hover:lg:rotate-[-2deg] transition-transform duration-300">
               <div className="bg-white p-2.5 pb-8 rounded-sm shadow-2xl w-32 sm:w-40 md:w-44 lg:w-36 xl:w-44 border border-gray-200">
                 <div className="relative aspect-square w-full overflow-hidden bg-gray-200">
-                  <Image src="/pexels-maorattias-5191958.jpg" alt="Party" fill className="object-cover grayscale hover:grayscale-0 transition-all duration-500" />
+                  <Image src="/pexels-franco-monsalvo-252430633-37980178.jpg" alt="Party" fill className="object-cover grayscale hover:grayscale-0 transition-all duration-500" />
                 </div>
                 <p className="absolute bottom-2.5 left-0 w-full text-center text-black font-bold text-[10px] sm:text-xs uppercase tracking-wider handwritten-font">Homecoming</p>
               </div>
@@ -100,7 +100,7 @@ export default function AboutEvidaSection() {
             <div className="hidden md:block lg:absolute lg:-bottom-12 lg:-right-6 xl:-right-12 z-30 lg:rotate-[-5deg] hover:lg:rotate-[2deg] transition-transform duration-300">
               <div className="bg-white p-2.5 pb-8 rounded-sm shadow-2xl w-36 sm:w-44 md:w-48 lg:w-40 xl:w-48 border border-gray-200">
                 <div className="relative aspect-square w-full overflow-hidden bg-gray-200">
-                  <Image src="/pexels-rdne-7648057.jpg" alt="Career Fair" fill className="object-cover grayscale hover:grayscale-0 transition-all duration-500" />
+                  <Image src="/pexels-tima-miroshnichenko-5439368.jpg" alt="Career Fair" fill className="object-cover grayscale hover:grayscale-0 transition-all duration-500" />
                 </div>
                 <p className="absolute bottom-2.5 left-0 w-full text-center text-black font-bold text-[10px] sm:text-xs uppercase tracking-wider handwritten-font">Career Fair</p>
               </div>

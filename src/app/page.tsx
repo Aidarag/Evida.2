@@ -57,46 +57,46 @@ export default function LandingPage() {
 
   const mockEventsByCategory: Record<string, Array<any>> = {
     'Sports': [
-      { id: 'mock-sports-1', title: 'Blue Bears Basketball Game', category: 'Sports', date: 'Oct 12, 2026', time: '7:00 PM', location: 'Campus Arena', coverImage: '/pexels-nick-rush-2508183-11211233.jpg' },
-      { id: 'mock-sports-2', title: 'Varsity Tennis Match', category: 'Sports', date: 'Oct 18, 2026', time: '3:00 PM', location: 'Tennis Courts', coverImage: '/pexels-gasparzaldo-13464806.jpg' },
-      { id: 'mock-sports-3', title: 'Intramural Soccer Finals', category: 'Sports', date: 'Oct 24, 2026', time: '5:00 PM', location: 'Athletic Field', coverImage: '/pexels-maorattias-5191958.jpg' },
+      { id: 'mock-sports-1', title: 'Blue Bears Basketball Game', category: 'Sports', date: 'Oct 12, 2026', time: '7:00 PM', location: 'Campus Arena', coverImage: '/pexels-marwen-larafa-2159807713-37714941.jpg' },
+      { id: 'mock-sports-2', title: 'Varsity Tennis Match', category: 'Sports', date: 'Oct 18, 2026', time: '3:00 PM', location: 'Tennis Courts', coverImage: '/pexels-hanna-elesha-abraham-1587801282-27498756.jpg' },
+      { id: 'mock-sports-3', title: 'Intramural Soccer Finals', category: 'Sports', date: 'Oct 24, 2026', time: '5:00 PM', location: 'Athletic Field', coverImage: '/pexels-yaroslav-shuraev-8513385.jpg' },
     ],
     'Homecoming': [
-      { id: 'mock-home-1', title: 'Homecoming Football Game', category: 'Homecoming', date: 'Oct 15, 2026', time: '2:00 PM', location: 'Memorial Stadium', coverImage: '/pexels-maorattias-5191958.jpg' },
-      { id: 'mock-home-2', title: 'Homecoming Concert & Dance', category: 'Homecoming', date: 'Oct 16, 2026', time: '8:00 PM', location: 'Main Plaza', coverImage: '/pexels-amar-20025867.jpg' },
-      { id: 'mock-home-3', title: 'Alumni Tailgate Party', category: 'Homecoming', date: 'Oct 15, 2026', time: '11:00 AM', location: 'West Lot', coverImage: '/pexels-maorattias-5191958.jpg' },
+      { id: 'mock-home-1', title: 'Homecoming Football Game', category: 'Homecoming', date: 'Oct 15, 2026', time: '2:00 PM', location: 'Memorial Stadium', coverImage: '/pexels-marwen-larafa-2159807713-37714941.jpg' },
+      { id: 'mock-home-2', title: 'Homecoming Concert & Dance', category: 'Homecoming', date: 'Oct 16, 2026', time: '8:00 PM', location: 'Main Plaza', coverImage: '/pexels-franco-monsalvo-252430633-37980178.jpg' },
+      { id: 'mock-home-3', title: 'Alumni Tailgate Party', category: 'Homecoming', date: 'Oct 15, 2026', time: '11:00 AM', location: 'West Lot', coverImage: '/pexels-gu-ko-2150570603-31827067.jpg' },
     ],
     'Career Fair': [
-      { id: 'mock-career-1', title: 'Annual Fall Career Fair', category: 'Career Fair', date: 'Oct 20, 2026', time: '10:00 AM', location: 'Student Union Ballroom', coverImage: '/pexels-rdne-7648057.jpg' },
-      { id: 'mock-career-2', title: 'Tech Resume Review', category: 'Career Fair', date: 'Oct 21, 2026', time: '2:00 PM', location: 'Science Hall 101', coverImage: '/pexels-rdne-7648057.jpg' },
-      { id: 'mock-career-3', title: 'Mock Interview Blitz', category: 'Career Fair', date: 'Oct 22, 2026', time: '1:00 PM', location: 'Career Center', coverImage: '/pexels-rdne-7648057.jpg' },
+      { id: 'mock-career-1', title: 'Annual Fall Career Fair', category: 'Career Fair', date: 'Oct 20, 2026', time: '10:00 AM', location: 'Student Union Ballroom', coverImage: '/pexels-edward-jenner-4031319.jpg' },
+      { id: 'mock-career-2', title: 'Tech Resume Review', category: 'Career Fair', date: 'Oct 21, 2026', time: '2:00 PM', location: 'Science Hall 101', coverImage: '/pexels-markus-winkler-1430818-12199407.jpg' },
+      { id: 'mock-career-3', title: 'Mock Interview Blitz', category: 'Career Fair', date: 'Oct 22, 2026', time: '1:00 PM', location: 'Career Center', coverImage: '/pexels-cottonbro-5989925.jpg' },
     ],
     'Workshops': [
-      { id: 'mock-work-1', title: 'STEM Club Code & Coffee', category: 'Workshops', date: 'Oct 10, 2026', time: '9:00 AM', location: 'Engineering Lab B', coverImage: '/pexels-rdne-7648057.jpg' },
-      { id: 'mock-work-2', title: 'Creative Writing Workshop', category: 'Workshops', date: 'Oct 14, 2026', time: '4:00 PM', location: 'Library Room 302', coverImage: '/pexels-amar-20025867.jpg' },
-      { id: 'mock-work-3', title: 'UI/UX Design Masterclass', category: 'Workshops', date: 'Oct 19, 2026', time: '6:00 PM', location: 'Design Studio', coverImage: '/pexels-rdne-7648057.jpg' },
+      { id: 'mock-work-1', title: 'STEM Club Code & Coffee', category: 'Workshops', date: 'Oct 10, 2026', time: '9:00 AM', location: 'Engineering Lab B', coverImage: '/pexels-tima-miroshnichenko-5439368.jpg' },
+      { id: 'mock-work-2', title: 'Creative Writing Workshop', category: 'Workshops', date: 'Oct 14, 2026', time: '4:00 PM', location: 'Library Room 302', coverImage: '/pexels-cottonbro-5989925.jpg' },
+      { id: 'mock-work-3', title: 'UI/UX Design Masterclass', category: 'Workshops', date: 'Oct 19, 2026', time: '6:00 PM', location: 'Design Studio', coverImage: '/pexels-markus-winkler-1430818-12199407.jpg' },
     ],
     'Orientation': [
-      { id: 'mock-ori-1', title: 'Freshman Welcome Rally', category: 'Orientation', date: 'Oct 1, 2026', time: '9:00 AM', location: 'Quad', coverImage: '/pexels-amar-20025867.jpg' },
-      { id: 'mock-ori-2', title: 'Campus Scavenger Hunt', category: 'Orientation', date: 'Oct 2, 2026', time: '2:00 PM', location: 'Student Center', coverImage: '/pexels-maorattias-5191958.jpg' },
-      { id: 'mock-ori-3', title: 'President\'s Ice Cream Social', category: 'Orientation', date: 'Oct 3, 2026', time: '4:00 PM', location: 'President\'s Lawn', coverImage: '/pexels-amar-20025867.jpg' },
+      { id: 'mock-ori-1', title: 'Freshman Welcome Rally', category: 'Orientation', date: 'Oct 1, 2026', time: '9:00 AM', location: 'Quad', coverImage: '/pexels-ron-lach-8576102.jpg' },
+      { id: 'mock-ori-2', title: 'Campus Scavenger Hunt', category: 'Orientation', date: 'Oct 2, 2026', time: '2:00 PM', location: 'Student Center', coverImage: '/pexels-gu-ko-2150570603-31827067.jpg' },
+      { id: 'mock-ori-3', title: 'President\'s Ice Cream Social', category: 'Orientation', date: 'Oct 3, 2026', time: '4:00 PM', location: 'President\'s Lawn', coverImage: '/pexels-yaroslav-shuraev-8513385.jpg' },
     ],
     'Concerts': [
-      { id: 'mock-concert-1', title: 'Acoustic Sunset Session', category: 'Concerts', date: 'Oct 9, 2026', time: '6:00 PM', location: 'Amphitheater', coverImage: '/pexels-amar-20025867.jpg' },
-      { id: 'mock-concert-2', title: 'Battle of the Bands', category: 'Concerts', date: 'Oct 23, 2026', time: '8:00 PM', location: 'Campus Theatre', coverImage: '/pexels-amar-20025867.jpg' },
-      { id: 'mock-concert-3', title: 'Jazz Ensemble Fall Show', category: 'Concerts', date: 'Oct 30, 2026', time: '7:30 PM', location: 'Music Hall', coverImage: '/pexels-amar-20025867.jpg' },
+      { id: 'mock-concert-1', title: 'Acoustic Sunset Session', category: 'Concerts', date: 'Oct 9, 2026', time: '6:00 PM', location: 'Amphitheater', coverImage: '/pexels-amine-1285347-9371719.jpg' },
+      { id: 'mock-concert-2', title: 'Battle of the Bands', category: 'Concerts', date: 'Oct 23, 2026', time: '8:00 PM', location: 'Campus Theatre', coverImage: '/pexels-franco-monsalvo-252430633-37980178.jpg' },
+      { id: 'mock-concert-3', title: 'Jazz Ensemble Fall Show', category: 'Concerts', date: 'Oct 30, 2026', time: '7:30 PM', location: 'Music Hall', coverImage: '/pexels-franco-monsalvo-252430633-37980178.jpg' },
     ],
     'Parties': [
-      { id: 'mock-party-1', title: 'Welcome Back Neon Rave', category: 'Parties', date: 'Oct 5, 2026', time: '9:00 PM', location: 'Student Plaza', coverImage: '/pexels-amar-20025867.jpg' },
-      { id: 'mock-party-2', title: 'Halloween Costume Ball', category: 'Parties', date: 'Oct 31, 2026', time: '8:00 PM', location: 'Gymnasium', coverImage: '/pexels-maorattias-5191958.jpg' },
+      { id: 'mock-party-1', title: 'Welcome Back Neon Rave', category: 'Parties', date: 'Oct 5, 2026', time: '9:00 PM', location: 'Student Plaza', coverImage: '/pexels-amine-1285347-9371719.jpg' },
+      { id: 'mock-party-2', title: 'Halloween Costume Ball', category: 'Parties', date: 'Oct 31, 2026', time: '8:00 PM', location: 'Gymnasium', coverImage: '/pexels-ron-lach-8576102.jpg' },
     ],
     'Clubs': [
-      { id: 'mock-club-1', title: 'Astronomy Club Stargazing', category: 'Clubs', date: 'Oct 12, 2026', time: '9:00 PM', location: 'Observatory Hill', coverImage: '/pexels-maorattias-5191958.jpg' },
-      { id: 'mock-club-2', title: 'Chess Club Open Tournament', category: 'Clubs', date: 'Oct 17, 2026', time: '1:00 PM', location: 'Student Union', coverImage: '/pexels-rdne-7648057.jpg' },
+      { id: 'mock-club-1', title: 'Astronomy Club Stargazing', category: 'Clubs', date: 'Oct 12, 2026', time: '9:00 PM', location: 'Observatory Hill', coverImage: '/pexels-amine-1285347-9371719.jpg' },
+      { id: 'mock-club-2', title: 'Chess Club Open Tournament', category: 'Clubs', date: 'Oct 17, 2026', time: '1:00 PM', location: 'Student Union', coverImage: '/pexels-tima-miroshnichenko-5439368.jpg' },
     ],
     'Academic Events': [
-      { id: 'mock-acad-1', title: 'Distinguished Lecture Series', category: 'Academic Events', date: 'Oct 8, 2026', time: '4:00 PM', location: 'Auditorium A', coverImage: '/pexels-rdne-7648057.jpg' },
-      { id: 'mock-acad-2', title: 'Undergraduate Research Symposium', category: 'Academic Events', date: 'Oct 22, 2026', time: '10:00 AM', location: 'Science Center Lobby', coverImage: '/pexels-rdne-7648057.jpg' },
+      { id: 'mock-acad-1', title: 'Distinguished Lecture Series', category: 'Academic Events', date: 'Oct 8, 2026', time: '4:00 PM', location: 'Auditorium A', coverImage: '/pexels-edward-jenner-4031319.jpg' },
+      { id: 'mock-acad-2', title: 'Undergraduate Research Symposium', category: 'Academic Events', date: 'Oct 22, 2026', time: '10:00 AM', location: 'Science Center Lobby', coverImage: '/pexels-edward-jenner-4031319.jpg' },
     ],
   };
 
@@ -150,7 +150,7 @@ export default function LandingPage() {
       <section className="relative w-full h-[100vh] min-h-[600px] flex flex-col items-center justify-center overflow-hidden bg-[#0F0F13]">
         {/* Background Image */}
         <div 
-          className="absolute inset-0 w-full h-full bg-[url('/pexels-maorattias-5191958.jpg')] bg-cover bg-center opacity-50 grayscale contrast-125"
+          className="absolute inset-0 w-full h-full bg-[url('/pexels-amine-1285347-9371719.jpg')] bg-cover bg-center opacity-50 grayscale contrast-125"
         />
         
         {/* Dark Overlay Gradient */}
