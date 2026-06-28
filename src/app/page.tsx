@@ -721,6 +721,42 @@ export default function LandingPage() {
         </div>
       </section>
 
+      {/* 7. Closing Statement Section */}
+      <section className="relative w-full bg-[#0B0B0E] pt-32 pb-48 overflow-hidden flex flex-col items-center justify-center border-t border-white/5">
+        {/* Soft Ambient Radial Glows */}
+        <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[80%] h-[300px] bg-gradient-to-t from-[var(--color-evida-blue)]/5 via-[var(--color-evida-lime)]/5 to-transparent rounded-full blur-[120px] pointer-events-none" />
+        
+        <div className="relative max-w-4xl mx-auto px-6 text-center z-20 space-y-8">
+          <h2 className="text-white font-extrabold text-4xl md:text-6xl lg:text-7xl uppercase tracking-tight leading-none" style={{ fontFamily: 'var(--font-display)' }}>
+            College Ends.<br />
+            <span className="bg-gradient-to-r from-[var(--color-evida-coral)] via-[var(--color-evida-blue)] to-[var(--color-evida-lime)] bg-clip-text text-transparent">
+              Memories Don’t.
+            </span>
+          </h2>
+          
+          <p className="text-white/60 text-base md:text-lg max-w-2xl mx-auto leading-relaxed font-light">
+            Every event you attend, every connection you make, and every memory you create begins with a single place. Welcome to your campus life, reimagined.
+          </p>
+          
+          <div className="pt-4">
+            <Link 
+              href="/login"
+              className="inline-flex items-center justify-center px-8 py-4 rounded-full text-sm font-bold uppercase tracking-wider bg-white text-black hover:bg-[var(--color-evida-lime)] transition-all duration-300 transform hover:scale-105 shadow-xl hover:shadow-[var(--color-evida-lime)]/20 cursor-pointer"
+              style={{ fontFamily: 'var(--font-display)' }}
+            >
+              Get started
+            </Link>
+          </div>
+        </div>
+
+        {/* Giant Immersive EVIDA Wordmark in Background */}
+        <div className="absolute bottom-0 left-0 w-full overflow-hidden select-none pointer-events-none z-10 leading-none">
+          <div className="w-full text-center text-[18vw] font-extrabold tracking-tighter uppercase opacity-10 bg-gradient-to-r from-[var(--color-evida-coral)] via-[var(--color-evida-blue)] to-[var(--color-evida-lime)] bg-clip-text text-transparent translate-y-[20%]">
+            EVIDA
+          </div>
+        </div>
+      </section>
+
       {/* Footer Section */}
       <footer className="relative w-full bg-[#0F0F13] pt-24 pb-12">
         <div className="relative max-w-6xl mx-auto px-6 md:px-12 z-20 flex flex-col items-center">
@@ -783,11 +819,11 @@ export default function LandingPage() {
           <div>
             <h4 className="text-[var(--color-evida-blue)] font-bold uppercase tracking-widest text-xs mb-4">Discover</h4>
             <ul className="space-y-3 text-sm font-medium">
-              <li><Link href="#why-evida" className="hover:text-white transition-colors">Why Evida</Link></li>
+              <li><Link href="#about-evida" className="hover:text-white transition-colors">About Evida</Link></li>
+              <li><Link href="#our-mission" className="hover:text-white transition-colors">Our Mission</Link></li>
+              <li><Link href="#explore-categories" className="hover:text-white transition-colors">Featured Events</Link></li>
               <li><Link href="#how-it-works" className="hover:text-white transition-colors">How It Works</Link></li>
-              <li><Link href="#featured-events" className="hover:text-white transition-colors">Featured Events</Link></li>
-              <li><Link href="#for-students" className="hover:text-white transition-colors">For Students</Link></li>
-              <li><Link href="#for-schools" className="hover:text-white transition-colors">For Schools</Link></li>
+              <li><Link href="#faq" className="hover:text-white transition-colors">FAQ</Link></li>
             </ul>
           </div>
 
