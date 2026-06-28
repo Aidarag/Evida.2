@@ -12,6 +12,7 @@ import { useEvents } from '@/lib/context/EventContext';
 
 export default function LandingPage() {
   const { events } = useEvents();
+  const [activeStep, setActiveStep] = React.useState(0);
   
   // Map the specific featured events and their uploaded images
   const featuredEventsData = [
@@ -134,38 +135,173 @@ export default function LandingPage() {
       </section>
 
       {/* How it Works */}
-      <section className="w-full py-24 bg-white">
-        <div className="max-w-7xl mx-auto px-6 md:px-12 text-center space-y-16">
-          <h2 className="text-heading-2 text-gray-900">How It Works</h2>
+      <section className="w-full py-24 bg-white font-sans overflow-hidden" id="how-it-works">
+        <div className="max-w-5xl mx-auto px-6 md:px-12 text-center space-y-12">
           
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 relative">
-            <div className="hidden md:block absolute top-1/2 left-0 w-full h-0.5 bg-gray-100 -translate-y-1/2 z-0" />
-            
-            <div className="flex flex-col items-center gap-4 relative z-10">
-              <div className="h-16 w-16 rounded-full bg-white border-[4px] border-[var(--color-evida-coral)] flex items-center justify-center shadow-lg">
-                <Search className="h-6 w-6 text-[var(--color-evida-coral)]" />
-              </div>
-              <h4 className="text-title text-gray-900">1. Discover</h4>
-            </div>
-            <div className="flex flex-col items-center gap-4 relative z-10">
-              <div className="h-16 w-16 rounded-full bg-white border-[4px] border-gray-200 flex items-center justify-center">
-                <MousePointer2 className="h-6 w-6 text-gray-400" />
-              </div>
-              <h4 className="text-title text-gray-900">2. Create</h4>
-            </div>
-            <div className="flex flex-col items-center gap-4 relative z-10">
-              <div className="h-16 w-16 rounded-full bg-white border-[4px] border-gray-200 flex items-center justify-center">
-                <UserCheck className="h-6 w-6 text-gray-400" />
-              </div>
-              <h4 className="text-title text-gray-900">3. Attend</h4>
-            </div>
-            <div className="flex flex-col items-center gap-4 relative z-10">
-              <div className="h-16 w-16 rounded-full bg-white border-[4px] border-gray-200 flex items-center justify-center">
-                <LineChart className="h-6 w-6 text-gray-400" />
-              </div>
-              <h4 className="text-title text-gray-900">4. Engage</h4>
-            </div>
+          <div className="space-y-4">
+            <h2 className="text-heading-2 text-gray-900">How It Works</h2>
+            <p className="text-subtitle text-gray-500 max-w-2xl mx-auto">
+              Evida simplifies campus engagement in four simple steps. Hover or click to explore the journey.
+            </p>
           </div>
+
+          {/* Progress Indicator */}
+          <div className="relative w-full h-1.5 bg-gray-100 rounded-full overflow-hidden max-w-xl mx-auto mb-12">
+            <div 
+              className="absolute top-0 left-0 h-full bg-gradient-to-r from-[var(--color-evida-blue)] via-[var(--color-evida-coral)] to-[var(--color-evida-lime)] transition-all duration-500 ease-out"
+              style={{ width: `${((activeStep + 1) / 4) * 100}%` }}
+            />
+          </div>
+
+          {/* Cards Container */}
+          {/* Desktop Layout (Horizontal Accordion) */}
+          <div className="hidden lg:flex flex-row gap-6 w-full min-h-[380px] items-stretch text-left">
+            {[
+              {
+                number: "01",
+                title: "Discover",
+                icon: Search,
+                description: "Find exactly what you're looking for. Filter by category, date, or organization to discover the best of campus life."
+              },
+              {
+                number: "02",
+                title: "Create",
+                icon: MousePointer2,
+                description: "Host your own event, workshop, or promotion. Customize the details and publish instantly for your club or community."
+              },
+              {
+                number: "03",
+                title: "Attend",
+                icon: UserCheck,
+                description: "RSVP to events, save them to your profile, and receive notifications. Show up and connect with your fellow students."
+              },
+              {
+                number: "04",
+                title: "Engage",
+                icon: LineChart,
+                description: "Track attendance, collect feedback, and analyze engagement. Administrators and student leaders get real-time analytics."
+              }
+            ].map((step, index) => {
+              const isActive = activeStep === index;
+              const Icon = step.icon;
+              return (
+                <div
+                  key={index}
+                  onMouseEnter={() => setActiveStep(index)}
+                  onClick={() => setActiveStep(index)}
+                  className={`relative rounded-[32px] p-8 flex flex-col justify-between transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] cursor-pointer select-none border-2 ${
+                    isActive
+                      ? 'flex-[2.5] bg-[#0F0F13] border-transparent text-white shadow-2xl scale-[1.01]'
+                      : 'flex-[1] bg-gray-50/50 border-gray-100 hover:bg-gray-50 text-gray-400 hover:border-gray-200'
+                  }`}
+                >
+                  {/* Top Row: Number & Icon */}
+                  <div className="flex justify-between items-start">
+                    <span className={`font-black text-3xl transition-colors duration-500 ${
+                      isActive ? 'text-[var(--color-evida-lime)]' : 'text-gray-300'
+                    }`} style={{ fontFamily: 'var(--font-lufga)' }}>
+                      {step.number}
+                    </span>
+                    <div className={`p-3 rounded-2xl transition-all duration-500 ${
+                      isActive ? 'bg-white/10 text-white' : 'bg-gray-100 text-gray-500'
+                    }`}>
+                      <Icon className={`h-6 w-6 ${isActive ? 'animate-pulse' : ''}`} />
+                    </div>
+                  </div>
+
+                  {/* Bottom Area: Title & Description */}
+                  <div className="space-y-4">
+                    <h3 className={`font-black text-2xl uppercase tracking-wide transition-colors duration-500 ${
+                      isActive ? 'text-white' : 'text-gray-900'
+                    }`} style={{ fontFamily: 'var(--font-lufga)' }}>
+                      {step.title}
+                    </h3>
+                    
+                    <div className={`transition-all duration-500 overflow-hidden ${
+                      isActive ? 'max-h-[150px] opacity-100 mt-2' : 'max-h-0 opacity-0 pointer-events-none'
+                    }`}>
+                      <p className="text-white/70 text-sm leading-relaxed font-medium">
+                        {step.description}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Mobile/Tablet Layout (Vertical Accordion) */}
+          <div className="lg:hidden flex flex-col gap-4 text-left">
+            {[
+              {
+                number: "01",
+                title: "Discover",
+                icon: Search,
+                description: "Find exactly what you're looking for. Filter by category, date, or organization to discover the best of campus life."
+              },
+              {
+                number: "02",
+                title: "Create",
+                icon: MousePointer2,
+                description: "Host your own event, workshop, or promotion. Customize the details and publish instantly for your club or community."
+              },
+              {
+                number: "03",
+                title: "Attend",
+                icon: UserCheck,
+                description: "RSVP to events, save them to your profile, and receive notifications. Show up and connect with your fellow students."
+              },
+              {
+                number: "04",
+                title: "Engage",
+                icon: LineChart,
+                description: "Track attendance, collect feedback, and analyze engagement. Administrators and student leaders get real-time analytics."
+              }
+            ].map((step, index) => {
+              const isActive = activeStep === index;
+              const Icon = step.icon;
+              return (
+                <div
+                  key={index}
+                  onClick={() => setActiveStep(index)}
+                  className={`rounded-2xl p-5 border-2 transition-all duration-500 ease-out cursor-pointer select-none ${
+                    isActive
+                      ? 'bg-[#0F0F13] border-transparent text-white shadow-lg'
+                      : 'bg-gray-50/50 border-gray-100 text-gray-400'
+                  }`}
+                >
+                  <div className="flex justify-between items-center">
+                    <div className="flex items-center gap-4">
+                      <span className={`font-black text-xl ${
+                        isActive ? 'text-[var(--color-evida-lime)]' : 'text-gray-300'
+                      }`} style={{ fontFamily: 'var(--font-lufga)' }}>
+                        {step.number}
+                      </span>
+                      <h3 className={`font-black text-lg uppercase tracking-wide ${
+                        isActive ? 'text-white' : 'text-gray-900'
+                      }`} style={{ fontFamily: 'var(--font-lufga)' }}>
+                        {step.title}
+                      </h3>
+                    </div>
+                    <div className={`p-2 rounded-xl ${
+                      isActive ? 'bg-white/10 text-white' : 'bg-gray-100 text-gray-500'
+                    }`}>
+                      <Icon className="h-5 w-5" />
+                    </div>
+                  </div>
+
+                  <div className={`transition-all duration-500 overflow-hidden ${
+                    isActive ? 'max-h-[120px] opacity-100 mt-4' : 'max-h-0 opacity-0 pointer-events-none'
+                  }`}>
+                    <p className="text-white/70 text-xs sm:text-sm leading-relaxed font-medium">
+                      {step.description}
+                    </p>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+
         </div>
       </section>
 
