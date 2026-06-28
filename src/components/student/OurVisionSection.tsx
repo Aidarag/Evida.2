@@ -17,55 +17,34 @@ import {
 type VisionKey = 'Students' | 'Schools' | 'Discovery' | 'Connection' | 'Community' | 'Memories';
 
 interface VisionContent {
-  leftHeadline: string;
-  leftText: string;
-  bottomHeadline: string;
-  bottomText: string;
   tagline: string;
+  description: string;
 }
 
 const visionData: Record<VisionKey, VisionContent> = {
   Students: {
-    leftHeadline: "STUDENTS FIRST.",
-    leftText: "College is more than classes. Evida helps every student discover opportunities, connect with others, and never miss what makes campus life memorable.",
-    bottomHeadline: "ONE PLATFORM. TWO COMMUNITIES.",
-    bottomText: "By bringing students and schools together, Evida transforms scattered campus information into one connected experience.",
-    tagline: "The College Experience"
+    tagline: "Your campus, all in one place.",
+    description: "Evida gives every student a simple way to discover what’s happening on campus, stay informed, and never miss opportunities that matter."
   },
   Schools: {
-    leftHeadline: "EMPOWERING SCHOOLS.",
-    leftText: "Empower your student body. Evida provides administrators with the tools to manage events, approve promotions, and track engagement in real-time.",
-    bottomHeadline: "SECURE & SCALEABLE.",
-    bottomText: "Designed to meet school policies while giving student organizations the freedom to share, promote, and grow.",
-    tagline: "Administrative Control"
+    tagline: "A smarter way to engage your campus.",
+    description: "Evida helps schools centralize events, improve communication, and better connect with students through one trusted platform."
   },
   Discovery: {
-    leftHeadline: "DISCOVER MORE.",
-    leftText: "Stop searching through dozens of group chats, emails, and flyers. Evida centralizes all campus activities into a single, intuitive feed.",
-    bottomHeadline: "ALWAYS IN THE LOOP.",
-    bottomText: "Filter by your interests, save events to your calendar, and receive notifications for updates that matter to you.",
-    tagline: "Smart Event Feed"
+    tagline: "Find experiences, not just events.",
+    description: "From career fairs to game nights, Evida makes it easy to explore opportunities based on your interests and campus life."
   },
   Connection: {
-    leftHeadline: "CONNECT DEEPLY.",
-    leftText: "Great college memories are made with others. Evida makes it easy to find clubs, join student groups, and meet people who share your passions.",
-    bottomHeadline: "CLUBS & ORGANIZATIONS.",
-    bottomText: "Give your student organization a digital home. Expand your reach, track your members, and simplify event promotion.",
-    tagline: "Peer Network"
+    tagline: "Meaningful connections start with shared experiences.",
+    description: "Every event is a chance to meet new people, join organizations, and build relationships that last beyond college."
   },
   Community: {
-    leftHeadline: "BUILD COMMUNITY.",
-    leftText: "A vibrant campus is an engaged campus. Evida fosters a sense of belonging by making student-led initiatives visible to everyone.",
-    bottomHeadline: "STRONGER TOGETHER.",
-    bottomText: "When students and administration collaborate on a single platform, the entire campus culture becomes more connected.",
-    tagline: "Unified Hub"
+    tagline: "One campus. One community.",
+    description: "Evida brings students, organizations, and schools together in one connected ecosystem where everyone belongs."
   },
   Memories: {
-    leftHeadline: "UNFORGETTABLE MEMORIES.",
-    leftText: "Your college years are some of the most impactful years of your life. Evida ensures you don't miss the moments that turn into lifelong memories.",
-    bottomHeadline: "COLLEGE ENDS, MEMORIES DON'T.",
-    bottomText: "Capturing the spirit of campus life. Because what you do outside the classroom matters just as much as what you do inside.",
-    tagline: "Cherish the Moments"
+    tagline: "College ends. Memories don’t.",
+    description: "The best moments deserve to be remembered. Evida helps preserve the experiences, friendships, and milestones that define your college journey."
   }
 };
 
@@ -296,16 +275,16 @@ export default function OurVisionSection() {
                         </div>
                       </div>
 
-                      {/* Middle: Title & Tagline */}
-                      <div className="my-auto text-left space-y-2">
+                      {/* Middle: Title, Tagline & Description */}
+                      <div className="my-auto text-left space-y-2.5">
                         <h3 className="text-black font-extrabold text-2xl sm:text-3xl tracking-tighter leading-none uppercase" style={{ fontFamily: 'var(--font-display)' }}>
                           {item}
                         </h3>
-                        <p className="text-gray-400 text-[10px] font-mono font-bold uppercase tracking-wider">
-                          // {visionData[item].tagline}
+                        <p className="text-gray-900 text-xs sm:text-sm font-extrabold leading-tight tracking-tight">
+                          {visionData[item].tagline}
                         </p>
-                        <p className="text-gray-600 text-xs font-semibold leading-relaxed mt-2">
-                          {visionData[item].leftHeadline}
+                        <p className="text-gray-600 text-[10.5px] sm:text-xs font-medium leading-relaxed">
+                          {visionData[item].description}
                         </p>
                       </div>
 
@@ -372,50 +351,33 @@ export default function OurVisionSection() {
             </div>
 
             {/* Paragraphs under the Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8 md:mt-12 text-left border-t border-gray-100 pt-8">
-              {/* Left Paragraph */}
-              <div className="space-y-3">
+            <div className="grid grid-cols-1 md:grid-cols-12 gap-6 md:gap-12 mt-8 md:mt-12 text-left border-t border-gray-100 pt-8 items-start">
+              {/* Left Column: Tagline */}
+              <div className="md:col-span-5 space-y-3">
+                <span className="text-[9px] font-mono font-bold text-gray-400 uppercase tracking-widest block">// Core Promise</span>
                 <motion.h4 
-                  key={`${activeItem}-left-headline`}
+                  key={`${activeItem}-tagline`}
                   initial={{ opacity: 0, y: 5 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.3 }}
-                  className="text-black font-bold text-lg uppercase tracking-wider animate-fade-in" 
+                  className="text-black font-extrabold text-xl sm:text-2xl uppercase tracking-tight leading-tight"
                   style={{ fontFamily: 'var(--font-display)' }}
                 >
-                  {visionData[activeItem].leftHeadline}
+                  {visionData[activeItem].tagline}
                 </motion.h4>
-                <motion.p 
-                  key={`${activeItem}-left-text`}
-                  initial={{ opacity: 0, y: 5 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.3, delay: 0.05 }}
-                  className="text-gray-600 text-sm leading-relaxed font-light min-h-[70px]"
-                >
-                  {visionData[activeItem].leftText}
-                </motion.p>
               </div>
 
-              {/* Bottom Middle Paragraph */}
-              <div className="space-y-3">
-                <motion.h4 
-                  key={`${activeItem}-bottom-headline`}
-                  initial={{ opacity: 0, y: 5 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.3 }}
-                  className="text-black font-bold text-lg uppercase tracking-wider" 
-                  style={{ fontFamily: 'var(--font-display)' }}
-                >
-                  {visionData[activeItem].bottomHeadline}
-                </motion.h4>
+              {/* Right Column: Description */}
+              <div className="md:col-span-7 space-y-3">
+                <span className="text-[9px] font-mono font-bold text-gray-400 uppercase tracking-widest block">// Actionable Vision</span>
                 <motion.p 
-                  key={`${activeItem}-bottom-text`}
+                  key={`${activeItem}-description`}
                   initial={{ opacity: 0, y: 5 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.3, delay: 0.05 }}
-                  className="text-gray-600 text-sm leading-relaxed font-light min-h-[70px]"
+                  className="text-gray-600 text-sm sm:text-base leading-relaxed font-light min-h-[60px]"
                 >
-                  {visionData[activeItem].bottomText}
+                  {visionData[activeItem].description}
                 </motion.p>
               </div>
             </div>
