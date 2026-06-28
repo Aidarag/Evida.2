@@ -472,9 +472,7 @@ export default function LandingPage() {
                 What's Happening Next
               </span>
               <h2 className="text-white font-extrabold text-3xl md:text-5xl uppercase tracking-tight leading-none" style={{ fontFamily: 'var(--font-display)' }}>
-                Your Campus <br />
-                <span className="text-[var(--color-evida-lime)]">Calendar</span> <br />
-                At A Glance
+                Your Campus <span className="text-[var(--color-evida-lime)]">Calendar</span> At A Glance
               </h2>
               <p className="text-white/70 text-sm md:text-base leading-relaxed">
                 Never miss a beat. Discover upcoming campus events, connect with student organizations, and make the most of your college experience.
