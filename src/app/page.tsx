@@ -768,38 +768,7 @@ export default function LandingPage() {
              </span>
           </div>
 
-          {/* Horizontal Scrolling Categories */}
-          <div className="w-full mb-16 pt-8 border-t border-white/5 text-left">
-            <div className="flex items-center justify-between mb-4">
-              <span className="text-white/40 font-bold uppercase text-[10px] tracking-[0.2em]">EXPLORE BY CATEGORY</span>
-              <span className="text-white/20 text-[9px] font-bold tracking-wider">SWIPE &middot; DISCOVER</span>
-            </div>
-            <div className="flex overflow-x-auto gap-4 pb-6 pt-2 no-scrollbar scroll-smooth -mx-6 px-6 md:-mx-12 md:px-12">
-              {[
-                { name: 'Sports', color: 'var(--color-evida-blue)' },
-                { name: 'Homecoming', color: 'var(--color-evida-coral)' },
-                { name: 'Career Fair', color: 'var(--color-evida-lime)' },
-                { name: 'Workshops', color: 'var(--color-evida-blue)' },
-                { name: 'Orientation', color: 'var(--color-evida-coral)' },
-                { name: 'Concerts', color: 'var(--color-evida-lime)' },
-                { name: 'Student Organizations', color: 'var(--color-evida-blue)' },
-                { name: 'Arts & Culture', color: 'var(--color-evida-coral)' },
-                { name: 'Guest Lectures', color: 'var(--color-evida-lime)' },
-                { name: 'Tech Hackathons', color: 'var(--color-evida-blue)' },
-                { name: 'Alumni Networking', color: 'var(--color-evida-coral)' },
-                { name: 'Wellness & Fitness', color: 'var(--color-evida-lime)' },
-              ].map((cat, i) => (
-                <Link 
-                  key={i} 
-                  href={`/student/events?category=${encodeURIComponent(cat.name)}`}
-                  className="flex-shrink-0 border-2 border-white/10 hover:border-white/30 text-white px-6 py-3 rounded-full font-bold uppercase text-[11px] tracking-wider transition-all duration-300 hover:scale-102 flex items-center gap-3 group/cat cursor-pointer"
-                >
-                  <span className="w-2 h-2 rounded-full transition-transform duration-300 group-hover/cat:scale-150" style={{ backgroundColor: cat.color }} />
-                  <span className="group-hover/cat:text-[var(--color-evida-lime)] transition-colors">{cat.name}</span>
-                </Link>
-              ))}
-            </div>
-          </div>
+
         </div>
 
         {/* Footer Links */}
