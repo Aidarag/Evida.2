@@ -54,6 +54,7 @@ export default function LandingPage() {
   const approvedEvents = events.filter(e => e.status === 'approved');
 
   const [selectedCategory, setSelectedCategory] = React.useState('Sports');
+  const [calendarDate, setCalendarDate] = React.useState<Date>(new Date(2026, 9, 1)); // October 2026
 
   const mockEventsByCategory: Record<string, Array<any>> = {
     'Sports': [
@@ -141,6 +142,112 @@ export default function LandingPage() {
     "Volunteering", "Greek Life", "Athletics", "Hackathons", 
     "Career Development", "Campus Life"
   ];
+
+  // Dynamic Calendar Calculation
+  const year = calendarDate.getFullYear();
+  const month = calendarDate.getMonth();
+  
+  // Get days in current month
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
+  // Get first day of the month (0: Sunday, 1: Monday, ..., 6: Saturday)
+  const firstDayOfMonth = new Date(year, month, 1);
+  // Map so that Monday is 0, Tuesday is 1, ..., Sunday is 6
+  const firstDayOfWeek = (firstDayOfMonth.getDay() + 6) % 7;
+  
+  // Get days in previous month
+  const daysInPrevMonth = new Date(year, month, 0).getDate();
+  
+  // Create calendar grid array
+  const calendarDays = [];
+  
+  // 1. Add previous month's offset days
+  for (let i = firstDayOfWeek - 1; i >= 0; i--) {
+    calendarDays.push({
+      day: daysInPrevMonth - i,
+      isCurrentMonth: false,
+      date: new Date(year, month - 1, daysInPrevMonth - i),
+    });
+  }
+  
+  // 2. Add current month's days
+  for (let i = 1; i <= daysInMonth; i++) {
+    calendarDays.push({
+      day: i,
+      isCurrentMonth: true,
+      date: new Date(year, month, i),
+    });
+  }
+  
+  // 3. Add next month's offset days to complete the grid (up to multiple of 7, e.g., 35 or 42)
+  const totalCells = calendarDays.length > 35 ? 42 : 35;
+  const remainingCells = totalCells - calendarDays.length;
+  for (let i = 1; i <= remainingCells; i++) {
+    calendarDays.push({
+      day: i,
+      isCurrentMonth: false,
+      date: new Date(year, month + 1, i),
+    });
+  }
+
+  // Get events on a specific date (using the context events)
+  const getEventsForDate = (date: Date) => {
+    const y = date.getFullYear();
+    const m = String(date.getMonth() + 1).padStart(2, '0');
+    const d = String(date.getDate()).padStart(2, '0');
+    const dateString = `${y}-${m}-${d}`;
+    return events.filter(e => e.date === dateString && e.status === 'approved');
+  };
+
+  // Map category to icon and color
+  const getCategoryIconAndColor = (category: string) => {
+    const catLower = category.toLowerCase();
+    if (catLower.includes('music') || catLower.includes('concert') || catLower.includes('show') || catLower.includes('art') || catLower.includes('theater')) {
+      return {
+        icon: <Music className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-[#2563EB]" />,
+        bgColor: 'bg-[#2563EB]/10',
+        borderColor: 'border-[#2563EB]',
+        textColor: 'text-[#2563EB]',
+      };
+    }
+    if (catLower.includes('sport') || catLower.includes('game') || catLower.includes('match') || catLower.includes('trophy')) {
+      return {
+        icon: <Trophy className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-[#65A30D]" />,
+        bgColor: 'bg-[#DAFB71]/20',
+        borderColor: 'border-[#DAFB71]',
+        textColor: 'text-slate-800',
+      };
+    }
+    if (catLower.includes('career') || catLower.includes('job') || catLower.includes('fair') || catLower.includes('workshop') || catLower.includes('seminar')) {
+      return {
+        icon: <Briefcase className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-[#2563EB]" />,
+        bgColor: 'bg-[#2563EB]/10',
+        borderColor: 'border-[#2563EB]',
+        textColor: 'text-[#2563EB]',
+      };
+    }
+    if (catLower.includes('social') || catLower.includes('club') || catLower.includes('meet') || catLower.includes('association')) {
+      return {
+        icon: <Users className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-[#2563EB]" />,
+        bgColor: 'bg-[#2563EB]/10',
+        borderColor: 'border-[#2563EB]',
+        textColor: 'text-[#2563EB]',
+      };
+    }
+    if (catLower.includes('grad') || catLower.includes('commence') || catLower.includes('ceremony')) {
+      return {
+        icon: <GraduationCap className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-[#65A30D]" />,
+        bgColor: 'bg-[#DAFB71]/20',
+        borderColor: 'border-[#DAFB71]',
+        textColor: 'text-slate-800',
+      };
+    }
+    return {
+      icon: <Sparkles className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-[#2563EB]" />,
+      bgColor: 'bg-[#2563EB]/10',
+      borderColor: 'border-[#2563EB]',
+      textColor: 'text-[#2563EB]',
+    };
+  };
 
   return (
     <div className="min-h-screen bg-white text-gray-900 flex flex-col font-sans overflow-x-hidden">
@@ -501,13 +608,29 @@ export default function LandingPage() {
                 <div className="flex justify-between items-center mb-6 pt-2 border-b border-slate-200/60 pb-4">
                   <div className="text-left">
                     <span className="text-[#2563EB] font-bold uppercase text-[10px] tracking-[0.2em]">CAMPUS LIFE</span>
-                    <h4 className="text-slate-900 font-bold text-lg md:text-xl tracking-wide uppercase mt-0.5" style={{ fontFamily: 'var(--font-display)' }}>October 2026</h4>
+                    <h4 className="text-slate-900 font-bold text-lg md:text-xl tracking-wide uppercase mt-0.5" style={{ fontFamily: 'var(--font-display)' }}>
+                      {calendarDate.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
+                    </h4>
                   </div>
                   <div className="flex gap-2">
-                    <button className="w-7 h-7 rounded-full border border-slate-200 flex items-center justify-center text-slate-400 hover:text-slate-800 hover:border-slate-400 transition-colors text-xs font-bold">
+                    <button 
+                      onClick={() => {
+                        const prev = new Date(calendarDate);
+                        prev.setMonth(prev.getMonth() - 1);
+                        setCalendarDate(prev);
+                      }}
+                      className="w-7 h-7 rounded-full border border-slate-200 flex items-center justify-center text-slate-400 hover:text-slate-800 hover:border-slate-400 transition-colors text-xs font-bold cursor-pointer"
+                    >
                       &larr;
                     </button>
-                    <button className="w-7 h-7 rounded-full border border-slate-200 flex items-center justify-center text-slate-400 hover:text-slate-800 hover:border-slate-400 transition-colors text-xs font-bold">
+                    <button 
+                      onClick={() => {
+                        const next = new Date(calendarDate);
+                        next.setMonth(next.getMonth() + 1);
+                        setCalendarDate(next);
+                      }}
+                      className="w-7 h-7 rounded-full border border-slate-200 flex items-center justify-center text-slate-400 hover:text-slate-800 hover:border-slate-400 transition-colors text-xs font-bold cursor-pointer"
+                    >
                       &rarr;
                     </button>
                   </div>
@@ -526,102 +649,60 @@ export default function LandingPage() {
 
                 {/* Calendar Days Grid */}
                 <div className="grid grid-cols-7 gap-2 md:gap-3">
-                  {/* Empty days offsets */}
-                  <div className="aspect-square bg-slate-200/20 border border-slate-200/30 rounded-lg opacity-30 flex items-center justify-center text-[10px] text-slate-300">28</div>
-                  <div className="aspect-square bg-slate-200/20 border border-slate-200/30 rounded-lg opacity-30 flex items-center justify-center text-[10px] text-slate-300">29</div>
-                  
-                  {/* Active Days */}
-                  <div className="aspect-square bg-white rounded-xl border border-slate-200/60 flex items-center justify-center text-[10px] sm:text-xs text-slate-700 font-bold hover:border-slate-300 hover:bg-slate-50 transition-colors">1</div>
-                  <div className="aspect-square bg-white rounded-xl border border-slate-200/60 flex items-center justify-center text-[10px] sm:text-xs text-slate-700 font-bold hover:border-slate-300 hover:bg-slate-50 transition-colors">2</div>
-                  <div className="aspect-square bg-white rounded-xl border border-slate-200/60 flex items-center justify-center text-[10px] sm:text-xs text-slate-700 font-bold hover:border-slate-300 hover:bg-slate-50 transition-colors">3</div>
-                  
-                  {/* Day 4: Music (Concert) */}
-                  <div className="relative aspect-square bg-[#2563EB]/10 rounded-xl border border-[#2563EB] flex flex-col items-center justify-center text-[10px] sm:text-xs text-[#2563EB] font-bold group/day cursor-pointer hover:scale-105 transition-all duration-300">
-                    <span className="absolute top-0.5 left-1 text-[8px] sm:text-[9px] text-[#2563EB] font-bold">4</span>
-                    <Music className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-[#2563EB] animate-pulse" />
-                    {/* Tooltip */}
-                    <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 bg-[#0F0F13] border border-white/10 text-[9px] text-white uppercase tracking-wider px-2.5 py-1 rounded-sm whitespace-nowrap opacity-0 pointer-events-none group-hover/day:opacity-100 transition-opacity duration-300 shadow-xl z-50">
-                      Welcome Concert
-                    </div>
-                  </div>
-
-                  <div className="aspect-square bg-white rounded-xl border border-slate-200/60 flex items-center justify-center text-[10px] sm:text-xs text-slate-700 font-bold hover:border-slate-300 hover:bg-slate-50 transition-colors">5</div>
-                  <div className="aspect-square bg-white rounded-xl border border-slate-200/60 flex items-center justify-center text-[10px] sm:text-xs text-slate-700 font-bold hover:border-slate-300 hover:bg-slate-50 transition-colors">6</div>
-                  <div className="aspect-square bg-white rounded-xl border border-slate-200/60 flex items-center justify-center text-[10px] sm:text-xs text-slate-700 font-bold hover:border-slate-300 hover:bg-slate-50 transition-colors">7</div>
-                  <div className="aspect-square bg-white rounded-xl border border-slate-200/60 flex items-center justify-center text-[10px] sm:text-xs text-slate-700 font-bold hover:border-slate-300 hover:bg-slate-50 transition-colors">8</div>
-                  <div className="aspect-square bg-white rounded-xl border border-slate-200/60 flex items-center justify-center text-[10px] sm:text-xs text-slate-700 font-bold hover:border-slate-300 hover:bg-slate-50 transition-colors">9</div>
-                  <div className="aspect-square bg-white rounded-xl border border-slate-200/60 flex items-center justify-center text-[10px] sm:text-xs text-slate-700 font-bold hover:border-slate-300 hover:bg-slate-50 transition-colors">10</div>
-                  <div className="aspect-square bg-white rounded-xl border border-slate-200/60 flex items-center justify-center text-[10px] sm:text-xs text-slate-700 font-bold hover:border-slate-300 hover:bg-slate-50 transition-colors">11</div>
-                  
-                  {/* Day 12: Sports (Game Day) */}
-                  <div className="relative aspect-square bg-[#DAFB71]/20 rounded-xl border border-[#DAFB71] flex flex-col items-center justify-center text-[10px] sm:text-xs text-slate-800 font-bold group/day cursor-pointer hover:scale-105 transition-all duration-300">
-                    <span className="absolute top-0.5 left-1 text-[8px] sm:text-[9px] text-slate-600 font-bold">12</span>
-                    <Trophy className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-[#65A30D]" />
-                    {/* Tooltip */}
-                    <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 bg-[#0F0F13] border border-white/10 text-[9px] text-white uppercase tracking-wider px-2.5 py-1 rounded-sm whitespace-nowrap opacity-0 pointer-events-none group-hover/day:opacity-100 transition-opacity duration-300 shadow-xl z-50">
-                      Championship Game
-                    </div>
-                  </div>
-
-                  <div className="aspect-square bg-white rounded-xl border border-slate-200/60 flex items-center justify-center text-[10px] sm:text-xs text-slate-700 font-bold hover:border-slate-300 hover:bg-slate-50 transition-colors">13</div>
-                  <div className="aspect-square bg-white rounded-xl border border-slate-200/60 flex items-center justify-center text-[10px] sm:text-xs text-slate-700 font-bold hover:border-slate-300 hover:bg-slate-50 transition-colors">14</div>
-
-                  {/* Day 15: Career Fair */}
-                  <div className="relative aspect-square bg-[#2563EB]/10 rounded-xl border border-[#2563EB] flex flex-col items-center justify-center text-[10px] sm:text-xs text-[#2563EB] font-bold group/day cursor-pointer hover:scale-105 transition-all duration-300">
-                    <span className="absolute top-0.5 left-1 text-[8px] sm:text-[9px] text-[#2563EB] font-bold">15</span>
-                    <Briefcase className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-[#2563EB]" />
-                    {/* Tooltip */}
-                    <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 bg-[#0F0F13] border border-white/10 text-[9px] text-white uppercase tracking-wider px-2.5 py-1 rounded-sm whitespace-nowrap opacity-0 pointer-events-none group-hover/day:opacity-100 transition-opacity duration-300 shadow-xl z-50">
-                      Annual Career Fair
-                    </div>
-                  </div>
-
-                  <div className="aspect-square bg-white rounded-xl border border-slate-200/60 flex items-center justify-center text-[10px] sm:text-xs text-slate-700 font-bold hover:border-slate-300 hover:bg-slate-50 transition-colors">16</div>
-                  <div className="aspect-square bg-white rounded-xl border border-slate-200/60 flex items-center justify-center text-[10px] sm:text-xs text-slate-700 font-bold hover:border-slate-300 hover:bg-slate-50 transition-colors">17</div>
-                  <div className="aspect-square bg-white rounded-xl border border-slate-200/60 flex items-center justify-center text-[10px] sm:text-xs text-slate-700 font-bold hover:border-slate-300 hover:bg-slate-50 transition-colors">18</div>
-                  <div className="aspect-square bg-white rounded-xl border border-slate-200/60 flex items-center justify-center text-[10px] sm:text-xs text-slate-700 font-bold hover:border-slate-300 hover:bg-slate-50 transition-colors">19</div>
-                  <div className="aspect-square bg-white rounded-xl border border-slate-200/60 flex items-center justify-center text-[10px] sm:text-xs text-slate-700 font-bold hover:border-slate-300 hover:bg-slate-50 transition-colors">20</div>
-                  <div className="aspect-square bg-white rounded-xl border border-slate-200/60 flex items-center justify-center text-[10px] sm:text-xs text-slate-700 font-bold hover:border-slate-300 hover:bg-slate-50 transition-colors">21</div>
-
-                  {/* Day 22: Party */}
-                  <div className="relative aspect-square bg-[#2563EB]/10 rounded-xl border border-[#2563EB] flex flex-col items-center justify-center text-[10px] sm:text-xs text-[#2563EB] font-bold group/day cursor-pointer hover:scale-105 transition-all duration-300">
-                    <span className="absolute top-0.5 left-1 text-[8px] sm:text-[9px] text-[#2563EB] font-bold">22</span>
-                    <Sparkles className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-[#2563EB]" />
-                    {/* Tooltip */}
-                    <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 bg-[#0F0F13] border border-white/10 text-[9px] text-white uppercase tracking-wider px-2.5 py-1 rounded-sm whitespace-nowrap opacity-0 pointer-events-none group-hover/day:opacity-100 transition-opacity duration-300 shadow-xl z-50">
-                      Homecoming Bash
-                    </div>
-                  </div>
-
-                  <div className="aspect-square bg-white rounded-xl border border-slate-200/60 flex items-center justify-center text-[10px] sm:text-xs text-slate-700 font-bold hover:border-slate-300 hover:bg-slate-50 transition-colors">23</div>
-                  <div className="aspect-square bg-white rounded-xl border border-slate-200/60 flex items-center justify-center text-[10px] sm:text-xs text-slate-700 font-bold hover:border-slate-300 hover:bg-slate-50 transition-colors">24</div>
-                  <div className="aspect-square bg-white rounded-xl border border-slate-200/60 flex items-center justify-center text-[10px] sm:text-xs text-slate-700 font-bold hover:border-slate-300 hover:bg-slate-50 transition-colors">25</div>
-                  <div className="aspect-square bg-white rounded-xl border border-slate-200/60 flex items-center justify-center text-[10px] sm:text-xs text-slate-700 font-bold hover:border-slate-300 hover:bg-slate-50 transition-colors">26</div>
-
-                  {/* Day 27: Club */}
-                  <div className="relative aspect-square bg-[#2563EB]/10 rounded-xl border border-[#2563EB] flex flex-col items-center justify-center text-[10px] sm:text-xs text-[#2563EB] font-bold group/day cursor-pointer hover:scale-105 transition-all duration-300">
-                    <span className="absolute top-0.5 left-1 text-[8px] sm:text-[9px] text-[#2563EB] font-bold">27</span>
-                    <Users className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-[#2563EB]" />
-                    {/* Tooltip */}
-                    <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 bg-[#0F0F13] border border-white/10 text-[9px] text-white uppercase tracking-wider px-2.5 py-1 rounded-sm whitespace-nowrap opacity-0 pointer-events-none group-hover/day:opacity-100 transition-opacity duration-300 shadow-xl z-50">
-                      STEM Club Workshop
-                    </div>
-                  </div>
-
-                  <div className="aspect-square bg-white rounded-xl border border-slate-200/60 flex items-center justify-center text-[10px] sm:text-xs text-slate-700 font-bold hover:border-slate-300 hover:bg-slate-50 transition-colors">28</div>
-                  <div className="aspect-square bg-white rounded-xl border border-slate-200/60 flex items-center justify-center text-[10px] sm:text-xs text-slate-700 font-bold hover:border-slate-300 hover:bg-slate-50 transition-colors">29</div>
-
-                  {/* Day 30: Graduation */}
-                  <div className="relative aspect-square bg-[#DAFB71]/20 rounded-xl border border-[#DAFB71] flex flex-col items-center justify-center text-[10px] sm:text-xs text-slate-800 font-bold group/day cursor-pointer hover:scale-105 transition-all duration-300">
-                    <span className="absolute top-0.5 left-1 text-[8px] sm:text-[9px] text-slate-600 font-bold">30</span>
-                    <GraduationCap className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-[#65A30D]" />
-                    {/* Tooltip */}
-                    <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 bg-[#0F0F13] border border-white/10 text-[9px] text-white uppercase tracking-wider px-2.5 py-1 rounded-sm whitespace-nowrap opacity-0 pointer-events-none group-hover/day:opacity-100 transition-opacity duration-300 shadow-xl z-50">
-                      Commencement
-                    </div>
-                  </div>
-
-                  <div className="aspect-square bg-white rounded-xl border border-slate-200/60 flex items-center justify-center text-[10px] sm:text-xs text-slate-700 font-bold hover:border-slate-300 hover:bg-slate-50 transition-colors">31</div>
+                  {calendarDays.map((cell, idx) => {
+                    const dayEvents = getEventsForDate(cell.date);
+                    const hasEvents = dayEvents.length > 0;
+                    
+                    if (!cell.isCurrentMonth) {
+                      return (
+                        <div 
+                          key={`offset-${idx}`}
+                          className="aspect-square bg-slate-200/20 border border-slate-200/30 rounded-lg opacity-30 flex items-center justify-center text-[10px] text-slate-300"
+                        >
+                          {cell.day}
+                        </div>
+                      );
+                    }
+                    
+                    if (hasEvents) {
+                      const firstEvent = dayEvents[0];
+                      const style = getCategoryIconAndColor(firstEvent.category);
+                      
+                      return (
+                        <div 
+                          key={`day-${cell.day}`}
+                          onClick={() => {
+                            if (dayEvents.length === 1) {
+                              router.push(`/events/${firstEvent.id}`);
+                            } else {
+                              router.push(`/student/events?date=${cell.date.toISOString().split('T')[0]}`);
+                            }
+                          }}
+                          className={`relative aspect-square ${style.bgColor} rounded-xl border ${style.borderColor} flex flex-col items-center justify-center text-[10px] sm:text-xs ${style.textColor} font-bold group/day cursor-pointer hover:scale-105 transition-all duration-300`}
+                        >
+                          <span className="absolute top-0.5 left-1 text-[8px] sm:text-[9px] font-bold">
+                            {cell.day}
+                          </span>
+                          <div className="animate-pulse">
+                            {style.icon}
+                          </div>
+                          {/* Tooltip */}
+                          <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 bg-[#0F0F13] border border-white/10 text-[9px] text-white uppercase tracking-wider px-2.5 py-1 rounded-sm whitespace-nowrap opacity-0 pointer-events-none group-hover/day:opacity-100 transition-opacity duration-300 shadow-xl z-50">
+                            {dayEvents.map(e => e.title).join(' & ')}
+                          </div>
+                        </div>
+                      );
+                    }
+                    
+                    return (
+                      <div 
+                        key={`day-${cell.day}`}
+                        className="aspect-square bg-white rounded-xl border border-slate-200/60 flex items-center justify-center text-[10px] sm:text-xs text-slate-700 font-bold hover:border-slate-300 hover:bg-slate-50 transition-colors"
+                      >
+                        {cell.day}
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
             </div>
