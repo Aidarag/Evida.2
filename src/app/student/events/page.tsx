@@ -168,52 +168,76 @@ export default function StudentEventsFeed() {
           </div>
         </div>
 
-        {/* Row 1: Ownership Filters (Primary) */}
-        <div className="space-y-2">
-          <span className="text-[10px] font-bold text-gray-500 uppercase tracking-widest block">Filter by Organizer</span>
-          <div className="flex flex-wrap gap-2.5">
+        {/* Row 1: Organizer Filters (Primary) */}
+        <div className="space-y-3">
+          <span className="text-[9px] font-mono font-bold text-gray-500 uppercase tracking-[0.2em] block pl-1">// Organizer</span>
+          <div className="flex flex-wrap gap-3">
             {ownershipFilters.map((filter) => {
               const Icon = filter.icon;
               const isActive = selectedOwnership === filter.id;
               return (
-                <button
+                <motion.button
                   key={filter.id}
                   onClick={() => {
                     setSelectedOwnership(filter.id);
                     setSelectedCategory('All'); // Reset category filter on ownership change
                   }}
-                  className={`flex items-center gap-2 px-4 py-2.5 rounded-full text-xs font-bold uppercase tracking-wider border-2 transition-all cursor-pointer ${
+                  whileHover={{ y: -2, scale: 1.01 }}
+                  whileTap={{ scale: 0.98 }}
+                  transition={{ type: 'spring', stiffness: 400, damping: 25 }}
+                  className={`relative flex items-center justify-center gap-2.5 px-6 py-3 h-12 rounded-full text-xs font-extrabold uppercase tracking-widest border-2 cursor-pointer select-none transition-colors duration-200 ${
                     isActive
-                      ? 'bg-white border-white text-[#08080B] shadow-lg'
-                      : 'bg-white/[0.02] border-white/[0.06] text-[#B8BBC8] hover:bg-white/[0.04] hover:text-white'
+                      ? 'border-white text-[#08080B] shadow-[0_6px_25px_rgba(255,255,255,0.08)]'
+                      : 'border-white/[0.08] bg-white/[0.01] text-[#B8BBC8] hover:border-white/20'
                   }`}
                 >
-                  <Icon className={`h-4 w-4 ${isActive ? 'text-[#08080B]' : ''}`} />
-                  {filter.label}
-                </button>
+                  {/* Sliding Background */}
+                  {isActive && (
+                    <motion.div
+                      layoutId="activeOrganizerBg"
+                      className="absolute inset-0 bg-white rounded-full z-0"
+                      transition={{ type: 'spring', stiffness: 380, damping: 30 }}
+                    />
+                  )}
+                  <span className="relative z-10 flex items-center gap-2.5">
+                    <Icon className={`h-4 w-4 ${isActive ? 'text-[#08080B]' : 'text-[#B8BBC8]'}`} />
+                    {filter.label}
+                  </span>
+                </motion.button>
               );
             })}
           </div>
         </div>
 
         {/* Row 2: Category Filters (Secondary) */}
-        <div className="space-y-2 pt-1">
-          <span className="text-[10px] font-bold text-gray-500 uppercase tracking-widest block">Refine by Category</span>
-          <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide -mx-6 px-6 md:mx-0 md:px-0">
+        <div className="space-y-3 pt-1">
+          <span className="text-[9px] font-mono font-bold text-gray-500 uppercase tracking-[0.2em] block pl-1">// Category</span>
+          <div className="flex gap-2.5 overflow-x-auto pb-3 scrollbar-hide -mx-6 px-6 md:mx-0 md:px-0">
             {categories.map((cat) => {
               const isActive = selectedCategory === cat;
               return (
-                <button
+                <motion.button
                   key={cat}
                   onClick={() => setSelectedCategory(cat)}
-                  className={`shrink-0 px-3.5 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer ${
+                  whileHover={{ y: -1.5, scale: 1.01 }}
+                  whileTap={{ scale: 0.98 }}
+                  transition={{ type: 'spring', stiffness: 400, damping: 25 }}
+                  className={`relative shrink-0 px-5.5 py-2.5 h-9.5 rounded-full text-[10px] font-extrabold uppercase tracking-wider cursor-pointer select-none transition-colors duration-200 ${
                     isActive
-                      ? 'bg-[var(--color-evida-lime)] text-[#08080B]'
-                      : 'bg-white/5 text-[#B8BBC8] hover:bg-white/10 hover:text-white'
+                      ? 'text-[#08080B]'
+                      : 'bg-white/[0.02] border border-white/[0.06] text-[#B8BBC8] hover:bg-white/[0.04] hover:text-white'
                   }`}
                 >
-                  {cat}
-                </button>
+                  {/* Sliding Background */}
+                  {isActive && (
+                    <motion.div
+                      layoutId="activeCategoryBg"
+                      className="absolute inset-0 bg-[var(--color-evida-lime)] rounded-full z-0"
+                      transition={{ type: 'spring', stiffness: 380, damping: 30 }}
+                    />
+                  )}
+                  <span className="relative z-10">{cat}</span>
+                </motion.button>
               );
             })}
           </div>
