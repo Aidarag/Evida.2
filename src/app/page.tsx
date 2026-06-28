@@ -375,20 +375,20 @@ export default function LandingPage() {
       </section>
 
       {/* 5. Explore by Category Section */}
-      <section id="explore-categories" className="relative w-full bg-[#0F0F13] py-24 mt-20">
+      <section id="explore-categories" className="relative w-full bg-slate-50 py-24 border-t border-slate-100 mt-20">
         {/* Torn Paper Edges - Top Transition Only */}
-        <div className="absolute top-[-10px] left-0 w-full h-10 bg-[#0F0F13] edge-top z-10" />
+        <div className="absolute top-[-10px] left-0 w-full h-10 bg-slate-50 edge-top z-10" />
 
         <div className="max-w-6xl mx-auto px-6 md:px-12 z-20 space-y-12">
           
           <div className="text-center space-y-4">
-            <span className="text-[var(--color-evida-lime)] font-bold uppercase text-xs tracking-[0.2em]">
+            <span className="text-[#2563EB] font-bold uppercase text-xs tracking-[0.2em]">
               Discovery
             </span>
-            <h2 className="text-white font-extrabold text-3xl md:text-5xl uppercase tracking-tight" style={{ fontFamily: 'var(--font-display)' }}>
+            <h2 className="text-slate-900 font-extrabold text-3xl md:text-5xl uppercase tracking-tight" style={{ fontFamily: 'var(--font-display)' }}>
               Explore by Category
             </h2>
-            <p className="text-white/70 text-sm md:text-base max-w-2xl mx-auto">
+            <p className="text-slate-500 text-sm md:text-base max-w-2xl mx-auto">
               Click on a category to filter campus events instantly. Discover what interests you the most.
             </p>
           </div>
@@ -403,8 +403,8 @@ export default function LandingPage() {
                   onClick={() => setSelectedCategory(category)}
                   className={`px-6 py-2.5 rounded-full text-xs font-bold uppercase tracking-wider transition-all duration-300 transform hover:scale-105 cursor-pointer border ${
                     isActive
-                      ? 'bg-[var(--color-evida-lime)] text-[#111827] border-transparent shadow-lg shadow-[var(--color-evida-lime)]/10'
-                      : 'bg-[#16161A] text-white/70 border-white/5 hover:text-white hover:border-white/20'
+                      ? 'bg-[#2563EB] text-white border-transparent shadow-lg shadow-blue-500/10'
+                      : 'bg-white text-slate-600 border-slate-200 hover:text-slate-900 hover:border-slate-400 shadow-sm'
                   }`}
                   style={{ fontFamily: 'var(--font-display)' }}
                 >
@@ -433,9 +433,9 @@ export default function LandingPage() {
       </section>
 
       {/* 5.5 Infinite Category Marquee */}
-      <section className="relative w-full bg-[#0F0F13] py-12 border-t border-b border-white/5 overflow-hidden">
-        <div className="absolute inset-y-0 left-0 w-24 bg-gradient-to-r from-[#0F0F13] to-transparent z-10 pointer-events-none" />
-        <div className="absolute inset-y-0 right-0 w-24 bg-gradient-to-l from-[#0F0F13] to-transparent z-10 pointer-events-none" />
+      <section className="relative w-full bg-white py-12 border-t border-b border-slate-100 overflow-hidden">
+        <div className="absolute inset-y-0 left-0 w-24 bg-gradient-to-r from-white to-transparent z-10 pointer-events-none" />
+        <div className="absolute inset-y-0 right-0 w-24 bg-gradient-to-l from-white to-transparent z-10 pointer-events-none" />
         
         <div className="relative w-full overflow-hidden flex items-center">
           <div className="animate-marquee flex gap-2 text-white">
@@ -447,8 +447,8 @@ export default function LandingPage() {
                   onClick={() => setSelectedCategory(cat)}
                   className={`flex-shrink-0 px-6 py-3 mx-3 rounded-full text-xs font-bold uppercase tracking-wider transition-all duration-300 border cursor-pointer hover:scale-105 ${
                     isActive
-                      ? 'bg-[var(--color-evida-lime)] text-[#111827] border-transparent shadow-lg shadow-[var(--color-evida-lime)]/10'
-                      : 'bg-[#16161A] text-white/70 border-white/5 hover:text-white hover:border-white/20'
+                      ? 'bg-[#2563EB] text-white border-transparent shadow-lg shadow-blue-500/10'
+                      : 'bg-slate-50 text-slate-600 border-slate-200 hover:text-slate-900 hover:border-slate-400 shadow-sm'
                   }`}
                   style={{ fontFamily: 'var(--font-display)' }}
                 >
@@ -460,25 +460,25 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* 6. Calendar Section (Standalone Dark Theme) */}
-      <section id="calendar" className="relative w-full bg-[#0F0F13] py-24 border-t border-white/5">
+      {/* 6. Calendar Section (Light Theme) */}
+      <section id="calendar" className="relative w-full bg-white py-24 border-t border-slate-100">
         <div className="relative max-w-6xl mx-auto px-6 md:px-12 z-20">
           {/* Campus Calendar Section */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 w-full">
             
             {/* Left side: What's Happening Next */}
             <div className="space-y-6 lg:col-span-5 flex flex-col justify-center text-left">
-              <span className="text-[var(--color-evida-lime)] font-bold uppercase text-xs tracking-[0.2em]">
+              <span className="text-[#2563EB] font-bold uppercase text-xs tracking-[0.2em]">
                 What's Happening Next
               </span>
-              <h2 className="text-white font-extrabold text-3xl md:text-5xl uppercase tracking-tight leading-none" style={{ fontFamily: 'var(--font-display)' }}>
-                Your Campus <span className="text-[var(--color-evida-lime)]">Calendar</span> At A Glance
+              <h2 className="text-slate-900 font-extrabold text-3xl md:text-5xl uppercase tracking-tight leading-none" style={{ fontFamily: 'var(--font-display)' }}>
+                Your Campus <span className="text-[#2563EB]">Calendar</span> At A Glance
               </h2>
-              <p className="text-white/70 text-sm md:text-base leading-relaxed">
+              <p className="text-slate-600 text-sm md:text-base leading-relaxed">
                 Never miss a beat. Discover upcoming campus events, connect with student organizations, and make the most of your college experience.
               </p>
               <div className="pt-2">
-                <Link href="/student/events" className="inline-flex bg-[var(--color-evida-lime)] text-[#111827] font-bold uppercase tracking-widest text-[10px] px-5 py-3 hover:bg-[var(--color-evida-coral)] hover:text-white transition-colors items-center gap-2 rounded-sm shadow-[4px_4px_0px_rgba(255,255,255,0.1)]">
+                <Link href="/student/events" className="inline-flex bg-[#2563EB] text-white font-bold uppercase tracking-widest text-[10px] px-6 py-3.5 hover:bg-blue-700 transition-colors items-center gap-2 rounded-full shadow-lg shadow-blue-500/10">
                   Explore Events <ArrowRight className="h-3.5 w-3.5" />
                 </Link>
               </div>
@@ -486,35 +486,35 @@ export default function LandingPage() {
 
             {/* Right side: Custom Illustrated Calendar */}
             <div className="lg:col-span-7 w-full">
-              <div className="relative bg-[#16161A] border-2 border-white/10 rounded-3xl p-6 md:p-8 shadow-2xl overflow-visible group/calendar transition-all duration-500 hover:border-white/20 hover:shadow-[0_20px_50px_rgba(128,176,236,0.15)]">
+              <div className="relative bg-slate-50 border border-slate-200/60 rounded-[32px] p-6 md:p-8 shadow-xl overflow-visible group/calendar transition-all duration-500 hover:border-slate-300/80 hover:shadow-2xl">
                 
                 {/* Binder rings at the top */}
                 <div className="absolute top-0 left-0 right-0 h-4 flex justify-around px-12 -translate-y-1/2 z-30">
                   {[...Array(6)].map((_, i) => (
-                    <div key={i} className="w-3 h-8 bg-gradient-to-b from-gray-400 to-gray-600 rounded-full border border-black/40 shadow-md relative">
+                    <div key={i} className="w-3 h-8 bg-gradient-to-b from-gray-300 to-gray-500 rounded-full border border-black/10 shadow-sm relative">
                       <div className="absolute top-1 left-1/2 -translate-x-1/2 w-1 h-3 bg-white/30 rounded-full" />
                     </div>
                   ))}
                 </div>
 
                 {/* Calendar Header */}
-                <div className="flex justify-between items-center mb-6 pt-2 border-b border-white/5 pb-4">
+                <div className="flex justify-between items-center mb-6 pt-2 border-b border-slate-200/60 pb-4">
                   <div className="text-left">
-                    <span className="text-[var(--color-evida-lime)] font-bold uppercase text-[10px] tracking-[0.2em]">CAMPUS LIFE</span>
-                    <h4 className="text-white font-bold text-lg md:text-xl tracking-wide uppercase mt-0.5" style={{ fontFamily: 'var(--font-display)' }}>October 2026</h4>
+                    <span className="text-[#2563EB] font-bold uppercase text-[10px] tracking-[0.2em]">CAMPUS LIFE</span>
+                    <h4 className="text-slate-900 font-bold text-lg md:text-xl tracking-wide uppercase mt-0.5" style={{ fontFamily: 'var(--font-display)' }}>October 2026</h4>
                   </div>
                   <div className="flex gap-2">
-                    <button className="w-7 h-7 rounded-full border border-white/10 flex items-center justify-center text-white/50 hover:text-white hover:border-white/30 transition-colors text-xs font-bold">
+                    <button className="w-7 h-7 rounded-full border border-slate-200 flex items-center justify-center text-slate-400 hover:text-slate-800 hover:border-slate-400 transition-colors text-xs font-bold">
                       &larr;
                     </button>
-                    <button className="w-7 h-7 rounded-full border border-white/10 flex items-center justify-center text-white/50 hover:text-white hover:border-white/30 transition-colors text-xs font-bold">
+                    <button className="w-7 h-7 rounded-full border border-slate-200 flex items-center justify-center text-slate-400 hover:text-slate-800 hover:border-slate-400 transition-colors text-xs font-bold">
                       &rarr;
                     </button>
                   </div>
                 </div>
 
                 {/* Days of week */}
-                <div className="grid grid-cols-7 gap-2 mb-4 text-center text-[9px] font-bold text-white/40 uppercase tracking-widest">
+                <div className="grid grid-cols-7 gap-2 mb-4 text-center text-[9px] font-bold text-slate-400 uppercase tracking-widest">
                   <span>Mon</span>
                   <span>Tue</span>
                   <span>Wed</span>
@@ -527,101 +527,101 @@ export default function LandingPage() {
                 {/* Calendar Days Grid */}
                 <div className="grid grid-cols-7 gap-2 md:gap-3">
                   {/* Empty days offsets */}
-                  <div className="aspect-square bg-white/[0.02] rounded-lg border border-white/5 opacity-30 flex items-center justify-center text-[10px] text-white/20">28</div>
-                  <div className="aspect-square bg-white/[0.02] rounded-lg border border-white/5 opacity-30 flex items-center justify-center text-[10px] text-white/20">29</div>
+                  <div className="aspect-square bg-slate-200/20 border border-slate-200/30 rounded-lg opacity-30 flex items-center justify-center text-[10px] text-slate-300">28</div>
+                  <div className="aspect-square bg-slate-200/20 border border-slate-200/30 rounded-lg opacity-30 flex items-center justify-center text-[10px] text-slate-300">29</div>
                   
                   {/* Active Days */}
-                  <div className="aspect-square bg-[#1E1E24] rounded-xl border border-white/5 flex items-center justify-center text-[10px] sm:text-xs text-white/60 font-bold hover:border-white/20 transition-colors">1</div>
-                  <div className="aspect-square bg-[#1E1E24] rounded-xl border border-white/5 flex items-center justify-center text-[10px] sm:text-xs text-white/60 font-bold hover:border-white/20 transition-colors">2</div>
-                  <div className="aspect-square bg-[#1E1E24] rounded-xl border border-white/5 flex items-center justify-center text-[10px] sm:text-xs text-white/60 font-bold hover:border-white/20 transition-colors">3</div>
+                  <div className="aspect-square bg-white rounded-xl border border-slate-200/60 flex items-center justify-center text-[10px] sm:text-xs text-slate-700 font-bold hover:border-slate-300 hover:bg-slate-50 transition-colors">1</div>
+                  <div className="aspect-square bg-white rounded-xl border border-slate-200/60 flex items-center justify-center text-[10px] sm:text-xs text-slate-700 font-bold hover:border-slate-300 hover:bg-slate-50 transition-colors">2</div>
+                  <div className="aspect-square bg-white rounded-xl border border-slate-200/60 flex items-center justify-center text-[10px] sm:text-xs text-slate-700 font-bold hover:border-slate-300 hover:bg-slate-50 transition-colors">3</div>
                   
                   {/* Day 4: Music (Concert) */}
-                  <div className="relative aspect-square bg-[var(--color-evida-coral)]/20 rounded-xl border-2 border-[var(--color-evida-coral)] flex flex-col items-center justify-center text-[10px] sm:text-xs text-white font-bold group/day cursor-pointer hover:scale-105 transition-all duration-300">
-                    <span className="absolute top-0.5 left-1 text-[8px] sm:text-[9px] text-[var(--color-evida-coral)] font-bold">4</span>
-                    <Music className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-[var(--color-evida-coral)] animate-pulse" />
+                  <div className="relative aspect-square bg-[#2563EB]/10 rounded-xl border border-[#2563EB] flex flex-col items-center justify-center text-[10px] sm:text-xs text-[#2563EB] font-bold group/day cursor-pointer hover:scale-105 transition-all duration-300">
+                    <span className="absolute top-0.5 left-1 text-[8px] sm:text-[9px] text-[#2563EB] font-bold">4</span>
+                    <Music className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-[#2563EB] animate-pulse" />
                     {/* Tooltip */}
                     <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 bg-[#0F0F13] border border-white/10 text-[9px] text-white uppercase tracking-wider px-2.5 py-1 rounded-sm whitespace-nowrap opacity-0 pointer-events-none group-hover/day:opacity-100 transition-opacity duration-300 shadow-xl z-50">
                       Welcome Concert
                     </div>
                   </div>
 
-                  <div className="aspect-square bg-[#1E1E24] rounded-xl border border-white/5 flex items-center justify-center text-[10px] sm:text-xs text-white/60 font-bold hover:border-white/20 transition-colors">5</div>
-                  <div className="aspect-square bg-[#1E1E24] rounded-xl border border-white/5 flex items-center justify-center text-[10px] sm:text-xs text-white/60 font-bold hover:border-white/20 transition-colors">6</div>
-                  <div className="aspect-square bg-[#1E1E24] rounded-xl border border-white/5 flex items-center justify-center text-[10px] sm:text-xs text-white/60 font-bold hover:border-white/20 transition-colors">7</div>
-                  <div className="aspect-square bg-[#1E1E24] rounded-xl border border-white/5 flex items-center justify-center text-[10px] sm:text-xs text-white/60 font-bold hover:border-white/20 transition-colors">8</div>
-                  <div className="aspect-square bg-[#1E1E24] rounded-xl border border-white/5 flex items-center justify-center text-[10px] sm:text-xs text-white/60 font-bold hover:border-white/20 transition-colors">9</div>
-                  <div className="aspect-square bg-[#1E1E24] rounded-xl border border-white/5 flex items-center justify-center text-[10px] sm:text-xs text-white/60 font-bold hover:border-white/20 transition-colors">10</div>
-                  <div className="aspect-square bg-[#1E1E24] rounded-xl border border-white/5 flex items-center justify-center text-[10px] sm:text-xs text-white/60 font-bold hover:border-white/20 transition-colors">11</div>
+                  <div className="aspect-square bg-white rounded-xl border border-slate-200/60 flex items-center justify-center text-[10px] sm:text-xs text-slate-700 font-bold hover:border-slate-300 hover:bg-slate-50 transition-colors">5</div>
+                  <div className="aspect-square bg-white rounded-xl border border-slate-200/60 flex items-center justify-center text-[10px] sm:text-xs text-slate-700 font-bold hover:border-slate-300 hover:bg-slate-50 transition-colors">6</div>
+                  <div className="aspect-square bg-white rounded-xl border border-slate-200/60 flex items-center justify-center text-[10px] sm:text-xs text-slate-700 font-bold hover:border-slate-300 hover:bg-slate-50 transition-colors">7</div>
+                  <div className="aspect-square bg-white rounded-xl border border-slate-200/60 flex items-center justify-center text-[10px] sm:text-xs text-slate-700 font-bold hover:border-slate-300 hover:bg-slate-50 transition-colors">8</div>
+                  <div className="aspect-square bg-white rounded-xl border border-slate-200/60 flex items-center justify-center text-[10px] sm:text-xs text-slate-700 font-bold hover:border-slate-300 hover:bg-slate-50 transition-colors">9</div>
+                  <div className="aspect-square bg-white rounded-xl border border-slate-200/60 flex items-center justify-center text-[10px] sm:text-xs text-slate-700 font-bold hover:border-slate-300 hover:bg-slate-50 transition-colors">10</div>
+                  <div className="aspect-square bg-white rounded-xl border border-slate-200/60 flex items-center justify-center text-[10px] sm:text-xs text-slate-700 font-bold hover:border-slate-300 hover:bg-slate-50 transition-colors">11</div>
                   
                   {/* Day 12: Sports (Game Day) */}
-                  <div className="relative aspect-square bg-[var(--color-evida-blue)]/20 rounded-xl border-2 border-[var(--color-evida-blue)] flex flex-col items-center justify-center text-[10px] sm:text-xs text-white font-bold group/day cursor-pointer hover:scale-105 transition-all duration-300">
-                    <span className="absolute top-0.5 left-1 text-[8px] sm:text-[9px] text-[var(--color-evida-blue)] font-bold">12</span>
-                    <Trophy className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-[var(--color-evida-blue)]" />
+                  <div className="relative aspect-square bg-[#DAFB71]/20 rounded-xl border border-[#DAFB71] flex flex-col items-center justify-center text-[10px] sm:text-xs text-slate-800 font-bold group/day cursor-pointer hover:scale-105 transition-all duration-300">
+                    <span className="absolute top-0.5 left-1 text-[8px] sm:text-[9px] text-slate-600 font-bold">12</span>
+                    <Trophy className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-[#65A30D]" />
                     {/* Tooltip */}
                     <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 bg-[#0F0F13] border border-white/10 text-[9px] text-white uppercase tracking-wider px-2.5 py-1 rounded-sm whitespace-nowrap opacity-0 pointer-events-none group-hover/day:opacity-100 transition-opacity duration-300 shadow-xl z-50">
                       Championship Game
                     </div>
                   </div>
 
-                  <div className="aspect-square bg-[#1E1E24] rounded-xl border border-white/5 flex items-center justify-center text-[10px] sm:text-xs text-white/60 font-bold hover:border-white/20 transition-colors">13</div>
-                  <div className="aspect-square bg-[#1E1E24] rounded-xl border border-white/5 flex items-center justify-center text-[10px] sm:text-xs text-white/60 font-bold hover:border-white/20 transition-colors">14</div>
+                  <div className="aspect-square bg-white rounded-xl border border-slate-200/60 flex items-center justify-center text-[10px] sm:text-xs text-slate-700 font-bold hover:border-slate-300 hover:bg-slate-50 transition-colors">13</div>
+                  <div className="aspect-square bg-white rounded-xl border border-slate-200/60 flex items-center justify-center text-[10px] sm:text-xs text-slate-700 font-bold hover:border-slate-300 hover:bg-slate-50 transition-colors">14</div>
 
                   {/* Day 15: Career Fair */}
-                  <div className="relative aspect-square bg-[var(--color-evida-lime)]/20 rounded-xl border-2 border-[var(--color-evida-lime)] flex flex-col items-center justify-center text-[10px] sm:text-xs text-white font-bold group/day cursor-pointer hover:scale-105 transition-all duration-300">
-                    <span className="absolute top-0.5 left-1 text-[8px] sm:text-[9px] text-[var(--color-evida-lime)] font-bold">15</span>
-                    <Briefcase className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-[var(--color-evida-lime)]" />
+                  <div className="relative aspect-square bg-[#2563EB]/10 rounded-xl border border-[#2563EB] flex flex-col items-center justify-center text-[10px] sm:text-xs text-[#2563EB] font-bold group/day cursor-pointer hover:scale-105 transition-all duration-300">
+                    <span className="absolute top-0.5 left-1 text-[8px] sm:text-[9px] text-[#2563EB] font-bold">15</span>
+                    <Briefcase className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-[#2563EB]" />
                     {/* Tooltip */}
                     <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 bg-[#0F0F13] border border-white/10 text-[9px] text-white uppercase tracking-wider px-2.5 py-1 rounded-sm whitespace-nowrap opacity-0 pointer-events-none group-hover/day:opacity-100 transition-opacity duration-300 shadow-xl z-50">
                       Annual Career Fair
                     </div>
                   </div>
 
-                  <div className="aspect-square bg-[#1E1E24] rounded-xl border border-white/5 flex items-center justify-center text-[10px] sm:text-xs text-white/60 font-bold hover:border-white/20 transition-colors">16</div>
-                  <div className="aspect-square bg-[#1E1E24] rounded-xl border border-white/5 flex items-center justify-center text-[10px] sm:text-xs text-white/60 font-bold hover:border-white/20 transition-colors">17</div>
-                  <div className="aspect-square bg-[#1E1E24] rounded-xl border border-white/5 flex items-center justify-center text-[10px] sm:text-xs text-white/60 font-bold hover:border-white/20 transition-colors">18</div>
-                  <div className="aspect-square bg-[#1E1E24] rounded-xl border border-white/5 flex items-center justify-center text-[10px] sm:text-xs text-white/60 font-bold hover:border-white/20 transition-colors">19</div>
-                  <div className="aspect-square bg-[#1E1E24] rounded-xl border border-white/5 flex items-center justify-center text-[10px] sm:text-xs text-white/60 font-bold hover:border-white/20 transition-colors">20</div>
-                  <div className="aspect-square bg-[#1E1E24] rounded-xl border border-white/5 flex items-center justify-center text-[10px] sm:text-xs text-white/60 font-bold hover:border-white/20 transition-colors">21</div>
+                  <div className="aspect-square bg-white rounded-xl border border-slate-200/60 flex items-center justify-center text-[10px] sm:text-xs text-slate-700 font-bold hover:border-slate-300 hover:bg-slate-50 transition-colors">16</div>
+                  <div className="aspect-square bg-white rounded-xl border border-slate-200/60 flex items-center justify-center text-[10px] sm:text-xs text-slate-700 font-bold hover:border-slate-300 hover:bg-slate-50 transition-colors">17</div>
+                  <div className="aspect-square bg-white rounded-xl border border-slate-200/60 flex items-center justify-center text-[10px] sm:text-xs text-slate-700 font-bold hover:border-slate-300 hover:bg-slate-50 transition-colors">18</div>
+                  <div className="aspect-square bg-white rounded-xl border border-slate-200/60 flex items-center justify-center text-[10px] sm:text-xs text-slate-700 font-bold hover:border-slate-300 hover:bg-slate-50 transition-colors">19</div>
+                  <div className="aspect-square bg-white rounded-xl border border-slate-200/60 flex items-center justify-center text-[10px] sm:text-xs text-slate-700 font-bold hover:border-slate-300 hover:bg-slate-50 transition-colors">20</div>
+                  <div className="aspect-square bg-white rounded-xl border border-slate-200/60 flex items-center justify-center text-[10px] sm:text-xs text-slate-700 font-bold hover:border-slate-300 hover:bg-slate-50 transition-colors">21</div>
 
                   {/* Day 22: Party */}
-                  <div className="relative aspect-square bg-[var(--color-evida-coral)]/20 rounded-xl border-2 border-[var(--color-evida-coral)] flex flex-col items-center justify-center text-[10px] sm:text-xs text-white font-bold group/day cursor-pointer hover:scale-105 transition-all duration-300">
-                    <span className="absolute top-0.5 left-1 text-[8px] sm:text-[9px] text-[var(--color-evida-coral)] font-bold">22</span>
-                    <Sparkles className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-[var(--color-evida-coral)]" />
+                  <div className="relative aspect-square bg-[#2563EB]/10 rounded-xl border border-[#2563EB] flex flex-col items-center justify-center text-[10px] sm:text-xs text-[#2563EB] font-bold group/day cursor-pointer hover:scale-105 transition-all duration-300">
+                    <span className="absolute top-0.5 left-1 text-[8px] sm:text-[9px] text-[#2563EB] font-bold">22</span>
+                    <Sparkles className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-[#2563EB]" />
                     {/* Tooltip */}
                     <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 bg-[#0F0F13] border border-white/10 text-[9px] text-white uppercase tracking-wider px-2.5 py-1 rounded-sm whitespace-nowrap opacity-0 pointer-events-none group-hover/day:opacity-100 transition-opacity duration-300 shadow-xl z-50">
                       Homecoming Bash
                     </div>
                   </div>
 
-                  <div className="aspect-square bg-[#1E1E24] rounded-xl border border-white/5 flex items-center justify-center text-[10px] sm:text-xs text-white/60 font-bold hover:border-white/20 transition-colors">23</div>
-                  <div className="aspect-square bg-[#1E1E24] rounded-xl border border-white/5 flex items-center justify-center text-[10px] sm:text-xs text-white/60 font-bold hover:border-white/20 transition-colors">24</div>
-                  <div className="aspect-square bg-[#1E1E24] rounded-xl border border-white/5 flex items-center justify-center text-[10px] sm:text-xs text-white/60 font-bold hover:border-white/20 transition-colors">25</div>
-                  <div className="aspect-square bg-[#1E1E24] rounded-xl border border-white/5 flex items-center justify-center text-[10px] sm:text-xs text-white/60 font-bold hover:border-white/20 transition-colors">26</div>
+                  <div className="aspect-square bg-white rounded-xl border border-slate-200/60 flex items-center justify-center text-[10px] sm:text-xs text-slate-700 font-bold hover:border-slate-300 hover:bg-slate-50 transition-colors">23</div>
+                  <div className="aspect-square bg-white rounded-xl border border-slate-200/60 flex items-center justify-center text-[10px] sm:text-xs text-slate-700 font-bold hover:border-slate-300 hover:bg-slate-50 transition-colors">24</div>
+                  <div className="aspect-square bg-white rounded-xl border border-slate-200/60 flex items-center justify-center text-[10px] sm:text-xs text-slate-700 font-bold hover:border-slate-300 hover:bg-slate-50 transition-colors">25</div>
+                  <div className="aspect-square bg-white rounded-xl border border-slate-200/60 flex items-center justify-center text-[10px] sm:text-xs text-slate-700 font-bold hover:border-slate-300 hover:bg-slate-50 transition-colors">26</div>
 
                   {/* Day 27: Club */}
-                  <div className="relative aspect-square bg-[var(--color-evida-blue)]/20 rounded-xl border-2 border-[var(--color-evida-blue)] flex flex-col items-center justify-center text-[10px] sm:text-xs text-white font-bold group/day cursor-pointer hover:scale-105 transition-all duration-300">
-                    <span className="absolute top-0.5 left-1 text-[8px] sm:text-[9px] text-[var(--color-evida-blue)] font-bold">27</span>
-                    <Users className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-[var(--color-evida-blue)]" />
+                  <div className="relative aspect-square bg-[#2563EB]/10 rounded-xl border border-[#2563EB] flex flex-col items-center justify-center text-[10px] sm:text-xs text-[#2563EB] font-bold group/day cursor-pointer hover:scale-105 transition-all duration-300">
+                    <span className="absolute top-0.5 left-1 text-[8px] sm:text-[9px] text-[#2563EB] font-bold">27</span>
+                    <Users className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-[#2563EB]" />
                     {/* Tooltip */}
                     <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 bg-[#0F0F13] border border-white/10 text-[9px] text-white uppercase tracking-wider px-2.5 py-1 rounded-sm whitespace-nowrap opacity-0 pointer-events-none group-hover/day:opacity-100 transition-opacity duration-300 shadow-xl z-50">
                       STEM Club Workshop
                     </div>
                   </div>
 
-                  <div className="aspect-square bg-[#1E1E24] rounded-xl border border-white/5 flex items-center justify-center text-[10px] sm:text-xs text-white/60 font-bold hover:border-white/20 transition-colors">28</div>
-                  <div className="aspect-square bg-[#1E1E24] rounded-xl border border-white/5 flex items-center justify-center text-[10px] sm:text-xs text-white/60 font-bold hover:border-white/20 transition-colors">29</div>
+                  <div className="aspect-square bg-white rounded-xl border border-slate-200/60 flex items-center justify-center text-[10px] sm:text-xs text-slate-700 font-bold hover:border-slate-300 hover:bg-slate-50 transition-colors">28</div>
+                  <div className="aspect-square bg-white rounded-xl border border-slate-200/60 flex items-center justify-center text-[10px] sm:text-xs text-slate-700 font-bold hover:border-slate-300 hover:bg-slate-50 transition-colors">29</div>
 
                   {/* Day 30: Graduation */}
-                  <div className="relative aspect-square bg-[var(--color-evida-lime)]/20 rounded-xl border-2 border-[var(--color-evida-lime)] flex flex-col items-center justify-center text-[10px] sm:text-xs text-white font-bold group/day cursor-pointer hover:scale-105 transition-all duration-300">
-                    <span className="absolute top-0.5 left-1 text-[8px] sm:text-[9px] text-[var(--color-evida-lime)] font-bold">30</span>
-                    <GraduationCap className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-[var(--color-evida-lime)]" />
+                  <div className="relative aspect-square bg-[#DAFB71]/20 rounded-xl border border-[#DAFB71] flex flex-col items-center justify-center text-[10px] sm:text-xs text-slate-800 font-bold group/day cursor-pointer hover:scale-105 transition-all duration-300">
+                    <span className="absolute top-0.5 left-1 text-[8px] sm:text-[9px] text-slate-600 font-bold">30</span>
+                    <GraduationCap className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-[#65A30D]" />
                     {/* Tooltip */}
                     <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 bg-[#0F0F13] border border-white/10 text-[9px] text-white uppercase tracking-wider px-2.5 py-1 rounded-sm whitespace-nowrap opacity-0 pointer-events-none group-hover/day:opacity-100 transition-opacity duration-300 shadow-xl z-50">
                       Commencement
                     </div>
                   </div>
 
-                  <div className="aspect-square bg-[#1E1E24] rounded-xl border border-white/5 flex items-center justify-center text-[10px] sm:text-xs text-white/60 font-bold hover:border-white/20 transition-colors">31</div>
+                  <div className="aspect-square bg-white rounded-xl border border-slate-200/60 flex items-center justify-center text-[10px] sm:text-xs text-slate-700 font-bold hover:border-slate-300 hover:bg-slate-50 transition-colors">31</div>
                 </div>
               </div>
             </div>
@@ -631,26 +631,26 @@ export default function LandingPage() {
       </section>
 
       {/* 6. FAQ Section */}
-      <section id="faq" className="relative w-full bg-[#0F0F13] py-24 border-t border-white/5">
+      <section id="faq" className="relative w-full bg-slate-50 py-24 border-t border-slate-100">
         <div className="max-w-6xl mx-auto px-6 md:px-12 grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
           
           {/* Left Column: Title and overlapping circles */}
           <div className="lg:col-span-4 space-y-8 flex flex-col items-center lg:items-start text-center lg:text-left">
-            <h2 className="text-white font-extrabold text-5xl md:text-6xl uppercase tracking-tighter" style={{ fontFamily: 'var(--font-display)' }}>
+            <h2 className="text-slate-900 font-extrabold text-5xl md:text-6xl uppercase tracking-tighter" style={{ fontFamily: 'var(--font-display)' }}>
               FAQ
             </h2>
             
             {/* Overlapping Brand Circles (from the screenshot design) */}
             <div className="relative w-28 h-16 flex items-center justify-center lg:justify-start">
-              <div className="w-12 h-12 rounded-full border-4 border-[var(--color-evida-coral)] opacity-80" />
-              <div className="w-12 h-12 rounded-full border-4 border-[var(--color-evida-blue)] opacity-80 -ml-4" />
+              <div className="w-12 h-12 rounded-full border-4 border-[#2563EB] opacity-80" />
+              <div className="w-12 h-12 rounded-full border-4 border-[#DAFB71] opacity-80 -ml-4" />
             </div>
           </div>
 
           {/* Right Column: Tab Selector and Accordion List */}
           <div className="lg:col-span-8 space-y-8">
             {/* Tab Selector */}
-            <div className="flex space-x-2 bg-[#16161A] p-1 rounded-full border border-white/5 w-fit">
+            <div className="flex space-x-2 bg-slate-200/60 p-1 rounded-full border border-slate-300/20 w-fit">
               <button
                 onClick={() => {
                   setFaqTab('students');
@@ -658,8 +658,8 @@ export default function LandingPage() {
                 }}
                 className={`px-6 py-2 rounded-full text-xs font-bold uppercase tracking-wider transition-all cursor-pointer ${
                   faqTab === 'students'
-                    ? 'bg-[var(--color-evida-lime)] text-[#111827]'
-                    : 'text-white/60 hover:text-white'
+                    ? 'bg-white text-slate-900 shadow-sm'
+                    : 'text-slate-600 hover:text-slate-900'
                 }`}
                 style={{ fontFamily: 'var(--font-display)' }}
               >
@@ -672,8 +672,8 @@ export default function LandingPage() {
                 }}
                 className={`px-6 py-2 rounded-full text-xs font-bold uppercase tracking-wider transition-all cursor-pointer ${
                   faqTab === 'schools'
-                    ? 'bg-[var(--color-evida-lime)] text-[#111827]'
-                    : 'text-white/60 hover:text-white'
+                    ? 'bg-white text-slate-900 shadow-sm'
+                    : 'text-slate-600 hover:text-slate-900'
                 }`}
                 style={{ fontFamily: 'var(--font-display)' }}
               >
@@ -688,16 +688,16 @@ export default function LandingPage() {
                 return (
                   <div
                     key={index}
-                    className="bg-[#16161A] border border-white/5 rounded-2xl overflow-hidden transition-all duration-300 hover:border-white/10"
+                    className="bg-white border border-slate-200/60 rounded-2xl overflow-hidden transition-all duration-300 hover:border-slate-300 shadow-sm"
                   >
                     <button
                       onClick={() => setExpandedFaq(isOpen ? null : index)}
                       className="w-full px-6 py-5 flex justify-between items-center text-left gap-4 cursor-pointer focus:outline-none"
                     >
-                      <span className="text-white font-bold text-sm sm:text-base uppercase tracking-wide" style={{ fontFamily: 'var(--font-display)' }}>
+                      <span className="text-slate-900 font-bold text-sm sm:text-base uppercase tracking-wide" style={{ fontFamily: 'var(--font-display)' }}>
                         {item.question}
                       </span>
-                      <span className="text-white/60 text-xl font-medium shrink-0">
+                      <span className="text-slate-500 text-xl font-medium shrink-0">
                         {isOpen ? '−' : '+'}
                       </span>
                     </button>
@@ -705,10 +705,10 @@ export default function LandingPage() {
                     {/* Expandable Answer */}
                     <div
                       className={`transition-all duration-300 ease-in-out ${
-                        isOpen ? 'max-h-[200px] border-t border-white/5 opacity-100' : 'max-h-0 opacity-0'
+                        isOpen ? 'max-h-[200px] border-t border-slate-100 opacity-100' : 'max-h-0 opacity-0'
                       } overflow-hidden`}
                     >
-                      <p className="px-6 py-5 text-white/70 text-xs sm:text-sm leading-relaxed font-light">
+                      <p className="px-6 py-5 text-slate-600 text-xs sm:text-sm leading-relaxed font-light">
                         {item.answer}
                       </p>
                     </div>

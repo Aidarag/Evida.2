@@ -58,43 +58,42 @@ const pillarIcons: Record<VisionKey, React.ComponentType<any>> = {
   Community: Globe,
   Memories: Trophy
 };
-
 const pillarColors: Record<VisionKey, { text: string; border: string; bg: string; hoverBg: string }> = {
   Students: {
-    text: 'text-[var(--color-evida-coral)]',
-    border: 'border-[var(--color-evida-coral)]',
-    bg: 'bg-[var(--color-evida-coral)]/10',
-    hoverBg: 'hover:bg-[var(--color-evida-coral)]'
+    text: 'text-[#2563EB]',
+    border: 'border-[#2563EB]/30',
+    bg: 'bg-[#2563EB]/5',
+    hoverBg: 'hover:bg-[#2563EB]'
   },
   Schools: {
-    text: 'text-[var(--color-evida-blue)]',
-    border: 'border-[var(--color-evida-blue)]',
-    bg: 'bg-[var(--color-evida-blue)]/10',
-    hoverBg: 'hover:bg-[var(--color-evida-blue)]'
+    text: 'text-slate-900',
+    border: 'border-slate-300',
+    bg: 'bg-slate-50',
+    hoverBg: 'hover:bg-slate-900'
   },
   Discovery: {
-    text: 'text-[var(--color-evida-lime)]',
-    border: 'border-[var(--color-evida-lime)]',
-    bg: 'bg-[var(--color-evida-lime)]/10',
-    hoverBg: 'hover:bg-[var(--color-evida-lime)]'
+    text: 'text-emerald-600',
+    border: 'border-emerald-200',
+    bg: 'bg-emerald-50',
+    hoverBg: 'hover:bg-emerald-600'
   },
   Connection: {
-    text: 'text-[var(--color-evida-blue)]',
-    border: 'border-[var(--color-evida-blue)]',
-    bg: 'bg-[var(--color-evida-blue)]/10',
-    hoverBg: 'hover:bg-[var(--color-evida-blue)]'
+    text: 'text-[#2563EB]',
+    border: 'border-[#2563EB]/30',
+    bg: 'bg-[#2563EB]/5',
+    hoverBg: 'hover:bg-[#2563EB]'
   },
   Community: {
-    text: 'text-[var(--color-evida-coral)]',
-    border: 'border-[var(--color-evida-coral)]',
-    bg: 'bg-[var(--color-evida-coral)]/10',
-    hoverBg: 'hover:bg-[var(--color-evida-coral)]'
+    text: 'text-slate-900',
+    border: 'border-slate-300',
+    bg: 'bg-slate-50',
+    hoverBg: 'hover:bg-slate-900'
   },
   Memories: {
-    text: 'text-[var(--color-evida-lime)]',
-    border: 'border-[var(--color-evida-lime)]',
-    bg: 'bg-[var(--color-evida-lime)]/10',
-    hoverBg: 'hover:bg-[var(--color-evida-lime)]'
+    text: 'text-emerald-600',
+    border: 'border-emerald-200',
+    bg: 'bg-emerald-50',
+    hoverBg: 'hover:bg-emerald-600'
   }
 };
 
@@ -176,7 +175,7 @@ export default function OurVisionSection() {
           <h2 className="text-gray-900 font-extrabold text-3xl md:text-4xl tracking-widest uppercase mb-4" style={{ fontFamily: 'var(--font-display)' }}>
             OUR VISION
           </h2>
-          <div className="w-12 h-1 bg-black mx-auto" />
+          <div className="w-12 h-1 bg-[#2563EB] mx-auto" />
         </div>
 
         {/* Mobile/Tablet Menu (Horizontal Tabs) - Top positioned for better UX */}
@@ -211,7 +210,7 @@ export default function OurVisionSection() {
             {/* Card Stack Area */}
             <div className="flex flex-col items-center justify-center h-[360px] sm:h-[410px] relative">
               {/* Tape Decorator at the top of the stack */}
-              <div className="absolute -top-3 left-1/2 -translate-x-1/2 w-16 h-7 bg-yellow-200/30 border border-yellow-300/20 backdrop-blur-[1px] rotate-[-2deg] shadow-sm z-30 pointer-events-none" />
+              <div className="absolute -top-3 left-1/2 -translate-x-1/2 w-16 h-7 bg-yellow-200/20 border border-yellow-300/10 backdrop-blur-[1px] rotate-[-2deg] shadow-sm z-30 pointer-events-none" />
 
               <div className="relative w-[295px] h-[355px] sm:w-[320px] sm:h-[380px] select-none">
                 {sortedKeys.map((item) => {
@@ -225,7 +224,7 @@ export default function OurVisionSection() {
                   return (
                     <motion.div
                       key={item}
-                      className="absolute inset-0 bg-white border-4 border-black p-5 sm:p-6 flex flex-col justify-between shadow-[8px_8px_0px_rgba(0,0,0,1)] rounded-sm cursor-grab active:cursor-grabbing"
+                      className="absolute inset-0 bg-white border-2 border-slate-900 p-5 sm:p-6 flex flex-col justify-between shadow-[6px_6px_0px_rgba(15,23,42,1)] rounded-2xl cursor-grab active:cursor-grabbing"
                       style={{
                         backgroundImage: 'radial-gradient(#e5e7eb 1.5px, transparent 1.5px)',
                         backgroundSize: '16px 16px',
@@ -267,10 +266,10 @@ export default function OurVisionSection() {
                     >
                       {/* Top Row: Badge & Icon */}
                       <div className="flex justify-between items-center">
-                        <span className={`text-[9px] font-mono font-bold uppercase tracking-[0.2em] px-2.5 py-1 border-2 border-black rounded-full ${colors.bg} ${colors.text}`}>
+                        <span className={`text-[9px] font-mono font-bold uppercase tracking-[0.2em] px-2.5 py-1 border border-slate-900 rounded-full ${colors.bg} ${colors.text}`}>
                           Pillar 0{visionKeys.indexOf(item) + 1}
                         </span>
-                        <div className={`p-2 border-2 border-black rounded-xl ${colors.bg} ${colors.text}`}>
+                        <div className={`p-2 border border-slate-900 rounded-xl ${colors.bg} ${colors.text}`}>
                           <Icon className="h-5 w-5" />
                         </div>
                       </div>
@@ -300,7 +299,7 @@ export default function OurVisionSection() {
                       </div>
 
                       {/* Bottom Row: Barcode & Link */}
-                      <div className="flex justify-between items-center pt-4 border-t border-dashed border-gray-200">
+                      <div className="flex justify-between items-center pt-4 border-t border-dashed border-gray-100">
                         {/* Barcode SVG - hidden on mobile/tablet to make space for Next button */}
                         <svg className="h-6 w-20 text-gray-300 hidden md:block" viewBox="0 0 100 20" fill="currentColor">
                           <rect x="0" width="3" height="20" />
@@ -335,7 +334,7 @@ export default function OurVisionSection() {
                                 e.stopPropagation();
                                 handleSwipe('right');
                               }}
-                              className="inline-flex items-center gap-1.5 text-[9px] font-bold uppercase tracking-widest px-3 py-1.5 border-2 border-black bg-[var(--color-evida-lime)] text-[#111827] hover:bg-black hover:text-white transition-colors rounded-sm shadow-[2px_2px_0px_rgba(0,0,0,1)] cursor-pointer shrink-0"
+                              className="inline-flex items-center gap-1.5 text-[9px] font-bold uppercase tracking-widest px-3.5 py-2 border border-slate-200 bg-slate-50 text-slate-800 hover:bg-slate-900 hover:text-white hover:border-transparent transition-colors rounded-full shadow-sm cursor-pointer shrink-0"
                             >
                               Next <ArrowRight className="h-3.5 w-3.5" />
                             </button>
@@ -344,7 +343,7 @@ export default function OurVisionSection() {
                           <Link 
                             href={linkUrl}
                             onClick={(e) => e.stopPropagation()}
-                            className={`inline-flex items-center gap-1.5 text-[9px] font-bold uppercase tracking-widest px-3 py-1.5 border-2 border-black bg-black text-white ${colors.hoverBg} hover:text-black transition-colors rounded-sm shadow-[2px_2px_0px_rgba(0,0,0,1)] cursor-pointer shrink-0 ${!isTop ? 'ml-auto' : ''}`}
+                            className={`inline-flex items-center gap-1.5 text-[9px] font-bold uppercase tracking-widest px-3.5 py-2 border border-transparent bg-[#2563EB] text-white hover:bg-blue-700 transition-colors rounded-full shadow-sm cursor-pointer shrink-0 ${!isTop ? 'ml-auto' : ''}`}
                           >
                             Open <ArrowUpRight className="h-3.5 w-3.5" />
                           </Link>
@@ -402,32 +401,32 @@ export default function OurVisionSection() {
                 transition={{ duration: 0.3 }}
               >
                 {activeItem === 'Students' && (
-                  <Link href="/login" className="inline-flex items-center gap-2 bg-[#0F0F13] text-white font-bold uppercase tracking-widest text-[10px] px-6 py-3.5 hover:bg-[var(--color-evida-coral)] transition-colors rounded-sm shadow-[4px_4px_0px_rgba(0,0,0,0.15)]">
+                  <Link href="/login" className="inline-flex items-center gap-2 bg-[#111827] text-white font-bold uppercase tracking-widest text-[10px] px-6 py-3.5 hover:bg-[#2563EB] transition-colors rounded-full shadow-lg hover:shadow-blue-500/10">
                     Get Started as Student <ArrowRight className="h-3.5 w-3.5" />
                   </Link>
                 )}
                 {activeItem === 'Schools' && (
-                  <Link href="/login" className="inline-flex items-center gap-2 bg-[#0F0F13] text-white font-bold uppercase tracking-widest text-[10px] px-6 py-3.5 hover:bg-[var(--color-evida-blue)] transition-colors rounded-sm shadow-[4px_4px_0px_rgba(0,0,0,0.15)]">
+                  <Link href="/login" className="inline-flex items-center gap-2 bg-[#111827] text-white font-bold uppercase tracking-widest text-[10px] px-6 py-3.5 hover:bg-[#2563EB] transition-colors rounded-full shadow-lg hover:shadow-blue-500/10">
                     Partner with Evida <ArrowRight className="h-3.5 w-3.5" />
                   </Link>
                 )}
                 {activeItem === 'Discovery' && (
-                  <Link href="/#explore-categories" className="inline-flex items-center gap-2 bg-[#0F0F13] text-white font-bold uppercase tracking-widest text-[10px] px-6 py-3.5 hover:bg-[var(--color-evida-lime)] hover:text-[#111827] transition-colors rounded-sm shadow-[4px_4px_0px_rgba(0,0,0,0.15)]">
+                  <Link href="/#explore-categories" className="inline-flex items-center gap-2 bg-[#111827] text-white font-bold uppercase tracking-widest text-[10px] px-6 py-3.5 hover:bg-[#2563EB] transition-colors rounded-full shadow-lg hover:shadow-blue-500/10">
                     Explore Event Discovery <ArrowRight className="h-3.5 w-3.5" />
                   </Link>
                 )}
                 {activeItem === 'Connection' && (
-                  <Link href="/#calendar" className="inline-flex items-center gap-2 bg-[#0F0F13] text-white font-bold uppercase tracking-widest text-[10px] px-6 py-3.5 hover:bg-[var(--color-evida-coral)] transition-colors rounded-sm shadow-[4px_4px_0px_rgba(0,0,0,0.15)]">
+                  <Link href="/#calendar" className="inline-flex items-center gap-2 bg-[#111827] text-white font-bold uppercase tracking-widest text-[10px] px-6 py-3.5 hover:bg-[#2563EB] transition-colors rounded-full shadow-lg hover:shadow-blue-500/10">
                     View Campus Calendar <ArrowRight className="h-3.5 w-3.5" />
                   </Link>
                 )}
                 {activeItem === 'Community' && (
-                  <Link href="/student/dashboard" className="inline-flex items-center gap-2 bg-[#0F0F13] text-white font-bold uppercase tracking-widest text-[10px] px-6 py-3.5 hover:bg-[var(--color-evida-blue)] transition-colors rounded-sm shadow-[4px_4px_0px_rgba(0,0,0,0.15)]">
+                  <Link href="/student/dashboard" className="inline-flex items-center gap-2 bg-[#111827] text-white font-bold uppercase tracking-widest text-[10px] px-6 py-3.5 hover:bg-[#2563EB] transition-colors rounded-full shadow-lg hover:shadow-blue-500/10">
                     Join Student Dashboard <ArrowRight className="h-3.5 w-3.5" />
                   </Link>
                 )}
                 {activeItem === 'Memories' && (
-                  <Link href="/#faq" className="inline-flex items-center gap-2 bg-[#0F0F13] text-white font-bold uppercase tracking-widest text-[10px] px-6 py-3.5 hover:bg-[var(--color-evida-lime)] hover:text-[#111827] transition-colors rounded-sm shadow-[4px_4px_0px_rgba(0,0,0,0.15)]">
+                  <Link href="/#faq" className="inline-flex items-center gap-2 bg-[#111827] text-white font-bold uppercase tracking-widest text-[10px] px-6 py-3.5 hover:bg-[#2563EB] transition-colors rounded-full shadow-lg hover:shadow-blue-500/10">
                     Read FAQ & Guidelines <ArrowRight className="h-3.5 w-3.5" />
                   </Link>
                 )}
