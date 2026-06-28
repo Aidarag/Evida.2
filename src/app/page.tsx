@@ -15,7 +15,6 @@ import EvidaLogo from '@/components/ui/EvidaLogo';
 export default function LandingPage() {
   const router = useRouter();
   const { events } = useEvents();
-  const [activeStep, setActiveStep] = React.useState(0);
 
   const faqData = {
     students: [
@@ -312,26 +311,22 @@ export default function LandingPage() {
 
       {/* 3. How it Works */}
       <section className="w-full py-24 bg-white font-sans overflow-hidden" id="how-it-works">
-        <div className="max-w-5xl mx-auto px-6 md:px-12 text-center space-y-12">
+        <div className="max-w-6xl mx-auto px-6 md:px-12 text-center space-y-16">
           
           <div className="space-y-4">
-            <h2 className="text-heading-2 text-gray-900">How It Works</h2>
-            <p className="text-subtitle text-gray-500 max-w-2xl mx-auto">
-              Evida simplifies campus engagement in four simple steps. Hover or click to explore the journey.
+            <span className="text-[#2563EB] font-bold uppercase text-xs tracking-[0.2em]">
+              Process
+            </span>
+            <h2 className="text-slate-900 font-extrabold text-3xl md:text-5xl uppercase tracking-tight" style={{ fontFamily: 'var(--font-display)' }}>
+              How It Works
+            </h2>
+            <p className="text-slate-500 text-sm md:text-base max-w-2xl mx-auto">
+              Evida simplifies campus engagement in four simple steps. Here is how you can get started.
             </p>
           </div>
 
-          {/* Progress Indicator */}
-          <div className="relative w-full h-1.5 bg-gray-100 rounded-full overflow-hidden max-w-xl mx-auto mb-12">
-            <div 
-              className="absolute top-0 left-0 h-full bg-gradient-to-r from-[var(--color-evida-blue)] via-[var(--color-evida-coral)] to-[var(--color-evida-lime)] transition-all duration-500 ease-out"
-              style={{ width: `${((activeStep + 1) / 4) * 100}%` }}
-            />
-          </div>
-
-          {/* Cards Container */}
-          {/* Desktop Layout (Horizontal Accordion) */}
-          <div className="hidden lg:flex flex-row gap-6 w-full min-h-[380px] items-stretch text-left">
+          {/* Cards Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 text-left">
             {[
               {
                 number: "01",
@@ -358,118 +353,28 @@ export default function LandingPage() {
                 description: "Track attendance, collect feedback, and analyze engagement. Administrators and student leaders get real-time analytics."
               }
             ].map((step, index) => {
-              const isActive = activeStep === index;
               const Icon = step.icon;
               return (
                 <div
                   key={index}
-                  onMouseEnter={() => setActiveStep(index)}
-                  onClick={() => setActiveStep(index)}
-                  className={`relative rounded-[32px] p-8 flex flex-col justify-between transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] cursor-pointer select-none border-2 ${
-                    isActive
-                      ? 'flex-[2.5] bg-[#0F0F13] border-transparent text-white shadow-2xl scale-[1.01]'
-                      : 'flex-[1] bg-gray-50/50 border-gray-100 hover:bg-gray-50 text-gray-400 hover:border-gray-200'
-                  }`}
+                  className="bg-slate-50 border border-slate-200/60 rounded-[28px] p-8 flex flex-col justify-between shadow-sm hover:shadow-md transition-all duration-300 hover:scale-[1.01]"
                 >
                   {/* Top Row: Number & Icon */}
-                  <div className="flex justify-between items-start">
-                    <span className={`font-bold text-3xl transition-colors duration-500 ${
-                      isActive ? 'text-[var(--color-evida-lime)]' : 'text-gray-300'
-                    }`} style={{ fontFamily: 'var(--font-display)' }}>
+                  <div className="flex justify-between items-center mb-8">
+                    <span className="font-extrabold text-2xl text-[#2563EB]" style={{ fontFamily: 'var(--font-display)' }}>
                       {step.number}
                     </span>
-                    <div className={`p-3 rounded-2xl transition-all duration-500 ${
-                      isActive ? 'bg-white/10 text-white' : 'bg-gray-100 text-gray-500'
-                    }`}>
-                      <Icon className={`h-6 w-6 ${isActive ? 'animate-pulse' : ''}`} />
+                    <div className="p-3 rounded-2xl bg-white border border-slate-200/60 text-[#2563EB] shadow-sm">
+                      <Icon className="h-6 w-6" />
                     </div>
                   </div>
 
                   {/* Bottom Area: Title & Description */}
-                  <div className="space-y-4">
-                    <h3 className={`font-bold text-2xl uppercase tracking-wide transition-colors duration-500 ${
-                      isActive ? 'text-white' : 'text-gray-900'
-                    }`} style={{ fontFamily: 'var(--font-display)' }}>
+                  <div className="space-y-3">
+                    <h3 className="font-bold text-lg text-slate-900 uppercase tracking-wide" style={{ fontFamily: 'var(--font-display)' }}>
                       {step.title}
                     </h3>
-                    
-                    <div className={`transition-all duration-500 overflow-hidden ${
-                      isActive ? 'max-h-[150px] opacity-100 mt-2' : 'max-h-0 opacity-0 pointer-events-none'
-                    }`}>
-                      <p className="text-white/70 text-sm leading-relaxed font-light">
-                        {step.description}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-
-          {/* Mobile/Tablet Layout (Vertical Accordion) */}
-          <div className="lg:hidden flex flex-col gap-4 text-left">
-            {[
-              {
-                number: "01",
-                title: "Discover",
-                icon: Search,
-                description: "Find exactly what you're looking for. Filter by category, date, or organization to discover the best of campus life."
-              },
-              {
-                number: "02",
-                title: "Create",
-                icon: MousePointer2,
-                description: "Host your own event, workshop, or promotion. Customize the details and publish instantly for your club or community."
-              },
-              {
-                number: "03",
-                title: "Attend",
-                icon: UserCheck,
-                description: "RSVP to events, save them to your profile, and receive notifications. Show up and connect with your fellow students."
-              },
-              {
-                number: "04",
-                title: "Engage",
-                icon: LineChart,
-                description: "Track attendance, collect feedback, and analyze engagement. Administrators and student leaders get real-time analytics."
-              }
-            ].map((step, index) => {
-              const isActive = activeStep === index;
-              const Icon = step.icon;
-              return (
-                <div
-                  key={index}
-                  onClick={() => setActiveStep(index)}
-                  className={`rounded-2xl p-5 border-2 transition-all duration-500 ease-out cursor-pointer select-none ${
-                    isActive
-                      ? 'bg-[#0F0F13] border-transparent text-white shadow-lg'
-                      : 'bg-gray-50/50 border-gray-100 text-gray-400'
-                  }`}
-                >
-                  <div className="flex justify-between items-center">
-                    <div className="flex items-center gap-4">
-                      <span className={`font-bold text-xl ${
-                        isActive ? 'text-[var(--color-evida-lime)]' : 'text-gray-300'
-                      }`} style={{ fontFamily: 'var(--font-display)' }}>
-                        {step.number}
-                      </span>
-                      <h3 className={`font-bold text-lg uppercase tracking-wide ${
-                        isActive ? 'text-white' : 'text-gray-900'
-                      }`} style={{ fontFamily: 'var(--font-display)' }}>
-                        {step.title}
-                      </h3>
-                    </div>
-                    <div className={`p-2 rounded-xl ${
-                      isActive ? 'bg-white/10 text-white' : 'bg-gray-100 text-gray-500'
-                    }`}>
-                      <Icon className="h-5 w-5" />
-                    </div>
-                  </div>
-
-                  <div className={`transition-all duration-500 overflow-hidden ${
-                    isActive ? 'max-h-[120px] opacity-100 mt-4' : 'max-h-0 opacity-0 pointer-events-none'
-                  }`}>
-                    <p className="text-white/70 text-xs sm:text-sm leading-relaxed font-light">
+                    <p className="text-slate-600 text-sm leading-relaxed font-light">
                       {step.description}
                     </p>
                   </div>
