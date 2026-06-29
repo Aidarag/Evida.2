@@ -287,7 +287,7 @@ export default function LandingPage() {
       <section className="relative w-full h-[100vh] min-h-[600px] flex flex-col items-center justify-center overflow-hidden bg-[#0F0F13]">
         {/* Background Image (Vibrant Real Color) */}
         <div 
-          className="absolute inset-0 w-full h-full bg-[url('/pexels-yaroslav-shuraev-8513385.jpg')] bg-cover bg-center opacity-35 contrast-100"
+          className="absolute inset-0 w-full h-full bg-[url('/pexels-maorattias-5191958.jpg')] bg-cover bg-center opacity-35 contrast-100"
         />
         
         {/* Dark Overlay Gradient */}
