@@ -19,7 +19,7 @@ export default function EvidaLogo({
 }: EvidaLogoProps) {
   // Scale factor based on the default height of 48px
   const scale = size / 48;
-  const viewBoxWidth = text === 'Evida' ? 200 : 260;
+  const viewBoxWidth = text === 'Evida' ? 200 : 340;
   const width = showText ? viewBoxWidth * scale : 48 * scale;
 
   return (
