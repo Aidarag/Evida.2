@@ -204,28 +204,84 @@ export default function LandingPage() {
   // Helper to get highlight style based on the day index (Santiago Orange, Gold Black, Landmark)
   const getHighlightStyle = (day: number) => {
     // 10 days: 4 orange, 3 black, 3 gray
-    if ([3, 12, 20, 26].includes(day)) {
+    if (day === 3) {
       return {
         bgColor: 'bg-[#eb5e28]/10',
         borderColor: 'border-[#eb5e28]',
         textColor: 'text-[#eb5e28]',
-        bulletColor: 'bg-[#eb5e28]',
+        emoticon: '🏫',
       };
     }
-    if ([5, 15, 22].includes(day)) {
+    if (day === 12) {
+      return {
+        bgColor: 'bg-[#eb5e28]/10',
+        borderColor: 'border-[#eb5e28]',
+        textColor: 'text-[#eb5e28]',
+        emoticon: '🎵',
+      };
+    }
+    if (day === 20) {
+      return {
+        bgColor: 'bg-[#eb5e28]/10',
+        borderColor: 'border-[#eb5e28]',
+        textColor: 'text-[#eb5e28]',
+        emoticon: '🎨',
+      };
+    }
+    if (day === 26) {
+      return {
+        bgColor: 'bg-[#eb5e28]/10',
+        borderColor: 'border-[#eb5e28]',
+        textColor: 'text-[#eb5e28]',
+        emoticon: '🪩',
+      };
+    }
+    if (day === 5) {
       return {
         bgColor: 'bg-[#2c2324]/10',
         borderColor: 'border-[#2c2324]',
         textColor: 'text-[#2c2324]',
-        bulletColor: 'bg-[#2c2324]',
+        emoticon: '🤝',
       };
     }
-    // [8, 18, 29]
+    if (day === 15) {
+      return {
+        bgColor: 'bg-[#2c2324]/10',
+        borderColor: 'border-[#2c2324]',
+        textColor: 'text-[#2c2324]',
+        emoticon: '🏀',
+      };
+    }
+    if (day === 22) {
+      return {
+        bgColor: 'bg-[#2c2324]/10',
+        borderColor: 'border-[#2c2324]',
+        textColor: 'text-[#2c2324]',
+        emoticon: '❤️',
+      };
+    }
+    if (day === 8) {
+      return {
+        bgColor: 'bg-[#766754]/10',
+        borderColor: 'border-[#766754]',
+        textColor: 'text-[#766754]',
+        emoticon: '💼',
+      };
+    }
+    if (day === 18) {
+      return {
+        bgColor: 'bg-[#766754]/10',
+        borderColor: 'border-[#766754]',
+        textColor: 'text-[#766754]',
+        emoticon: '💻',
+      };
+    }
+    // day === 29
     return {
       bgColor: 'bg-[#766754]/10',
       borderColor: 'border-[#766754]',
       textColor: 'text-[#766754]',
-      bulletColor: 'bg-[#766754]',
+      emoticon: '🍿',
     };
   };
 
@@ -655,8 +711,10 @@ export default function LandingPage() {
                             {cell.day}
                           </span>
                           
-                          {/* Dot indicator */}
-                          <div className={`h-1.5 w-1.5 rounded-full ${style.bulletColor} mt-2 animate-pulse`} />
+                          {/* Themed Emoticon */}
+                          <span className="text-xs sm:text-sm mt-2.5 transform group-hover/day:scale-125 transition-transform duration-300 select-none">
+                            {style.emoticon}
+                          </span>
                           
                           {/* Tooltip */}
                           <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 bg-[#2c2324] border border-white/10 text-[9px] text-white uppercase tracking-wider px-2.5 py-1 rounded-sm whitespace-nowrap opacity-0 pointer-events-none group-hover/day:opacity-100 transition-opacity duration-300 shadow-xl z-50">
