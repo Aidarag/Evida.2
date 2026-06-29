@@ -188,6 +188,37 @@ export default function LandingPage() {
     });
   }
 
+  // We want to highlight exactly 10 different dates in the active month
+  const highlightedDays = [3, 5, 8, 12, 15, 18, 20, 22, 26, 29];
+
+  // Helper to get highlight style based on the day index (Santiago Orange, Gold Black, Landmark)
+  const getHighlightStyle = (day: number) => {
+    // 10 days: 4 orange, 3 black, 3 gray
+    if ([3, 12, 20, 26].includes(day)) {
+      return {
+        bgColor: 'bg-[#eb5e28]/10',
+        borderColor: 'border-[#eb5e28]',
+        textColor: 'text-[#eb5e28]',
+        bulletColor: 'bg-[#eb5e28]',
+      };
+    }
+    if ([5, 15, 22].includes(day)) {
+      return {
+        bgColor: 'bg-[#2c2324]/10',
+        borderColor: 'border-[#2c2324]',
+        textColor: 'text-[#2c2324]',
+        bulletColor: 'bg-[#2c2324]',
+      };
+    }
+    // [8, 18, 29]
+    return {
+      bgColor: 'bg-[#766754]/10',
+      borderColor: 'border-[#766754]',
+      textColor: 'text-[#766754]',
+      bulletColor: 'bg-[#766754]',
+    };
+  };
+
   // Get events on a specific date (using the context events)
   const getEventsForDate = (date: Date) => {
     const y = date.getFullYear();
@@ -256,7 +287,7 @@ export default function LandingPage() {
       <section className="relative w-full h-[100vh] min-h-[600px] flex flex-col items-center justify-center overflow-hidden bg-[#0F0F13]">
         {/* Background Image (Vibrant Real Color) */}
         <div 
-          className="absolute inset-0 w-full h-full bg-[url('/pexels-franco-monsalvo-252430633-37980178.jpg')] bg-cover bg-center opacity-35 contrast-100"
+          className="absolute inset-0 w-full h-full bg-[url('/pexels-yaroslav-shuraev-8513385.jpg')] bg-cover bg-center opacity-35 contrast-100"
         />
         
         {/* Dark Overlay Gradient */}
@@ -572,6 +603,7 @@ export default function LandingPage() {
                 {/* Calendar Days Grid */}
                 <div className="grid grid-cols-7 gap-2 md:gap-3">
                   {calendarDays.map((cell, idx) => {
+                    const isHighlighted = cell.isCurrentMonth && highlightedDays.includes(cell.day);
                     const dayEvents = getEventsForDate(cell.date);
                     const hasEvents = dayEvents.length > 0;
                     
@@ -586,16 +618,17 @@ export default function LandingPage() {
                       );
                     }
                     
-                    if (hasEvents) {
-                      const firstEvent = dayEvents[0];
-                      const style = getCategoryIconAndColor(firstEvent.category);
+                    if (isHighlighted) {
+                      const style = getHighlightStyle(cell.day);
+                      const eventTitle = hasEvents ? dayEvents[0].title : `Campus Event ${cell.day}`;
+                      const eventId = hasEvents ? dayEvents[0].id : 'mock';
                       
                       return (
                         <div 
                           key={`day-${cell.day}`}
                           onClick={() => {
-                            if (dayEvents.length === 1) {
-                              router.push(`/events/${firstEvent.id}`);
+                            if (hasEvents) {
+                              router.push(`/events/${eventId}`);
                             } else {
                               router.push(`/student/events?date=${cell.date.toISOString().split('T')[0]}`);
                             }
@@ -605,12 +638,13 @@ export default function LandingPage() {
                           <span className="absolute top-0.5 left-1 text-[8px] sm:text-[9px] font-bold">
                             {cell.day}
                           </span>
-                          <div className="animate-pulse">
-                            {style.icon}
-                          </div>
+                          
+                          {/* Dot indicator */}
+                          <div className={`h-1.5 w-1.5 rounded-full ${style.bulletColor} mt-2 animate-pulse`} />
+                          
                           {/* Tooltip */}
-                          <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 bg-[#0F0F13] border border-white/10 text-[9px] text-white uppercase tracking-wider px-2.5 py-1 rounded-sm whitespace-nowrap opacity-0 pointer-events-none group-hover/day:opacity-100 transition-opacity duration-300 shadow-xl z-50">
-                            {dayEvents.map(e => e.title).join(' & ')}
+                          <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 bg-[#2c2324] border border-white/10 text-[9px] text-white uppercase tracking-wider px-2.5 py-1 rounded-sm whitespace-nowrap opacity-0 pointer-events-none group-hover/day:opacity-100 transition-opacity duration-300 shadow-xl z-50">
+                            {eventTitle}
                           </div>
                         </div>
                       );
