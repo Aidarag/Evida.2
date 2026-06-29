@@ -305,10 +305,10 @@ export default function LandingPage() {
         <div className="absolute inset-0 bg-gradient-to-b from-[#0F0F13]/80 via-transparent to-[#0F0F13] z-0" />
 
         {/* Hero Content (Centered) */}
-        <div className="relative z-10 flex flex-col items-center text-center px-6 max-w-5xl mx-auto -mt-16">
+        <div className="relative z-10 flex flex-col items-center text-center px-6 max-w-4xl mx-auto -mt-16">
           <motion.h1 
             style={{ fontFamily: 'var(--font-display)' }}
-            className="text-4xl md:text-6xl lg:text-7xl xl:text-8xl font-extrabold text-[#efece3] leading-[0.95] tracking-tighter mb-8 select-none uppercase"
+            className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-[#efece3] leading-[1.1] tracking-tight mb-8 select-none uppercase max-w-3xl mx-auto"
           >
             Discover Evida, <br />
             the digital home of <br />
