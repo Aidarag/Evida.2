@@ -1,8 +1,8 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Event } from '@/lib/types';
-import { ArrowRight } from 'lucide-react';
+import { Calendar, Heart, MapPin } from 'lucide-react';
 
 interface FeaturedEventCardProps {
   event: Event;
@@ -10,66 +10,95 @@ interface FeaturedEventCardProps {
 }
 
 export default function FeaturedEventCard({ event, onClick }: FeaturedEventCardProps) {
-  // If the cover image is a gradient (used in mock data), we handle it. 
-  // Otherwise, we use it as a background image with grayscale filter.
+  const [isSaved, setIsSaved] = useState(false);
+
+  // Parse the date to match a clean invite format (e.g. Monday, Oct 12)
+  const dateObj = new Date(event.date);
+  const formattedDate = dateObj.toLocaleDateString('en-US', { 
+    weekday: 'long', 
+    month: 'short', 
+    day: 'numeric' 
+  });
+
   const isGradient = event.coverImage ? event.coverImage.includes('from-') : false;
-  const bgClass = isGradient ? event.coverImage : (event.coverImage ? '' : 'bg-gray-800');
+  const bgClass = isGradient ? event.coverImage : (event.coverImage ? '' : 'bg-gray-100');
   const bgStyle = (!isGradient && event.coverImage) 
     ? { backgroundImage: `url(${event.coverImage})`, backgroundSize: 'cover', backgroundPosition: 'center' } 
     : {};
 
-  // For styling the text, we parse the date to match the reference (e.g. SAT 26 JUN)
-  const dateObj = new Date(event.date);
-  const dayStr = dateObj.toLocaleDateString('en-US', { weekday: 'short' }).toUpperCase();
-  const dateStr = dateObj.getDate();
-  const monthStr = dateObj.toLocaleDateString('en-US', { month: 'short' }).toUpperCase();
-
   return (
     <div 
-      onClick={onClick} 
-      className="group cursor-pointer flex flex-col bg-[#1A1A1E] rounded-[24px] overflow-hidden hover:bg-[#222226] transition-colors border border-white/5"
+      className="group flex flex-col bg-white rounded-[32px] overflow-hidden border border-slate-200/50 shadow-sm hover:shadow-xl hover:scale-[1.01] transition-all duration-500 h-full justify-between relative"
     >
-      {/* Sharp image container */}
-      <div className="relative aspect-[16/10] w-full overflow-hidden bg-black">
-        {/* The actual image */}
+      {/* 1. Banner Image */}
+      <div 
+        onClick={onClick}
+        className="relative aspect-[16/10] w-full overflow-hidden bg-slate-100 cursor-pointer"
+      >
         <div 
-          className={`absolute inset-0 transition-transform duration-500 group-hover:scale-105 ${bgClass}`}
+          className={`absolute inset-0 transition-transform duration-700 group-hover:scale-105 ${bgClass}`}
           style={bgStyle}
         />
         
-        {/* Neon Badge top right */}
-        <div className="absolute top-4 right-4 z-10 flex">
-          <div className="bg-[var(--color-evida-lime)] px-3 py-1 text-[10px] font-bold text-black tracking-widest uppercase rounded-full shadow-lg">
+        {/* Category Badge top left */}
+        <div className="absolute top-4 left-4 z-10 flex">
+          <span className="bg-[#2563EB] px-3.5 py-1 text-[10px] font-bold text-white tracking-widest uppercase rounded-full shadow-sm">
             {event.category === 'Art' ? 'Exhibition' : event.category}
-          </div>
+          </span>
         </div>
       </div>
 
-      {/* Content Below Image */}
-      <div className="px-5 pb-5 pt-4 flex flex-col flex-1 gap-2">
-        {/* Date text (neon) */}
-        <div className="text-[var(--color-evida-lime)] text-[10px] font-bold tracking-wider uppercase mb-1">
-          {dayStr} {dateStr} {monthStr}
+      {/* 2. Interactive Save (Heart) Button - Floating top right */}
+      <button 
+        type="button"
+        onClick={(e) => {
+          e.stopPropagation();
+          setIsSaved(!isSaved);
+        }}
+        className="absolute top-4 right-4 z-20 h-8 w-8 rounded-full bg-white/80 backdrop-blur-md border border-slate-200/50 flex items-center justify-center text-slate-500 hover:text-rose-500 hover:scale-110 active:scale-95 transition-all shadow-sm cursor-pointer"
+      >
+        <Heart 
+          className={`h-4.5 w-4.5 transition-colors ${
+            isSaved ? 'fill-rose-500 text-rose-500' : 'text-slate-400'
+          }`} 
+        />
+      </button>
+
+      {/* 3. Content Body */}
+      <div className="p-6 flex flex-col flex-1 justify-between gap-4 text-left">
+        <div className="space-y-2 cursor-pointer" onClick={onClick}>
+          {/* Date & Time Invite Style */}
+          <div className="text-[#2563EB] text-xs font-bold uppercase tracking-wider">
+            {formattedDate} • {event.time}
+          </div>
+
+          {/* Event Title */}
+          <h3 className="text-slate-900 font-extrabold text-xl line-clamp-2 leading-tight tracking-tight hover:text-[#2563EB] transition-colors" style={{ fontFamily: 'var(--font-display)' }}>
+            {event.title}
+          </h3>
+          
+          {/* Location Row */}
+          <div className="flex items-center gap-1.5 text-slate-400 text-xs font-medium">
+            <MapPin className="h-3.5 w-3.5 shrink-0 text-slate-400" />
+            <span className="truncate">{event.location}</span>
+          </div>
+
+          {/* Description */}
+          <p className="text-slate-500 text-xs leading-relaxed font-light line-clamp-2 pt-1">
+            {event.description || `Join us for the ${event.title}, happening at ${event.location}.`}
+          </p>
         </div>
 
-        {/* Title */}
-        <h3 className="text-lg font-bold text-white line-clamp-2 leading-tight">
-          {event.title}
-        </h3>
-        
-        {/* Description */}
-        <p className="text-[12px] text-gray-400 line-clamp-3 leading-relaxed mt-1 flex-1">
-          {event.description || `Join us for the ${event.title}, happening at ${event.location}.`}
-        </p>
-
-        {/* Footer line */}
-        <div className="flex items-center justify-between mt-4 pt-4 border-t border-white/10">
-          <span className="text-[var(--color-evida-lime)] text-[12px] font-bold tracking-wide">
-            {event.status === 'approved' ? 'FREE' : 'TICKETED'}
-          </span>
-          <span className="text-white text-[11px] font-bold flex items-center gap-1 group-hover:gap-2 transition-all">
-            Learn more <ArrowRight className="h-3 w-3" />
-          </span>
+        {/* 4. Invite Action Footer */}
+        <div className="pt-4 border-t border-slate-100">
+          <button
+            onClick={onClick}
+            className="w-full inline-flex items-center justify-center gap-2 bg-[#2563EB] text-white font-bold text-xs uppercase tracking-wider py-3 px-6 rounded-full hover:bg-blue-700 transition-colors shadow-sm shadow-blue-500/10 cursor-pointer"
+            style={{ fontFamily: 'var(--font-display)' }}
+          >
+            <Calendar className="h-4 w-4" />
+            Add to Calendar
+          </button>
         </div>
       </div>
     </div>
