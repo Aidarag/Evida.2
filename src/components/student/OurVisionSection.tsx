@@ -1,15 +1,13 @@
 'use client';
 
 import React from 'react';
-import Link from 'next/link';
 import { 
   GraduationCap, 
   Shield, 
   Compass, 
   Users, 
   Globe, 
-  Trophy, 
-  ArrowRight 
+  Trophy 
 } from 'lucide-react';
 
 type VisionKey = 'Students' | 'Schools' | 'Discovery' | 'Connection' | 'Community' | 'Memories';
@@ -21,28 +19,28 @@ interface VisionContent {
 
 const visionData: Record<VisionKey, VisionContent> = {
   Students: {
-    tagline: "Your campus, all in one place.",
+    tagline: "Your campus, all in one place",
     description: "Evida gives every student a simple way to discover what’s happening on campus, stay informed, and never miss opportunities that matter."
   },
   Schools: {
-    tagline: "A smarter way to engage your campus.",
+    tagline: "A smarter way to engage your campus",
     description: "Evida helps schools centralize events, improve communication, and better connect with students through one trusted platform."
   },
   Discovery: {
-    tagline: "Find experiences, not just events.",
+    tagline: "Find experiences, not just events",
     description: "From career fairs to game nights, Evida makes it easy to explore opportunities based on your interests and campus life."
   },
   Connection: {
-    tagline: "Meaningful connections start with shared experiences.",
+    tagline: "Meaningful connections start here",
     description: "Every event is a chance to meet new people, join organizations, and build relationships that last beyond college."
   },
   Community: {
-    tagline: "One campus. One community.",
+    tagline: "One campus. One community",
     description: "Evida brings students, organizations, and schools together in one connected ecosystem where everyone belongs."
   },
   Memories: {
-    tagline: "College ends. Memories don’t.",
-    description: "The best moments deserve to be remembered. Evida helps preserve the experiences, friendships, and milestones that define your college journey."
+    tagline: "College ends. Memories don’t",
+    description: "The best moments deserve to be remembered. Evida helps preserve the experiences, friendships, and milestones of your journey."
   }
 };
 
@@ -57,132 +55,55 @@ const pillarIcons: Record<VisionKey, React.ComponentType<any>> = {
   Memories: Trophy
 };
 
-const pillarColors: Record<VisionKey, { text: string; border: string; bg: string; hoverBg: string; accentColor: string }> = {
-  Students: {
-    text: 'text-[#2563EB]',
-    border: 'border-blue-100',
-    bg: 'bg-blue-50/40',
-    hoverBg: 'hover:bg-[#2563EB]',
-    accentColor: '#2563EB'
-  },
-  Schools: {
-    text: 'text-slate-800',
-    border: 'border-slate-200/60',
-    bg: 'bg-slate-50/80',
-    hoverBg: 'hover:bg-slate-900',
-    accentColor: '#1e293b'
-  },
-  Discovery: {
-    text: 'text-emerald-600',
-    border: 'border-emerald-100',
-    bg: 'bg-emerald-50/40',
-    hoverBg: 'hover:bg-emerald-600',
-    accentColor: '#059669'
-  },
-  Connection: {
-    text: 'text-[#2563EB]',
-    border: 'border-blue-100',
-    bg: 'bg-blue-50/40',
-    hoverBg: 'hover:bg-[#2563EB]',
-    accentColor: '#2563EB'
-  },
-  Community: {
-    text: 'text-slate-800',
-    border: 'border-slate-200/60',
-    bg: 'bg-slate-50/80',
-    hoverBg: 'hover:bg-slate-900',
-    accentColor: '#1e293b'
-  },
-  Memories: {
-    text: 'text-emerald-600',
-    border: 'border-emerald-100',
-    bg: 'bg-emerald-50/40',
-    hoverBg: 'hover:bg-emerald-600',
-    accentColor: '#059669'
-  }
-};
-
-const getLinkUrl = (item: VisionKey) => {
-  switch (item) {
-    case 'Students':
-    case 'Schools':
-      return '/login';
-    case 'Discovery':
-      return '/#explore-categories';
-    case 'Connection':
-      return '/#calendar';
-    case 'Community':
-      return '/student/dashboard';
-    case 'Memories':
-      return '/#faq';
-  }
-};
-
 export default function OurVisionSection() {
   return (
-    <section id="our-mission" className="w-full bg-white py-24 border-y border-gray-100 font-sans overflow-hidden">
-      <div className="max-w-4xl mx-auto px-6 md:px-12">
+    <section id="our-mission" className="w-full bg-slate-50 py-24 border-y border-slate-100 font-sans relative overflow-hidden">
+      {/* Subtle Background Radial Glow (like in the screenshot) */}
+      <div className="absolute -left-[10%] top-1/4 w-[40%] h-[50%] bg-blue-500/5 rounded-full blur-[120px] pointer-events-none" />
+      <div className="absolute -right-[10%] bottom-1/4 w-[40%] h-[50%] bg-blue-500/5 rounded-full blur-[120px] pointer-events-none" />
+      
+      <div className="max-w-6xl mx-auto px-6 md:px-12 relative z-10">
         
-        {/* Title */}
-        <div className="text-center mb-16">
+        {/* Title & Subtitle */}
+        <div className="text-center mb-16 space-y-3">
           <span className="text-[#2563EB] font-bold uppercase text-xs tracking-[0.2em]">
-            Foundations
+            Why Choose Evida?
           </span>
-          <h2 className="text-slate-900 font-extrabold text-3xl md:text-5xl uppercase tracking-tight mt-2" style={{ fontFamily: 'var(--font-display)' }}>
-            Our Vision
+          <h2 className="text-slate-900 font-extrabold text-3xl md:text-5xl uppercase tracking-tight max-w-4xl mx-auto leading-tight" style={{ fontFamily: 'var(--font-display)' }}>
+            <span className="text-[#2563EB]">More Than</span> a Platform, The Future of <br className="hidden md:inline" />
+            Campus Life <span className="text-[#2563EB]">is Here</span>
           </h2>
-          <p className="text-slate-500 text-sm md:text-base max-w-2xl mx-auto mt-4">
-            The core pillars that shape the Evida experience for students, leaders, and universities.
-          </p>
         </div>
 
-        {/* Vertical Stack of Cards */}
-        <div className="space-y-6">
-          {visionKeys.map((item, index) => {
+        {/* 3x2 Grid of Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+          {visionKeys.map((item) => {
             const Icon = pillarIcons[item];
-            const colors = pillarColors[item];
-            const linkUrl = getLinkUrl(item);
             
             return (
               <div
                 key={item}
-                className={`flex flex-col md:flex-row items-start md:items-center justify-between gap-6 p-6 md:p-8 rounded-[24px] border ${colors.border} ${colors.bg} hover:shadow-md transition-all duration-300`}
+                className="bg-white border border-slate-100 rounded-[32px] p-8 flex flex-col items-center text-center space-y-4 shadow-sm hover:shadow-md hover:scale-[1.01] transition-all duration-300"
               >
-                {/* Left side: Icon and Number */}
-                <div className="flex items-center gap-4 shrink-0">
-                  <span className={`font-mono text-xs font-bold uppercase tracking-wider ${colors.text}`}>
-                    Pillar 0{index + 1}
-                  </span>
-                  <div className={`p-3 rounded-2xl bg-white border ${colors.border} ${colors.text} shadow-sm`}>
-                    <Icon className="h-6 w-6" />
-                  </div>
+                {/* Icon */}
+                <div className="text-[#2563EB] p-3.5 bg-blue-50/50 rounded-2xl border border-blue-50">
+                  <Icon className="h-8 w-8 stroke-[1.5]" />
                 </div>
 
-                {/* Center: Content */}
-                <div className="flex-1 text-left space-y-2">
-                  <div className="flex flex-col sm:flex-row sm:items-baseline gap-1 sm:gap-3">
-                    <h3 className="text-slate-900 font-extrabold text-lg md:text-xl uppercase tracking-wide" style={{ fontFamily: 'var(--font-display)' }}>
-                      {item}
-                    </h3>
-                    <span className="text-slate-500 font-bold text-xs">
-                      — {visionData[item].tagline}
-                    </span>
-                  </div>
-                  <p className="text-slate-600 text-sm leading-relaxed font-light">
-                    {visionData[item].description}
+                {/* Title & Tagline */}
+                <div className="space-y-1">
+                  <h3 className="text-slate-900 font-extrabold text-lg md:text-xl uppercase tracking-wide" style={{ fontFamily: 'var(--font-display)' }}>
+                    {item}
+                  </h3>
+                  <p className="text-[#2563EB] font-bold text-[11px] uppercase tracking-wider">
+                    {visionData[item].tagline}
                   </p>
                 </div>
 
-                {/* Right side: Action Link */}
-                <div className="shrink-0 w-full md:w-auto flex justify-end">
-                  <Link 
-                    href={linkUrl}
-                    className={`inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider px-4 py-2 bg-white border ${colors.border} ${colors.text} hover:bg-slate-900 hover:text-white hover:border-transparent transition-all rounded-full shadow-sm cursor-pointer`}
-                    style={{ fontFamily: 'var(--font-display)' }}
-                  >
-                    Explore <ArrowRight className="h-4 w-4" />
-                  </Link>
-                </div>
+                {/* Description */}
+                <p className="text-slate-500 text-sm leading-relaxed font-light pt-2">
+                  {visionData[item].description}
+                </p>
               </div>
             );
           })}
