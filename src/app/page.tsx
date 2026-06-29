@@ -307,17 +307,12 @@ export default function LandingPage() {
         {/* Hero Content (Centered) */}
         <div className="relative z-10 flex flex-col items-center text-center px-6 max-w-5xl mx-auto -mt-16">
           <motion.h1 
-            style={{ 
-              backgroundImage: 'linear-gradient(135deg, #eb5e28 0%, #efece3 50%, #eb5e28 100%)',
-              backgroundSize: '200% 100%',
-              backgroundPositionX: textBgPos,
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-              fontFamily: 'var(--font-display)'
-            }}
-            className="text-4xl md:text-5xl lg:text-7xl font-extrabold leading-tight tracking-wide mb-8 select-none"
+            style={{ fontFamily: 'var(--font-display)' }}
+            className="text-4xl md:text-6xl lg:text-7xl xl:text-8xl font-extrabold text-[#efece3] leading-[0.95] tracking-tighter mb-8 select-none uppercase"
           >
-            Discover Evida, the digital home of campus life and community connection
+            Discover Evida, <br />
+            the digital home of <br />
+            campus life & community
           </motion.h1>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
             <Link href="/student/events" className="bg-[var(--color-evida-blue)] text-[#111827] font-bold uppercase tracking-widest text-xs px-8 py-4 hover:bg-[var(--color-evida-coral)] hover:text-white transition-colors flex items-center gap-2 rounded-sm shadow-[4px_4px_0px_rgba(255,255,255,0.1)]">
