@@ -1,7 +1,7 @@
 'use client';
 
-import React from 'react';
-import { MapPin, Users, Heart, Star, Compass, Megaphone } from 'lucide-react';
+import React, { useState } from 'react';
+import { MapPin, Calendar, Heart } from 'lucide-react';
 import { Event, Promotion } from '@/lib/types';
 
 interface EventCardProps {
@@ -12,6 +12,8 @@ interface EventCardProps {
 }
 
 export default function EventCard({ event, onClick, onSave, isSaved = false }: EventCardProps) {
+  const [isSavedLocal, setIsSavedLocal] = useState(false);
+
   // Check if it's a promotion
   const isPromo = !('ownershipType' in event);
 
@@ -24,92 +26,121 @@ export default function EventCard({ event, onClick, onSave, isSaved = false }: E
   const bgClass = isGradient ? coverImage : (coverImage ? '' : 'bg-gray-100');
   const bgStyle = (!isGradient && coverImage) ? { backgroundImage: `url(${coverImage})`, backgroundSize: 'cover', backgroundPosition: 'center' } : {};
 
-  // Ownership Badge details
-  let badgeLabel = 'Student';
-  let badgeColors = 'bg-emerald-500/10 text-emerald-600 border border-emerald-500/20';
+  // Parse the date to match the uppercase invite format (e.g. SUN, OCT 11)
+  const dateObj = new Date(event.date);
+  const weekday = dateObj.toLocaleDateString('en-US', { weekday: 'short' }).toUpperCase();
+  const month = dateObj.toLocaleDateString('en-US', { month: 'short' }).toUpperCase();
+  const day = dateObj.getDate();
+  const formattedDate = `${weekday}, ${month} ${day}`;
 
-  if (isPromo) {
-    badgeLabel = 'Promotion';
-    badgeColors = 'bg-purple-500/10 text-purple-600 border border-purple-500/20';
-  } else {
-    if (event.ownershipType === 'school') {
-      badgeLabel = 'Official School';
-      badgeColors = 'bg-red-500/10 text-red-600 border border-red-500/20';
-    } else if (event.ownershipType === 'organization') {
-      badgeLabel = 'Organization';
-      badgeColors = 'bg-sky-500/10 text-sky-600 border border-sky-500/20';
-    }
-  }
+  const timeStr = !isPromo && (event as Event).time ? (event as Event).time : '7:00 PM';
+
+  // Dynamic mock attendee count based on event title length
+  const goingCount = 32 + (event.title.length * 2);
 
   return (
     <div 
-      onClick={onClick} 
-      className="group cursor-pointer flex flex-col bg-white rounded-[24px] overflow-hidden transition-all duration-300 hover:shadow-lg border border-transparent hover:border-gray-100"
+      className="group flex flex-col bg-white rounded-[32px] overflow-hidden border border-slate-200/50 shadow-sm hover:shadow-xl hover:scale-[1.01] transition-all duration-500 h-full justify-between relative"
     >
-      {/* Image Container */}
-      <div className="p-2">
+      {/* 1. Image Container */}
+      <div 
+        onClick={onClick}
+        className="relative aspect-[16/10] w-full overflow-hidden bg-slate-100 cursor-pointer"
+      >
         <div 
-          className={`relative aspect-[16/10] w-full rounded-2xl overflow-hidden ${bgClass}`}
+          className={`absolute inset-0 transition-transform duration-700 group-hover:scale-105 ${bgClass}`}
           style={bgStyle}
-        >
-          {/* Subtle overlay */}
-          <div className="absolute inset-0 bg-black/10 transition-opacity group-hover:bg-black/5" />
-          
-          {/* Top Left Badge: Date (and Time if event) */}
-          <div className="absolute top-3 left-3 z-10 flex gap-2">
-            <div className="bg-white px-2.5 py-1 rounded-full text-[11px] font-bold text-gray-900 shadow-sm flex items-center gap-1">
-              {new Date(event.date).getDate()} {new Date(event.date).toLocaleString('default', { month: 'short' })}
-            </div>
-            {!isPromo && (event as Event).time && (
-              <div className="bg-black/30 backdrop-blur-md px-2.5 py-1 rounded-full text-[11px] font-medium text-white shadow-sm flex items-center gap-1">
-                {(event as Event).time}
-              </div>
-            )}
-          </div>
-
-          {/* Top Right Badges */}
-          <div className="absolute top-3 right-3 z-10 flex gap-2">
-            {!isPromo && (event as Event).isFeatured && (
-              <div className="bg-[#4C1D95] px-2.5 py-1 rounded-full text-[11px] font-bold text-white shadow-sm">
-                Featured
-              </div>
-            )}
-            {onSave && !isPromo && (
-              <button
-                onClick={onSave}
-                className="h-7 w-7 rounded-full bg-white flex items-center justify-center hover:bg-gray-100 transition-colors shadow-sm cursor-pointer"
-              >
-                <Heart className={`h-3.5 w-3.5 ${isSaved ? 'fill-[#4C1D95] text-[#4C1D95]' : 'text-gray-400'}`} />
-              </button>
-            )}
-            {isPromo && (
-              <div className="h-7 w-7 rounded-full bg-white/25 backdrop-blur-md flex items-center justify-center text-white">
-                <Megaphone className="h-3.5 w-3.5" />
-              </div>
-            )}
-          </div>
+        />
+        
+        {/* Category Badge top left */}
+        <div className="absolute top-4 left-4 z-10 flex">
+          <span className="bg-[#2563EB] px-3.5 py-1 text-[10px] font-bold text-white tracking-widest uppercase rounded-full shadow-sm">
+            {isPromo ? 'Promotion' : event.category}
+          </span>
         </div>
       </div>
 
-      {/* Content Below Image */}
-      <div className="px-4 pb-5 pt-2 flex flex-col flex-1 gap-1">
-        {/* Ownership Badge */}
-        <div className="mb-1">
-          <span className={`inline-block text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full ${badgeColors}`}>
-            {badgeLabel}
-          </span>
+      {/* 2. Interactive Save (Heart) Button - Floating top right */}
+      <button 
+        type="button"
+        onClick={(e) => {
+          e.stopPropagation();
+          if (onSave) {
+            onSave(e);
+          } else {
+            setIsSavedLocal(!isSavedLocal);
+          }
+        }}
+        className="absolute top-4 right-4 z-20 h-8 w-8 rounded-full bg-white/80 backdrop-blur-md border border-slate-200/50 flex items-center justify-center text-slate-500 hover:text-rose-500 hover:scale-110 active:scale-95 transition-all shadow-sm cursor-pointer"
+      >
+        <Heart 
+          className={`h-4.5 w-4.5 transition-colors ${
+            (onSave ? isSaved : isSavedLocal) ? 'fill-rose-500 text-rose-500' : 'text-slate-400'
+          }`} 
+        />
+      </button>
+
+      {/* 3. Content Body */}
+      <div className="p-6 flex flex-col flex-1 justify-between gap-4 text-left">
+        <div className="space-y-2 cursor-pointer" onClick={onClick}>
+          {/* Date & Time Invite Style (Blue, Uppercase) */}
+          <div className="text-[#2563EB] text-[11px] font-extrabold uppercase tracking-wider">
+            {formattedDate} • {timeStr}
+          </div>
+
+          {/* Event Title */}
+          <h3 className="text-slate-900 font-extrabold text-lg md:text-xl line-clamp-2 leading-tight tracking-tight hover:text-[#2563EB] transition-colors" style={{ fontFamily: 'var(--font-display)' }}>
+            {event.title}
+          </h3>
+          
+          {/* Location Row */}
+          <div className="flex items-center gap-1.5 text-slate-400 text-xs font-medium">
+            <MapPin className="h-3.5 w-3.5 shrink-0 text-slate-400" />
+            <span className="truncate">{isPromo ? (event as Promotion).organizer : (event as Event).location}</span>
+          </div>
+
+          {/* Description */}
+          <p className="text-slate-500 text-xs leading-relaxed font-light line-clamp-2 pt-1">
+            {event.description || `Join us for the ${event.title}, happening soon.`}
+          </p>
         </div>
 
-        <h3 className="text-base font-bold text-gray-900 line-clamp-1 group-hover:text-[#4C1D95] transition-colors">
-          {event.title}
-        </h3>
-        
-        <p className="text-[13px] text-gray-500 line-clamp-2">
-          {isPromo 
-            ? `${event.category} • Posted by ${(event as Promotion).organizer}`
-            : `${event.category} • ${(event as Event).location}`
-          }
-        </p>
+        {/* 4. Invite Action Footer (Avatars + Compact Add to Calendar Button) */}
+        <div className="pt-4 border-t border-slate-100 flex items-center justify-between gap-2">
+          {/* Attendee Avatars */}
+          <div className="flex items-center gap-2">
+            <div className="flex -space-x-2">
+              <img 
+                src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=80&h=80&fit=crop&crop=face" 
+                alt="Attendee" 
+                className="h-6 w-6 rounded-full border-2 border-white object-cover"
+              />
+              <img 
+                src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=80&h=80&fit=crop&crop=face" 
+                alt="Attendee" 
+                className="h-6 w-6 rounded-full border-2 border-white object-cover"
+              />
+              <img 
+                src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=80&h=80&fit=crop&crop=face" 
+                alt="Attendee" 
+                className="h-6 w-6 rounded-full border-2 border-white object-cover"
+              />
+            </div>
+            <span className="text-slate-400 text-[10px] font-medium whitespace-nowrap">
+              +{goingCount} going
+            </span>
+          </div>
+
+          {/* Compact Add to Calendar Button */}
+          <button
+            onClick={onClick}
+            className="inline-flex items-center gap-1.5 bg-white border border-slate-200 text-slate-800 font-bold text-[10px] sm:text-xs uppercase tracking-wider py-1.5 px-3.5 rounded-full hover:bg-slate-50 transition-colors shadow-sm cursor-pointer whitespace-nowrap"
+            style={{ fontFamily: 'var(--font-display)' }}
+          >
+            <Calendar className="h-3.5 w-3.5 text-slate-800" />
+            Add to Calendar
+          </button>
+        </div>
       </div>
     </div>
   );

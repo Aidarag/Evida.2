@@ -12,19 +12,21 @@ interface FeaturedEventCardProps {
 export default function FeaturedEventCard({ event, onClick }: FeaturedEventCardProps) {
   const [isSaved, setIsSaved] = useState(false);
 
-  // Parse the date to match a clean invite format (e.g. Monday, Oct 12)
+  // Parse the date to match the uppercase invite format (e.g. SUN, OCT 11)
   const dateObj = new Date(event.date);
-  const formattedDate = dateObj.toLocaleDateString('en-US', { 
-    weekday: 'long', 
-    month: 'short', 
-    day: 'numeric' 
-  });
+  const weekday = dateObj.toLocaleDateString('en-US', { weekday: 'short' }).toUpperCase();
+  const month = dateObj.toLocaleDateString('en-US', { month: 'short' }).toUpperCase();
+  const day = dateObj.getDate();
+  const formattedDate = `${weekday}, ${month} ${day}`;
 
   const isGradient = event.coverImage ? event.coverImage.includes('from-') : false;
   const bgClass = isGradient ? event.coverImage : (event.coverImage ? '' : 'bg-gray-100');
   const bgStyle = (!isGradient && event.coverImage) 
     ? { backgroundImage: `url(${event.coverImage})`, backgroundSize: 'cover', backgroundPosition: 'center' } 
     : {};
+
+  // Dynamic mock attendee count based on event title length
+  const goingCount = 42 + (event.title.length * 3);
 
   return (
     <div 
@@ -67,13 +69,13 @@ export default function FeaturedEventCard({ event, onClick }: FeaturedEventCardP
       {/* 3. Content Body */}
       <div className="p-6 flex flex-col flex-1 justify-between gap-4 text-left">
         <div className="space-y-2 cursor-pointer" onClick={onClick}>
-          {/* Date & Time Invite Style */}
-          <div className="text-[#2563EB] text-xs font-bold uppercase tracking-wider">
+          {/* Date & Time Invite Style (Blue, Uppercase) */}
+          <div className="text-[#2563EB] text-[11px] font-extrabold uppercase tracking-wider">
             {formattedDate} • {event.time}
           </div>
 
           {/* Event Title */}
-          <h3 className="text-slate-900 font-extrabold text-xl line-clamp-2 leading-tight tracking-tight hover:text-[#2563EB] transition-colors" style={{ fontFamily: 'var(--font-display)' }}>
+          <h3 className="text-slate-900 font-extrabold text-lg md:text-xl line-clamp-2 leading-tight tracking-tight hover:text-[#2563EB] transition-colors" style={{ fontFamily: 'var(--font-display)' }}>
             {event.title}
           </h3>
           
@@ -89,14 +91,39 @@ export default function FeaturedEventCard({ event, onClick }: FeaturedEventCardP
           </p>
         </div>
 
-        {/* 4. Invite Action Footer */}
-        <div className="pt-4 border-t border-slate-100">
+        {/* 4. Invite Action Footer (Avatars + Compact Add to Calendar Button) */}
+        <div className="pt-4 border-t border-slate-100 flex items-center justify-between gap-2">
+          {/* Attendee Avatars */}
+          <div className="flex items-center gap-2">
+            <div className="flex -space-x-2">
+              <img 
+                src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=80&h=80&fit=crop&crop=face" 
+                alt="Attendee" 
+                className="h-6 w-6 rounded-full border-2 border-white object-cover"
+              />
+              <img 
+                src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=80&h=80&fit=crop&crop=face" 
+                alt="Attendee" 
+                className="h-6 w-6 rounded-full border-2 border-white object-cover"
+              />
+              <img 
+                src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=80&h=80&fit=crop&crop=face" 
+                alt="Attendee" 
+                className="h-6 w-6 rounded-full border-2 border-white object-cover"
+              />
+            </div>
+            <span className="text-slate-400 text-[10px] font-medium whitespace-nowrap">
+              +{goingCount} going
+            </span>
+          </div>
+
+          {/* Compact Add to Calendar Button */}
           <button
             onClick={onClick}
-            className="w-full inline-flex items-center justify-center gap-2 bg-[#2563EB] text-white font-bold text-xs uppercase tracking-wider py-3 px-6 rounded-full hover:bg-blue-700 transition-colors shadow-sm shadow-blue-500/10 cursor-pointer"
+            className="inline-flex items-center gap-1.5 bg-white border border-slate-200 text-slate-800 font-bold text-[10px] sm:text-xs uppercase tracking-wider py-1.5 px-3.5 rounded-full hover:bg-slate-50 transition-colors shadow-sm cursor-pointer whitespace-nowrap"
             style={{ fontFamily: 'var(--font-display)' }}
           >
-            <Calendar className="h-4 w-4" />
+            <Calendar className="h-3.5 w-3.5 text-slate-800" />
             Add to Calendar
           </button>
         </div>
