@@ -40,10 +40,10 @@ export function DesktopNav({ variant = 'student' }: { variant?: 'student' | 'sch
         variant === 'public' 
           ? `fixed top-0 left-0 right-0 z-50 h-20 md:h-24 ${
               scrolled 
-                ? 'bg-[#efece3]/85 backdrop-blur-xl border-b border-[#766754]/20 shadow-md' 
+                ? 'bg-[#FFFDE1]/85 backdrop-blur-xl border-b border-[#766754]/20 shadow-md' 
                 : 'bg-[#2c2324]/60 backdrop-blur-xl border-b border-white/10 shadow-lg'
             }` 
-          : 'sticky top-0 z-40 h-16 border-b border-[#766754]/10 bg-[#efece3]/90 backdrop-blur-xl shadow-sm'
+          : 'sticky top-0 z-40 h-16 border-b border-[#766754]/10 bg-[#FFFDE1]/90 backdrop-blur-xl shadow-sm'
       } ${variant !== 'public' ? 'hidden md:flex' : ''}`}>
         <div className="mx-auto w-full max-w-[1400px] px-6 md:px-8 flex items-center justify-between">
           {/* Left side: Logo & Links */}
@@ -67,7 +67,7 @@ export function DesktopNav({ variant = 'student' }: { variant?: 'student' | 'sch
                     className={`text-[11px] font-bold uppercase tracking-widest transition-colors duration-300 ${
                       scrolled 
                         ? 'text-[#2c2324] hover:text-[#eb5e28]' 
-                        : 'text-[#efece3]/90 hover:text-[#eb5e28]'
+                        : 'text-[#FFFDE1]/90 hover:text-[#eb5e28]'
                     }`}
                   >
                     {link.label}
@@ -85,7 +85,7 @@ export function DesktopNav({ variant = 'student' }: { variant?: 'student' | 'sch
                   <Link 
                     href="/login" 
                     className={`text-xs font-bold uppercase tracking-widest transition-colors flex items-center gap-2 ${
-                      scrolled ? 'text-[#2c2324] hover:text-[#eb5e28]' : 'text-[#efece3]/95 hover:text-[#eb5e28]'
+                      scrolled ? 'text-[#2c2324] hover:text-[#eb5e28]' : 'text-[#FFFDE1]/95 hover:text-[#eb5e28]'
                     }`}
                   >
                     Sign In
@@ -94,8 +94,8 @@ export function DesktopNav({ variant = 'student' }: { variant?: 'student' | 'sch
                     href="/signup" 
                     className={`ml-4 px-6 py-2.5 font-bold uppercase tracking-widest text-xs transition-all duration-300 rounded-full shadow-sm ${
                       scrolled 
-                        ? 'bg-[#eb5e28] text-[#efece3] hover:bg-[#2c2324] hover:text-[#efece3]' 
-                        : 'bg-[#efece3] text-[#2c2324] hover:bg-[#eb5e28] hover:text-[#efece3]'
+                        ? 'bg-[#eb5e28] text-[#FFFDE1] hover:bg-[#2c2324] hover:text-[#FFFDE1]' 
+                        : 'bg-[#FFFDE1] text-[#2c2324] hover:bg-[#eb5e28] hover:text-[#FFFDE1]'
                     }`}
                   >
                     Sign Up
@@ -106,7 +106,7 @@ export function DesktopNav({ variant = 'student' }: { variant?: 'student' | 'sch
                 <button 
                   onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
                   className={`lg:hidden p-2 focus:outline-none transition-colors z-55 cursor-pointer ${
-                    scrolled ? 'text-[#2c2324] hover:text-[#eb5e28]' : 'text-[#efece3] hover:text-[#eb5e28]'
+                    scrolled ? 'text-[#2c2324] hover:text-[#eb5e28]' : 'text-[#FFFDE1] hover:text-[#eb5e28]'
                   }`}
                 >
                   {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
@@ -146,7 +146,7 @@ export function DesktopNav({ variant = 'student' }: { variant?: 'student' | 'sch
                 key={link.href}
                 href={link.href} 
                 onClick={() => setMobileMenuOpen(false)}
-                className="text-xl font-bold text-[#efece3] hover:text-[#eb5e28] uppercase tracking-wider transition-colors py-2 border-b border-white/5"
+                className="text-xl font-bold text-[#FFFDE1] hover:text-[#eb5e28] uppercase tracking-wider transition-colors py-2 border-b border-white/5"
               >
                 {link.label}
               </Link>
@@ -156,14 +156,14 @@ export function DesktopNav({ variant = 'student' }: { variant?: 'student' | 'sch
             <Link 
               href="/login" 
               onClick={() => setMobileMenuOpen(false)}
-              className="w-full text-center py-4 text-sm font-bold text-[#efece3] border border-white/10 uppercase tracking-widest hover:border-white/30 transition-colors"
+              className="w-full text-center py-4 text-sm font-bold text-[#FFFDE1] border border-white/10 uppercase tracking-widest hover:border-white/30 transition-colors"
             >
               Sign In
             </Link>
             <Link 
               href="/signup" 
               onClick={() => setMobileMenuOpen(false)}
-              className="w-full text-center py-4 text-sm font-bold bg-[#eb5e28] text-[#efece3] uppercase tracking-widest hover:bg-[#efece3] hover:text-[#2c2324] transition-colors"
+              className="w-full text-center py-4 text-sm font-bold bg-[#eb5e28] text-[#FFFDE1] uppercase tracking-widest hover:bg-[#FFFDE1] hover:text-[#2c2324] transition-colors"
             >
               Sign Up
             </Link>

@@ -6,7 +6,7 @@ import EvidaLogo from '@/components/ui/EvidaLogo';
 
 export default function AboutEvidaSection() {
   return (
-    <section id="about-evida" className="relative w-full bg-[#efece3] py-24 overflow-hidden border-b border-[#766754]/10 font-sans">
+    <section id="about-evida" className="relative w-full bg-[#FFFDE1] py-24 overflow-hidden border-b border-[#766754]/10 font-sans">
       <div className="relative z-10 max-w-7xl mx-auto px-6 md:px-12">
         
         {/* 1. Header Row (Rekolet inspired) */}
@@ -53,23 +53,23 @@ export default function AboutEvidaSection() {
           {/* Card 1 (Santiago Orange) */}
           <div className="bg-[#eb5e28] rounded-[32px] p-8 md:p-10 flex flex-col justify-between aspect-[4/5] text-left shadow-sm hover:scale-[1.02] transition-transform duration-300">
             <div>
-              <span className="text-[#efece3]/70 text-[10px] font-bold tracking-[0.2em] uppercase">ENGAGEMENT</span>
-              <h4 className="text-[#efece3] font-bold text-lg md:text-xl uppercase mt-4 leading-snug" style={{ fontFamily: 'var(--font-display)' }}>
+              <span className="text-[#FFFDE1]/70 text-[10px] font-bold tracking-[0.2em] uppercase">ENGAGEMENT</span>
+              <h4 className="text-[#FFFDE1] font-bold text-lg md:text-xl uppercase mt-4 leading-snug" style={{ fontFamily: 'var(--font-display)' }}>
                 Active Campus Community
               </h4>
             </div>
             <div>
-              <div className="text-[#efece3] font-extrabold text-5xl md:text-6xl lg:text-7xl leading-none" style={{ fontFamily: 'var(--font-display)' }}>
+              <div className="text-[#FFFDE1] font-extrabold text-5xl md:text-6xl lg:text-7xl leading-none" style={{ fontFamily: 'var(--font-display)' }}>
                 94%
               </div>
-              <p className="text-[#efece3]/80 text-xs mt-4 font-light leading-relaxed">
+              <p className="text-[#FFFDE1]/80 text-xs mt-4 font-light leading-relaxed">
                 Students reporting a more connected and active campus experience since using Evida.
               </p>
             </div>
           </div>
 
           {/* Card 2 (Cold Foam with Landmark Border) */}
-          <div className="bg-[#efece3] border border-[#766754]/35 rounded-[32px] p-8 md:p-10 flex flex-col justify-between aspect-[4/5] text-left shadow-sm hover:scale-[1.02] transition-transform duration-300">
+          <div className="bg-[#FFFDE1] border border-[#766754]/35 rounded-[32px] p-8 md:p-10 flex flex-col justify-between aspect-[4/5] text-left shadow-sm hover:scale-[1.02] transition-transform duration-300">
             <div>
               <span className="text-[#766754] text-[10px] font-bold tracking-[0.2em] uppercase">EFFICIENCY</span>
               <h4 className="text-[#2c2324] font-bold text-lg md:text-xl uppercase mt-4 leading-snug" style={{ fontFamily: 'var(--font-display)' }}>
@@ -89,16 +89,16 @@ export default function AboutEvidaSection() {
           {/* Card 3 (Gold Black) */}
           <div className="bg-[#2c2324] rounded-[32px] p-8 md:p-10 flex flex-col justify-between aspect-[4/5] text-left shadow-sm hover:scale-[1.02] transition-transform duration-300">
             <div>
-              <span className="text-[#efece3]/75 text-[10px] font-bold tracking-[0.2em] uppercase">INCLUSION</span>
-              <h4 className="text-[#efece3] font-bold text-lg md:text-xl uppercase mt-4 leading-snug" style={{ fontFamily: 'var(--font-display)' }}>
+              <span className="text-[#FFFDE1]/75 text-[10px] font-bold tracking-[0.2em] uppercase">INCLUSION</span>
+              <h4 className="text-[#FFFDE1] font-bold text-lg md:text-xl uppercase mt-4 leading-snug" style={{ fontFamily: 'var(--font-display)' }}>
                 Diverse Campus Life
               </h4>
             </div>
             <div>
-              <div className="text-[#efece3] font-extrabold text-5xl md:text-6xl lg:text-7xl leading-none" style={{ fontFamily: 'var(--font-display)' }}>
+              <div className="text-[#FFFDE1] font-extrabold text-5xl md:text-6xl lg:text-7xl leading-none" style={{ fontFamily: 'var(--font-display)' }}>
                 100%
               </div>
-              <p className="text-[#efece3]/80 text-xs mt-4 font-light leading-relaxed">
+              <p className="text-[#FFFDE1]/80 text-xs mt-4 font-light leading-relaxed">
                 All events, sports, organizations, and career opportunities aggregated in one centralized digital hub.
               </p>
             </div>

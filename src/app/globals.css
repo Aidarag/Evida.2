@@ -5,9 +5,9 @@
    ─────────────────────────────────────────────── */
 @theme {
   /* Colors – Core light backgrounds */
-  --color-primary-bg: #efece3;
-  --color-secondary-bg: #efece3;
-  --color-surface: #efece3;
+  --color-primary-bg: #FFFDE1;
+  --color-secondary-bg: #FFFDE1;
+  --color-surface: #FFFDE1;
 
   /* Colors – Text */
   --color-primary-text: #2c2324;
@@ -17,7 +17,7 @@
   /* Colors – Brand accents (From Screenshot) */
   /* Colors - Brand accents (Evida Original) */
   --color-evida-lime: #eb5e28;
-  --color-evida-coral: #efece3;
+  --color-evida-coral: #FFFDE1;
   --color-evida-blue: #eb5e28;
   
   /* Grungy Theme Accents */
@@ -43,7 +43,7 @@
    Global Styles
    ─────────────────────────────────────────────── */
 :root {
-  --bg-primary: #efece3;
+  --bg-primary: #FFFDE1;
   --text-primary: #2c2324;
   --text-secondary: #766754;
 }

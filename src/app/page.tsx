@@ -364,7 +364,7 @@ export default function LandingPage() {
         <div className="relative z-10 flex flex-col items-center text-center px-6 max-w-4xl mx-auto -mt-16">
           <motion.h1 
             style={{ fontFamily: 'var(--font-display)' }}
-            className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-[#efece3] leading-[1.1] tracking-tight mb-8 select-none uppercase max-w-3xl mx-auto"
+            className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-[#FFFDE1] leading-[1.1] tracking-tight mb-8 select-none uppercase max-w-3xl mx-auto"
           >
             Discover Evida, <br />
             the digital home <br />
@@ -383,7 +383,7 @@ export default function LandingPage() {
         {/* Scrolling Category Marquee (Bottom of Hero) */}
         <div className="absolute bottom-0 left-0 w-full z-20">
           <div className="relative w-full overflow-hidden bg-[#2c2324]/90 backdrop-blur-sm py-5 flex items-center border-t border-white/5 shadow-2xl">
-            <div className="animate-marquee flex gap-12 text-[#efece3] font-bold text-lg tracking-[0.2em] uppercase opacity-90 items-center">
+            <div className="animate-marquee flex gap-12 text-[#FFFDE1] font-bold text-lg tracking-[0.2em] uppercase opacity-90 items-center">
               <span>ORIENTATION</span>
               <EvidaLogo size={22} showText={false} />
               <span>HOMECOMING</span>
@@ -567,7 +567,7 @@ export default function LandingPage() {
       {/* 5.5 Infinite Category Marquee */}
       <section className="relative w-full bg-[#2c2324] py-5 overflow-hidden border-t border-b border-white/5 shadow-2xl">
         <div className="relative w-full overflow-hidden flex items-center">
-          <div className="animate-marquee flex gap-12 text-[#efece3] font-bold text-lg tracking-[0.2em] uppercase opacity-90 items-center">
+          <div className="animate-marquee flex gap-12 text-[#FFFDE1] font-bold text-lg tracking-[0.2em] uppercase opacity-90 items-center">
             <span>ORIENTATION</span>
             <EvidaLogo size={22} showText={false} />
             <span>HOMECOMING</span>
