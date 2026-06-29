@@ -15,11 +15,11 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 
 const variantStyles: Record<ButtonVariant, string> = {
   primary:
-    'bg-gradient-to-r from-[#80B0EC] to-[#DAFB71] text-[#08080B] font-semibold shadow-[0_4px_16px_rgba(128,176,236,0.25)]',
+    'bg-gradient-to-r from-[#80B0EC] to-[#38BDF8] text-[#08080B] font-semibold shadow-[0_4px_16px_rgba(128,176,236,0.25)]',
   secondary:
     'bg-gradient-to-r from-[#EE3D5A] to-[#80B0EC] text-white font-semibold shadow-[0_4px_16px_rgba(238,61,90,0.2)]',
   neon:
-    'bg-[#DAFB71] text-[#08080B] font-semibold shadow-[0_4px_16px_rgba(218,251,113,0.3)]',
+    'bg-[#38BDF8] text-[#08080B] font-semibold shadow-[0_4px_16px_rgba(218,251,113,0.3)]',
   ghost:
     'bg-transparent border border-white/15 text-white backdrop-blur-md',
   danger:

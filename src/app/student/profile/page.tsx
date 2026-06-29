@@ -28,7 +28,7 @@ export default function StudentProfilePage() {
     <div className="p-6 md:p-10 max-w-4xl mx-auto space-y-8">
       {/* Profile Header Card */}
       <Card className="p-8 md:p-10 flex flex-col md:flex-row items-center md:items-start gap-8" hover={false}>
-        <div className="h-32 w-32 rounded-full bg-gradient-to-br from-[#80B0EC] to-[#DAFB71] flex items-center justify-center shadow-[0_8px_30px_rgba(128,176,236,0.3)] shrink-0">
+        <div className="h-32 w-32 rounded-full bg-gradient-to-br from-[#80B0EC] to-[#38BDF8] flex items-center justify-center shadow-[0_8px_30px_rgba(128,176,236,0.3)] shrink-0">
           <span className="text-5xl font-bold text-[#08080B]">{currentUser.avatar}</span>
         </div>
         

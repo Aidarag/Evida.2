@@ -103,8 +103,8 @@ export default function EventDetailsPage() {
               </div>
 
               <div className="flex items-start gap-4">
-                <div className="h-12 w-12 rounded-2xl bg-[#DAFB71]/10 flex items-center justify-center shrink-0">
-                  <MapPin className="h-5 w-5 text-[#DAFB71]" />
+                <div className="h-12 w-12 rounded-2xl bg-[#38BDF8]/10 flex items-center justify-center shrink-0">
+                  <MapPin className="h-5 w-5 text-[#38BDF8]" />
                 </div>
                 <div>
                   <h3 className="font-bold text-white">{event.location}</h3>

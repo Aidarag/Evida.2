@@ -61,7 +61,7 @@ export default function StudentDashboardPage() {
         <div className="rounded-[24px] bg-[#171722] border border-white/[0.06] p-5 flex flex-col justify-between h-32 md:col-span-2">
            <div className="flex items-center justify-between">
             <span className="text-xs font-bold text-[#B8BBC8] uppercase tracking-wider">Campus Activity</span>
-            <Activity className="h-5 w-5 text-[#DAFB71]" />
+            <Activity className="h-5 w-5 text-[#38BDF8]" />
           </div>
           <div className="flex items-end gap-2">
              <div className="text-3xl font-bold text-white">{events.length}</div>

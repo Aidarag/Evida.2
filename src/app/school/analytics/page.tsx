@@ -46,7 +46,7 @@ export default function AnalyticsPage() {
 
         <Card className="p-6">
           <div className="flex items-center gap-4 mb-4">
-            <div className="h-10 w-10 rounded-xl bg-[#DAFB71]/10 flex items-center justify-center text-[#DAFB71]">
+            <div className="h-10 w-10 rounded-xl bg-[#38BDF8]/10 flex items-center justify-center text-[#38BDF8]">
               <Users className="h-5 w-5" />
             </div>
             <span className="text-xs font-bold text-[#B8BBC8] uppercase tracking-wider">Total RSVPs</span>
@@ -95,7 +95,7 @@ export default function AnalyticsPage() {
                       initial={{ width: 0 }}
                       animate={{ width: `${percentage}%` }}
                       transition={{ duration: 1, ease: "easeOut" }}
-                      className="h-full bg-gradient-to-r from-[#80B0EC] to-[#DAFB71] rounded-full"
+                      className="h-full bg-gradient-to-r from-[#80B0EC] to-[#38BDF8] rounded-full"
                     />
                   </div>
                 </div>
@@ -106,7 +106,7 @@ export default function AnalyticsPage() {
 
         <Card className="p-6 space-y-6">
           <h2 className="text-lg font-bold text-white flex items-center gap-2">
-            <Users className="h-5 w-5 text-[#DAFB71]" /> Top Organizations (RSVPs)
+            <Users className="h-5 w-5 text-[#38BDF8]" /> Top Organizations (RSVPs)
           </h2>
           <div className="space-y-4">
             {organizations
@@ -120,7 +120,7 @@ export default function AnalyticsPage() {
                   <div className="flex-1">
                     <p className="text-sm font-bold text-white">{org.name}</p>
                   </div>
-                  <span className="text-sm font-bold text-[#DAFB71]">{org.rsvps} RSVPs</span>
+                  <span className="text-sm font-bold text-[#38BDF8]">{org.rsvps} RSVPs</span>
                 </div>
               ))}
           </div>

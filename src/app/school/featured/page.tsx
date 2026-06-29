@@ -48,7 +48,7 @@ export default function FeaturedEventsPage() {
                 
                 <div className="flex flex-wrap gap-4 text-xs font-medium text-[#B8BBC8]">
                   <span className="flex items-center gap-1.5"><Calendar className="h-4 w-4 text-[#80B0EC]" /> {event.date}</span>
-                  <span className="flex items-center gap-1.5"><Trophy className="h-4 w-4 text-[#DAFB71]" /> {event.category}</span>
+                  <span className="flex items-center gap-1.5"><Trophy className="h-4 w-4 text-[#38BDF8]" /> {event.category}</span>
                 </div>
               </div>
             </Card>

@@ -16,17 +16,17 @@
 
   /* Colors – Brand accents (From Screenshot) */
   /* Colors - Brand accents (Evida Original) */
-  --color-evida-lime: #DAFB71;
+  --color-evida-lime: #38BDF8;
   --color-evida-coral: #FFFFFF;
   --color-evida-blue: #2563EB;
   
   /* Grungy Theme Accents */
   --color-grungy-bg: #0F0F13;
   --color-grungy-card: #1A1A1E;
-  --color-neon-yellow: #DAFB71; /* Reusing lime for neon */
+  --color-neon-yellow: #38BDF8; /* Reusing sky blue for neon */
   
   /* Colors – Gradients */
-  --color-gradient-hero: linear-gradient(135deg, #2563EB, #DAFB71);
+  --color-gradient-hero: linear-gradient(135deg, #2563EB, #38BDF8);
 
   /* Border radius */
   --radius-large: 32px;
@@ -119,8 +119,8 @@ html, body {
   transition: all 0.2s ease;
 }
 .btn-primary:hover {
-  background: #C4E65C; /* darker lime */
-  box-shadow: 0 4px 12px rgba(218, 251, 113, 0.3);
+  background: #0EA5E9; /* darker sky blue */
+  box-shadow: 0 4px 12px rgba(56, 189, 248, 0.3);
 }
 
 .btn-outline {

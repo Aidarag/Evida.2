@@ -153,7 +153,7 @@ export default function SignupPage() {
       {/* Dynamic Background Glowing Blobs */}
       <div className="absolute top-1/4 left-1/4 w-[400px] h-[400px] rounded-full bg-[#80B0EC]/10 blur-[120px] pointer-events-none" />
       <div className="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] rounded-full bg-[#EE3D5A]/5 blur-[100px] pointer-events-none" />
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] rounded-full bg-[#DAFB71]/5 blur-[140px] pointer-events-none" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] rounded-full bg-[#38BDF8]/5 blur-[140px] pointer-events-none" />
 
       {/* Back to Home Button */}
       {step === 'role-selection' && (

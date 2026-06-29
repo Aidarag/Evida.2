@@ -11,7 +11,7 @@ export default function StudentLayout({
       {/* Mobile Top Nav (visible only on small screens) */}
       <div className="md:hidden sticky top-0 z-40 w-full h-14 border-b border-gray-200 bg-white/90 backdrop-blur-xl flex items-center justify-center">
         <span className="text-lg font-bold tracking-tight text-[#4C1D95] flex items-center gap-2">
-          <div className="h-7 w-7 rounded-lg bg-gradient-to-br from-[#80B0EC] to-[#DAFB71] flex items-center justify-center">
+          <div className="h-7 w-7 rounded-lg bg-gradient-to-br from-[#80B0EC] to-[#38BDF8] flex items-center justify-center">
             <span className="text-[#08080B] font-bold text-xs">E</span>
           </div>
           Evida

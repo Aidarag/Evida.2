@@ -210,10 +210,10 @@ export default function LandingPage() {
     }
     if (catLower.includes('sport') || catLower.includes('game') || catLower.includes('match') || catLower.includes('trophy')) {
       return {
-        icon: <Trophy className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-[#65A30D]" />,
-        bgColor: 'bg-[#DAFB71]/20',
-        borderColor: 'border-[#DAFB71]',
-        textColor: 'text-slate-800',
+        icon: <Trophy className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-[#0284C7]" />,
+        bgColor: 'bg-[#38BDF8]/10',
+        borderColor: 'border-[#38BDF8]',
+        textColor: 'text-[#0284C7]',
       };
     }
     if (catLower.includes('career') || catLower.includes('job') || catLower.includes('fair') || catLower.includes('workshop') || catLower.includes('seminar')) {
@@ -234,10 +234,10 @@ export default function LandingPage() {
     }
     if (catLower.includes('grad') || catLower.includes('commence') || catLower.includes('ceremony')) {
       return {
-        icon: <GraduationCap className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-[#65A30D]" />,
-        bgColor: 'bg-[#DAFB71]/20',
-        borderColor: 'border-[#DAFB71]',
-        textColor: 'text-slate-800',
+        icon: <GraduationCap className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-[#0284C7]" />,
+        bgColor: 'bg-[#38BDF8]/10',
+        borderColor: 'border-[#38BDF8]',
+        textColor: 'text-[#0284C7]',
       };
     }
     return {
@@ -256,7 +256,7 @@ export default function LandingPage() {
       <section className="relative w-full h-[100vh] min-h-[600px] flex flex-col items-center justify-center overflow-hidden bg-[#0F0F13]">
         {/* Background Image */}
         <div 
-          className="absolute inset-0 w-full h-full bg-[url('/pexels-amine-1285347-9371719.jpg')] bg-cover bg-center opacity-50 grayscale contrast-125"
+          className="absolute inset-0 w-full h-full bg-[url('/pexels-franco-monsalvo-252430633-37980178.jpg')] bg-cover bg-center opacity-40 grayscale contrast-125"
         />
         
         {/* Dark Overlay Gradient */}
@@ -629,7 +629,7 @@ export default function LandingPage() {
             {/* Overlapping Brand Circles (from the screenshot design) */}
             <div className="relative w-28 h-16 flex items-center justify-center lg:justify-start">
               <div className="w-12 h-12 rounded-full border-4 border-[#2563EB] opacity-80" />
-              <div className="w-12 h-12 rounded-full border-4 border-[#DAFB71] opacity-80 -ml-4" />
+              <div className="w-12 h-12 rounded-full border-4 border-[#38BDF8] opacity-80 -ml-4" />
             </div>
           </div>
 

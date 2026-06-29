@@ -60,7 +60,7 @@ export default function OrganizationsPage() {
                       <span className="text-xs text-[#B8BBC8]">{org.members.length} members</span>
                       <span className="h-1 w-1 rounded-full bg-white/20" />
                       {org.verified ? (
-                        <span className="flex items-center gap-1 text-[10px] font-bold text-[#DAFB71] uppercase">
+                        <span className="flex items-center gap-1 text-[10px] font-bold text-[#38BDF8] uppercase">
                           <CheckCircle2 className="h-3 w-3" /> Verified
                         </span>
                       ) : (

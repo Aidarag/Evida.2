@@ -31,10 +31,10 @@ export default function EvidaLogo({
       className={`select-none ${className}`}
     >
       <g id="evida-logo-mark">
-        {/* Left Ribbon (Lime) */}
+        {/* Left Ribbon (Lime replaced by Sky Blue) */}
         <path
           d="M 6 42 L 6 22 L 24 6 L 24 15 L 15 24 L 15 42 Z"
-          fill="#DAFB71"
+          fill="#38BDF8"
           opacity="0.85"
         />
         
