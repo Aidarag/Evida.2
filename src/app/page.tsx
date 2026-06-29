@@ -756,20 +756,26 @@ export default function LandingPage() {
       </section>
 
       {/* 6. FAQ Section */}
-      <section id="faq" className="relative w-full bg-[#FFFDE1] py-24 border-t border-slate-100">
-        <div className="max-w-6xl mx-auto px-6 md:px-12 grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
+      <section id="faq" className="relative w-full bg-[#FFFDE1] py-24 border-t border-[#766754]/10">
+        <div className="max-w-6xl mx-auto px-6 md:px-12 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
           
-          {/* Left Column: Title */}
-          <div className="lg:col-span-4 space-y-8 flex flex-col items-center lg:items-start text-center lg:text-left">
-            <h2 className="text-slate-900 font-extrabold text-5xl md:text-6xl uppercase tracking-tighter" style={{ fontFamily: 'var(--font-display)' }}>
+          {/* Left Column: Title and centered overlapping circles */}
+          <div className="lg:col-span-4 flex flex-col items-center justify-center text-center py-6">
+            <h2 className="text-[#2c2324] font-extrabold text-5xl md:text-6xl uppercase tracking-tighter" style={{ fontFamily: 'var(--font-display)' }}>
               FAQ
             </h2>
+            
+            {/* Overlapping Brand Circles (centered directly under the word FAQ) */}
+            <div className="relative w-24 h-12 flex items-center justify-center mt-6">
+              <div className="w-12 h-12 rounded-full border-4 border-[#eb5e28] opacity-85" />
+              <div className="w-12 h-12 rounded-full border-4 border-[#eb5e28] opacity-85 -ml-5" />
+            </div>
           </div>
 
           {/* Right Column: Tab Selector and Accordion List */}
           <div className="lg:col-span-8 space-y-8">
             {/* Tab Selector */}
-            <div className="flex space-x-2 bg-slate-200/60 p-1 rounded-full border border-slate-300/20 w-fit">
+            <div className="flex space-x-2 bg-[#FFFDE1] p-1 rounded-full border border-slate-300/20 w-fit">
               <button
                 onClick={() => {
                   setFaqTab('students');
@@ -813,7 +819,7 @@ export default function LandingPage() {
                       onClick={() => setExpandedFaq(isOpen ? null : index)}
                       className="w-full px-6 py-5 flex justify-between items-center text-left gap-4 cursor-pointer focus:outline-none"
                     >
-                      <span className="text-slate-900 font-bold text-sm sm:text-base uppercase tracking-wide" style={{ fontFamily: 'var(--font-display)' }}>
+                      <span className="text-[#2c2324] font-bold text-sm sm:text-base uppercase tracking-wide" style={{ fontFamily: 'var(--font-display)' }}>
                         {item.question}
                       </span>
                       <span className="text-slate-500 text-xl font-medium shrink-0">
@@ -838,14 +844,6 @@ export default function LandingPage() {
 
           </div>
 
-        </div>
-
-        {/* Overlapping Brand Circles - Centered at the bottom of the FAQ section */}
-        <div className="mt-16 flex justify-center w-full">
-          <div className="relative w-24 h-12 flex items-center justify-center">
-            <div className="w-12 h-12 rounded-full border-4 border-[#eb5e28] opacity-85" />
-            <div className="w-12 h-12 rounded-full border-4 border-[#eb5e28] opacity-85 -ml-5" />
-          </div>
         </div>
       </section>
 
