@@ -7,6 +7,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Sparkles, ArrowLeft, ArrowRight, GraduationCap, Shield, Mail, KeyRound, CheckCircle2, User, BookOpen, Calendar, Building, Lock } from 'lucide-react';
 import { useUser } from '@/lib/context/UserContext';
 import Card from '@/components/ui/Card';
+import EvidaLogo from '@/components/ui/EvidaLogo';
 
 type SignupStep = 'role-selection' | 'student-details' | 'admin-details' | 'verify' | 'success';
 
@@ -60,11 +61,49 @@ export default function SignupPage() {
 
   const handleRoleSelect = (selectedRole: 'student' | 'admin') => {
     setRole(selectedRole);
-    if (selectedRole === 'student') {
-      navigateTo('student-details');
-    } else {
-      navigateTo('admin-details');
-    }
+    setIsLoading(true);
+
+    setTimeout(() => {
+      if (selectedRole === 'student') {
+        const mockStudent = {
+          username: 'alex.rivera',
+          name: 'Alex Rivera',
+          email: 'alex.rivera@stateuni.edu',
+          role: 'student' as const,
+          organizations: [],
+          major: 'Computer Science',
+          gradYear: '2028',
+          graduationYear: '2028',
+          school: 'State University',
+          avatar: 'AR',
+        };
+        setCurrentUser(mockStudent);
+      } else {
+        const mockAdmin = {
+          username: 'dean.williams',
+          name: 'Dean Williams',
+          email: 'dean.williams@university.edu',
+          role: 'admin' as const,
+          organizations: [],
+          major: 'Administration',
+          gradYear: 'N/A',
+          graduationYear: 'N/A',
+          school: 'Administration Board',
+          avatar: 'DW',
+        };
+        setCurrentUser(mockAdmin);
+      }
+      setIsLoading(false);
+      navigateTo('success');
+      
+      setTimeout(() => {
+        if (selectedRole === 'student') {
+          router.push('/student/events');
+        } else {
+          router.push('/school/dashboard');
+        }
+      }, 1500);
+    }, 1000);
   };
 
   const handleDetailsSubmit = (e: React.FormEvent) => {
@@ -195,8 +234,8 @@ export default function SignupPage() {
               {/* HEADER */}
               {step !== 'success' && (
                 <div className="text-center space-y-3">
-                  <div className="mx-auto flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-tr from-[#FF5A1F] to-[#FF8B5B] shadow-[0_4px_15px_rgba(255,90,31,0.2)]">
-                    <Sparkles className="h-5.5 w-5.5 text-white" />
+                  <div className="mx-auto flex justify-center mb-1">
+                    <EvidaLogo size={36} showText={false} />
                   </div>
                   <div>
                     <h1 className="text-xl font-extrabold text-[#121212] uppercase tracking-wider" style={{ fontFamily: 'var(--font-display)' }}>
@@ -243,10 +282,10 @@ export default function SignupPage() {
                     {/* Admin Option */}
                     <button
                       onClick={() => handleRoleSelect('admin')}
-                      className="w-full flex items-center justify-between p-5 rounded-2xl border-2 border-black/[0.06] bg-white hover:bg-black/[0.01] hover:border-[#4F7CFF] transition-all duration-300 cursor-pointer text-left group"
+                      className="w-full flex items-center justify-between p-5 rounded-2xl border-2 border-black/[0.06] bg-white hover:bg-black/[0.01] hover:border-[#121212]/30 transition-all duration-300 cursor-pointer text-left group"
                     >
                       <div className="flex items-center gap-4">
-                        <div className="h-12 w-12 rounded-xl bg-[#4F7CFF]/10 text-[#4F7CFF] flex items-center justify-center group-hover:scale-105 transition-transform">
+                        <div className="h-12 w-12 rounded-xl bg-[#121212]/10 text-[#121212] flex items-center justify-center group-hover:scale-105 transition-transform">
                           <Shield className="h-6 w-6" />
                         </div>
                         <div>
@@ -254,7 +293,7 @@ export default function SignupPage() {
                           <p className="text-xs text-[#4F5666] mt-0.5 max-w-[220px]">Establish Evida integration for your campus and departments.</p>
                         </div>
                       </div>
-                      <ArrowRight className="h-5 w-5 text-[#4F5666] group-hover:text-[#4F7CFF] group-hover:translate-x-1 transition-all" />
+                      <ArrowRight className="h-5 w-5 text-[#4F5666] group-hover:text-[#121212] group-hover:translate-x-1 transition-all" />
                     </button>
                   </div>
 

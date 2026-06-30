@@ -26,11 +26,11 @@ export function DesktopNav({ variant = 'student' }: { variant?: 'student' | 'sch
   }, [variant]);
 
   const publicLinks = [
-    { label: 'About Evida', href: '/#about-evida' },
-    { label: 'Our Mission', href: '/#our-mission' },
-    { label: 'FAQ', href: '/#faq' },
-    { label: 'Featured Events', href: '/#explore-categories' },
-    { label: 'Calendar', href: '/#calendar' },
+    { label: 'About Evida', href: '/about' },
+    { label: 'Our Mission', href: '/our-mission' },
+    { label: 'How It Works', href: '/how-it-works' },
+    { label: 'Calendar', href: '/calendar' },
+    { label: 'Explore Events', href: '/student/events' },
   ];
 
   return (

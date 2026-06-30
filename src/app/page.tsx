@@ -3,14 +3,14 @@
 import React from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { Search, ChevronDown, Compass, Megaphone, Shield, MousePointer2, UserCheck, CalendarDays, LineChart, ArrowRight, Briefcase, Sparkles, Music, Trophy, GraduationCap, Users, Palette, Heart, Code, Film } from 'lucide-react';
-import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
+import { Search, MousePointer2, UserCheck, LineChart, ArrowRight, Sparkles } from 'lucide-react';
+import { motion, useScroll, useTransform } from 'framer-motion';
 import { DesktopNav } from '@/components/Navbar';
 import FeaturedEventCard from '@/components/student/FeaturedEventCard';
 import AboutEvidaSection from '@/components/student/AboutEvidaSection';
-import OurVisionSection from '@/components/student/OurVisionSection';
 import { useEvents } from '@/lib/context/EventContext';
 import EvidaLogo from '@/components/ui/EvidaLogo';
+import AppShowcase from '@/components/student/AppShowcase';
 
 export default function LandingPage() {
   const router = useRouter();
@@ -22,43 +22,8 @@ export default function LandingPage() {
   const opacityBg = useTransform(scrollY, [0, 600], [0.45, 0.05]);
   const scaleBg = useTransform(scrollY, [0, 600], [1, 1.06]);
 
-  const faqData = {
-    students: [
-      {
-        question: "Can I create my own event?",
-        answer: "Yes. Students can submit events through Evida. Depending on your school’s policies, some events may require approval before they are published."
-      },
-      {
-        question: "Do I need to join a club or organization to use Evida?",
-        answer: "No. Every student can discover, save, and RSVP to events. You don’t need to belong to an organization to enjoy campus life."
-      },
-      {
-        question: "Will I miss events if I don’t check Evida every day?",
-        answer: "No. Save events you’re interested in and receive reminders so you never miss important dates."
-      }
-    ],
-    schools: [
-      {
-        question: "How does Evida help our campus?",
-        answer: "Evida centralizes campus events into one platform, making it easier to communicate with students, increase participation, and manage campus activities."
-      },
-      {
-        question: "Can schools review events before they are published?",
-        answer: "Yes. Schools have an administrative dashboard where they can review, approve, reject, or feature events according to campus policies."
-      },
-      {
-        question: "Does Evida provide insights about student engagement?",
-        answer: "Yes. Schools can access analytics such as event participation, attendance trends, and engagement metrics to better understand campus life."
-      }
-    ]
-  };
-
-  const [faqTab, setFaqTab] = React.useState<'students' | 'schools'>('students');
-  const [expandedFaq, setExpandedFaq] = React.useState<number | null>(null);
-  
   const approvedEvents = events.filter(e => e.status === 'approved');
   const [selectedCategory, setSelectedCategory] = React.useState('Sports');
-  const [calendarDate, setCalendarDate] = React.useState<Date>(new Date(2026, 9, 1)); // October 2026
 
   const mockEventsByCategory: Record<string, Array<any>> = {
     'Sports': [
@@ -140,79 +105,6 @@ export default function LandingPage() {
 
   const categoryEvents = [...filteredEvents, ...getEventsForCategory(selectedCategory)].slice(0, 3);
 
-  // Dynamic Calendar Calculation
-  const year = calendarDate.getFullYear();
-  const month = calendarDate.getMonth();
-  const daysInMonth = new Date(year, month + 1, 0).getDate();
-  const firstDayOfMonth = new Date(year, month, 1);
-  const firstDayOfWeek = (firstDayOfMonth.getDay() + 6) % 7;
-  const daysInPrevMonth = new Date(year, month, 0).getDate();
-  const calendarDays = [];
-  
-  for (let i = firstDayOfWeek - 1; i >= 0; i--) {
-    calendarDays.push({
-      day: daysInPrevMonth - i,
-      isCurrentMonth: false,
-      date: new Date(year, month - 1, daysInPrevMonth - i),
-    });
-  }
-  
-  for (let i = 1; i <= daysInMonth; i++) {
-    calendarDays.push({
-      day: i,
-      isCurrentMonth: true,
-      date: new Date(year, month, i),
-    });
-  }
-  
-  const totalCells = calendarDays.length > 35 ? 42 : 35;
-  const remainingCells = totalCells - calendarDays.length;
-  for (let i = 1; i <= remainingCells; i++) {
-    calendarDays.push({
-      day: i,
-      isCurrentMonth: false,
-      date: new Date(year, month + 1, i),
-    });
-  }
-
-  const highlightedDays = [3, 5, 8, 12, 15, 18, 20, 22, 26, 29];
-
-  const getHighlightStyle = (day: number) => {
-    if (day === 3 || day === 12 || day === 20 || day === 26) {
-      const IconComp = day === 3 ? GraduationCap : day === 12 ? Music : day === 20 ? Palette : Sparkles;
-      return {
-        bgColor: 'bg-[#FF5A1F]/10 hover:bg-[#FF5A1F]/15',
-        borderColor: 'border-[#FF5A1F]/35',
-        textColor: 'text-[#FF5A1F]',
-        icon: <IconComp className="h-4 w-4 text-[#FF5A1F] stroke-[2]" />,
-      };
-    }
-    if (day === 5 || day === 15 || day === 22) {
-      const IconComp = day === 5 ? Users : day === 15 ? Trophy : Heart;
-      return {
-        bgColor: 'bg-black/5 hover:bg-black/8',
-        borderColor: 'border-black/20',
-        textColor: 'text-[#121212]',
-        icon: <IconComp className="h-4 w-4 text-[#121212] stroke-[2]" />,
-      };
-    }
-    const IconComp = day === 8 ? Briefcase : day === 18 ? Code : Film;
-    return {
-      bgColor: 'bg-[#FF5A1F]/10 hover:bg-[#FF5A1F]/15',
-      borderColor: 'border-[#FF5A1F]/35',
-      textColor: 'text-[#FF5A1F]',
-      icon: <IconComp className="h-4 w-4 text-[#FF5A1F] stroke-[2]" />,
-    };
-  };
-
-  const getEventsForDate = (date: Date) => {
-    const y = date.getFullYear();
-    const m = String(date.getMonth() + 1).padStart(2, '0');
-    const d = String(date.getDate()).padStart(2, '0');
-    const dateString = `${y}-${m}-${d}`;
-    return events.filter(e => e.date === dateString && e.status === 'approved');
-  };
-
   const headlineLines = ["Discover Evida,", "the digital home", "of campus life"];
 
   return (
@@ -288,48 +180,15 @@ export default function LandingPage() {
             className="flex flex-col sm:flex-row items-center justify-center gap-4"
           >
             <Link 
-              href="/student/events" 
+              href="/login" 
               className="bg-[#FF5A1F] text-white font-bold uppercase tracking-widest text-[11px] px-8 py-4 hover:bg-[#e04b12] hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center gap-2 rounded-full shadow-[0_4px_18px_rgba(255,90,31,0.3)]"
             >
-              Explore Events <ArrowRight className="h-4 w-4" />
+              Get Started <ArrowRight className="h-4 w-4" />
             </Link>
-            <Link 
-              href="/login" 
-              className="bg-white/10 border border-white/15 text-white font-bold uppercase tracking-widest text-[11px] px-8 py-4 hover:bg-white hover:text-black hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center gap-2 rounded-full backdrop-blur-md"
-            >
-              Get Started
-            </Link>
-          </motion.div>
-
-          {/* Student Avatars Social Proof */}
-          <motion.div 
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 1, delay: 0.8 }}
-            className="flex items-center gap-3 mt-10 justify-center"
-          >
-            <div className="flex -space-x-2.5">
-              <img className="w-8 h-8 rounded-full border-2 border-[#121212] object-cover" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=80&h=80&fit=crop&crop=face" alt="Student" />
-              <img className="w-8 h-8 rounded-full border-2 border-[#121212] object-cover" src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=80&h=80&fit=crop&crop=face" alt="Student" />
-              <img className="w-8 h-8 rounded-full border-2 border-[#121212] object-cover" src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=80&h=80&fit=crop&crop=face" alt="Student" />
-              <img className="w-8 h-8 rounded-full border-2 border-[#121212] object-cover" src="https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?w=80&h=80&fit=crop&crop=face" alt="Student" />
-            </div>
-            <p className="text-[11px] text-white/50 font-bold uppercase tracking-wider">Joined by 12,000+ active students</p>
           </motion.div>
         </div>
 
-        {/* Bouncing Scroll Down Indicator */}
-        <motion.div 
-          animate={{ y: [0, 8, 0] }}
-          transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
-          className="absolute bottom-24 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 cursor-pointer z-20"
-          onClick={() => document.getElementById('about-evida')?.scrollIntoView({ behavior: 'smooth' })}
-        >
-          <span className="text-[9px] font-bold tracking-[0.25em] text-white/30 uppercase">SCROLL TO EXPLORE</span>
-          <div className="w-5 h-8 border-2 border-white/15 rounded-full flex justify-center pt-1.5">
-            <div className="w-1 h-1.5 bg-[#FF5A1F] rounded-full" />
-          </div>
-        </motion.div>
+
 
         {/* Scrolling Category Marquee (Bottom) */}
         <div className="absolute bottom-0 left-0 w-full z-20">
@@ -377,97 +236,10 @@ export default function LandingPage() {
       {/* 1. About Evida Section */}
       <AboutEvidaSection />
 
-      {/* 2. Our Mission (Vision) Section */}
-      <OurVisionSection />
+      {/* 2. Interactive App Showcase Section */}
+      <AppShowcase />
 
-      {/* 3. How it Works Section */}
-      <section className="w-full py-24 bg-[#FFFDF8] font-sans overflow-hidden" id="how-it-works">
-        <div className="max-w-6xl mx-auto px-6 md:px-12 text-center space-y-16">
-          
-          <div className="space-y-4">
-            <span className="text-[#FF5A1F] font-bold uppercase text-xs tracking-[0.2em]">
-              Process
-            </span>
-            <h2 className="text-[#121212] font-extrabold text-3xl md:text-5xl uppercase tracking-tight" style={{ fontFamily: 'var(--font-display)' }}>
-              How It Works
-            </h2>
-            <p className="text-[#4F5666] text-sm md:text-base max-w-2xl mx-auto font-light">
-              Evida simplifies campus engagement in four simple steps. Here is how you can get started.
-            </p>
-          </div>
-
-          {/* Cards Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 text-left">
-            {[
-              {
-                number: "01",
-                title: "Discover",
-                icon: Search,
-                color: "#FF5A1F",
-                lightBg: "bg-[#FF5A1F]/8",
-                description: "Find exactly what you're looking for. Filter by category, date, or organization to discover the best of campus life."
-              },
-              {
-                number: "02",
-                title: "Create",
-                icon: MousePointer2,
-                color: "#121212",
-                lightBg: "bg-black/5",
-                description: "Host your own event, workshop, or promotion. Customize the details and publish instantly for your club or community."
-              },
-              {
-                number: "03",
-                title: "Attend",
-                icon: UserCheck,
-                color: "#FF5A1F",
-                lightBg: "bg-[#FF5A1F]/8",
-                description: "RSVP to events, save them to your profile, and receive notifications. Show up and connect with your fellow students."
-              },
-              {
-                number: "04",
-                title: "Engage",
-                icon: LineChart,
-                color: "#FF5A1F",
-                lightBg: "bg-[#FF5A1F]/8",
-                description: "Track attendance, collect feedback, and analyze engagement. Administrators and student leaders get real-time analytics."
-              }
-            ].map((step, index) => {
-              const Icon = step.icon;
-              return (
-                <motion.div
-                  key={index}
-                  whileHover={{ y: -6, scale: 1.01 }}
-                  transition={{ type: 'spring', stiffness: 400, damping: 25 }}
-                  className="bg-white border border-black/[0.04] rounded-[24px] p-8 flex flex-col justify-between shadow-[var(--shadow-premium-sm)] hover:shadow-[var(--shadow-premium-md)] transition-all duration-300"
-                >
-                  {/* Top Row: Number & Icon */}
-                  <div className="flex justify-between items-center mb-8">
-                    <span className="font-extrabold text-2xl" style={{ fontFamily: 'var(--font-display)', color: step.color }}>
-                      {step.number}
-                    </span>
-                    <div className={`p-3.5 rounded-2xl border border-transparent ${step.lightBg}`} style={{ color: step.color }}>
-                      <Icon className="h-5 w-5 stroke-[2]" />
-                    </div>
-                  </div>
-
-                  {/* Bottom Area: Title & Description */}
-                  <div className="space-y-3">
-                    <h3 className="font-bold text-base text-[#121212] uppercase tracking-wide" style={{ fontFamily: 'var(--font-display)' }}>
-                      {step.title}
-                    </h3>
-                    <p className="text-[#4F5666] text-xs sm:text-sm leading-relaxed font-light">
-                      {step.description}
-                    </p>
-                  </div>
-                </motion.div>
-              );
-            })}
-          </div>
-
-        </div>
-      </section>
-
-      {/* 4. Explore by Category Section */}
+      {/* 3. Explore by Category Section */}
       <section id="explore-categories" className="relative w-full bg-[#FFFDF8] py-24 border-t border-black/[0.04]">
         <div className="max-w-6xl mx-auto px-6 md:px-12 z-20 space-y-12">
           
@@ -514,7 +286,7 @@ export default function LandingPage() {
             {categoryEvents.map((event) => (
               <div 
                 key={event.id}
-                className="transform transition-all duration-500 animate-fade-in"
+                className="transform transition-all duration-500"
               >
                 <FeaturedEventCard 
                   event={event}
@@ -527,306 +299,7 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* 4.5 Infinite Category Marquee */}
-      <section className="relative w-full bg-[#121212] py-4 overflow-hidden border-t border-b border-white/5 shadow-2xl">
-        <div className="relative w-full overflow-hidden flex items-center">
-          <div className="animate-marquee flex gap-12 text-white/90 font-bold text-sm tracking-[0.2em] uppercase items-center">
-            <span>ORIENTATION</span>
-            <EvidaLogo size={18} showText={false} />
-            <span>HOMECOMING</span>
-            <EvidaLogo size={18} showText={false} />
-            <span>CAREER FAIR</span>
-            <EvidaLogo size={18} showText={false} />
-            <span>SPORTS</span>
-            <EvidaLogo size={18} showText={false} />
-            <span>WORKSHOPS</span>
-            <EvidaLogo size={18} showText={false} />
-            <span>STUDENT LIFE</span>
-            <EvidaLogo size={18} showText={false} />
-            <span>ORGANIZATIONS</span>
-            <EvidaLogo size={18} showText={false} />
-            <span>CULTURAL EVENTS</span>
-            <EvidaLogo size={18} showText={false} />
-            
-            {/* Duplicate for infinite effect */}
-            <span>ORIENTATION</span>
-            <EvidaLogo size={18} showText={false} />
-            <span>HOMECOMING</span>
-            <EvidaLogo size={18} showText={false} />
-            <span>CAREER FAIR</span>
-            <EvidaLogo size={18} showText={false} />
-            <span>SPORTS</span>
-            <EvidaLogo size={18} showText={false} />
-            <span>WORKSHOPS</span>
-            <EvidaLogo size={18} showText={false} />
-            <span>STUDENT LIFE</span>
-            <EvidaLogo size={18} showText={false} />
-            <span>ORGANIZATIONS</span>
-            <EvidaLogo size={18} showText={false} />
-            <span>CULTURAL EVENTS</span>
-            <EvidaLogo size={18} showText={false} />
-          </div>
-        </div>
-      </section>
-
-      {/* 5. Calendar Section (Tactile Design) */}
-      <section id="calendar" className="relative w-full bg-[#FFFDF8] py-24 border-t border-black/[0.04]">
-        <div className="relative max-w-6xl mx-auto px-6 md:px-12 z-20">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 w-full">
-            
-            {/* Left side: Content */}
-            <div className="space-y-6 lg:col-span-5 flex flex-col justify-center text-left">
-              <span className="text-[#FF5A1F] font-bold uppercase text-xs tracking-[0.2em]">
-                What's Happening Next
-              </span>
-              <h2 className="text-[#121212] font-extrabold text-3xl md:text-5xl uppercase tracking-tight leading-[1.08]" style={{ fontFamily: 'var(--font-display)' }}>
-                <span className="block sm:whitespace-nowrap">Your Campus</span>
-                <span className="block sm:whitespace-nowrap text-[#FF5A1F]">Calendar</span>
-                <span className="block sm:whitespace-nowrap">At A Glance</span>
-              </h2>
-              <p className="text-[#4F5666] text-sm md:text-base leading-relaxed font-light">
-                Never miss a beat. Discover upcoming campus events, connect with student organizations, and make the most of your college experience.
-              </p>
-              <div className="pt-2">
-                <Link href="/student/events" className="inline-flex bg-[#FF5A1F] text-white font-bold uppercase tracking-widest text-[10px] px-7 py-4 hover:bg-[#e04b12] hover:scale-[1.02] active:scale-[0.98] transition-all items-center gap-2 rounded-full shadow-lg shadow-orange-500/20">
-                  Explore Events <ArrowRight className="h-3.5 w-3.5" />
-                </Link>
-              </div>
-            </div>
-
-            {/* Right side: Illustrated Tactile Calendar */}
-            <div className="lg:col-span-7 w-full">
-              <div className="relative bg-white border border-black/[0.05] rounded-[24px] p-6 md:p-8 shadow-[var(--shadow-premium-md)] transition-all duration-500 hover:border-black/[0.08] hover:shadow-[var(--shadow-premium-lg)]">
-                
-                {/* Binder rings at the top */}
-                <div className="absolute top-0 left-0 right-0 h-4 flex justify-around px-12 -translate-y-1/2 z-30">
-                  {[...Array(6)].map((_, i) => (
-                    <div key={i} className="w-2.5 h-6.5 bg-gradient-to-b from-gray-200 to-gray-400 rounded-full border border-black/10 shadow-sm relative">
-                      <div className="absolute top-1 left-1/2 -translate-x-1/2 w-0.5 h-2 bg-white/30 rounded-full" />
-                    </div>
-                  ))}
-                </div>
-
-                {/* Calendar Header */}
-                <div className="flex justify-between items-center mb-6 pt-2 border-b border-black/[0.04] pb-4">
-                  <div className="text-left">
-                    <span className="text-[#FF5A1F] font-bold uppercase text-[9px] tracking-[0.25em]">CAMPUS LIFE</span>
-                    <h4 className="text-[#121212] font-bold text-lg md:text-xl tracking-wide uppercase mt-0.5" style={{ fontFamily: 'var(--font-display)' }}>
-                      {calendarDate.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
-                    </h4>
-                  </div>
-                  <div className="flex gap-2">
-                    <button 
-                      onClick={() => {
-                        const prev = new Date(calendarDate);
-                        prev.setMonth(prev.getMonth() - 1);
-                        setCalendarDate(prev);
-                      }}
-                      className="w-8 h-8 rounded-full border border-black/10 flex items-center justify-center text-gray-400 hover:text-[#121212] hover:border-black/20 transition-all text-xs font-bold cursor-pointer"
-                    >
-                      &larr;
-                    </button>
-                    <button 
-                      onClick={() => {
-                        const next = new Date(calendarDate);
-                        next.setMonth(next.getMonth() + 1);
-                        setCalendarDate(next);
-                      }}
-                      className="w-8 h-8 rounded-full border border-black/10 flex items-center justify-center text-gray-400 hover:text-[#121212] hover:border-black/20 transition-all text-xs font-bold cursor-pointer"
-                    >
-                      &rarr;
-                    </button>
-                  </div>
-                </div>
-
-                {/* Days of week */}
-                <div className="grid grid-cols-7 gap-2 mb-4 text-center text-[9px] font-bold text-gray-400 uppercase tracking-widest">
-                  <span>Mon</span>
-                  <span>Tue</span>
-                  <span>Wed</span>
-                  <span>Thu</span>
-                  <span>Fri</span>
-                  <span>Sat</span>
-                  <span>Sun</span>
-                </div>
-
-                {/* Calendar Days Grid */}
-                <div className="grid grid-cols-7 gap-2 md:gap-3">
-                  {calendarDays.map((cell, idx) => {
-                    const isHighlighted = cell.isCurrentMonth && highlightedDays.includes(cell.day);
-                    const dayEvents = getEventsForDate(cell.date);
-                    const hasEvents = dayEvents.length > 0;
-                    
-                    if (!cell.isCurrentMonth) {
-                      return (
-                        <div 
-                          key={`offset-${idx}`}
-                          className="aspect-square bg-gray-50/20 border border-black/[0.02] rounded-xl opacity-20 flex items-center justify-center text-[10px] text-gray-300"
-                        >
-                          {cell.day}
-                        </div>
-                      );
-                    }
-                    
-                    if (isHighlighted) {
-                      const style = getHighlightStyle(cell.day);
-                      const eventTitle = hasEvents ? dayEvents[0].title : `Campus Event ${cell.day}`;
-                      const eventId = hasEvents ? dayEvents[0].id : 'mock';
-                      
-                      return (
-                        <div 
-                          key={`day-${cell.day}`}
-                          onClick={() => {
-                            if (hasEvents) {
-                              router.push(`/events/${eventId}`);
-                            } else {
-                              router.push(`/student/events?date=${cell.date.toISOString().split('T')[0]}`);
-                            }
-                          }}
-                          className={`relative aspect-square ${style.bgColor} rounded-xl border ${style.borderColor} flex flex-col items-center justify-center text-[10px] sm:text-xs ${style.textColor} font-bold group/day cursor-pointer hover:scale-105 transition-all duration-300`}
-                        >
-                          <span className="absolute top-1 left-1.5 text-[8px] sm:text-[9px] font-bold">
-                            {cell.day}
-                          </span>
-                          
-                          <div className="mt-2 transform group-hover/day:scale-115 transition-transform duration-300 select-none">
-                            {style.icon}
-                          </div>
-                          
-                          {/* Premium Tooltip */}
-                          <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 bg-[#121212] border border-white/10 text-[9px] text-white font-bold uppercase tracking-widest px-3 py-1.5 rounded-lg whitespace-nowrap opacity-0 pointer-events-none group-hover/day:opacity-100 transition-opacity duration-300 shadow-[var(--shadow-premium-lg)] z-50">
-                            {eventTitle}
-                          </div>
-                        </div>
-                      );
-                    }
-                    
-                    return (
-                      <div 
-                        key={`day-${cell.day}`}
-                        className="aspect-square bg-white rounded-xl border border-black/[0.04] flex items-center justify-center text-[10px] sm:text-xs text-[#4F5666] font-bold hover:border-black/15 hover:text-[#121212] transition-colors"
-                      >
-                        {cell.day}
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-            </div>
-
-          </div>
-        </div>
-      </section>
-
-      {/* 6. FAQ Section */}
-      <section id="faq" className="relative w-full bg-[#FFFDF8] py-24 border-t border-black/[0.04]">
-        <div className="max-w-6xl mx-auto px-6 md:px-12 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-          
-          {/* Left Column: Title and overlapping brand circles */}
-          <div className="lg:col-span-4 flex flex-col items-center justify-center text-center py-6">
-            <h2 className="text-[#121212] font-extrabold text-5xl md:text-6xl uppercase tracking-tighter" style={{ fontFamily: 'var(--font-display)' }}>
-              FAQ
-            </h2>
-            
-            {/* Overlapping Brand Circles */}
-            <div className="relative w-24 h-12 flex items-center justify-center mt-6">
-              <div className="w-11 h-11 rounded-full border-4 border-[#FF5A1F] opacity-90" />
-              <div className="w-11 h-11 rounded-full border-4 border-[#121212] opacity-90 -ml-4" />
-            </div>
-          </div>
-
-          {/* Right Column: Accordion with smooth transitions */}
-          <div className="lg:col-span-8 space-y-8">
-            
-            {/* Tab Selector (with sliding background) */}
-            <div className="flex space-x-2 bg-white p-1 rounded-full border border-black/[0.04] w-fit shadow-[var(--shadow-premium-sm)] relative">
-              <button
-                onClick={() => {
-                  setFaqTab('students');
-                  setExpandedFaq(null);
-                }}
-                className={`relative px-6 py-2 rounded-full text-[10px] font-bold uppercase tracking-widest transition-colors duration-300 cursor-pointer ${
-                  faqTab === 'students' ? 'text-white' : 'text-[#4F5666] hover:text-[#121212]'
-                }`}
-                style={{ fontFamily: 'var(--font-display)' }}
-              >
-                {faqTab === 'students' && (
-                  <motion.span 
-                    layoutId="activeFaqTabBg"
-                    className="absolute inset-0 bg-[#FF5A1F] rounded-full z-0"
-                    transition={{ type: 'spring', stiffness: 380, damping: 30 }}
-                  />
-                )}
-                <span className="relative z-10">For Students</span>
-              </button>
-              <button
-                onClick={() => {
-                  setFaqTab('schools');
-                  setExpandedFaq(null);
-                }}
-                className={`relative px-6 py-2 rounded-full text-[10px] font-bold uppercase tracking-widest transition-colors duration-300 cursor-pointer ${
-                  faqTab === 'schools' ? 'text-white' : 'text-[#4F5666] hover:text-[#121212]'
-                }`}
-                style={{ fontFamily: 'var(--font-display)' }}
-              >
-                {faqTab === 'schools' && (
-                  <motion.span 
-                    layoutId="activeFaqTabBg"
-                    className="absolute inset-0 bg-[#FF5A1F] rounded-full z-0"
-                    transition={{ type: 'spring', stiffness: 380, damping: 30 }}
-                  />
-                )}
-                <span className="relative z-10">For Schools</span>
-              </button>
-            </div>
-
-            {/* Accordion Cards with Framer Motion Height Transition */}
-            <div className="space-y-4">
-              {faqData[faqTab].map((item, index) => {
-                const isOpen = expandedFaq === index;
-                return (
-                  <div
-                    key={index}
-                    className="bg-white border border-black/[0.04] rounded-[16px] overflow-hidden transition-all duration-300 hover:border-black/[0.08] shadow-[var(--shadow-premium-sm)]"
-                  >
-                    <button
-                      onClick={() => setExpandedFaq(isOpen ? null : index)}
-                      className="w-full px-6 py-5 flex justify-between items-center text-left gap-4 cursor-pointer focus:outline-none"
-                    >
-                      <span className="text-[#121212] font-bold text-sm sm:text-base uppercase tracking-wide" style={{ fontFamily: 'var(--font-display)' }}>
-                        {item.question}
-                      </span>
-                      <span className="text-gray-400 text-xl font-medium shrink-0">
-                        {isOpen ? '−' : '+'}
-                      </span>
-                    </button>
-                    
-                    <AnimatePresence initial={false}>
-                      {isOpen && (
-                        <motion.div
-                          initial={{ height: 0, opacity: 0 }}
-                          animate={{ height: 'auto', opacity: 1 }}
-                          exit={{ height: 0, opacity: 0 }}
-                          transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-                          className="overflow-hidden"
-                        >
-                          <p className="px-6 pb-6 text-[#4F5666] text-xs sm:text-sm leading-relaxed font-light border-t border-black/[0.02] pt-4">
-                            {item.answer}
-                          </p>
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
-                  </div>
-                );
-              })}
-            </div>
-
-          </div>
-
-        </div>
-      </section>
-
-      {/* 7. Closing Statement Section (Deep Dark Immersive Theme) */}
+      {/* 4. Closing Statement Section (Deep Dark Immersive Theme) */}
       <section className="relative w-full bg-[#121212] pt-32 pb-48 overflow-hidden flex flex-col items-center justify-center border-t border-white/5">
         
         {/* Soft Ambient Radial Glows */}
@@ -891,10 +364,8 @@ export default function LandingPage() {
             <h4 className="text-white font-bold uppercase tracking-widest text-[10px] mb-4">Discover</h4>
             <ul className="space-y-3 text-xs font-semibold">
               <li><Link href="#about-evida" className="hover:text-white transition-colors">About Evida</Link></li>
-              <li><Link href="#our-mission" className="hover:text-white transition-colors">Our Mission</Link></li>
               <li><Link href="#explore-categories" className="hover:text-white transition-colors">Featured Events</Link></li>
               <li><Link href="#how-it-works" className="hover:text-white transition-colors">How It Works</Link></li>
-              <li><Link href="#faq" className="hover:text-white transition-colors">FAQ</Link></li>
             </ul>
           </div>
 

@@ -7,6 +7,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Sparkles, ArrowLeft, ArrowRight, GraduationCap, Shield, Mail, KeyRound, CheckCircle2, Lock } from 'lucide-react';
 import { useUser } from '@/lib/context/UserContext';
 import Card from '@/components/ui/Card';
+import EvidaLogo from '@/components/ui/EvidaLogo';
 
 type LoginStep = 'role-selection' | 'student-email' | 'student-verify' | 'admin-login' | 'success';
 
@@ -49,11 +50,49 @@ export default function LoginPage() {
 
   const handleRoleSelect = (selectedRole: 'student' | 'admin') => {
     setRole(selectedRole);
-    if (selectedRole === 'student') {
-      navigateTo('student-email');
-    } else {
-      navigateTo('admin-login');
-    }
+    setIsLoading(true);
+    
+    setTimeout(() => {
+      if (selectedRole === 'student') {
+        const mockStudent = simulatedUsers.find(u => u.role === 'student') || {
+          username: 'alex.rivera',
+          name: 'Alex Rivera',
+          email: 'alex.rivera@stateuni.edu',
+          role: 'student' as const,
+          organizations: [],
+          major: 'Computer Science',
+          gradYear: '2028',
+          graduationYear: '2028',
+          school: 'State University',
+          avatar: 'AR',
+        };
+        setCurrentUser(mockStudent);
+      } else {
+        const mockAdmin = simulatedUsers.find(u => u.role === 'admin') || {
+          username: 'dean.williams',
+          name: 'Dean Williams',
+          email: 'dean.williams@university.edu',
+          role: 'admin' as const,
+          organizations: [],
+          major: 'Administration',
+          gradYear: 'N/A',
+          graduationYear: 'N/A',
+          school: 'Administration Board',
+          avatar: 'DW',
+        };
+        setCurrentUser(mockAdmin);
+      }
+      setIsLoading(false);
+      navigateTo('success');
+      
+      setTimeout(() => {
+        if (selectedRole === 'student') {
+          router.push('/student/events');
+        } else {
+          router.push('/school/dashboard');
+        }
+      }, 1500);
+    }, 1000);
   };
 
   const handleEmailSubmit = (e: React.FormEvent) => {
@@ -206,8 +245,8 @@ export default function LoginPage() {
               {/* HEADER */}
               {step !== 'success' && (
                 <div className="text-center space-y-3">
-                  <div className="mx-auto flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-tr from-[#FF5A1F] to-[#FF8B5B] shadow-[0_4px_15px_rgba(255,90,31,0.2)]">
-                    <Sparkles className="h-5.5 w-5.5 text-white" />
+                  <div className="mx-auto flex justify-center mb-1">
+                    <EvidaLogo size={36} showText={false} />
                   </div>
                   <div>
                     <h1 className="text-xl font-extrabold text-[#121212] uppercase tracking-wider" style={{ fontFamily: 'var(--font-display)' }}>
@@ -254,10 +293,10 @@ export default function LoginPage() {
                     {/* Admin Option */}
                     <button
                       onClick={() => handleRoleSelect('admin')}
-                      className="w-full flex items-center justify-between p-5 rounded-2xl border-2 border-black/[0.06] bg-white hover:bg-black/[0.01] hover:border-[#4F7CFF] transition-all duration-300 cursor-pointer text-left group"
+                      className="w-full flex items-center justify-between p-5 rounded-2xl border-2 border-black/[0.06] bg-white hover:bg-black/[0.01] hover:border-[#121212]/30 transition-all duration-300 cursor-pointer text-left group"
                     >
                       <div className="flex items-center gap-4">
-                        <div className="h-12 w-12 rounded-xl bg-[#4F7CFF]/10 text-[#4F7CFF] flex items-center justify-center group-hover:scale-105 transition-transform">
+                        <div className="h-12 w-12 rounded-xl bg-[#121212]/10 text-[#121212] flex items-center justify-center group-hover:scale-105 transition-transform">
                           <Shield className="h-6 w-6" />
                         </div>
                         <div>
@@ -265,7 +304,7 @@ export default function LoginPage() {
                           <p className="text-xs text-[#4F5666] mt-0.5 max-w-[220px]">Manage campus events, review queues, and view analytics.</p>
                         </div>
                       </div>
-                      <ArrowRight className="h-5 w-5 text-[#4F5666] group-hover:text-[#4F7CFF] group-hover:translate-x-1 transition-all" />
+                      <ArrowRight className="h-5 w-5 text-[#4F5666] group-hover:text-[#121212] group-hover:translate-x-1 transition-all" />
                     </button>
                   </div>
 
@@ -431,7 +470,7 @@ export default function LoginPage() {
                     <div className="bg-black/[0.02] border border-black/[0.06] p-3 rounded-xl text-[11px] space-y-1">
                       <span className="text-[9px] font-bold text-gray-400 uppercase tracking-wider block text-center mb-1">Simulation Helper</span>
                       <p className="text-[#4F5666]">Use the official admin email:</p>
-                      <code className="text-[#4F7CFF] block font-mono font-bold select-all text-center">dean.williams@university.edu</code>
+                      <code className="text-[#FF5A1F] block font-mono font-bold select-all text-center">dean.williams@university.edu</code>
                       <button
                         type="button"
                         onClick={() => {
