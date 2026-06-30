@@ -200,9 +200,9 @@ export function MobileBottomNav({ variant = 'student' }: { variant?: 'student' |
               <Link key={tab.href} href={tab.href} className="-mt-6">
                 <motion.div
                   whileTap={{ scale: 0.9 }}
-                  className="h-14 w-14 rounded-full bg-[#E8FF40] flex items-center justify-center shadow-lg shadow-orange-500/20 cursor-pointer"
+                  className="h-14 w-14 rounded-full bg-[#E8FF40] flex items-center justify-center shadow-lg shadow-[#203627]/10 cursor-pointer"
                 >
-                  <Plus className="h-6 w-6 text-white stroke-[2.5]" />
+                  <Plus className="h-6 w-6 text-[#203627] stroke-[2.5]" />
                 </motion.div>
               </Link>
             );
@@ -214,8 +214,8 @@ export function MobileBottomNav({ variant = 'student' }: { variant?: 'student' |
               href={tab.href}
               className={`flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-2xl transition-colors cursor-pointer ${
                 isActive 
-                  ? 'text-[#E8FF40]' 
-                  : 'text-gray-400 hover:text-[#E8FF40]'
+                  ? 'text-[#203627] font-extrabold' 
+                  : 'text-gray-400 hover:text-[#203627]'
               }`}
             >
               <Icon className="h-5 w-5" />

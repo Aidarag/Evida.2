@@ -181,7 +181,7 @@ export default function LandingPage() {
           >
             <Link 
               href="/login" 
-              className="bg-[#E8FF40] text-[#203627] font-bold uppercase tracking-widest text-[11px] px-8 py-4 hover:bg-[#d8ee2e] hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center gap-2 rounded-full shadow-[0_4px_18px_rgba(255,90,31,0.3)]"
+              className="bg-[#E8FF40] text-[#203627] font-bold uppercase tracking-widest text-[11px] px-8 py-4 hover:bg-[#d8ee2e] hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center gap-2 rounded-full shadow-[0_4px_18px_rgba(32,54,39,0.15)]"
             >
               Get Started <ArrowRight className="h-4 w-4" />
             </Link>
@@ -264,7 +264,7 @@ export default function LandingPage() {
                   key={category}
                   onClick={() => setSelectedCategory(category)}
                   className={`relative px-6 py-2.5 rounded-full text-[10px] font-bold uppercase tracking-widest transition-colors duration-300 cursor-pointer ${
-                    isActive ? 'text-white' : 'text-[#4F5666] hover:text-[#203627]'
+                    isActive ? 'text-[#203627]' : 'text-[#4F5666] hover:text-[#203627]'
                   }`}
                   style={{ fontFamily: 'var(--font-display)' }}
                 >
@@ -320,7 +320,7 @@ export default function LandingPage() {
           <div className="pt-4">
             <Link 
               href="/login"
-              className="inline-flex items-center justify-center px-8 py-4 rounded-full text-xs font-bold uppercase tracking-wider bg-white text-[#203627] hover:bg-[#E8FF40] hover:text-white transition-all duration-300 transform hover:scale-105 shadow-xl hover:shadow-[#E8FF40]/10 cursor-pointer"
+              className="inline-flex items-center justify-center px-8 py-4 rounded-full text-xs font-bold uppercase tracking-wider bg-white text-[#203627] hover:bg-[#E8FF40] hover:text-[#203627] transition-all duration-300 transform hover:scale-105 shadow-xl hover:shadow-[#E8FF40]/10 cursor-pointer"
               style={{ fontFamily: 'var(--font-display)' }}
             >
               Get started

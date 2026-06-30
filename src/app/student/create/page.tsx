@@ -157,10 +157,10 @@ export default function CreateListingPage() {
             className="space-y-8"
           >
             <div className="text-center space-y-2">
-              <h1 className="text-3xl font-extrabold text-white tracking-tight" style={{ fontFamily: 'var(--font-display)' }}>
+              <h1 className="text-3xl font-extrabold text-[#203627] tracking-tight" style={{ fontFamily: 'var(--font-display)' }}>
                 What would you like to create?
               </h1>
-              <p className="text-sm text-[#B8BBC8]">Choose the type of listing you want to add to Evida.</p>
+              <p className="text-sm text-[#4F5666]">Choose the type of listing you want to add to Evida.</p>
             </div>
 
             <div className="grid md:grid-cols-2 gap-6">
@@ -172,8 +172,8 @@ export default function CreateListingPage() {
                   <Calendar className="h-8 w-8" />
                 </div>
                 <div>
-                  <h3 className="text-xl font-bold text-white uppercase tracking-wider" style={{ fontFamily: 'var(--font-display)' }}>Event</h3>
-                  <p className="text-xs text-[#B8BBC8] mt-2.5 leading-relaxed">
+                  <h3 className="text-xl font-bold text-[#203627] uppercase tracking-wider" style={{ fontFamily: 'var(--font-display)' }}>Event</h3>
+                  <p className="text-xs text-[#4F5666] mt-2.5 leading-relaxed">
                     Host an activity happening on campus. Gather student groups, schedule club meetings, or organize school-wide events.
                   </p>
                 </div>
@@ -187,8 +187,8 @@ export default function CreateListingPage() {
                   <Tag className="h-8 w-8" />
                 </div>
                 <div>
-                  <h3 className="text-xl font-bold text-white uppercase tracking-wider" style={{ fontFamily: 'var(--font-display)' }}>Promotion</h3>
-                  <p className="text-xs text-[#B8BBC8] mt-2.5 leading-relaxed">
+                  <h3 className="text-xl font-bold text-[#203627] uppercase tracking-wider" style={{ fontFamily: 'var(--font-display)' }}>Promotion</h3>
+                  <p className="text-xs text-[#4F5666] mt-2.5 leading-relaxed">
                     Advertise a student service, business, tutoring, food sale, photography service, or student initiative.
                   </p>
                 </div>
@@ -207,26 +207,26 @@ export default function CreateListingPage() {
             className="space-y-8 max-w-2xl mx-auto w-full"
           >
             <div className="text-center space-y-2">
-              <h1 className="text-3xl font-extrabold text-white tracking-tight" style={{ fontFamily: 'var(--font-display)' }}>
+              <h1 className="text-3xl font-extrabold text-[#203627] tracking-tight" style={{ fontFamily: 'var(--font-display)' }}>
                 Who is organizing this event?
               </h1>
-              <p className="text-sm text-[#B8BBC8]">Choose who owns and hosts this event on campus.</p>
+              <p className="text-sm text-[#4F5666]">Choose who owns and hosts this event on campus.</p>
             </div>
 
             <div className="space-y-4">
               {/* Option 1: Me */}
               <button
                 onClick={() => { setCreatorEntity('student'); handleNext(); }}
-                className="w-full text-left p-5 rounded-2xl border-2 border-white/[0.05] bg-[#FFFDE1]/[0.01] hover:bg-[#FFFDE1]/[0.03] hover:border-[var(--color-evida-blue)] transition-all flex items-center gap-4 group cursor-pointer"
+                className="w-full text-left p-5 rounded-2xl border-2 border-black/[0.06] bg-white hover:bg-black/[0.01] hover:border-[#203627]/30 transition-all flex items-center gap-4 group cursor-pointer"
               >
                 <div className="h-12 w-12 rounded-xl bg-[var(--color-evida-blue)]/10 text-[var(--color-evida-blue)] flex items-center justify-center group-hover:scale-105 transition-transform shrink-0">
                   <User className="h-6 w-6" />
                 </div>
                 <div>
-                  <h3 className="text-md font-bold text-white uppercase tracking-wider">Me</h3>
-                  <p className="text-xs text-[#B8BBC8] mt-0.5">Student-Owned Event. Independent activities, study groups, and meetups.</p>
+                  <h3 className="text-md font-bold text-[#203627] uppercase tracking-wider">Me</h3>
+                  <p className="text-xs text-[#4F5666] mt-0.5">Student-Owned Event. Independent activities, study groups, and meetups.</p>
                 </div>
-                <ArrowRight className="h-5 w-5 text-[#B8BBC8] ml-auto group-hover:text-white group-hover:translate-x-1 transition-all" />
+                <ArrowRight className="h-5 w-5 text-[#4F5666] ml-auto group-hover:text-[#203627] group-hover:translate-x-1 transition-all" />
               </button>
 
               {/* Option 2: My Organization */}
@@ -239,34 +239,34 @@ export default function CreateListingPage() {
                   }
                   setStep(4); // Go straight to form
                 }}
-                className="w-full text-left p-5 rounded-2xl border-2 border-white/[0.05] bg-[#FFFDE1]/[0.01] hover:bg-[#FFFDE1]/[0.03] hover:border-[var(--color-evida-lime)] transition-all flex items-center gap-4 group cursor-pointer"
+                className="w-full text-left p-5 rounded-2xl border-2 border-black/[0.06] bg-white hover:bg-black/[0.01] hover:border-[#203627]/30 transition-all flex items-center gap-4 group cursor-pointer"
               >
                 <div className="h-12 w-12 rounded-xl bg-[var(--color-evida-lime)]/10 text-[var(--color-evida-lime)] flex items-center justify-center group-hover:scale-105 transition-transform shrink-0">
                   <Users className="h-6 w-6" />
                 </div>
                 <div>
-                  <h3 className="text-md font-bold text-white uppercase tracking-wider">My Organization</h3>
-                  <p className="text-xs text-[#B8BBC8] mt-0.5">Organization-Owned Event. For verified clubs, teams, and Greek life.</p>
+                  <h3 className="text-md font-bold text-[#203627] uppercase tracking-wider">My Organization</h3>
+                  <p className="text-xs text-[#4F5666] mt-0.5">Organization-Owned Event. For verified clubs, teams, and Greek life.</p>
                 </div>
-                <ArrowRight className="h-5 w-5 text-[#B8BBC8] ml-auto group-hover:text-white group-hover:translate-x-1 transition-all" />
+                <ArrowRight className="h-5 w-5 text-[#4F5666] ml-auto group-hover:text-[#203627] group-hover:translate-x-1 transition-all" />
               </button>
 
               {/* Option 3: School (Visible only to administrators) */}
               {isAdmin && (
                 <button
                   onClick={() => { setCreatorEntity('school'); setStep(4); }} // Go straight to form
-                  className="w-full text-left p-5 rounded-2xl border-2 border-white/[0.05] bg-[#FFFDE1]/[0.01] hover:bg-[#FFFDE1]/[0.03] hover:border-[var(--color-evida-coral)] transition-all flex items-center gap-4 group cursor-pointer animate-pulse"
+                  className="w-full text-left p-5 rounded-2xl border-2 border-black/[0.06] bg-white hover:bg-black/[0.01] hover:border-[#203627]/30 transition-all flex items-center gap-4 group cursor-pointer animate-pulse"
                 >
                   <div className="h-12 w-12 rounded-xl bg-[var(--color-evida-coral)]/10 text-[var(--color-evida-coral)] flex items-center justify-center group-hover:scale-105 transition-transform shrink-0">
                     <Shield className="h-6 w-6" />
                   </div>
                   <div>
-                    <h3 className="text-md font-bold text-white uppercase tracking-wider flex items-center gap-1.5">
+                    <h3 className="text-md font-bold text-[#203627] uppercase tracking-wider flex items-center gap-1.5">
                       School <span className="bg-[var(--color-evida-coral)]/20 text-[var(--color-evida-coral)] text-[8px] font-extrabold px-1.5 py-0.5 rounded uppercase">Admin Only</span>
                     </h3>
-                    <p className="text-xs text-[#B8BBC8] mt-0.5">School-Owned Event. Official administrative postings and university initiatives.</p>
+                    <p className="text-xs text-[#4F5666] mt-0.5">School-Owned Event. Official administrative postings and university initiatives.</p>
                   </div>
-                  <ArrowRight className="h-5 w-5 text-[#B8BBC8] ml-auto group-hover:text-white group-hover:translate-x-1 transition-all" />
+                  <ArrowRight className="h-5 w-5 text-[#4F5666] ml-auto group-hover:text-[#203627] group-hover:translate-x-1 transition-all" />
                 </button>
               )}
             </div>
@@ -289,10 +289,10 @@ export default function CreateListingPage() {
             className="space-y-8 max-w-2xl mx-auto w-full"
           >
             <div className="text-center space-y-2">
-              <h1 className="text-3xl font-extrabold text-white tracking-tight" style={{ fontFamily: 'var(--font-display)' }}>
+              <h1 className="text-3xl font-extrabold text-[#203627] tracking-tight" style={{ fontFamily: 'var(--font-display)' }}>
                 Select Event Type
               </h1>
-              <p className="text-sm text-[#B8BBC8]">Choose the format that best fits your student activity.</p>
+              <p className="text-sm text-[#4F5666]">Choose the format that best fits your student activity.</p>
             </div>
 
             <div className="grid md:grid-cols-2 gap-6">
@@ -306,7 +306,7 @@ export default function CreateListingPage() {
                 </div>
                 <div>
                   <h3 className="text-lg font-bold text-white uppercase tracking-wide">Quick Event</h3>
-                  <p className="text-xs text-[#B8BBC8] mt-2 leading-relaxed">
+                  <p className="text-xs text-[#4F5666] mt-2 leading-relaxed">
                     Minimal 5-field form for small student activities like study groups, tutoring, or small meetings. Fast-tracked approval.
                   </p>
                 </div>
@@ -322,7 +322,7 @@ export default function CreateListingPage() {
                 </div>
                 <div>
                   <h3 className="text-lg font-bold text-white uppercase tracking-wide">Standard Event</h3>
-                  <p className="text-xs text-[#B8BBC8] mt-2 leading-relaxed">
+                  <p className="text-xs text-[#4F5666] mt-2 leading-relaxed">
                     Full form for larger student gatherings, public meetups, or cultural events. Normal moderation process.
                   </p>
                 </div>
@@ -347,7 +347,7 @@ export default function CreateListingPage() {
             className="w-full max-w-2xl mx-auto"
           >
             <div className="mb-6 flex items-center gap-4">
-              <button onClick={handleBack} className="h-10 w-10 rounded-full bg-[#FFFDE1]/[0.06] flex items-center justify-center text-[#B8BBC8] hover:text-white hover:bg-[#FFFDE1]/[0.1] transition-colors cursor-pointer">
+              <button onClick={handleBack} className="h-10 w-10 rounded-full bg-[#FFFDE1]/[0.06] flex items-center justify-center text-[#4F5666] hover:text-white hover:bg-[#FFFDE1]/[0.1] transition-colors cursor-pointer">
                 <ArrowLeft className="h-5 w-5" />
               </button>
               <div>
@@ -356,13 +356,13 @@ export default function CreateListingPage() {
                     ? 'Promotion Campaign' 
                     : `${creatorEntity}-owned ${eventSubtype === 'quick' ? 'quick' : 'standard'} event`}
                 </span>
-                <h1 className="text-2xl font-extrabold text-white uppercase tracking-wide" style={{ fontFamily: 'var(--font-display)' }}>
+                <h1 className="text-2xl font-extrabold text-[#203627] uppercase tracking-wide" style={{ fontFamily: 'var(--font-display)' }}>
                   {createType === 'promotion' ? 'Create Promotion' : 'Event Details'}
                 </h1>
               </div>
             </div>
 
-            <Card className="p-8 border-2 border-white/[0.04]">
+            <Card className="p-8 max-sm:p-5 max-sm:rounded-[28px] border-2 border-black/[0.04] bg-white text-[#203627]">
               {createType === 'event' ? (
                 // ─────────────────────────────────────────────
                 // EVENT FORM
@@ -372,10 +372,10 @@ export default function CreateListingPage() {
                   {/* Organization Selector (Visible only for Organization events) */}
                   {creatorEntity === 'organization' && (
                     <div className="space-y-1.5">
-                      <label className="block text-[10px] font-bold text-[#B8BBC8] uppercase tracking-widest">Select Club / Organization</label>
+                      <label className="block text-[10px] font-bold text-[#4F5666] uppercase tracking-widest">Select Club / Organization</label>
                       {myOrgs.length > 0 ? (
                         <select 
-                          className="w-full rounded-xl bg-[#08080B] border-2 border-white/[0.08] px-4 py-3 text-xs text-white focus:outline-none focus:border-[var(--color-evida-lime)] font-medium cursor-pointer"
+                          className="w-full rounded-xl bg-white border-2 border-black/[0.08] px-4 py-3 text-xs text-[#203627] focus:outline-none focus:border-[#E8FF40] font-medium cursor-pointer"
                           value={eventForm.selectedOrgId}
                           onChange={e => setEventForm({...eventForm, selectedOrgId: e.target.value})}
                           required
@@ -418,9 +418,9 @@ export default function CreateListingPage() {
                     />
                     
                     <div className="space-y-1.5">
-                      <label className="block text-[10px] font-bold text-[#B8BBC8] uppercase tracking-widest">Description</label>
+                      <label className="block text-[10px] font-bold text-[#4F5666] uppercase tracking-widest">Description</label>
                       <textarea 
-                        className="w-full rounded-xl bg-[#FFFDE1]/[0.02] border-2 border-white/[0.08] px-4 py-3 text-xs text-white placeholder-slate-600 focus:outline-none focus:border-[var(--color-evida-blue)] min-h-[120px] resize-none font-medium leading-relaxed"
+                        className="w-full rounded-xl bg-white border-2 border-black/[0.08] px-4 py-3 text-xs text-[#203627] placeholder-gray-400 focus:outline-none focus:border-[#E8FF40] min-h-[120px] resize-none font-medium leading-relaxed"
                         placeholder="What should campus know about this event?"
                         value={eventForm.description}
                         onChange={e => setEventForm({...eventForm, description: e.target.value})}
@@ -457,9 +457,9 @@ export default function CreateListingPage() {
                       {/* Hide Category/Capacity on Quick Student events (Simplified form) */}
                       {eventSubtype !== 'quick' && (
                         <div className="space-y-1.5">
-                          <label className="block text-[10px] font-bold text-[#B8BBC8] uppercase tracking-widest">Category</label>
+                          <label className="block text-[10px] font-bold text-[#4F5666] uppercase tracking-widest">Category</label>
                           <select 
-                            className="w-full rounded-xl bg-[#08080B] border-2 border-white/[0.08] px-4 py-3 text-xs text-white focus:outline-none focus:border-[var(--color-evida-blue)] font-medium cursor-pointer"
+                            className="w-full rounded-xl bg-white border-2 border-black/[0.08] px-4 py-3 text-xs text-[#203627] focus:outline-none focus:border-[#E8FF40] font-medium cursor-pointer"
                             value={eventForm.category}
                             onChange={e => setEventForm({...eventForm, category: e.target.value})}
                           >
@@ -489,7 +489,7 @@ export default function CreateListingPage() {
                         {/* School admin can set Featured status */}
                         {creatorEntity === 'school' && (
                           <div className="space-y-1.5 flex flex-col justify-center">
-                            <label className="block text-[10px] font-bold text-[#B8BBC8] uppercase tracking-widest mb-1.5">Featured Event</label>
+                            <label className="block text-[10px] font-bold text-[#4F5666] uppercase tracking-widest mb-1.5">Featured Event</label>
                             <label className="relative inline-flex items-center cursor-pointer">
                               <input 
                                 type="checkbox" 
@@ -497,8 +497,8 @@ export default function CreateListingPage() {
                                 onChange={e => setEventForm({...eventForm, isFeatured: e.target.checked})}
                                 className="sr-only peer" 
                               />
-                              <div className="w-11 h-6 bg-slate-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-[#FFFDE1] after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[var(--color-evida-lime)]"></div>
-                              <span className="ml-3 text-xs font-semibold text-white">Feature on Landing Page</span>
+                              <div className="w-11 h-6 bg-slate-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#E8FF40]"></div>
+                              <span className="ml-3 text-xs font-semibold text-[#203627]">Feature on Landing Page</span>
                             </label>
                           </div>
                         )}
@@ -508,19 +508,19 @@ export default function CreateListingPage() {
                     {/* Visual Image Uploader Mock (Hidden for Quick Student Events) */}
                     {eventSubtype !== 'quick' && (
                       <div className="space-y-1.5 pt-2">
-                        <label className="block text-[10px] font-bold text-[#B8BBC8] uppercase tracking-widest">Cover Image / Flyer</label>
-                        <div className="w-full rounded-2xl border-2 border-dashed border-white/[0.08] bg-[#FFFDE1]/[0.01] p-6 flex flex-col items-center justify-center gap-2 hover:bg-[#FFFDE1]/[0.03] transition-colors cursor-pointer">
-                          <ImageIcon className="h-6 w-6 text-[#B8BBC8]/60" />
+                        <label className="block text-[10px] font-bold text-[#4F5666] uppercase tracking-widest">Cover Image / Flyer</label>
+                        <div className="w-full rounded-2xl border-2 border-dashed border-black/[0.08] bg-black/[0.01] p-6 flex flex-col items-center justify-center gap-2 hover:bg-black/[0.03] transition-colors cursor-pointer">
+                          <ImageIcon className="h-6 w-6 text-[#4F5666]/60" />
                           <div className="text-center">
-                            <p className="text-xs font-bold text-white">Click to upload flyer image</p>
-                            <p className="text-[10px] text-[#B8BBC8]">PNG or JPG up to 5MB (Default gradient applied otherwise)</p>
+                            <p className="text-xs font-bold text-[#203627]">Click to upload flyer image</p>
+                            <p className="text-[10px] text-[#4F5666]">PNG or JPG up to 5MB (Default gradient applied otherwise)</p>
                           </div>
                         </div>
                       </div>
                     )}
                   </div>
 
-                  <div className="pt-6 border-t border-white/[0.06] flex justify-end">
+                  <div className="pt-6 border-t border-black/[0.06] flex justify-end">
                     <Button 
                       type="submit" 
                       disabled={isSubmitting || (creatorEntity === 'organization' && myOrgs.length === 0)} 
@@ -546,9 +546,9 @@ export default function CreateListingPage() {
                     />
 
                     <div className="space-y-1.5">
-                      <label className="block text-[10px] font-bold text-[#B8BBC8] uppercase tracking-widest">Service Description</label>
+                      <label className="block text-[10px] font-bold text-[#4F5666] uppercase tracking-widest">Service Description</label>
                       <textarea 
-                        className="w-full rounded-xl bg-[#FFFDE1]/[0.02] border-2 border-white/[0.08] px-4 py-3 text-xs text-white placeholder-slate-600 focus:outline-none focus:border-[var(--color-evida-lime)] min-h-[120px] resize-none font-medium leading-relaxed"
+                        className="w-full rounded-xl bg-white border-2 border-black/[0.08] px-4 py-3 text-xs text-[#203627] placeholder-gray-400 focus:outline-none focus:border-[#E8FF40] min-h-[120px] resize-none font-medium leading-relaxed"
                         placeholder="Explain your service, rates, timings, or initiative details..."
                         value={promoForm.description}
                         onChange={e => setPromoForm({...promoForm, description: e.target.value})}
@@ -558,9 +558,9 @@ export default function CreateListingPage() {
 
                     <div className="grid grid-cols-2 gap-4">
                       <div className="space-y-1.5">
-                        <label className="block text-[10px] font-bold text-[#B8BBC8] uppercase tracking-widest">Promotion Category</label>
+                        <label className="block text-[10px] font-bold text-[#4F5666] uppercase tracking-widest">Promotion Category</label>
                         <select 
-                          className="w-full rounded-xl bg-[#08080B] border-2 border-white/[0.08] px-4 py-3 text-xs text-white focus:outline-none focus:border-[var(--color-evida-lime)] font-medium cursor-pointer"
+                          className="w-full rounded-xl bg-white border-2 border-black/[0.08] px-4 py-3 text-xs text-[#203627] focus:outline-none focus:border-[#E8FF40] font-medium cursor-pointer"
                           value={promoForm.category}
                           onChange={e => setPromoForm({...promoForm, category: e.target.value})}
                         >
@@ -590,7 +590,7 @@ export default function CreateListingPage() {
                     />
                   </div>
 
-                  <div className="pt-6 border-t border-white/[0.06] flex justify-end">
+                  <div className="pt-6 border-t border-black/[0.06] flex justify-end">
                     <Button type="submit" disabled={isSubmitting} variant="neon" icon={<Check className="h-4 w-4" />}>
                       {isSubmitting ? 'Submitting...' : 'Submit Promotion'}
                     </Button>

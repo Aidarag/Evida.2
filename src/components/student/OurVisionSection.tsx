@@ -121,7 +121,7 @@ export default function OurVisionSection() {
                   <h3 className="text-[#203627] font-extrabold text-lg md:text-xl uppercase tracking-wide" style={{ fontFamily: 'var(--font-display)' }}>
                     {item}
                   </h3>
-                  <p className="font-bold text-[10px] uppercase tracking-wider" style={{ color: data.color }}>
+                  <p className="font-bold text-[10px] uppercase tracking-wider text-[#203627]">
                     {data.tagline}
                   </p>
                 </div>

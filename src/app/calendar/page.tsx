@@ -82,10 +82,10 @@ export default function CalendarPage() {
     if (day === 3 || day === 12 || day === 20 || day === 26) {
       const IconComp = day === 3 ? GraduationCap : day === 12 ? Music : day === 20 ? Palette : Sparkles;
       return {
-        bgColor: 'bg-[#E8FF40]/10 hover:bg-[#E8FF40]/15',
-        borderColor: 'border-[#E8FF40]/35',
-        textColor: 'text-[#E8FF40]',
-        icon: <IconComp className="h-4 w-4 text-[#E8FF40] stroke-[2]" />,
+        bgColor: 'bg-[#E8FF40]/15 hover:bg-[#E8FF40]/25',
+        borderColor: 'border-[#E8FF40]/40',
+        textColor: 'text-[#203627]',
+        icon: <IconComp className="h-4 w-4 text-[#203627] stroke-[2] max-md:h-3 max-md:w-3" />,
       };
     }
     if (day === 5 || day === 15 || day === 22) {
@@ -94,16 +94,16 @@ export default function CalendarPage() {
         bgColor: 'bg-black/5 hover:bg-black/8',
         borderColor: 'border-black/20',
         textColor: 'text-[#203627]',
-        icon: <IconComp className="h-4 w-4 text-[#203627] stroke-[2]" />,
+        icon: <IconComp className="h-4 w-4 text-[#203627] stroke-[2] max-md:h-3 max-md:w-3" />,
       };
     }
     if (day === 8 || day === 18 || day === 29) {
       const IconComp = day === 8 ? Briefcase : day === 18 ? Code : Film;
       return {
-        bgColor: 'bg-[#E8FF40]/10 hover:bg-[#E8FF40]/15',
-        borderColor: 'border-[#E8FF40]/35',
-        textColor: 'text-[#E8FF40]',
-        icon: <IconComp className="h-4 w-4 text-[#E8FF40] stroke-[2]" />,
+        bgColor: 'bg-[#E8FF40]/15 hover:bg-[#E8FF40]/25',
+        borderColor: 'border-[#E8FF40]/40',
+        textColor: 'text-[#203627]',
+        icon: <IconComp className="h-4 w-4 text-[#203627] stroke-[2] max-md:h-3 max-md:w-3" />,
       };
     }
     return null;

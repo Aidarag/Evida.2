@@ -203,7 +203,7 @@ h3, .text-heading-3 {
 }
 .btn-ghost:hover {
   color: #203627;
-  background: rgba(18, 18, 18, 0.03);
+  background: rgba(32, 54, 39, 0.03);
 }
 
 /* ───────────────────────────────────────────────
@@ -217,12 +217,23 @@ h3, .text-heading-3 {
   background: #EFEFEF;
 }
 ::-webkit-scrollbar-thumb {
-  background: rgba(18, 18, 18, 0.15);
+  background: rgba(32, 54, 39, 0.15);
   border-radius: 9999px;
   border: 2px solid #EFEFEF;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(18, 18, 18, 0.3);
+  background: rgba(32, 54, 39, 0.3);
+}
+
+/* Hide scrollbar utilities */
+.no-scrollbar::-webkit-scrollbar,
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar,
+.scrollbar-none {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 
 /* ───────────────────────────────────────────────

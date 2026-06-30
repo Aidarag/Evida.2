@@ -80,27 +80,27 @@ export default function StudentDashboardPage() {
       {/* 1. Header (Avatar + School Location Selector & Circular Actions) */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <div className="h-10 w-10 rounded-full bg-[#E8FF40] text-[#203627] flex items-center justify-center font-bold border-2 border-white shadow-md text-sm cursor-pointer" onClick={() => router.push('/student/profile')}>
+          <div className="h-11 w-11 rounded-full bg-[#E8FF40] text-[#203627] flex items-center justify-center font-bold border-2 border-white shadow-md text-sm cursor-pointer hover:scale-102 transition-transform" onClick={() => router.push('/student/profile')}>
             {currentUser.avatar || currentUser.name.substring(0, 2).toUpperCase()}
           </div>
           <div>
-            <span className="text-[10px] font-bold text-[#4F5666] uppercase tracking-widest block leading-none mb-1">Campus</span>
-            <button className="flex items-center gap-1 text-sm font-extrabold text-[#203627] uppercase tracking-wide hover:text-[#E8FF40] transition-colors">
-              {currentUser.school} <ChevronDown className="h-4 w-4 text-[#E8FF40]" />
+            <span className="text-[10px] font-bold text-[#4F5666] uppercase tracking-widest block leading-none mb-1.5">Campus</span>
+            <button className="flex items-center gap-1 text-sm font-extrabold text-[#203627] uppercase tracking-wide hover:text-[#203627]/80 transition-colors">
+              {currentUser.school} <ChevronDown className="h-4 w-4 text-[#203627]" />
             </button>
           </div>
         </div>
 
-        <div className="flex gap-2">
-          <Link href="/student/saved" className="h-9 w-9 rounded-full bg-white border border-black/[0.04] flex items-center justify-center text-[#4F5666] hover:text-[#E8FF40] transition-colors shadow-sm">
+        <div className="flex gap-2.5">
+          <Link href="/student/saved" className="h-11 w-11 rounded-full bg-white border border-black/[0.04] flex items-center justify-center text-[#4F5666] hover:text-[#203627] hover:bg-black/[0.02] transition-colors shadow-sm">
             <Heart className="h-4 w-4" />
           </Link>
           <div className="relative">
-            <button className="h-9 w-9 rounded-full bg-white border border-black/[0.04] flex items-center justify-center text-[#4F5666] hover:text-[#E8FF40] transition-colors shadow-sm">
+            <button className="h-11 w-11 rounded-full bg-white border border-black/[0.04] flex items-center justify-center text-[#4F5666] hover:text-[#203627] hover:bg-black/[0.02] transition-colors shadow-sm">
               <Bell className="h-4 w-4" />
             </button>
             {unreadNotifs.length > 0 && (
-              <span className="absolute top-0.5 right-0.5 h-2.5 w-2.5 rounded-full bg-[#E8FF40] border-2 border-white"></span>
+              <span className="absolute top-0.5 right-0.5 h-2.5 w-2.5 rounded-full bg-[#203627] border-2 border-white"></span>
             )}
           </div>
         </div>
@@ -152,7 +152,7 @@ export default function StudentDashboardPage() {
           </Link>
         </div>
 
-        <div className="flex gap-4 overflow-x-auto pb-2 scrollbar-none snap-x -mx-4 px-4">
+        <div className="flex gap-4 overflow-x-auto pb-2 scrollbar-none snap-x snap-mandatory -mx-4 px-4">
           {categories.map((cat) => {
             const isActive = selectedCategory.toLowerCase() === cat.name.toLowerCase();
             return (
@@ -191,7 +191,7 @@ export default function StudentDashboardPage() {
           </Link>
         </div>
 
-        <div className="flex gap-5 overflow-x-auto pb-4 scrollbar-none snap-x -mx-4 px-4">
+        <div className="flex gap-5 overflow-x-auto pb-4 scrollbar-none snap-x snap-mandatory -mx-4 px-4">
           {featuredEvents.length > 0 ? (
             featuredEvents.map((event) => {
               const day = event.date.split('-')[2] || '10';

@@ -41,10 +41,10 @@ export default function SchoolDashboardPage() {
       <div className="grid md:grid-cols-3 gap-6">
         <Card className="p-6 flex flex-col justify-between h-40 border-l-4 border-l-[#E8FF40]">
           <div className="flex justify-between items-start">
-            <div className="h-10 w-10 rounded-full bg-[#E8FF40]/10 flex items-center justify-center text-[#E8FF40]">
+            <div className="h-10 w-10 rounded-full bg-[#E8FF40]/10 flex items-center justify-center text-[#203627]">
               <AlertTriangle className="h-5 w-5" />
             </div>
-            <span className="rounded-full bg-[#E8FF40]/10 text-[#E8FF40] px-3 py-1 text-[10px] font-bold uppercase">High Priority</span>
+            <span className="rounded-full bg-[#E8FF40]/10 text-[#203627] px-3 py-1 text-[10px] font-bold uppercase">High Priority</span>
           </div>
           <div>
             <div className="text-3xl font-bold text-[#203627]">{complexQueue.length}</div>

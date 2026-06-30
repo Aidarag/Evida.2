@@ -244,13 +244,13 @@ export default function AppShowcase() {
         </div>
 
         {/* Right Side: Interactive iPhone Mockup */}
-        <div className="w-full lg:w-1/2 flex justify-center relative">
+        <div className="w-full lg:w-1/2 flex justify-center relative max-sm:-mx-4">
           
           {/* Subtle Ambient Radial Glow */}
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-[#E8FF40]/5 rounded-full blur-[100px] pointer-events-none" />
 
-          {/* iPhone body */}
-          <div className="relative w-[300px] h-[610px] rounded-[50px] border-[9px] border-[#27272A] bg-[#203627] shadow-[0_25px_60px_-15px_rgba(0,0,0,0.35)] overflow-hidden flex flex-col select-none ring-1 ring-white/10">
+          {/* iPhone body - responsive size */}
+          <div className="relative w-[280px] h-[570px] min-w-[280px] sm:w-[300px] sm:h-[610px] rounded-[42px] sm:rounded-[50px] border-[8px] sm:border-[9px] border-[#27272A] bg-[#203627] shadow-[0_25px_60px_-15px_rgba(0,0,0,0.35)] overflow-hidden flex flex-col select-none ring-1 ring-white/10">
             
             {/* Dynamic Island Notch */}
             <div className="absolute top-3.5 left-1/2 -translate-x-1/2 w-28 h-6 bg-black rounded-full z-40 flex items-center justify-between px-3 text-[9px] text-white/40 font-bold tracking-tight">

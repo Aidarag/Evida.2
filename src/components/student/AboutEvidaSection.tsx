@@ -64,16 +64,16 @@ export default function AboutEvidaSection() {
             className="bg-[#E8FF40] rounded-[24px] p-8 md:p-10 flex flex-col justify-between aspect-[4/5] text-left shadow-[var(--shadow-premium-md)] hover:shadow-[var(--shadow-premium-lg)] transition-shadow duration-300"
           >
             <div>
-              <span className="text-white/70 text-[10px] font-bold tracking-[0.2em] uppercase">ENGAGEMENT</span>
-              <h4 className="text-white font-bold text-lg md:text-xl uppercase mt-4 leading-snug" style={{ fontFamily: 'var(--font-display)' }}>
+              <span className="text-[#203627]/70 text-[10px] font-bold tracking-[0.2em] uppercase">ENGAGEMENT</span>
+              <h4 className="text-[#203627] font-bold text-lg md:text-xl uppercase mt-4 leading-snug" style={{ fontFamily: 'var(--font-display)' }}>
                 Active Campus Community
               </h4>
             </div>
             <div>
-              <div className="text-white font-extrabold text-5xl md:text-6xl lg:text-7xl leading-none" style={{ fontFamily: 'var(--font-display)' }}>
+              <div className="text-[#203627] font-extrabold text-5xl md:text-6xl lg:text-7xl leading-none" style={{ fontFamily: 'var(--font-display)' }}>
                 94%
               </div>
-              <p className="text-white/80 text-xs mt-4 font-light leading-relaxed">
+              <p className="text-[#203627]/80 text-xs mt-4 font-light leading-relaxed">
                 Students reporting a more connected and active campus experience since using Evida.
               </p>
             </div>

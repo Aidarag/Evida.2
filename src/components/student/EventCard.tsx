@@ -40,18 +40,18 @@ export default function EventCard({ event, onClick, onSave, isSaved = false }: E
   const goingCount = 32 + (event.title.length * 2);
 
   const getCategoryStyles = (cat?: string) => {
-    if (isPromo) return 'bg-[#E8FF40]/10 text-[#E8FF40] border-[#E8FF40]/15';
+    if (isPromo) return 'bg-[#E8FF40]/15 text-[#203627] border-[#E8FF40]/25';
     const c = cat?.toLowerCase() || '';
     if (c.includes('sport') || c.includes('athlet') || c.includes('trophy')) {
-      return 'bg-[#E8FF40]/10 text-[#E8FF40] border-[#E8FF40]/15';
+      return 'bg-[#E8FF40]/15 text-[#203627] border-[#E8FF40]/25';
     }
     if (c.includes('music') || c.includes('concert') || c.includes('party') || c.includes('show') || c.includes('art') || c.includes('greek')) {
       return 'bg-black/5 text-[#203627] border-black/10';
     }
-    if (c.includes('career') || c.includes('fair') || c.includes('workshop') || c.includes('hackathon') || c.includes('workshop') || c.includes('academic')) {
-      return 'bg-[#E8FF40]/10 text-[#E8FF40] border-[#E8FF40]/15';
+    if (c.includes('career') || c.includes('fair') || c.includes('workshop') || c.includes('hackathon') || c.includes('academic')) {
+      return 'bg-[#E8FF40]/15 text-[#203627] border-[#E8FF40]/25';
     }
-    return 'bg-[#E8FF40]/10 text-[#E8FF40] border-[#E8FF40]/15';
+    return 'bg-[#E8FF40]/15 text-[#203627] border-[#E8FF40]/25';
   };
 
   const activeSaved = onSave ? isSaved : isSavedLocal;
@@ -103,13 +103,13 @@ export default function EventCard({ event, onClick, onSave, isSaved = false }: E
       {/* 3. Content Body */}
       <div className="p-6 flex flex-col flex-1 justify-between gap-4 text-left">
         <div className="space-y-2 cursor-pointer" onClick={onClick}>
-          {/* Date & Time Invite Style (Orange, Uppercase) */}
-          <div className="text-[#E8FF40] text-[10px] font-bold uppercase tracking-widest">
+          {/* Date & Time Invite Style (Dark Green, Uppercase) */}
+          <div className="text-[#203627]/85 text-[10px] font-bold uppercase tracking-widest">
             {formattedDate} • {timeStr}
           </div>
 
           {/* Event Title */}
-          <h3 className="text-[#203627] font-bold text-lg line-clamp-2 leading-tight tracking-tight hover:text-[#E8FF40] transition-colors" style={{ fontFamily: 'var(--font-display)' }}>
+          <h3 className="text-[#203627] font-bold text-lg line-clamp-2 leading-tight tracking-tight hover:text-[#203627]/80 transition-colors" style={{ fontFamily: 'var(--font-display)' }}>
             {event.title}
           </h3>
           
@@ -157,7 +157,7 @@ export default function EventCard({ event, onClick, onSave, isSaved = false }: E
               e.stopPropagation();
               onClick();
             }}
-            className="inline-flex items-center gap-1.5 bg-white border border-black/10 hover:border-transparent hover:bg-[#E8FF40] hover:text-white text-[#203627] font-bold text-[10px] uppercase tracking-wider py-1.5 px-3.5 rounded-full transition-all duration-300 shadow-sm cursor-pointer whitespace-nowrap"
+            className="inline-flex items-center gap-1.5 bg-white border border-black/10 hover:border-transparent hover:bg-[#E8FF40] hover:text-[#203627] text-[#203627] font-bold text-[10px] uppercase tracking-wider py-1.5 px-3.5 rounded-full transition-all duration-300 shadow-sm cursor-pointer whitespace-nowrap"
             style={{ fontFamily: 'var(--font-display)' }}
           >
             <Calendar className="h-3.5 w-3.5" />

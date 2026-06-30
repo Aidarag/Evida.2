@@ -35,7 +35,7 @@ export default function Modal({ isOpen, onClose, children, title, size = 'md' }:
   return (
     <AnimatePresence>
       {isOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 max-sm:p-0 max-sm:items-end">
           {/* Backdrop */}
           <motion.div
             initial={{ opacity: 0 }}
@@ -48,15 +48,16 @@ export default function Modal({ isOpen, onClose, children, title, size = 'md' }:
 
           {/* Panel */}
           <motion.div
-            initial={{ opacity: 0, scale: 0.95, y: 10 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.95, y: 10 }}
-            transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 24 }}
+            transition={{ type: 'spring', stiffness: 450, damping: 35 }}
             className={`
               relative w-full ${sizeClasses[size]}
               bg-[#EFEFEF] border border-black/5
-              rounded-[24px] shadow-[var(--shadow-premium-xl)]
-              overflow-y-auto max-h-[85vh]
+              rounded-[24px] max-sm:rounded-t-[28px] max-sm:rounded-b-none
+              shadow-[var(--shadow-premium-xl)]
+              overflow-y-auto max-h-[85vh] max-sm:max-h-[92vh]
             `}
           >
             {/* Header */}
@@ -65,7 +66,7 @@ export default function Modal({ isOpen, onClose, children, title, size = 'md' }:
                 <h2 className="text-lg font-bold text-[#203627] uppercase tracking-wide" style={{ fontFamily: 'var(--font-display)' }}>{title}</h2>
                 <button
                   onClick={onClose}
-                  className="h-8 w-8 rounded-full bg-black/5 hover:bg-black/10 flex items-center justify-center transition-colors cursor-pointer"
+                  className="h-10 w-10 rounded-full bg-black/5 hover:bg-black/10 flex items-center justify-center transition-colors cursor-pointer"
                 >
                   <X className="h-4 w-4 text-[#4F5666]" />
                 </button>

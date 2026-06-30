@@ -17,7 +17,7 @@ const variantStyles: Record<ButtonVariant, string> = {
   primary:
     'bg-[#E8FF40] text-[#203627] font-bold shadow-[0_4px_14px_rgba(32, 54, 39, 0.1)] hover:bg-[#d8ee2e] border border-transparent',
   secondary:
-    'bg-[#203627] text-white font-bold shadow-[0_4px_14px_rgba(18,18,18,0.15)] hover:bg-[#16271c] border border-transparent',
+    'bg-[#203627] text-white font-bold shadow-[0_4px_14px_rgba(32, 54, 39, 0.08)] hover:bg-[#16271c] border border-transparent',
   accent:
     'bg-[#E8FF40] text-[#203627] font-bold shadow-[0_4px_14px_rgba(32, 54, 39, 0.1)] hover:bg-[#d8ee2e] border border-transparent',
   neon:
@@ -29,9 +29,9 @@ const variantStyles: Record<ButtonVariant, string> = {
 };
 
 const sizeStyles: Record<ButtonSize, string> = {
-  sm: 'px-4 py-1.5 text-[11px] uppercase tracking-wider gap-1.5',
-  md: 'px-6 py-2.5 text-xs uppercase tracking-wider gap-2',
-  lg: 'px-8 py-3.5 text-sm uppercase tracking-wider gap-2.5',
+  sm: 'px-4 py-1.5 text-[11px] uppercase tracking-wider gap-1.5 min-h-[36px] max-md:min-h-11 max-md:text-[12px]',
+  md: 'px-6 py-2.5 text-xs uppercase tracking-wider gap-2 min-h-[42px] max-md:min-h-11',
+  lg: 'px-8 py-3.5 text-sm uppercase tracking-wider gap-2.5 min-h-[50px] max-md:min-h-12',
 };
 
 const Button = forwardRef<HTMLButtonElement, ButtonProps>(

@@ -200,7 +200,7 @@ export default function StudentEventsFeed() {
                     />
                   )}
                   <span className="relative z-10 flex items-center gap-2.5">
-                    <Icon className={`h-4 w-4 relative z-10 ${isActive ? 'text-white' : 'text-[#4F5666]'}`} />
+                    <Icon className={`h-4 w-4 relative z-10 ${isActive ? 'text-[#203627]' : 'text-[#4F5666]'}`} />
                     <span className="relative z-10">{filter.label}</span>
                   </span>
                 </motion.button>
@@ -224,7 +224,7 @@ export default function StudentEventsFeed() {
                   transition={{ type: 'spring', stiffness: 400, damping: 25 }}
                   className={`relative shrink-0 px-5.5 py-2.5 h-9.5 rounded-full text-[10px] font-extrabold uppercase tracking-wider cursor-pointer select-none transition-colors duration-200 ${
                     isActive
-                      ? 'text-white'
+                      ? 'text-[#203627]'
                       : 'bg-black/[0.02] border border-black/[0.06] text-[#4F5666] hover:bg-black/[0.04] hover:text-[#203627]'
                   }`}
                 >

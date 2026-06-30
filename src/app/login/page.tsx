@@ -199,7 +199,7 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[var(--color-primary-bg)] flex items-center justify-center p-6 relative overflow-hidden font-sans">
+    <div className="min-h-screen bg-[var(--color-primary-bg)] flex items-center justify-center p-6 max-sm:p-4 relative overflow-hidden font-sans">
       {/* Dynamic Background Glowing Blobs */}
       <div className="absolute top-1/4 left-1/4 w-[400px] h-[400px] rounded-full bg-[#E8FF40]/5 blur-[120px] pointer-events-none" />
       <div className="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] rounded-full bg-[#9DC4D5]/4 blur-[100px] pointer-events-none" />
@@ -213,7 +213,7 @@ export default function LoginPage() {
       )}
 
       <div className="w-full max-w-md">
-        <Card glass className="p-8 space-y-6 overflow-hidden relative" hover={false}>
+        <Card glass className="p-8 max-sm:p-5 max-sm:rounded-[28px] space-y-6 overflow-hidden relative" hover={false}>
           
           {/* Back Navigation within Flow */}
           {step !== 'role-selection' && step !== 'success' && (
@@ -311,7 +311,7 @@ export default function LoginPage() {
                   <div className="pt-4 border-t border-black/[0.06] text-center">
                     <p className="text-xs text-[#4F5666]">
                       Don't have an account?{' '}
-                      <Link href="/signup" className="text-[#E8FF40] font-bold hover:underline transition-all">
+                      <Link href="/signup" className="text-[#203627] font-bold underline decoration-2 decoration-[#E8FF40] hover:text-[#203627]/80 transition-all">
                         Sign up here
                       </Link>
                     </p>
@@ -341,7 +341,7 @@ export default function LoginPage() {
                     </div>
                   </div>
 
-                  {error && <p className="text-xs text-[#E8FF40] font-semibold">{error}</p>}
+                  {error && <p className="text-xs text-red-600 font-semibold">{error}</p>}
 
                   <button
                     type="submit"
@@ -380,7 +380,7 @@ export default function LoginPage() {
                     </p>
                   </div>
 
-                  {error && <p className="text-xs text-[#E8FF40] font-semibold">{error}</p>}
+                  {error && <p className="text-xs text-red-600 font-semibold">{error}</p>}
 
                   <div className="space-y-3">
                     <button
@@ -396,7 +396,7 @@ export default function LoginPage() {
                       <span className="text-[9px] font-bold text-gray-400 uppercase tracking-wider block text-center">Simulation Helper</span>
                       <div className="flex justify-between items-center text-[11px]">
                         <span className="text-[#4F5666]">Simulated Code:</span>
-                        <code className="text-[#E8FF40] font-mono font-bold text-xs">{generatedCode}</code>
+                        <code className="text-[#203627] font-mono font-bold text-xs">{generatedCode}</code>
                       </div>
                       <button
                         type="button"
@@ -455,7 +455,7 @@ export default function LoginPage() {
                     </div>
                   </div>
 
-                  {error && <p className="text-xs text-[#E8FF40] font-semibold">{error}</p>}
+                  {error && <p className="text-xs text-red-600 font-semibold">{error}</p>}
 
                   <div className="space-y-3 pt-1">
                     <button
@@ -470,7 +470,7 @@ export default function LoginPage() {
                     <div className="bg-black/[0.02] border border-black/[0.06] p-3 rounded-xl text-[11px] space-y-1">
                       <span className="text-[9px] font-bold text-gray-400 uppercase tracking-wider block text-center mb-1">Simulation Helper</span>
                       <p className="text-[#4F5666]">Use the official admin email:</p>
-                      <code className="text-[#E8FF40] block font-mono font-bold select-all text-center">dean.williams@university.edu</code>
+                      <code className="text-[#203627] block font-mono font-bold select-all text-center">dean.williams@university.edu</code>
                       <button
                         type="button"
                         onClick={() => {

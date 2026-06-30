@@ -28,58 +28,58 @@ export default function AnalyticsPage() {
   return (
     <div className="p-6 md:p-10 space-y-8 max-w-6xl mx-auto">
       <div className="space-y-2">
-        <h1 className="text-3xl font-extrabold text-white tracking-tight">Engagement Analytics</h1>
-        <p className="text-sm text-[#B8BBC8]">Campus-wide metrics and event performance data.</p>
+        <h1 className="text-3xl font-extrabold text-[#203627] tracking-tight">Engagement Analytics</h1>
+        <p className="text-sm text-[#4F5666]">Campus-wide metrics and event performance data.</p>
       </div>
 
       {/* Top Stats */}
       <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
         <Card className="p-6">
           <div className="flex items-center gap-4 mb-4">
-            <div className="h-10 w-10 rounded-xl bg-[#80B0EC]/10 flex items-center justify-center text-[#80B0EC]">
+            <div className="h-10 w-10 rounded-xl bg-[#80B0EC]/10 flex items-center justify-center text-[#9DC4D5]">
               <CalendarDays className="h-5 w-5" />
             </div>
-            <span className="text-xs font-bold text-[#B8BBC8] uppercase tracking-wider">Total Events</span>
+            <span className="text-xs font-bold text-[#4F5666] uppercase tracking-wider">Total Events</span>
           </div>
-          <div className="text-3xl font-bold text-white">{totalApproved}</div>
+          <div className="text-3xl font-bold text-[#203627]">{totalApproved}</div>
         </Card>
 
         <Card className="p-6">
           <div className="flex items-center gap-4 mb-4">
-            <div className="h-10 w-10 rounded-xl bg-[#eb5e28]/10 flex items-center justify-center text-[#eb5e28]">
+            <div className="h-10 w-10 rounded-xl bg-[#eb5e28]/10 flex items-center justify-center text-[#203627]">
               <Users className="h-5 w-5" />
             </div>
-            <span className="text-xs font-bold text-[#B8BBC8] uppercase tracking-wider">Total RSVPs</span>
+            <span className="text-xs font-bold text-[#4F5666] uppercase tracking-wider">Total RSVPs</span>
           </div>
-          <div className="text-3xl font-bold text-white">{totalRsvps}</div>
+          <div className="text-3xl font-bold text-[#203627]">{totalRsvps}</div>
         </Card>
 
         <Card className="p-6">
           <div className="flex items-center gap-4 mb-4">
-            <div className="h-10 w-10 rounded-xl bg-[#EE3D5A]/10 flex items-center justify-center text-[#EE3D5A]">
+            <div className="h-10 w-10 rounded-xl bg-[#EE3D5A]/10 flex items-center justify-center text-[#203627]">
               <Activity className="h-5 w-5" />
             </div>
-            <span className="text-xs font-bold text-[#B8BBC8] uppercase tracking-wider">Total Views</span>
+            <span className="text-xs font-bold text-[#4F5666] uppercase tracking-wider">Total Views</span>
           </div>
-          <div className="text-3xl font-bold text-white">{totalViews}</div>
+          <div className="text-3xl font-bold text-[#203627]">{totalViews}</div>
         </Card>
 
         <Card className="p-6">
           <div className="flex items-center gap-4 mb-4">
-            <div className="h-10 w-10 rounded-xl bg-purple-500/10 flex items-center justify-center text-purple-400">
+            <div className="h-10 w-10 rounded-xl bg-purple-500/10 flex items-center justify-center text-[#203627]">
               <TrendingUp className="h-5 w-5" />
             </div>
-            <span className="text-xs font-bold text-[#B8BBC8] uppercase tracking-wider">Active Orgs</span>
+            <span className="text-xs font-bold text-[#4F5666] uppercase tracking-wider">Active Orgs</span>
           </div>
-          <div className="text-3xl font-bold text-white">{organizations.filter(o => o.verified).length}</div>
+          <div className="text-3xl font-bold text-[#203627]">{organizations.filter(o => o.verified).length}</div>
         </Card>
       </div>
 
       {/* Charts area */}
       <div className="grid md:grid-cols-2 gap-8">
         <Card className="p-6 space-y-6">
-          <h2 className="text-lg font-bold text-white flex items-center gap-2">
-            <BarChart3 className="h-5 w-5 text-[#80B0EC]" /> Events by Category
+          <h2 className="text-lg font-bold text-[#203627] flex items-center gap-2">
+            <BarChart3 className="h-5 w-5 text-[#9DC4D5]" /> Events by Category
           </h2>
           <div className="space-y-4">
             {sortedCategories.map(([category, count]) => {
@@ -87,15 +87,15 @@ export default function AnalyticsPage() {
               return (
                 <div key={category} className="space-y-1.5">
                   <div className="flex justify-between text-xs font-medium">
-                    <span className="text-white">{category}</span>
-                    <span className="text-[#B8BBC8]">{count} events ({percentage}%)</span>
+                    <span className="text-[#203627]">{category}</span>
+                    <span className="text-[#4F5666]">{count} events ({percentage}%)</span>
                   </div>
-                  <div className="w-full bg-[#FFFDE1]/[0.04] rounded-full h-2 overflow-hidden">
+                  <div className="w-full bg-black/[0.04] rounded-full h-2 overflow-hidden">
                     <motion.div 
                       initial={{ width: 0 }}
                       animate={{ width: `${percentage}%` }}
                       transition={{ duration: 1, ease: "easeOut" }}
-                      className="h-full bg-gradient-to-r from-[#80B0EC] to-[#eb5e28] rounded-full"
+                      className="h-full bg-gradient-to-r from-[#9DC4D5] to-[#E8FF40] rounded-full"
                     />
                   </div>
                 </div>
@@ -105,8 +105,8 @@ export default function AnalyticsPage() {
         </Card>
 
         <Card className="p-6 space-y-6">
-          <h2 className="text-lg font-bold text-white flex items-center gap-2">
-            <Users className="h-5 w-5 text-[#eb5e28]" /> Top Organizations (RSVPs)
+          <h2 className="text-lg font-bold text-[#203627] flex items-center gap-2">
+            <Users className="h-5 w-5 text-[#203627]" /> Top Organizations (RSVPs)
           </h2>
           <div className="space-y-4">
             {organizations
@@ -114,13 +114,13 @@ export default function AnalyticsPage() {
               .slice(0, 5)
               .map((org, index) => (
                 <div key={org.id} className="flex items-center gap-4">
-                  <div className="h-8 w-8 rounded-full bg-[#FFFDE1]/[0.06] flex items-center justify-center text-xs font-bold text-[#B8BBC8]">
+                  <div className="h-8 w-8 rounded-full bg-[#FFFDE1]/[0.06] flex items-center justify-center text-xs font-bold text-[#4F5666]">
                     #{index + 1}
                   </div>
                   <div className="flex-1">
-                    <p className="text-sm font-bold text-white">{org.name}</p>
+                    <p className="text-sm font-bold text-[#203627]">{org.name}</p>
                   </div>
-                  <span className="text-sm font-bold text-[#eb5e28]">{org.rsvps} RSVPs</span>
+                  <span className="text-sm font-bold text-[#203627]">{org.rsvps} RSVPs</span>
                 </div>
               ))}
           </div>
