@@ -109,16 +109,16 @@ export default function StudentDashboardPage() {
       {/* 2. Search & Filter Bar */}
       <div className="flex gap-3">
         <div className="relative flex-1">
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-[#7B8290]" />
+          <Search className="absolute left-4.5 top-1/2 -translate-y-1/2 h-4 w-4 text-[#7B8290]" />
           <input 
             type="text" 
             placeholder="Search events..." 
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full bg-white border border-black/[0.04] text-[#121212] placeholder-gray-400 rounded-2xl pl-11 pr-4 py-3.5 text-xs focus:outline-none focus:border-[#FF5A1F] focus:ring-1 focus:ring-[#FF5A1F] shadow-sm transition-all"
+            className="w-full bg-black/[0.025] border border-black/[0.04] text-[#121212] placeholder-gray-400 rounded-full pl-12 pr-4 py-3.5 text-xs focus:outline-none focus:border-[#FF5A1F] focus:ring-1 focus:ring-[#FF5A1F] transition-all"
           />
         </div>
-        <button className="h-11 w-11 rounded-2xl bg-white border border-black/[0.04] flex items-center justify-center text-[#4F5666] hover:text-[#FF5A1F] transition-colors shadow-sm shrink-0 cursor-pointer">
+        <button className="h-11 w-11 rounded-full bg-black/[0.025] border border-black/[0.04] flex items-center justify-center text-[#4F5666] hover:text-[#FF5A1F] transition-colors shrink-0 cursor-pointer">
           <SlidersHorizontal className="h-4 w-4" />
         </button>
       </div>
@@ -161,16 +161,15 @@ export default function StudentDashboardPage() {
                 onClick={() => setSelectedCategory(cat.name)}
                 className="flex flex-col items-center gap-2 shrink-0 snap-start cursor-pointer focus:outline-none"
               >
-                {/* Rounded square container with category image preview */}
-                <div className={`relative h-14 w-14 rounded-2xl overflow-hidden border-2 transition-all ${
-                  isActive ? 'border-[#FF5A1F] scale-102 shadow-md shadow-[#FF5A1F]/10' : 'border-black/[0.04] hover:border-black/15'
+                {/* Clean icon container like mockup */}
+                <div className={`h-12 w-12 rounded-2xl flex items-center justify-center transition-all ${
+                  isActive 
+                    ? 'bg-[#FF5A1F] text-white shadow-lg shadow-[#FF5A1F]/20 border border-[#FF5A1F]' 
+                    : 'bg-black/[0.03] border border-black/[0.04] text-[#4F5666] hover:bg-black/5 hover:text-[#121212]'
                 }`}>
-                  <img className="h-full w-full object-cover opacity-85" src={ptToHttp(cat.img)} alt={cat.name} />
-                  <div className="absolute inset-0 bg-black/25 flex items-center justify-center">
-                    <cat.icon className="h-5 w-5 text-white stroke-[2.5]" />
-                  </div>
+                  <cat.icon className="h-4.5 w-4.5 stroke-[2.5]" />
                 </div>
-                <span className={`text-[10px] font-extrabold uppercase tracking-wider transition-colors ${
+                <span className={`text-[9px] font-extrabold uppercase tracking-wider transition-colors ${
                   isActive ? 'text-[#FF5A1F]' : 'text-[#4F5666]'
                 }`}>
                   {cat.name}
@@ -202,61 +201,68 @@ export default function StudentDashboardPage() {
                 <div 
                   key={event.id}
                   onClick={() => router.push(`/events/${event.id}`)}
-                  className="relative w-60 shrink-0 snap-start bg-white border border-black/[0.04] rounded-[24px] overflow-hidden p-3.5 shadow-sm hover:shadow-md hover:border-black/10 transition-all duration-300 flex flex-col justify-between gap-4 cursor-pointer"
+                  className="relative w-56 h-72 shrink-0 snap-start rounded-[24px] overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 cursor-pointer group"
                 >
-                  {/* Event image card */}
-                  <div className="relative aspect-[4/3] w-full rounded-2xl overflow-hidden bg-gray-100">
-                    <img className="h-full w-full object-cover" src={event.coverImage || 'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=400&h=300&fit=crop'} alt={event.title} />
-                    
-                    {/* Date badge */}
-                    <span className="absolute top-2.5 left-2.5 bg-black/40 backdrop-blur-sm border border-white/10 text-[8px] font-bold uppercase px-2.5 py-1 rounded-full text-white tracking-widest">
+                  {/* Event Cover Image */}
+                  <img 
+                    className="absolute inset-0 h-full w-full object-cover group-hover:scale-103 transition-transform duration-500" 
+                    src={event.coverImage || 'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=400&h=600&fit=crop'} 
+                    alt={event.title} 
+                  />
+                  {/* Overlay Gradient */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/35 to-black/10 z-10" />
+
+                  {/* Top Badges */}
+                  <div className="absolute top-3 inset-x-3 z-20 flex justify-between items-center">
+                    <span className="bg-black/35 backdrop-blur-md border border-white/10 text-[8px] font-bold uppercase px-2.5 py-1 rounded-full text-white tracking-widest">
                       {day} Oct
                     </span>
-
-                    {/* Heart/Save Button */}
                     <button 
                       onClick={(e) => {
                         e.stopPropagation();
                         saveToggle(event.id);
                       }}
-                      className={`absolute top-2 left-2 right-auto h-7 w-7 rounded-full flex items-center justify-center backdrop-blur-md shadow-sm transition-all border ${
+                      className={`h-7 w-7 rounded-full flex items-center justify-center backdrop-blur-md transition-all border ${
                         isSaved 
                           ? 'bg-[#FF5A1F] border-[#FF5A1F] text-white' 
                           : 'bg-black/30 border-white/10 text-white hover:bg-white hover:text-[#FF5A1F]'
                       }`}
-                      style={{ left: 'auto', right: '10px' }} // Position right
                     >
                       <Heart className="h-3.5 w-3.5 stroke-[2.5]" />
                     </button>
                   </div>
 
-                  {/* Card Info Area */}
-                  <div className="space-y-3 text-left">
-                    <h4 className="font-extrabold text-[13px] text-[#121212] uppercase tracking-wide leading-tight line-clamp-1" style={{ fontFamily: 'var(--font-display)' }}>
+                  {/* Bottom Content Overlay */}
+                  <div className="absolute bottom-4 inset-x-4 z-20 space-y-2 text-left">
+                    {/* Avatars */}
+                    <div className="flex items-center gap-1.5">
+                      <div className="flex -space-x-1">
+                        <img className="h-4 w-4 rounded-full border border-white object-cover" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=40&fit=crop" alt="avatar" />
+                        <img className="h-4 w-4 rounded-full border border-white object-cover" src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&fit=crop" alt="avatar" />
+                      </div>
+                      <span className="text-[7.5px] font-bold text-white/80 uppercase tracking-widest">
+                        {event.attendees.length} Joined
+                      </span>
+                    </div>
+
+                    {/* Title */}
+                    <h4 className="font-extrabold text-[12px] text-white uppercase tracking-wide leading-tight line-clamp-2" style={{ fontFamily: 'var(--font-display)' }}>
                       {event.title}
                     </h4>
-                    
-                    {/* Attendees avatars & Join button */}
-                    <div className="flex items-center justify-between pt-1">
-                      <div className="flex items-center gap-1.5">
-                        <div className="flex -space-x-1.5">
-                          <img className="h-4.5 w-4.5 rounded-full border border-white object-cover" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=40&fit=crop" alt="avatar" />
-                          <img className="h-4.5 w-4.5 rounded-full border border-white object-cover" src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&fit=crop" alt="avatar" />
-                        </div>
-                        <span className="text-[8px] font-bold text-gray-500 uppercase tracking-widest">
-                          {event.attendees.length} Joined
-                        </span>
-                      </div>
 
+                    {/* Meta info & Action */}
+                    <div className="flex items-center justify-between pt-1">
+                      <span className="text-[8px] text-white/60 font-semibold tracking-wide truncate max-w-[100px]">
+                        {event.location}
+                      </span>
                       <button 
                         onClick={(e) => handleRsvpClick(event.id, e)}
-                        className="bg-[#FF5A1F] hover:bg-[#e04b12] text-white text-[8px] font-bold uppercase tracking-widest px-4 py-2 rounded-full transition-colors shadow-md shadow-orange-500/10 cursor-pointer"
+                        className="bg-white hover:bg-white/90 text-black text-[8px] font-bold uppercase tracking-widest px-3 py-1.5 rounded-full transition-colors shadow-sm cursor-pointer"
                       >
                         Join Now
                       </button>
                     </div>
                   </div>
-
                 </div>
               );
             })
