@@ -6,16 +6,31 @@ import { usePathname } from 'next/navigation';
 
 export default function Template({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
-  const [showSplash, setShowSplash] = useState(true);
+  const [showSplash, setShowSplash] = useState(false);
 
   useEffect(() => {
-    // Reset splash screen on every path change
-    setShowSplash(true);
-    const timer = setTimeout(() => {
-      setShowSplash(false);
-    }, 1800); // 1.8 seconds to allow the custom assembly & bounce animations to settle fully
+    if (typeof window !== 'undefined') {
+      const initialSplashDone = sessionStorage.getItem('evida_initial_splash_done');
+      const forceRedirectSplash = sessionStorage.getItem('evida_force_redirect_splash');
 
-    return () => clearTimeout(timer);
+      if (!initialSplashDone) {
+        setShowSplash(true);
+        sessionStorage.setItem('evida_initial_splash_done', 'true');
+        const timer = setTimeout(() => {
+          setShowSplash(false);
+        }, 1800);
+        return () => clearTimeout(timer);
+      } else if (forceRedirectSplash === 'true') {
+        setShowSplash(true);
+        sessionStorage.removeItem('evida_force_redirect_splash');
+        const timer = setTimeout(() => {
+          setShowSplash(false);
+        }, 1800);
+        return () => clearTimeout(timer);
+      } else {
+        setShowSplash(false);
+      }
+    }
   }, [pathname]);
 
   return (

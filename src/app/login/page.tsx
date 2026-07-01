@@ -85,6 +85,10 @@ export default function LoginPage() {
       setIsLoading(false);
       navigateTo('success');
       
+      if (typeof window !== 'undefined') {
+        sessionStorage.setItem('evida_force_redirect_splash', 'true');
+      }
+      
       setTimeout(() => {
         if (selectedRole === 'student') {
           router.push('/student/dashboard');
@@ -149,6 +153,10 @@ export default function LoginPage() {
       setIsLoading(false);
       navigateTo('success');
       
+      if (typeof window !== 'undefined') {
+        sessionStorage.setItem('evida_force_redirect_splash', 'true');
+      }
+      
       setTimeout(() => {
         router.push('/student/dashboard');
       }, 1500);
@@ -191,6 +199,10 @@ export default function LoginPage() {
 
       setIsLoading(false);
       navigateTo('success');
+      
+      if (typeof window !== 'undefined') {
+        sessionStorage.setItem('evida_force_redirect_splash', 'true');
+      }
       
       setTimeout(() => {
         router.push('/school/dashboard');
