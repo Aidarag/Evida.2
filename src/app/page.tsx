@@ -24,7 +24,7 @@ export default function LandingPage() {
       <DesktopNav variant="public" />
 
       {/* Responsive Immersive Hero Section */}
-      <section className="relative w-full h-[calc(100vh-3.5rem)] md:h-screen md:min-h-screen flex flex-col items-center justify-center overflow-hidden bg-[#191919] pt-16 pb-12 md:pt-28 md:pb-24">
+      <section className="relative w-full min-h-[calc(100vh-3.5rem)] md:min-h-screen flex flex-col items-center justify-center overflow-hidden bg-[#191919] pt-20 pb-24 md:pt-28 md:pb-24">
         
         {/* Animated Background Image */}
         <motion.div 
@@ -56,7 +56,7 @@ export default function LandingPage() {
           {/* Headline Fluid Word Reveal (Fully responsive & optimized for all devices) */}
           <h1 
             style={{ fontFamily: 'var(--font-display)' }}
-            className="text-[clamp(1.25rem,6.5vw,4.5rem)] font-extrabold text-white leading-[1.15] md:leading-[1.1] tracking-tight select-none uppercase w-full max-w-sm sm:max-w-xl md:max-w-5xl mx-auto"
+            className="text-[clamp(1.2rem,5.8vw,4.5rem)] font-extrabold text-white leading-[1.15] md:leading-[1.1] tracking-tight select-none uppercase w-full max-w-sm sm:max-w-xl md:max-w-5xl mx-auto"
           >
             {headlineLines.map((line, idx) => (
               <React.Fragment key={idx}>
