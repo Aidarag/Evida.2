@@ -320,6 +320,16 @@ export default function LoginPage() {
                     </button>
                   </div>
 
+                  {/* Rounded Access Helper Card under Role Selection Buttons */}
+                  <div className="bg-black/[0.02] border border-black/[0.06] p-4 rounded-[20px] shadow-sm text-left space-y-2">
+                    <span className="text-[9px] font-extrabold text-[#92D000] uppercase tracking-wider block">
+                      Quick Demo Access
+                    </span>
+                    <p className="text-[11px] text-[#4F5666] leading-relaxed">
+                      Select <strong className="text-[#191919]">Student</strong> to immediately authenticate as Alex Rivera (CS Major, 2028), or select <strong className="text-[#191919]">School / Administration</strong> to review queues as Dean Williams.
+                    </p>
+                  </div>
+
                   <div className="pt-4 border-t border-black/[0.06] text-center">
                     <p className="text-xs text-[#4F5666]">
                       Don't have an account?{' '}
@@ -358,7 +368,7 @@ export default function LoginPage() {
                   <button
                     type="submit"
                     disabled={isLoading}
-                    className="w-full flex items-center justify-center gap-2 rounded-xl bg-[#92D000] hover:bg-[#92D000]/90 py-3.5 text-xs font-bold text-[#191919] uppercase tracking-widest transition-all hover:scale-[1.01] cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed shadow-[0_4px_14px_rgba(32, 54, 39, 0.1)]"
+                    className="w-full flex items-center justify-center gap-2 rounded-xl bg-[#92D000] hover:bg-[#92D000]/90 active:bg-[#191919] active:text-white active:font-black py-3.5 text-xs font-bold text-[#191919] uppercase tracking-widest transition-all hover:scale-[1.01] cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed shadow-[0_4px_14px_rgba(32, 54, 39, 0.1)]"
                   >
                     {isLoading ? 'Sending Code...' : 'Send Verification Code'}
                     {!isLoading && <ArrowRight className="h-4 w-4" />}
@@ -398,7 +408,7 @@ export default function LoginPage() {
                     <button
                       type="submit"
                       disabled={isLoading}
-                      className="w-full flex items-center justify-center gap-2 rounded-xl bg-[#92D000] hover:bg-[#92D000]/90 py-3.5 text-xs font-bold text-[#191919] uppercase tracking-widest transition-all hover:scale-[1.01] cursor-pointer disabled:opacity-50 shadow-[0_4px_14px_rgba(32, 54, 39, 0.1)]"
+                      className="w-full flex items-center justify-center gap-2 rounded-xl bg-[#92D000] hover:bg-[#92D000]/90 active:bg-[#191919] active:text-white active:font-black py-3.5 text-xs font-bold text-[#191919] uppercase tracking-widest transition-all hover:scale-[1.01] cursor-pointer disabled:opacity-50 shadow-[0_4px_14px_rgba(32, 54, 39, 0.1)]"
                     >
                       {isLoading ? 'Verifying...' : 'Verify & Sign In'}
                     </button>
@@ -473,7 +483,7 @@ export default function LoginPage() {
                     <button
                       type="submit"
                       disabled={isLoading}
-                      className="w-full flex items-center justify-center gap-2 rounded-xl bg-[#92D000] hover:bg-[#92D000]/90 py-3.5 text-xs font-bold text-[#191919] uppercase tracking-widest transition-all hover:scale-[1.01] cursor-pointer disabled:opacity-50 shadow-[0_4px_14px_rgba(32, 54, 39, 0.1)]"
+                      className="w-full flex items-center justify-center gap-2 rounded-xl bg-[#92D000] hover:bg-[#92D000]/90 active:bg-[#191919] active:text-white active:font-black py-3.5 text-xs font-bold text-[#191919] uppercase tracking-widest transition-all hover:scale-[1.01] cursor-pointer disabled:opacity-50 shadow-[0_4px_14px_rgba(32, 54, 39, 0.1)]"
                     >
                       {isLoading ? 'Authenticating...' : 'Sign In as Admin'}
                     </button>
