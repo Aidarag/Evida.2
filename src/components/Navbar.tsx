@@ -36,19 +36,19 @@ export function DesktopNav({ variant = 'student' }: { variant?: 'student' | 'sch
     <>
       <header className={`flex items-center transition-all duration-500 ${
         variant === 'public' 
-          ? `fixed top-4 left-4 right-4 z-50 h-16 md:h-20 mx-auto max-w-7xl rounded-full ${
+          ? `fixed top-3 left-3 right-3 md:top-4 md:left-4 md:right-4 z-50 h-13 md:h-18 mx-auto max-w-7xl rounded-full ${
               scrolled 
                 ? 'bg-white/90 backdrop-blur-xl border border-black/[0.05] shadow-[var(--shadow-premium-md)]' 
                 : 'bg-white/70 backdrop-blur-md border border-black/[0.03] shadow-[var(--shadow-premium-sm)]'
             }` 
           : 'sticky top-0 z-40 h-16 border-b border-black/[0.04] bg-white/90 backdrop-blur-xl shadow-sm'
       } ${variant !== 'public' ? 'hidden md:flex' : ''}`}>
-        <div className="w-full px-6 md:px-8 flex items-center justify-between">
+        <div className="w-full px-5 md:px-8 flex items-center justify-between">
           {/* Left side: Logo & Links */}
           <div className="flex items-center gap-10">
             {/* Logo */}
             <Link href="/" className="flex items-center gap-2 group">
-              <EvidaLogo size={32} lightMode={true} />
+              <EvidaLogo size={28} lightMode={true} />
             </Link>
             
             {/* Public links */}

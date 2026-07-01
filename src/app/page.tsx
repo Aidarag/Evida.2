@@ -23,8 +23,8 @@ export default function LandingPage() {
     <div className="min-h-screen bg-[#DFDED7] text-[#191919] flex flex-col font-sans overflow-x-hidden">
       <DesktopNav variant="public" />
 
-      {/* Full-Screen Immersive Hero Section */}
-      <section className="relative w-full min-h-screen flex flex-col items-center justify-center overflow-hidden bg-[#191919] pt-28 pb-24">
+      {/* Responsive Immersive Hero Section */}
+      <section className="relative w-full h-[calc(100vh-3.5rem)] md:h-screen md:min-h-screen flex flex-col items-center justify-center overflow-hidden bg-[#191919] pt-16 pb-12 md:pt-28 md:pb-24">
         
         {/* Animated Background Image */}
         <motion.div 
@@ -33,45 +33,47 @@ export default function LandingPage() {
         />
         
         {/* Dark Elegant Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-b from-[#191919]/75 via-[#191919]/50 to-[#191919] z-0" />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#191919]/90 via-[#191919]/75 to-[#191919] z-0" />
 
         {/* Ambient Gradient Blobs */}
         <div className="absolute top-1/4 left-1/4 w-80 h-80 bg-[#92D000]/8 rounded-full blur-[100px] pointer-events-none animate-pulse" style={{ animationDuration: '8s' }} />
         <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-white/5 rounded-full blur-[120px] pointer-events-none animate-pulse" style={{ animationDuration: '12s' }} />
 
-        {/* Hero Content */}
-        <div className="relative z-10 flex flex-col items-center text-center px-6 max-w-5xl mx-auto">
+        {/* Hero Content: Single Centered Grid Container */}
+        <div className="relative z-10 w-full max-w-md md:max-w-4xl mx-auto px-6 md:px-8 flex flex-col items-center justify-center text-center space-y-5 sm:space-y-6 md:space-y-8">
           
           {/* Accent Tag */}
           <motion.div
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
-            className="mb-6"
           >
-            <span className="rounded-full bg-white/10 border border-white/15 px-4 py-1.5 text-[10px] font-bold uppercase tracking-[0.25em] text-white/95 backdrop-blur-md">
+            <span className="rounded-full bg-white/10 border border-white/15 px-3.5 py-1 text-[8px] sm:text-[10px] font-bold uppercase tracking-[0.25em] text-white/95 backdrop-blur-md">
               THE DIGITAL HOME OF CAMPUS LIFE
             </span>
           </motion.div>
 
-          {/* Headline Word Reveal */}
+          {/* Headline Word Reveal (Fitted/Centered to avoid line overflows on mobile) */}
           <h1 
             style={{ fontFamily: 'var(--font-display)' }}
-            className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold text-white leading-[1.1] tracking-tight mb-8 select-none uppercase max-w-5xl mx-auto"
+            className="text-2xl sm:text-4xl md:text-6xl lg:text-7xl font-extrabold text-white leading-tight md:leading-[1.1] tracking-tight select-none uppercase max-w-lg md:max-w-5xl mx-auto"
           >
-            {headlineLines.map((line, idx) => (
-              <React.Fragment key={idx}>
-                {idx > 0 && <br />}
-                <motion.span
-                  initial={{ opacity: 0, y: 30 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.8, delay: 0.15 + idx * 0.15, ease: [0.16, 1, 0.3, 1] }}
-                  className={`inline-block whitespace-nowrap ${idx === 2 ? "text-[#92D000]" : "text-white"}`}
-                >
-                  {line}
-                </motion.span>
-              </React.Fragment>
-            ))}
+            <span className="md:hidden text-[#92D000]">Discover Evida,<br />the digital home<br />of campus life</span>
+            <span className="hidden md:inline">
+              {headlineLines.map((line, idx) => (
+                <React.Fragment key={idx}>
+                  {idx > 0 && <br />}
+                  <motion.span
+                    initial={{ opacity: 0, y: 30 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.8, delay: 0.15 + idx * 0.15, ease: [0.16, 1, 0.3, 1] }}
+                    className={`inline-block whitespace-nowrap ${idx === 2 ? "text-[#92D000]" : "text-white"}`}
+                  >
+                    {line}
+                  </motion.span>
+                </React.Fragment>
+              ))}
+            </span>
           </h1>
 
           {/* Subtext */}
@@ -79,7 +81,7 @@ export default function LandingPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.5 }}
-            className="text-sm md:text-base text-white/70 max-w-xl mx-auto mb-8 font-light leading-relaxed"
+            className="text-xs sm:text-sm md:text-base text-white/70 max-w-xs sm:max-w-xl mx-auto font-light leading-relaxed"
           >
             Evida is a premium engagement experience. Students discover events, track RSVPs, and build communities, while universities manage activities with real-time analytics.
           </motion.p>
@@ -89,11 +91,11 @@ export default function LandingPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.6 }}
-            className="flex flex-col sm:flex-row items-center justify-center gap-4"
+            className="flex flex-col sm:flex-row items-center justify-center gap-4 w-full sm:w-auto"
           >
             <Link 
               href="/login" 
-              className="bg-[#92D000] text-[#191919] font-bold uppercase tracking-widest text-[11px] px-8 py-4 hover:bg-[#92D000]/90 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center gap-2 rounded-full shadow-[0_4px_18px_rgba(32,54,39,0.15)]"
+              className="bg-[#92D000] text-[#191919] font-bold uppercase tracking-widest text-[10px] sm:text-[11px] px-8 py-3.5 sm:py-4 hover:bg-[#92D000]/90 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-2 rounded-full shadow-[0_4px_18px_rgba(32,54,39,0.15)] w-fit mx-auto"
             >
               Get Started <ArrowRight className="h-4 w-4" />
             </Link>
