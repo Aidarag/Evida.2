@@ -127,7 +127,7 @@ export default function StudentDashboardPage() {
 
       {/* 3. High-Impact Featured Banner (Concert Style) */}
       <div className="relative rounded-[28px] overflow-hidden bg-[#191919] h-44 flex flex-col justify-end p-6 border border-black/[0.04] shadow-[var(--shadow-premium-md)] group">
-        <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=1000&fit=crop')] bg-cover bg-center opacity-65 group-hover:scale-102 transition-transform duration-700 pointer-events-none" />
+        <div className="absolute inset-0 bg-[url('/pexels-hanna-elesha-abraham-1587801282-27498756.jpg')] bg-cover bg-center opacity-65 group-hover:scale-102 transition-transform duration-700 pointer-events-none" />
         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent z-0" />
         
         <div className="relative z-10 space-y-2 text-left">

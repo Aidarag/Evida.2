@@ -4,11 +4,20 @@ import React from 'react';
 import { useUser } from '@/lib/context/UserContext';
 import { useEvents } from '@/lib/context/EventContext';
 import Card from '@/components/ui/Card';
-import { User, LogOut, Settings, Award, Users, Shield, CalendarCheck, Calendar } from 'lucide-react';
+import { LogOut, Settings, Award, Users, Shield, CalendarCheck, Calendar, ChevronRight, Bell, Edit3, BookOpen, Star } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
+// Cycle through available campus pexels photos for the profile banner
+const PROFILE_BANNERS = [
+  '/pexels-hanna-elesha-abraham-1587801282-27498756.jpg',
+  '/pexels-yaroslav-shuraev-8513385.jpg',
+  '/pexels-amine-1285347-9371719.jpg',
+  '/pexels-cottonbro-5989925.jpg',
+  '/pexels-gu-ko-2150570603-31827067.jpg',
+];
+
 export default function StudentProfilePage() {
-  const { currentUser, setCurrentUser, simulatedUsers } = useUser();
+  const { currentUser } = useUser();
   const { events, organizations } = useEvents();
   const router = useRouter();
 
@@ -19,102 +28,147 @@ export default function StudentProfilePage() {
   const totalSaved = events.filter(e => e.savedBy?.includes(currentUser.name)).length;
   const myOrgs = organizations.filter(org => currentUser.organizations.includes(org.id));
 
+  // Pick a stable banner based on username hash
+  const bannerIdx = currentUser.username.charCodeAt(0) % PROFILE_BANNERS.length;
+  const bannerPhoto = PROFILE_BANNERS[bannerIdx];
+
   const handleLogout = () => {
-    // For demo purposes, we just switch back to a default state or redirect to login
     router.push('/login');
   };
 
   return (
-    <div className="p-6 md:p-10 max-w-4xl mx-auto space-y-8">
-      {/* Profile Header Card */}
-      <Card className="p-6 max-sm:p-5 flex flex-col md:flex-row items-center md:items-start gap-6 md:gap-8" hover={false}>
-        <div className="h-24 w-24 md:h-32 md:w-32 rounded-full bg-[#92D000] flex items-center justify-center shadow-[0_8px_30px_rgba(32,54,39,0.1)] shrink-0">
-          <span className="text-4xl md:text-5xl font-extrabold text-[#191919]">{currentUser.avatar}</span>
-        </div>
-        
-        <div className="flex-1 text-center md:text-left space-y-4">
-          <div>
-            <h1 className="text-2xl md:text-3xl font-extrabold text-[#191919]">{currentUser.name}</h1>
-            <p className="text-[#191919]/85 font-extrabold text-sm">@{currentUser.username}</p>
-          </div>
-          
-          <div className="flex flex-wrap justify-center md:justify-start gap-3">
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-black/[0.03] border border-black/[0.06] text-xs font-bold text-[#4F5666]">
-              <Award className="h-3.5 w-3.5" />
-              {currentUser.major}
-            </span>
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-black/[0.03] border border-black/[0.06] text-xs font-bold text-[#4F5666]">
-              <Calendar className="h-3.5 w-3.5" />
-              Class of {currentUser.graduationYear}
-            </span>
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-black/[0.03] border border-black/[0.06] text-xs font-bold text-[#4F5666]">
-              <Shield className="h-3.5 w-3.5" />
-              {currentUser.school}
-            </span>
-          </div>
+    <div className="max-w-4xl mx-auto space-y-6 pb-8">
 
-          <div className="flex items-center justify-center md:justify-start gap-6 pt-4 border-t border-black/[0.06]">
-            <div className="text-center md:text-left">
-              <div className="text-xl md:text-2xl font-bold text-[#191919]">{totalRsvps}</div>
-              <div className="text-[9px] md:text-[10px] font-bold text-[#4F5666] uppercase tracking-wider">Events Attended</div>
+      {/* Profile Hero Banner */}
+      <div className="relative">
+        <div
+          className="h-36 md:h-48 w-full overflow-hidden"
+          style={{ backgroundImage: `url(${bannerPhoto})`, backgroundSize: 'cover', backgroundPosition: 'center' }}
+        >
+          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
+        </div>
+
+        {/* Avatar overlapping the banner */}
+        <div className="px-6 md:px-10">
+          <div className="flex flex-col md:flex-row items-start gap-5 -mt-14 md:-mt-16 relative z-10">
+            <div className="h-24 w-24 md:h-28 md:w-28 rounded-2xl bg-[#92D000] flex items-center justify-center shadow-[0_8px_30px_rgba(0,0,0,0.25)] border-4 border-[#DFDED7] shrink-0">
+              <span className="text-3xl md:text-4xl font-extrabold text-[#191919]">{currentUser.avatar}</span>
             </div>
-            <div className="text-center md:text-left">
-              <div className="text-xl md:text-2xl font-bold text-[#191919]">{totalCreated}</div>
-              <div className="text-[9px] md:text-[10px] font-bold text-[#4F5666] uppercase tracking-wider">Events Hosted</div>
-            </div>
-            <div className="text-center md:text-left">
-              <div className="text-xl md:text-2xl font-bold text-[#191919]">{totalSaved}</div>
-              <div className="text-[9px] md:text-[10px] font-bold text-[#4F5666] uppercase tracking-wider">Events Saved</div>
+
+            <div className="flex-1 flex flex-col gap-3 pt-2 md:pt-10">
+              <div className="space-y-1.5">
+                <h1 className="text-2xl md:text-3xl font-extrabold text-[#191919] leading-tight">{currentUser.name}</h1>
+                <p className="text-sm font-bold text-[#4F5666]">@{currentUser.username}</p>
+                <div className="flex flex-wrap gap-2 pt-1">
+                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-black/[0.05] border border-black/[0.07] text-[10px] font-bold text-[#4F5666] uppercase tracking-wider">
+                    <Award className="h-3 w-3" />{currentUser.major}
+                  </span>
+                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-black/[0.05] border border-black/[0.07] text-[10px] font-bold text-[#4F5666] uppercase tracking-wider">
+                    <Calendar className="h-3 w-3" />Class of {currentUser.graduationYear}
+                  </span>
+                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#92D000]/15 border border-[#92D000]/30 text-[10px] font-bold text-[#3a5200] uppercase tracking-wider">
+                    <Shield className="h-3 w-3" />{currentUser.school}
+                  </span>
+                </div>
+              </div>
             </div>
           </div>
         </div>
-      </Card>
+      </div>
 
-      {/* Organizations & Settings Grid */}
-      <div className="grid md:grid-cols-2 gap-8">
-        <div className="space-y-4">
-          <h2 className="text-lg font-bold text-[#191919] flex items-center gap-2">
-            <Users className="h-5 w-5 text-[#191919]/70" /> My Organizations
+      {/* Stats Row */}
+      <div className="px-6 md:px-10">
+        <div className="grid grid-cols-3 gap-3">
+          {[
+            { label: 'Attended', value: totalRsvps, Icon: CalendarCheck, color: '#92D000', bg: '#92D00018' },
+            { label: 'Hosted', value: totalCreated, Icon: Star, color: '#191919', bg: '#19191918' },
+            { label: 'Saved', value: totalSaved, Icon: BookOpen, color: '#4F5666', bg: '#4F566618' },
+          ].map(stat => (
+            <Card key={stat.label} className="p-4 text-center flex flex-col items-center gap-1.5" hover={false} glass>
+              <div className="h-8 w-8 rounded-xl flex items-center justify-center" style={{ background: stat.bg }}>
+                <stat.Icon className="h-4 w-4" style={{ color: stat.color }} />
+              </div>
+              <div className="text-xl font-extrabold text-[#191919]">{stat.value}</div>
+              <div className="text-[9px] font-bold text-[#4F5666] uppercase tracking-wider">{stat.label}</div>
+            </Card>
+          ))}
+        </div>
+      </div>
+
+      {/* Organizations & Account Actions */}
+      <div className="px-6 md:px-10 grid md:grid-cols-2 gap-6">
+
+        {/* My Organizations */}
+        <div className="space-y-3">
+          <h2 className="text-sm font-extrabold text-[#191919] flex items-center gap-2 uppercase tracking-wider">
+            <Users className="h-4 w-4 text-[#92D000]" /> My Organizations
           </h2>
           {myOrgs.length > 0 ? (
-            <div className="space-y-3">
+            <div className="space-y-2">
               {myOrgs.map(org => (
-                <Card key={org.id} className="p-5 flex items-center gap-4" glass>
-                  <div className={`h-12 w-12 rounded-xl bg-gradient-to-br flex items-center justify-center from-${org.logoColor}-500 to-${org.logoColor}-700`}>
-                    <span className="font-bold text-[#191919] text-lg">{org.name.charAt(0)}</span>
+                <Card key={org.id} className="p-4 flex items-center gap-3" glass>
+                  <div className="h-10 w-10 rounded-xl bg-[#92D000]/20 border border-[#92D000]/30 flex items-center justify-center shrink-0">
+                    <span className="font-extrabold text-[#3a5200] text-base">{org.name.charAt(0)}</span>
                   </div>
-                  <div>
-                    <h3 className="font-bold text-[#191919]">{org.name}</h3>
-                    <p className="text-xs text-[#4F5666]">{org.verified ? 'Verified Organization' : 'Student Group'}</p>
+                  <div className="flex-1 min-w-0">
+                    <h3 className="font-bold text-[#191919] text-sm truncate">{org.name}</h3>
+                    <p className="text-[10px] text-[#4F5666] font-medium">{org.verified ? '✓ Verified Organization' : 'Student Group'}</p>
                   </div>
                 </Card>
               ))}
             </div>
           ) : (
             <Card className="p-6 text-center" glass hover={false}>
-              <p className="text-xs text-[#4F5666]">You are not a member of any organizations yet.</p>
+              <Users className="h-8 w-8 text-[#4F5666]/40 mx-auto mb-2" />
+              <p className="text-xs text-[#4F5666]">Not a member of any organizations yet.</p>
             </Card>
           )}
         </div>
 
-        <div className="space-y-4">
-           <h2 className="text-lg font-bold text-[#191919] flex items-center gap-2">
-            <Settings className="h-5 w-5 text-red-500" /> Account Actions
+        {/* Account Actions */}
+        <div className="space-y-3">
+          <h2 className="text-sm font-extrabold text-[#191919] flex items-center gap-2 uppercase tracking-wider">
+            <Settings className="h-4 w-4 text-[#4F5666]" /> Account Actions
           </h2>
-          <Card className="divide-y divide-black/[0.06]" glass hover={false}>
-            <button className="w-full p-4 flex items-center justify-between hover:bg-black/[0.02] transition-colors cursor-not-allowed group">
-              <span className="text-sm font-medium text-white group-hover:text-[#191919]/70 transition-colors">Edit Profile (Demo)</span>
+          <Card className="overflow-hidden divide-y divide-black/[0.05]" glass hover={false}>
+
+            {/* Edit Profile */}
+            <button className="w-full p-4 flex items-center gap-3 hover:bg-black/[0.03] transition-colors cursor-not-allowed group">
+              <div className="h-9 w-9 rounded-xl bg-black/[0.06] flex items-center justify-center shrink-0">
+                <Edit3 className="h-4 w-4 text-[#191919]" />
+              </div>
+              <div className="flex-1 text-left">
+                <span className="text-sm font-semibold text-[#191919] block">Edit Profile</span>
+                <span className="text-[10px] text-[#4F5666]">Update your info &amp; photo</span>
+              </div>
+              <ChevronRight className="h-4 w-4 text-[#4F5666]/40 group-hover:text-[#191919]/50 transition-colors" />
             </button>
-            <button className="w-full p-4 flex items-center justify-between hover:bg-black/[0.02] transition-colors cursor-not-allowed group">
-              <span className="text-sm font-medium text-white group-hover:text-[#191919]/70 transition-colors">Notification Settings (Demo)</span>
+
+            {/* Notification Settings */}
+            <button className="w-full p-4 flex items-center gap-3 hover:bg-black/[0.03] transition-colors cursor-not-allowed group">
+              <div className="h-9 w-9 rounded-xl bg-black/[0.06] flex items-center justify-center shrink-0">
+                <Bell className="h-4 w-4 text-[#191919]" />
+              </div>
+              <div className="flex-1 text-left">
+                <span className="text-sm font-semibold text-[#191919] block">Notification Settings</span>
+                <span className="text-[10px] text-[#4F5666]">Manage your alerts</span>
+              </div>
+              <ChevronRight className="h-4 w-4 text-[#4F5666]/40 group-hover:text-[#191919]/50 transition-colors" />
             </button>
-            <button 
+
+            {/* Sign Out */}
+            <button
               onClick={handleLogout}
-              className="w-full p-4 flex items-center justify-between hover:bg-black/[0.02] transition-colors cursor-pointer group"
+              className="w-full p-4 flex items-center gap-3 hover:bg-red-500/[0.04] transition-colors cursor-pointer group"
             >
-              <span className="text-sm font-medium text-red-500 flex items-center gap-2">
-                <LogOut className="h-4 w-4" /> Sign Out
-              </span>
+              <div className="h-9 w-9 rounded-xl bg-red-500/10 flex items-center justify-center shrink-0">
+                <LogOut className="h-4 w-4 text-red-500" />
+              </div>
+              <div className="flex-1 text-left">
+                <span className="text-sm font-semibold text-red-500 block">Sign Out</span>
+                <span className="text-[10px] text-red-400/70">You will be returned to login</span>
+              </div>
+              <ChevronRight className="h-4 w-4 text-red-400/40 group-hover:text-red-400 transition-colors" />
             </button>
           </Card>
         </div>
