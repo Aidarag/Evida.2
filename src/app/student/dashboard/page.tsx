@@ -12,7 +12,6 @@ import {
   Search, 
   SlidersHorizontal, 
   Heart, 
-  ChevronDown, 
   Clock, 
   Plus,
   Compass,
@@ -108,9 +107,9 @@ export default function StudentDashboardPage() {
             <h1 className="text-base font-black text-[#191919] tracking-tight leading-none mb-1.5" style={{ fontFamily: 'var(--font-display)' }}>
               Yo {currentUser.name.split(' ')[0]}!
             </h1>
-            <button className="flex items-center gap-1 text-[10px] font-extrabold text-[#4F5666] uppercase tracking-wider hover:text-[#191919] transition-colors">
-              {currentUser.school} <ChevronDown className="h-3.5 w-3.5 text-[#4F5666]" />
-            </button>
+            <span className="flex items-center gap-1 text-[10px] font-extrabold text-[#4F5666] uppercase tracking-wider">
+              {currentUser.school}
+            </span>
           </div>
         </div>
 
@@ -118,14 +117,12 @@ export default function StudentDashboardPage() {
           <Link href="/student/saved" className="h-11 w-11 rounded-full bg-white border border-black/[0.04] flex items-center justify-center text-[#4F5666] hover:text-[#191919] hover:bg-black/[0.02] transition-colors shadow-sm">
             <Heart className="h-4 w-4" />
           </Link>
-          <div className="relative">
-            <button className="h-11 w-11 rounded-full bg-white border border-black/[0.04] flex items-center justify-center text-[#4F5666] hover:text-[#191919] hover:bg-black/[0.02] transition-colors shadow-sm">
-              <Bell className="h-4 w-4" />
-            </button>
+          <Link href="/student/my-events" className="h-11 w-11 rounded-full bg-white border border-black/[0.04] flex items-center justify-center text-[#4F5666] hover:text-[#191919] hover:bg-black/[0.02] transition-colors shadow-sm relative">
+            <Bell className="h-4 w-4" />
             {unreadNotifs.length > 0 && (
-              <span className="absolute top-0.5 right-0.5 h-2.5 w-2.5 rounded-full bg-[#191919] border-2 border-white"></span>
+              <span className="absolute top-0.5 right-0.5 h-2.5 w-2.5 rounded-full bg-[#191919] border-2 border-white" />
             )}
-          </div>
+          </Link>
         </div>
       </div>
 
@@ -141,13 +138,15 @@ export default function StudentDashboardPage() {
             className="w-full bg-black/[0.025] border border-black/[0.04] text-[#191919] placeholder-gray-400 rounded-full pl-12 pr-4 py-3.5 text-xs focus:outline-none focus:border-[#92D000] focus:ring-1 focus:ring-[#92D000] transition-all"
           />
         </div>
-        <button className="h-11 w-11 rounded-full bg-black/[0.025] border border-black/[0.04] flex items-center justify-center text-[#4F5666] hover:text-[#92D000] transition-colors shrink-0 cursor-pointer">
+        <Link href="/student/events" className="h-11 w-11 rounded-full bg-black/[0.025] border border-black/[0.04] flex items-center justify-center text-[#4F5666] hover:text-[#92D000] transition-colors shrink-0 cursor-pointer">
           <SlidersHorizontal className="h-4 w-4" />
-        </button>
+        </Link>
       </div>
 
-      {/* 3. High-Impact Featured Banner (Concert Style) */}
-      <div className="relative rounded-[28px] overflow-hidden bg-[#191919] h-44 flex flex-col justify-end p-6 border border-black/[0.04] shadow-[var(--shadow-premium-md)] group">
+      <div 
+        className="relative rounded-[28px] overflow-hidden bg-[#191919] h-44 flex flex-col justify-end p-6 border border-black/[0.04] shadow-[var(--shadow-premium-md)] group cursor-pointer"
+        onClick={() => router.push('/student/events')}
+      >
         <div className="absolute inset-0 bg-[url('/pexels-hanna-elesha-abraham-1587801282-27498756.jpg')] bg-cover bg-center opacity-65 group-hover:scale-102 transition-transform duration-700 pointer-events-none" />
         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent z-0" />
         
@@ -260,8 +259,12 @@ export default function StudentDashboardPage() {
                     {/* Avatars */}
                     <div className="flex items-center gap-1.5">
                       <div className="flex -space-x-1">
-                        <img className="h-4 w-4 rounded-full border border-white object-cover" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=40&fit=crop" alt="avatar" />
-                        <img className="h-4 w-4 rounded-full border border-white object-cover" src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&fit=crop" alt="avatar" />
+                        {[
+                          { i: 'MC', bg: '#92D000', c: '#191919' },
+                          { i: 'SJ', bg: '#191919', c: '#fff' },
+                        ].map(av => (
+                          <div key={av.i} className="h-4 w-4 rounded-full border border-white flex items-center justify-center text-[5px] font-extrabold" style={{ background: av.bg, color: av.c }}>{av.i}</div>
+                        ))}
                       </div>
                       <span className="text-[7.5px] font-bold text-white/80 uppercase tracking-widest">
                         {event.attendees.length} Joined

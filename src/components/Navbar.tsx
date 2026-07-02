@@ -112,9 +112,9 @@ export function DesktopNav({ variant = 'student' }: { variant?: 'student' | 'sch
                 <Link href="/student/events" className="text-xs font-bold text-[#92D000] hover:text-[#d8ee2e] uppercase tracking-wider transition-colors cursor-pointer">
                   Student Portal
                 </Link>
-                <div className="h-9 w-9 rounded-full bg-black/5 border border-black/10 flex items-center justify-center text-[#191919] text-xs font-bold">
+                <Link href="/school/dashboard" className="h-9 w-9 rounded-full bg-black/5 border border-black/10 flex items-center justify-center text-[#191919] text-xs font-bold hover:bg-black/10 transition-colors">
                   A
-                </div>
+                </Link>
               </>
             )}
           </div>

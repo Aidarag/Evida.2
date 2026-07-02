@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { ArrowRight } from 'lucide-react';
@@ -10,6 +10,8 @@ import EvidaLogo from '@/components/ui/EvidaLogo';
 
 export default function LandingPage() {
   const router = useRouter();
+  const [subscribed, setSubscribed] = useState(false);
+  const [emailInput, setEmailInput] = useState('');
 
   // Scroll-based parallax and zoom transforms for the hero background image
   const { scrollY } = useScroll();
@@ -171,9 +173,9 @@ export default function LandingPage() {
           <div className="md:col-span-2 space-y-4 text-left">
             <h4 className="text-white font-bold uppercase tracking-widest text-[10px] mb-4">Discover</h4>
             <ul className="space-y-3 text-xs font-semibold">
-              <li><Link href="#about-evida" className="hover:text-white transition-colors">About Evida</Link></li>
-              <li><Link href="#explore-categories" className="hover:text-white transition-colors">Featured Events</Link></li>
-              <li><Link href="#how-it-works" className="hover:text-white transition-colors">How It Works</Link></li>
+              <li><Link href="/about" className="hover:text-white transition-colors">About Evida</Link></li>
+              <li><Link href="/student/events" className="hover:text-white transition-colors">Featured Events</Link></li>
+              <li><Link href="/how-it-works" className="hover:text-white transition-colors">How It Works</Link></li>
             </ul>
           </div>
 
@@ -193,8 +195,8 @@ export default function LandingPage() {
           <div className="md:col-span-2 space-y-4 text-left">
             <h4 className="text-white font-bold uppercase tracking-widest text-[10px] mb-4">Stay Social</h4>
             <ul className="space-y-3 text-xs font-semibold">
-              <li><a href="#" className="hover:text-white transition-colors">Instagram</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">LinkedIn</a></li>
+              <li><a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">Instagram</a></li>
+              <li><a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">LinkedIn</a></li>
             </ul>
           </div>
 
@@ -204,20 +206,30 @@ export default function LandingPage() {
             <p className="text-white/40 text-xs leading-relaxed font-light">
               Stay updated on the latest campus events and club promotions.
             </p>
-            <form onSubmit={(e) => e.preventDefault()} className="flex flex-col sm:flex-row gap-2 pt-2">
-              <input 
-                type="email" 
-                placeholder="Enter your email" 
-                className="w-full bg-white/5 border border-white/10 text-white placeholder-white/20 rounded-full px-4 py-2.5 text-xs focus:outline-none focus:border-[#92D000] transition-colors"
-                required
-              />
-              <button 
-                type="submit"
-                className="bg-[#92D000] text-[#191919] px-5 py-2.5 rounded-full text-[10px] font-bold uppercase tracking-wider hover:bg-white hover:text-[#191919] transition-all duration-300 whitespace-nowrap"
-                style={{ fontFamily: 'var(--font-display)' }}
-              >
-                Subscribe
-              </button>
+            <form onSubmit={(e) => { e.preventDefault(); if (emailInput) setSubscribed(true); }} className="flex flex-col sm:flex-row gap-2 pt-2">
+              {subscribed ? (
+                <div className="flex items-center gap-2 px-4 py-2.5 rounded-full bg-[#92D000]/15 border border-[#92D000]/30 text-[#92D000] text-xs font-bold">
+                  ✓ Subscribed! Welcome aboard.
+                </div>
+              ) : (
+                <>
+                  <input 
+                    type="email" 
+                    placeholder="Enter your email" 
+                    value={emailInput}
+                    onChange={(e) => setEmailInput(e.target.value)}
+                    className="w-full bg-white/5 border border-white/10 text-white placeholder-white/20 rounded-full px-4 py-2.5 text-xs focus:outline-none focus:border-[#92D000] transition-colors"
+                    required
+                  />
+                  <button 
+                    type="submit"
+                    className="bg-[#92D000] text-[#191919] px-5 py-2.5 rounded-full text-[10px] font-bold uppercase tracking-wider hover:bg-white hover:text-[#191919] transition-all duration-300 whitespace-nowrap"
+                    style={{ fontFamily: 'var(--font-display)' }}
+                  >
+                    Subscribe
+                  </button>
+                </>
+              )}
             </form>
           </div>
         </div>
