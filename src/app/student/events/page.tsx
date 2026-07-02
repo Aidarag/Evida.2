@@ -360,7 +360,7 @@ export default function StudentEventsFeed() {
               <div className="h-full w-full overflow-y-scroll snap-y snap-mandatory scrollbar-none flex flex-col items-center">
                 {filteredItems.map((item) => {
                   const isSaved = 'ownershipType' in item ? item.savedBy?.includes(currentUser?.name || '') : false;
-                  const cover = 'ownershipType' in item ? item.coverImage : 'bg-gradient-to-tr from-purple-900/60 via-slate-900 to-violet-950/40';
+                  const cover = 'ownershipType' in item ? item.coverImage : '/pexels-markus-winkler-1430818-12199407.jpg';
                   
                   const isGradient = cover ? cover.includes('from-') : false;
                   const bgClass = isGradient ? cover : '';
@@ -473,7 +473,7 @@ export default function StudentEventsFeed() {
                   className="h-full w-full overflow-y-scroll snap-y snap-mandatory scrollbar-none"
                 >
                   {filteredItems.map((item) => {
-                    const cover = 'ownershipType' in item ? item.coverImage : 'bg-gradient-to-tr from-purple-900/60 via-slate-900 to-violet-950/40';
+                    const cover = 'ownershipType' in item ? item.coverImage : '/pexels-markus-winkler-1430818-12199407.jpg';
                     const isGradient = cover ? cover.includes('from-') : false;
                     const bgClass = isGradient ? cover : '';
                     const bgStyle = (!isGradient && cover) ? { backgroundImage: `url(${cover})`, backgroundSize: 'cover', backgroundPosition: 'center' } : {};

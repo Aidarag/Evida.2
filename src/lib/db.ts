@@ -160,7 +160,7 @@ const initialEvents: Event[] = [
     estimatedAttendance: 600,
     fundingRequested: false,
     transportationNeeded: false,
-    coverImage: 'from-orange-500 via-red-500 to-violet-600',
+    coverImage: '/pexels-hanna-elesha-abraham-1587801282-27498756.jpg',
     free: true,
     capacity: 1000,
     visibility: 'public'
@@ -189,7 +189,7 @@ const initialEvents: Event[] = [
     estimatedAttendance: 350,
     fundingRequested: false,
     transportationNeeded: false,
-    coverImage: 'from-blue-600 to-indigo-900',
+    coverImage: '/pexels-rdne-7648057.jpg',
     free: true,
     capacity: 400,
     visibility: 'public'
@@ -218,7 +218,7 @@ const initialEvents: Event[] = [
     estimatedAttendance: 100,
     fundingRequested: true,
     transportationNeeded: false,
-    coverImage: 'from-teal-400 to-emerald-600',
+    coverImage: '/pexels-yaroslav-shuraev-8513385.jpg',
     free: true,
     capacity: 120,
     visibility: 'public'
@@ -247,7 +247,7 @@ const initialEvents: Event[] = [
     estimatedAttendance: 800,
     fundingRequested: false,
     transportationNeeded: false,
-    coverImage: 'from-blue-500 to-cyan-500',
+    coverImage: '/pexels-caleboquendo-34598092.jpg',
     free: true,
     capacity: 1200,
     visibility: 'public'
@@ -276,7 +276,7 @@ const initialEvents: Event[] = [
     estimatedAttendance: 250,
     fundingRequested: true,
     transportationNeeded: false,
-    coverImage: 'from-rose-500 via-pink-500 to-orange-500',
+    coverImage: '/pexels-amine-1285347-9371719.jpg',
     free: true,
     capacity: 400,
     visibility: 'public'
@@ -305,7 +305,7 @@ const initialEvents: Event[] = [
     estimatedAttendance: 80,
     fundingRequested: false,
     transportationNeeded: false,
-    coverImage: 'from-emerald-400 to-cyan-600',
+    coverImage: '/pexels-hassan-zafar-949411593-29927473.jpg',
     free: true,
     capacity: 150,
     visibility: 'public'
@@ -334,7 +334,7 @@ const initialEvents: Event[] = [
     estimatedAttendance: 30,
     fundingRequested: false,
     transportationNeeded: false,
-    coverImage: 'from-slate-700 to-slate-900',
+    coverImage: '/pexels-nick-rush-2508183-11211233.jpg',
     free: true,
     capacity: 50,
     visibility: 'public'
@@ -361,7 +361,7 @@ const initialEvents: Event[] = [
     estimatedAttendance: 25,
     fundingRequested: false,
     transportationNeeded: false,
-    coverImage: 'from-teal-400 to-indigo-600',
+    coverImage: '/pexels-tima-miroshnichenko-5439368.jpg',
     free: true,
     capacity: 30,
     visibility: 'public'
@@ -390,7 +390,7 @@ const initialEvents: Event[] = [
     estimatedAttendance: 120,
     fundingRequested: true,
     transportationNeeded: false,
-    coverImage: 'from-red-600 via-rose-500 to-yellow-600',
+    coverImage: '/pexels-cottonbro-5989925.jpg',
     free: true,
     capacity: 200,
     visibility: 'public'
@@ -419,7 +419,7 @@ const initialEvents: Event[] = [
     estimatedAttendance: 15,
     fundingRequested: false,
     transportationNeeded: false,
-    coverImage: 'from-indigo-600 to-violet-800',
+    coverImage: '/pexels-amar-20025867.jpg',
     free: true,
     capacity: 25,
     visibility: 'public'

@@ -20,7 +20,7 @@ export default function EventCard({ event, onClick, onSave, isSaved = false }: E
 
   // Set up cover image
   const coverImage = isPromo 
-    ? 'bg-gradient-to-tr from-purple-900/60 via-slate-900 to-violet-950/40' 
+    ? '/pexels-markus-winkler-1430818-12199407.jpg' 
     : event.coverImage;
 
   const isGradient = coverImage ? coverImage.includes('from-') : false;
