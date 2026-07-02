@@ -34,6 +34,27 @@ export default function StudentDashboardPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
 
+  // Returns a safe URL for use in <img src>. Gradient class strings are not valid URLs.
+  const FALLBACK_PHOTOS = [
+    '/pexels-hanna-elesha-abraham-1587801282-27498756.jpg',
+    '/pexels-yaroslav-shuraev-8513385.jpg',
+    '/pexels-amine-1285347-9371719.jpg',
+    '/pexels-cottonbro-5989925.jpg',
+    '/pexels-gu-ko-2150570603-31827067.jpg',
+    '/pexels-caleboquendo-34598092.jpg',
+    '/pexels-rdne-7648057.jpg',
+    '/pexels-tima-miroshnichenko-5439368.jpg',
+    '/pexels-marwen-larafa-2159807713-37714941.jpg',
+    '/pexels-ron-lach-8576102.jpg',
+  ];
+  const getEventImg = (coverImage: string | undefined, seed: string) => {
+    if (!coverImage || coverImage.includes('from-') || coverImage.includes('to-') || coverImage.includes('via-')) {
+      const idx = (seed?.charCodeAt(0) || 0) % FALLBACK_PHOTOS.length;
+      return FALLBACK_PHOTOS[idx];
+    }
+    return coverImage;
+  };
+
   if (!currentUser) return null;
 
   // Filter events
@@ -208,7 +229,7 @@ export default function StudentDashboardPage() {
                   {/* Event Cover Image */}
                   <img 
                     className="absolute inset-0 h-full w-full object-cover group-hover:scale-103 transition-transform duration-500" 
-                    src={event.coverImage || 'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=400&h=600&fit=crop'} 
+                    src={getEventImg(event.coverImage, event.id)}
                     alt={event.title} 
                   />
                   {/* Overlay Gradient */}
@@ -301,7 +322,7 @@ export default function StudentDashboardPage() {
                 >
                   {/* Left Side: Thumbnail with heart indicator */}
                   <div className="relative h-18 w-20 rounded-xl overflow-hidden bg-gray-100 shrink-0">
-                    <img className="h-full w-full object-cover" src={event.coverImage || 'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=120&fit=crop'} alt={event.title} />
+                    <img className="h-full w-full object-cover" src={getEventImg(event.coverImage, event.id)} alt={event.title} />
                     
                     {/* Tiny heart save badge */}
                     <button 

@@ -130,21 +130,19 @@ export default function EventCard({ event, onClick, onSave, isSaved = false }: E
           {/* Attendee Avatars */}
           <div className="flex items-center gap-2">
             <div className="flex -space-x-2">
-              <img 
-                src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=80&h=80&fit=crop&crop=face" 
-                alt="Attendee" 
-                className="h-6 w-6 rounded-full border-2 border-white object-cover"
-              />
-              <img 
-                src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=80&h=80&fit=crop&crop=face" 
-                alt="Attendee" 
-                className="h-6 w-6 rounded-full border-2 border-white object-cover"
-              />
-              <img 
-                src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=80&h=80&fit=crop&crop=face" 
-                alt="Attendee" 
-                className="h-6 w-6 rounded-full border-2 border-white object-cover"
-              />
+              {[
+                { initials: 'MC', bg: '#92D000', color: '#191919' },
+                { initials: 'SJ', bg: '#191919', color: '#fff' },
+                { initials: 'AR', bg: '#4F5666', color: '#fff' },
+              ].map((av) => (
+                <div
+                  key={av.initials}
+                  className="h-6 w-6 rounded-full border-2 border-white flex items-center justify-center text-[7px] font-extrabold shrink-0"
+                  style={{ background: av.bg, color: av.color }}
+                >
+                  {av.initials}
+                </div>
+              ))}
             </div>
             <span className="text-[#7B8290] text-[10px] font-bold whitespace-nowrap">
               +{goingCount} going
