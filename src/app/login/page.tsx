@@ -111,7 +111,7 @@ export default function LoginPage() {
     }, 1000);
   };
 
-  const handleEmailPasswordLogin = (e: React.FormEvent) => {
+  const handleEmailPasswordLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email || !password) {
       setError('Please fill in all fields.');
@@ -121,34 +121,40 @@ export default function LoginPage() {
     setIsLoading(true);
     setError('');
     
-    setTimeout(() => {
-      // Find matching user in simulated database
-      const userRole = role === 'student' ? ['student', 'student_leader'] : ['admin'];
-      const matchedUser = simulatedUsers.find(
-        u => u.email && u.email.toLowerCase() === email.toLowerCase() && userRole.includes(u.role)
-      );
+    try {
+      const res = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password, role: role === 'school' ? 'school' : 'student' }),
+      });
 
-      if (matchedUser) {
-        setCurrentUser(matchedUser);
+      const data = await res.json();
+
+      if (!res.ok) {
         setIsLoading(false);
-        navigateTo('success');
-        
-        if (typeof window !== 'undefined') {
-          sessionStorage.setItem('evida_force_redirect_splash', 'true');
-        }
-        
-        setTimeout(() => {
-          if (role === 'student') {
-            router.push('/student/dashboard');
-          } else {
-            router.push('/school/dashboard');
-          }
-        }, 1500);
-      } else {
-        setIsLoading(false);
-        setError('Invalid email or password. For demo, try a default credential.');
+        setError(data.error || 'Invalid email or password.');
+        return;
       }
-    }, 1000);
+
+      setCurrentUser(data);
+      setIsLoading(false);
+      navigateTo('success');
+      
+      if (typeof window !== 'undefined') {
+        sessionStorage.setItem('evida_force_redirect_splash', 'true');
+      }
+      
+      setTimeout(() => {
+        if (role === 'student') {
+          router.push('/student/dashboard');
+        } else {
+          router.push('/school/dashboard');
+        }
+      }, 1500);
+    } catch (err) {
+      setIsLoading(false);
+      setError('Network error. Please try again.');
+    }
   };
 
   const handleForgotPasswordSubmit = (e: React.FormEvent) => {
@@ -319,7 +325,7 @@ export default function LoginPage() {
                             </div>
                             <div>
                               <p className="text-sm font-bold text-[#191919] uppercase tracking-wide">Student</p>
-                              <p className="text-xs text-[#4F5666] mt-0.5 max-w-[220px]">RSVP to events, coordinate clubs, and verify tickets.</p>
+                              <p className="text-xs text-[#4F5666] mt-0.5 max-w-[220px]">Join events, coordinate clubs, and verify tickets.</p>
                             </div>
                           </div>
                           <ArrowRight className="h-5 w-5 text-[#4F5666] group-hover:text-[#92D000] group-hover:translate-x-1 transition-all" />

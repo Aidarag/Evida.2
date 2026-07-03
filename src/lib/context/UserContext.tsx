@@ -6,6 +6,7 @@ import { User } from '@/lib/types';
 interface UserContextType {
   currentUser: User | null;
   setCurrentUser: (user: User) => void;
+  logout: () => void;
   simulatedUsers: User[];
   isLoading: boolean;
 }
@@ -91,11 +92,21 @@ export function UserProvider({ children }: { children: ReactNode }) {
     }
   }, []);
 
+  const handleLogout = useCallback(() => {
+    setCurrentUser(null);
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem('evida-user');
+      sessionStorage.setItem('evida_force_redirect_splash', 'true');
+      window.location.href = '/login';
+    }
+  }, []);
+
   return (
     <UserContext.Provider
       value={{
         currentUser,
         setCurrentUser: handleSetUser,
+        logout: handleLogout,
         simulatedUsers: DEFAULT_USERS,
         isLoading,
       }}

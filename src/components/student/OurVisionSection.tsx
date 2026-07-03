@@ -32,9 +32,9 @@ const visionData: Record<VisionKey, VisionContent> = {
   Schools: {
     tagline: "A smarter way to engage your campus",
     description: "Evida helps schools centralize events, improve communication, and better connect with students through one trusted platform.",
-    color: "#191919",
-    lightBg: "bg-black/5",
-    borderHover: "group-hover:border-black/10"
+    color: "#92D000",
+    lightBg: "bg-[#92D000]/8",
+    borderHover: "group-hover:border-[#92D000]/20"
   },
   Discovery: {
     tagline: "Find experiences, not just events",
@@ -46,9 +46,9 @@ const visionData: Record<VisionKey, VisionContent> = {
   Connection: {
     tagline: "Meaningful connections start here",
     description: "Every event is a chance to meet new people, join organizations, and build relationships that last beyond college.",
-    color: "#191919",
-    lightBg: "bg-black/5",
-    borderHover: "group-hover:border-black/10"
+    color: "#92D000",
+    lightBg: "bg-[#92D000]/8",
+    borderHover: "group-hover:border-[#92D000]/20"
   },
   Community: {
     tagline: "One campus. One community",

@@ -13,6 +13,10 @@ export interface User {
   graduationYear?: string;
   school?: string;
   avatar?: string;
+  password?: string;        // stored server-side only
+  phone?: string;
+  consentGiven?: boolean;
+  consentDate?: string;     // ISO timestamp
 }
 
 export interface Organization {

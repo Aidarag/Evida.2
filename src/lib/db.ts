@@ -96,42 +96,62 @@ const initialUsers: User[] = [
   {
     username: 'michael_c',
     name: 'Michael Chen',
+    email: 'michael.chen@university.edu',
+    password: 'demo123',
     role: 'student',
     organizations: ['org-isa', 'org-cab', 'org-athletics'],
     major: 'Computer Science',
     gradYear: '2028',
+    graduationYear: '2028',
     school: 'School of Engineering',
-    avatar: 'MC'
+    avatar: 'MC',
+    consentGiven: true,
+    consentDate: '2026-01-15T10:00:00Z'
   },
   {
     username: 'sarah_j',
     name: 'Sarah Jenkins',
+    email: 'sarah.jenkins@university.edu',
+    password: 'demo123',
     role: 'student_leader',
     organizations: ['org-stem', 'org-isa', 'org-athletics'],
     major: 'Mechanical Engineering',
     gradYear: '2027',
+    graduationYear: '2027',
     school: 'School of Engineering',
-    avatar: 'SJ'
+    avatar: 'SJ',
+    consentGiven: true,
+    consentDate: '2026-01-10T10:00:00Z'
   },
   {
     username: 'alex_r',
     name: 'Alex Rivera',
+    email: 'alex.rivera@university.edu',
+    password: 'demo123',
     role: 'student_leader',
     organizations: ['org-sg', 'org-stem', 'org-bsu'],
     major: 'Political Science',
     gradYear: '2026',
+    graduationYear: '2026',
     school: 'School of Public Affairs',
-    avatar: 'AR'
+    avatar: 'AR',
+    consentGiven: true,
+    consentDate: '2025-09-01T10:00:00Z'
   },
   {
     username: 'admin_dean',
     name: 'Dean Dean',
+    email: 'dean.williams@university.edu',
+    password: 'demo123',
     role: 'admin',
     organizations: [],
     major: 'Higher Ed Administration',
     gradYear: 'N/A',
+    graduationYear: 'N/A',
     school: 'Student Affairs Division',
-    avatar: 'DD'
+    avatar: 'DD',
+    consentGiven: true,
+    consentDate: '2025-08-01T10:00:00Z'
   }
 ];
 

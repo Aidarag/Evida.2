@@ -17,18 +17,16 @@ const PROFILE_BANNERS = [
 ];
 
 export default function StudentProfilePage() {
-  const { currentUser, setCurrentUser } = useUser();
+  const { currentUser, setCurrentUser, logout } = useUser();
   const { events, organizations } = useEvents();
   const router = useRouter();
 
-  // Edit profile state
   const [editOpen, setEditOpen] = useState(false);
   const [editName, setEditName] = useState('');
   const [editMajor, setEditMajor] = useState('');
   const [editYear, setEditYear] = useState('');
   const [savedFeedback, setSavedFeedback] = useState(false);
 
-  // Notification settings state
   const [notifOpen, setNotifOpen] = useState(false);
   const [notifSettings, setNotifSettings] = useState({
     newEvents: true,
@@ -47,7 +45,7 @@ export default function StudentProfilePage() {
   const bannerIdx = currentUser.username.charCodeAt(0) % PROFILE_BANNERS.length;
   const bannerPhoto = PROFILE_BANNERS[bannerIdx];
 
-  const handleLogout = () => router.push('/login');
+  const handleLogout = () => logout();
 
   const openEdit = () => {
     setEditName(currentUser.name);
@@ -74,119 +72,122 @@ export default function StudentProfilePage() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto space-y-6 pb-8">
+    <div className="max-w-4xl mx-auto pb-8">
 
-      {/* Profile Hero Banner */}
-      <div className="relative">
-        <div
-          className="h-36 md:h-48 w-full overflow-hidden"
-          style={{ backgroundImage: `url(${bannerPhoto})`, backgroundSize: 'cover', backgroundPosition: 'center' }}
-        >
-          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
+      {/* ── Banner ── */}
+      <div
+        className="h-32 md:h-44 w-full"
+        style={{ backgroundImage: `url(${bannerPhoto})`, backgroundSize: 'cover', backgroundPosition: 'center' }}
+      />
+
+      {/* ── Profile Header Card ── */}
+      <div className="bg-[#DFDED7] px-5 md:px-10 pt-0 pb-5">
+        {/* Avatar row — sits half over the banner */}
+        <div className="-mt-12 mb-4 flex items-end justify-between">
+          <div className="h-20 w-20 md:h-24 md:w-24 rounded-2xl bg-[#92D000] flex items-center justify-center shadow-lg border-4 border-[#DFDED7] shrink-0">
+            <span className="text-2xl md:text-3xl font-extrabold text-[#191919]">{currentUser.avatar}</span>
+          </div>
+          {savedFeedback && (
+            <span className="inline-flex items-center gap-1 px-3 py-1.5 rounded-full bg-[#92D000]/20 border border-[#92D000]/40 text-[10px] font-bold text-[#3a5200] uppercase tracking-wider">
+              <Check className="h-3 w-3" /> Saved
+            </span>
+          )}
         </div>
 
-        <div className="px-6 md:px-10">
-          <div className="flex flex-col md:flex-row items-start gap-5 -mt-14 md:-mt-16 relative z-10">
-            <div className="h-24 w-24 md:h-28 md:w-28 rounded-2xl bg-[#92D000] flex items-center justify-center shadow-[0_8px_30px_rgba(0,0,0,0.25)] border-4 border-[#DFDED7] shrink-0">
-              <span className="text-3xl md:text-4xl font-extrabold text-[#191919]">{currentUser.avatar}</span>
-            </div>
-            <div className="flex-1 flex flex-col gap-3 pt-2 md:pt-10">
-              <div className="space-y-1.5">
-                <div className="flex items-center gap-3">
-                  <h1 className="text-2xl md:text-3xl font-extrabold text-[#191919] leading-tight">{currentUser.name}</h1>
-                  {savedFeedback && (
-                    <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-[#92D000]/15 border border-[#92D000]/30 text-[10px] font-bold text-[#3a5200]">
-                      <Check className="h-3 w-3" /> Saved
-                    </span>
-                  )}
-                </div>
-                <p className="text-sm font-bold text-[#4F5666]">@{currentUser.username}</p>
-                <div className="flex flex-wrap gap-2 pt-1">
-                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-black/[0.05] border border-black/[0.07] text-[10px] font-bold text-[#4F5666] uppercase tracking-wider">
-                    <Award className="h-3 w-3" />{currentUser.major}
-                  </span>
-                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-black/[0.05] border border-black/[0.07] text-[10px] font-bold text-[#4F5666] uppercase tracking-wider">
-                    <Calendar className="h-3 w-3" />Class of {currentUser.graduationYear}
-                  </span>
-                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#92D000]/15 border border-[#92D000]/30 text-[10px] font-bold text-[#3a5200] uppercase tracking-wider">
-                    <Shield className="h-3 w-3" />{currentUser.school}
-                  </span>
-                </div>
-              </div>
-            </div>
-          </div>
+        {/* Name & username */}
+        <div className="space-y-1 mb-4">
+          <h1 className="text-2xl font-extrabold text-[#191919] uppercase tracking-tight leading-tight" style={{ fontFamily: 'var(--font-display)' }}>
+            {currentUser.name}
+          </h1>
+          <p className="text-sm text-[#4F5666]">@{currentUser.username}</p>
+        </div>
+
+        {/* Badges */}
+        <div className="flex flex-wrap gap-2">
+          <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white border border-black/[0.07] text-[10px] font-semibold text-[#4F5666]">
+            <Award className="h-3 w-3 text-[#92D000]" />
+            {currentUser.major || 'Undeclared'}
+          </span>
+          <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white border border-black/[0.07] text-[10px] font-semibold text-[#4F5666]">
+            <Calendar className="h-3 w-3 text-[#92D000]" />
+            Class of {currentUser.graduationYear}
+          </span>
+          <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white border border-black/[0.07] text-[10px] font-semibold text-[#4F5666]">
+            <Shield className="h-3 w-3 text-[#92D000]" />
+            {currentUser.school}
+          </span>
         </div>
       </div>
 
-      {/* Stats Row */}
-      <div className="px-6 md:px-10">
+      {/* ── Stats Row ── */}
+      <div className="px-5 md:px-10 py-4">
         <div className="grid grid-cols-3 gap-3">
           {[
             { label: 'Attended', value: totalRsvps, Icon: CalendarCheck, color: '#92D000', bg: '#92D00018' },
-            { label: 'Hosted', value: totalCreated, Icon: Star, color: '#191919', bg: '#19191918' },
-            { label: 'Saved', value: totalSaved, Icon: BookOpen, color: '#4F5666', bg: '#4F566618' },
+            { label: 'Hosted', value: totalCreated, Icon: Star, color: '#191919', bg: '#19191910' },
+            { label: 'Saved', value: totalSaved, Icon: BookOpen, color: '#4F5666', bg: '#4F566612' },
           ].map(stat => (
-            <Card key={stat.label} className="p-4 text-center flex flex-col items-center gap-1.5" hover={false} glass>
+            <div key={stat.label} className="bg-white rounded-2xl p-4 flex flex-col items-center gap-2 shadow-sm border border-black/[0.04]">
               <div className="h-8 w-8 rounded-xl flex items-center justify-center" style={{ background: stat.bg }}>
                 <stat.Icon className="h-4 w-4" style={{ color: stat.color }} />
               </div>
-              <div className="text-xl font-extrabold text-[#191919]">{stat.value}</div>
-              <div className="text-[9px] font-bold text-[#4F5666] uppercase tracking-wider">{stat.label}</div>
-            </Card>
+              <div className="text-2xl font-extrabold text-[#191919]">{stat.value}</div>
+              <div className="text-[9px] font-bold text-[#4F5666] uppercase tracking-widest">{stat.label}</div>
+            </div>
           ))}
         </div>
       </div>
 
-      {/* Organizations & Account Actions */}
-      <div className="px-6 md:px-10 grid md:grid-cols-2 gap-6">
+      {/* ── Organizations & Account Actions ── */}
+      <div className="px-5 md:px-10 grid md:grid-cols-2 gap-5">
 
         {/* My Organizations */}
         <div className="space-y-3">
-          <h2 className="text-sm font-extrabold text-[#191919] flex items-center gap-2 uppercase tracking-wider">
-            <Users className="h-4 w-4 text-[#92D000]" /> My Organizations
+          <h2 className="text-xs font-extrabold text-[#191919] flex items-center gap-2 uppercase tracking-widest">
+            <Users className="h-3.5 w-3.5 text-[#92D000]" /> My Organizations
           </h2>
           {myOrgs.length > 0 ? (
             <div className="space-y-2">
               {myOrgs.map(org => (
-                <Card key={org.id} className="p-4 flex items-center gap-3" glass>
-                  <div className="h-10 w-10 rounded-xl bg-[#92D000]/20 border border-[#92D000]/30 flex items-center justify-center shrink-0">
+                <div key={org.id} className="bg-white rounded-2xl p-4 flex items-center gap-3 border border-black/[0.04] shadow-sm">
+                  <div className="h-10 w-10 rounded-xl bg-[#92D000]/15 border border-[#92D000]/20 flex items-center justify-center shrink-0">
                     <span className="font-extrabold text-[#3a5200] text-base">{org.name.charAt(0)}</span>
                   </div>
                   <div className="flex-1 min-w-0">
-                    <h3 className="font-bold text-[#191919] text-sm truncate">{org.name}</h3>
-                    <p className="text-[10px] text-[#4F5666] font-medium">{org.verified ? '✓ Verified Organization' : 'Student Group'}</p>
+                    <p className="font-bold text-[#191919] text-sm uppercase tracking-tight truncate">{org.name}</p>
+                    <p className="text-[10px] text-[#4F5666]">{org.verified ? '✓ Verified organization' : 'Student group'}</p>
                   </div>
-                </Card>
+                </div>
               ))}
             </div>
           ) : (
-            <Card className="p-6 text-center" glass hover={false}>
-              <Users className="h-8 w-8 text-[#4F5666]/40 mx-auto mb-2" />
+            <div className="bg-white rounded-2xl p-6 text-center border border-black/[0.04]">
+              <Users className="h-8 w-8 text-[#4F5666]/30 mx-auto mb-2" />
               <p className="text-xs text-[#4F5666]">Not a member of any organizations yet.</p>
-            </Card>
+            </div>
           )}
         </div>
 
         {/* Account Actions */}
         <div className="space-y-3">
-          <h2 className="text-sm font-extrabold text-[#191919] flex items-center gap-2 uppercase tracking-wider">
-            <Settings className="h-4 w-4 text-[#4F5666]" /> Account Actions
+          <h2 className="text-xs font-extrabold text-[#191919] flex items-center gap-2 uppercase tracking-widest">
+            <Settings className="h-3.5 w-3.5 text-[#4F5666]" /> Account Actions
           </h2>
-          <Card className="overflow-hidden divide-y divide-black/[0.05]" glass hover={false}>
+          <div className="bg-white rounded-2xl overflow-hidden divide-y divide-black/[0.05] border border-black/[0.04] shadow-sm">
 
             {/* Edit Profile */}
             <button
               onClick={openEdit}
-              className="w-full p-4 flex items-center gap-3 hover:bg-black/[0.03] transition-colors cursor-pointer group"
+              className="w-full p-4 flex items-center gap-3 hover:bg-black/[0.02] active:bg-black/[0.04] transition-colors cursor-pointer group"
             >
-              <div className="h-9 w-9 rounded-xl bg-black/[0.06] flex items-center justify-center shrink-0">
-                <Edit3 className="h-4 w-4 text-[#191919]" />
+              <div className="h-9 w-9 rounded-xl bg-[#92D000]/15 flex items-center justify-center shrink-0">
+                <Edit3 className="h-4 w-4 text-[#3a5200]" />
               </div>
               <div className="flex-1 text-left">
-                <span className="text-sm font-semibold text-[#191919] block">Edit Profile</span>
-                <span className="text-[10px] text-[#4F5666]">Update your name, major &amp; year</span>
+                <p className="text-sm font-bold text-[#191919] uppercase tracking-tight">Edit Profile</p>
+                <p className="text-[10px] text-[#4F5666]">Update your name, major &amp; year</p>
               </div>
-              <ChevronRight className="h-4 w-4 text-[#4F5666]/40 group-hover:text-[#191919]/50 transition-colors" />
+              <ChevronRight className="h-4 w-4 text-[#4F5666]/40 group-hover:text-[#191919]/50 transition-colors shrink-0" />
             </button>
 
             {/* Edit Profile Inline Panel */}
@@ -196,45 +197,35 @@ export default function StudentProfilePage() {
                   initial={{ height: 0, opacity: 0 }}
                   animate={{ height: 'auto', opacity: 1 }}
                   exit={{ height: 0, opacity: 0 }}
-                  transition={{ duration: 0.25 }}
+                  transition={{ duration: 0.22 }}
                   className="overflow-hidden"
                 >
-                  <div className="p-4 bg-black/[0.02] border-b border-black/[0.05] space-y-3">
-                    <div className="space-y-1">
-                      <label className="text-[10px] font-bold text-[#4F5666] uppercase tracking-wider">Full Name</label>
-                      <input
-                        value={editName}
-                        onChange={e => setEditName(e.target.value)}
-                        className="w-full bg-white border border-black/[0.08] rounded-xl px-3 py-2 text-sm text-[#191919] focus:outline-none focus:border-[#92D000] transition-colors"
-                      />
-                    </div>
-                    <div className="space-y-1">
-                      <label className="text-[10px] font-bold text-[#4F5666] uppercase tracking-wider">Major</label>
-                      <input
-                        value={editMajor}
-                        onChange={e => setEditMajor(e.target.value)}
-                        className="w-full bg-white border border-black/[0.08] rounded-xl px-3 py-2 text-sm text-[#191919] focus:outline-none focus:border-[#92D000] transition-colors"
-                      />
-                    </div>
-                    <div className="space-y-1">
-                      <label className="text-[10px] font-bold text-[#4F5666] uppercase tracking-wider">Graduation Year</label>
-                      <input
-                        type="number"
-                        value={editYear}
-                        onChange={e => setEditYear(e.target.value)}
-                        className="w-full bg-white border border-black/[0.08] rounded-xl px-3 py-2 text-sm text-[#191919] focus:outline-none focus:border-[#92D000] transition-colors"
-                      />
-                    </div>
+                  <div className="p-4 bg-[#f7f7f5] space-y-3">
+                    {[
+                      { label: 'Full Name', value: editName, set: setEditName, type: 'text' },
+                      { label: 'Major', value: editMajor, set: setEditMajor, type: 'text' },
+                      { label: 'Graduation Year', value: editYear, set: setEditYear, type: 'text' },
+                    ].map(field => (
+                      <div key={field.label} className="space-y-1">
+                        <label className="text-[9px] font-bold text-[#4F5666] uppercase tracking-widest">{field.label}</label>
+                        <input
+                          type={field.type}
+                          value={field.value}
+                          onChange={e => field.set(e.target.value)}
+                          className="w-full bg-white border border-black/[0.08] rounded-xl px-3 py-2.5 text-sm text-[#191919] focus:outline-none focus:border-[#92D000] transition-colors"
+                        />
+                      </div>
+                    ))}
                     <div className="flex gap-2 pt-1">
                       <button
                         onClick={saveEdit}
-                        className="flex-1 bg-[#92D000] text-[#191919] text-xs font-bold uppercase tracking-wider py-2 rounded-xl hover:bg-[#92D000]/90 transition-colors"
+                        className="flex-1 bg-[#92D000] text-[#191919] text-xs font-bold uppercase tracking-wider py-2.5 rounded-xl hover:bg-[#92D000]/90 transition-colors"
                       >
-                        Save Changes
+                        Save changes
                       </button>
                       <button
                         onClick={() => setEditOpen(false)}
-                        className="h-9 w-9 rounded-xl bg-black/[0.05] flex items-center justify-center text-[#4F5666] hover:text-[#191919] transition-colors"
+                        className="h-10 w-10 rounded-xl bg-black/[0.05] flex items-center justify-center text-[#4F5666] hover:text-[#191919] transition-colors"
                       >
                         <X className="h-4 w-4" />
                       </button>
@@ -247,29 +238,28 @@ export default function StudentProfilePage() {
             {/* Notification Settings */}
             <button
               onClick={() => { setNotifOpen(!notifOpen); setEditOpen(false); }}
-              className="w-full p-4 flex items-center gap-3 hover:bg-black/[0.03] transition-colors cursor-pointer group"
+              className="w-full p-4 flex items-center gap-3 hover:bg-black/[0.02] active:bg-black/[0.04] transition-colors cursor-pointer group"
             >
-              <div className="h-9 w-9 rounded-xl bg-black/[0.06] flex items-center justify-center shrink-0">
+              <div className="h-9 w-9 rounded-xl bg-black/[0.05] flex items-center justify-center shrink-0">
                 <Bell className="h-4 w-4 text-[#191919]" />
               </div>
               <div className="flex-1 text-left">
-                <span className="text-sm font-semibold text-[#191919] block">Notification Settings</span>
-                <span className="text-[10px] text-[#4F5666]">Manage your alerts</span>
+                <p className="text-sm font-bold text-[#191919] uppercase tracking-tight">Notifications</p>
+                <p className="text-[10px] text-[#4F5666]">Manage your alerts</p>
               </div>
-              <ChevronDown className={`h-4 w-4 text-[#4F5666]/40 transition-transform duration-200 ${notifOpen ? 'rotate-180' : ''}`} />
+              <ChevronDown className={`h-4 w-4 text-[#4F5666]/40 transition-transform duration-200 shrink-0 ${notifOpen ? 'rotate-180' : ''}`} />
             </button>
 
-            {/* Notification Settings Inline Panel */}
             <AnimatePresence>
               {notifOpen && (
                 <motion.div
                   initial={{ height: 0, opacity: 0 }}
                   animate={{ height: 'auto', opacity: 1 }}
                   exit={{ height: 0, opacity: 0 }}
-                  transition={{ duration: 0.25 }}
+                  transition={{ duration: 0.22 }}
                   className="overflow-hidden"
                 >
-                  <div className="p-4 bg-black/[0.02] space-y-3">
+                  <div className="p-4 bg-[#f7f7f5] space-y-4">
                     {[
                       { key: 'newEvents' as const, label: 'New Events Near You', desc: 'Get notified when new events are posted' },
                       { key: 'rsvpReminders' as const, label: 'RSVP Reminders', desc: '24hr reminders for events you saved' },
@@ -277,15 +267,15 @@ export default function StudentProfilePage() {
                       { key: 'promotions' as const, label: 'Promotions & Deals', desc: 'Campus deals and sponsored posts' },
                     ].map(item => (
                       <div key={item.key} className="flex items-center justify-between gap-3">
-                        <div>
-                          <p className="text-xs font-semibold text-[#191919]">{item.label}</p>
-                          <p className="text-[10px] text-[#4F5666]">{item.desc}</p>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-xs font-bold text-[#191919] uppercase tracking-tight">{item.label}</p>
+                          <p className="text-[10px] text-[#4F5666] font-normal">{item.desc}</p>
                         </div>
                         <button
                           onClick={() => toggleNotif(item.key)}
-                          className={`relative h-5.5 w-10 rounded-full transition-colors duration-200 shrink-0 ${notifSettings[item.key] ? 'bg-[#92D000]' : 'bg-black/[0.12]'}`}
+                          className={`relative h-6 w-11 rounded-full transition-colors duration-200 shrink-0 ${notifSettings[item.key] ? 'bg-[#92D000]' : 'bg-black/[0.12]'}`}
                         >
-                          <div className={`absolute top-0.5 h-4.5 w-4.5 rounded-full bg-white shadow transition-transform duration-200 ${notifSettings[item.key] ? 'translate-x-[18px]' : 'translate-x-0.5'}`} />
+                          <div className={`absolute top-0.5 h-5 w-5 rounded-full bg-white shadow-sm transition-transform duration-200 ${notifSettings[item.key] ? 'translate-x-[22px]' : 'translate-x-0.5'}`} />
                         </button>
                       </div>
                     ))}
@@ -297,18 +287,18 @@ export default function StudentProfilePage() {
             {/* Sign Out */}
             <button
               onClick={handleLogout}
-              className="w-full p-4 flex items-center gap-3 hover:bg-red-500/[0.04] transition-colors cursor-pointer group"
+              className="w-full p-4 flex items-center gap-3 hover:bg-red-500/[0.03] active:bg-red-500/[0.06] transition-colors cursor-pointer group"
             >
               <div className="h-9 w-9 rounded-xl bg-red-500/10 flex items-center justify-center shrink-0">
                 <LogOut className="h-4 w-4 text-red-500" />
               </div>
               <div className="flex-1 text-left">
-                <span className="text-sm font-semibold text-red-500 block">Sign Out</span>
-                <span className="text-[10px] text-red-400/70">You will be returned to login</span>
+                <p className="text-sm font-bold text-red-500 uppercase tracking-tight">Sign Out</p>
+                <p className="text-[10px] text-red-400/70">You will be returned to login</p>
               </div>
-              <ChevronRight className="h-4 w-4 text-red-400/40 group-hover:text-red-400 transition-colors" />
+              <ChevronRight className="h-4 w-4 text-red-400/30 group-hover:text-red-400 transition-colors shrink-0" />
             </button>
-          </Card>
+          </div>
         </div>
       </div>
     </div>
