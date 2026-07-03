@@ -78,12 +78,12 @@ export function DesktopNav({ variant = 'student' }: { variant?: 'student' | 'sch
                   >
                     Sign Up
                   </Link>
-                  <Link 
-                    href="/login" 
-                    className="px-5 py-2 font-bold uppercase tracking-widest text-[11px] text-[#4F5666] hover:text-[#92D000] transition-colors duration-300"
-                  >
-                    Sign In
-                  </Link>
+                  <Link
+  href="/login"
+  className="px-5 py-2 rounded-full border border-[#92D000] text-[#92D000] text-[11px] font-bold uppercase tracking-widest hover:bg-[#92D000] hover:text-[#191919] transition-colors duration-300"
+>
+  Sign In
+</Link>
                 </div>
 
                 {/* Mobile Hamburger Button */}
@@ -137,13 +137,13 @@ export function DesktopNav({ variant = 'student' }: { variant?: 'student' | 'sch
             ))}
           </nav>
           <div className="flex flex-col gap-4 mt-12">
-            <Link 
-              href="/login" 
-              onClick={() => setMobileMenuOpen(false)}
-              className="w-full text-center py-3.5 text-xs font-bold border border-black/10 text-[#191919] rounded-full uppercase tracking-widest hover:bg-black hover:text-white transition-all"
-            >
-              Sign In
-            </Link>
+            <Link
+  href="/login"
+  onClick={() => setMobileMenuOpen(false)}
+  className="w-full text-center py-3.5 text-xs font-bold border border-[#92D000] text-[#92D000] rounded-full uppercase tracking-widest hover:bg-[#92D000] hover:text-[#191919] transition-all"
+>
+  Sign In
+</Link>
             <Link 
               href="/signup" 
               onClick={() => setMobileMenuOpen(false)}

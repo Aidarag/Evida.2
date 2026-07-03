@@ -44,16 +44,38 @@ export default function AboutEvidaSection() {
         <div className="grid grid-cols-1 md:grid-cols-12 gap-8 mb-20 items-start text-left">
           <div className="md:col-span-3">
             <span className="text-[#7B8290] text-xs font-bold tracking-[0.25em] uppercase block pt-2">
-              OUR MISSION
+              OUR STORY
             </span>
           </div>
           <div className="md:col-span-9">
             <p className="text-[#191919] font-extrabold text-xl md:text-3xl lg:text-4xl leading-tight tracking-tight uppercase" style={{ fontFamily: 'var(--font-display)' }}>
-              Every campus tells a story, and at Evida®, we make sure it's unforgettable. <span className="text-[#4F5666] font-normal lowercase normal-case">From concept to connection, we bring student life to life with design, coordination, and shaping experiences that resonate with everyone.</span>
+              Evida was founded to give every campus a vibrant digital hub where students connect, discover events, and build community. <span className="text-[#4F5666] font-normal lowercase normal-case">Our platform turns ideas into experiences, making campus life lively, inclusive, and unforgettable.</span>
             </p>
           </div>
         </div>
       </div>
-    </section>
+        {/* Smartphone Mockup Animation */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8 }}
+          className="mx-auto mt-12 w-[280px] h-[560px] rounded-3xl border-4 border-black bg-white overflow-hidden shadow-lg"
+        >
+          <iframe
+            src="/explore"
+            className="w-full h-full"
+            style={{ animation: 'scroll 10s linear infinite alternate' }}
+          ></iframe>
+        </motion.div>
+      </section>
+
+      {/* Inline CSS for iframe scroll animation */}
+      <style jsx>{`
+        @keyframes scroll {
+          0% { transform: translateY(0%); }
+          100% { transform: translateY(-30%); }
+        }
+      `}</style>
   );
 }
