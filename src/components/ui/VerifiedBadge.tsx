@@ -7,7 +7,7 @@ interface VerifiedBadgeProps {
 export default function VerifiedBadge({ className = "h-3.5 w-3.5" }: VerifiedBadgeProps) {
   return (
     <svg 
-      className={`${className} text-[#0095F6] fill-current inline-block shrink-0 align-middle ml-1`} 
+      className={`${className} text-[#22C55E] fill-current inline-block shrink-0 align-middle ml-1`} 
       viewBox="0 0 24 24"
       aria-label="Verified organization"
     >
