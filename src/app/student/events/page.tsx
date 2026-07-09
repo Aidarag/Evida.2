@@ -363,7 +363,7 @@ export default function StudentEventsFeed() {
             }`}
             title={feedMode === 'tiktok' ? "Switch to Grid view" : "Switch to Feed view"}
           >
-            {feedMode === 'tiktok' ? <LayoutGrid className="h-5 w-5" /> : <Compass className="h-5 w-5" />}
+            <LayoutGrid className="h-5 w-5" />
           </button>
 
           {/* Middle: Centered Filters (Events & Promotions) */}
