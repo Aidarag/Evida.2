@@ -18,7 +18,7 @@ export default function CreatePromoModal({
   onSubmit,
 }: CreatePromoModalProps) {
   const [title, setTitle] = useState('');
-  const [category, setCategory] = useState<'tutoring' | 'photography' | 'food' | 'initiative' | 'other'>('tutoring');
+  const [category, setCategory] = useState<'tutoring' | 'photography' | 'food' | 'initiative' | 'self-care' | 'other'>('tutoring');
   const [contactInfo, setContactInfo] = useState('');
   const [description, setDescription] = useState('');
   const [submitting, setSubmitting] = useState(false);
@@ -112,6 +112,7 @@ export default function CreatePromoModal({
                 <option value="photography">Photography Gigs</option>
                 <option value="food">Food & Bake Sales</option>
                 <option value="initiative">Student Initiatives</option>
+                <option value="self-care">Self Care (hair, makeup, nails, etc)</option>
                 <option value="other">Other Promotions</option>
               </select>
             </div>

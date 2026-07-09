@@ -90,7 +90,7 @@ export default function CreateListingPage() {
       organizationId: isOrg ? org?.id : undefined,
       organizationName: isOrg ? org?.name : undefined,
       organizer: isSchool ? (eventForm.departmentName || 'School Administration') : currentUser.name,
-      status: isSchool ? 'approved' : 'pending',
+      status: (isSchool || creatorEntity === 'student') ? 'approved' : 'pending',
       complexityType: eventSubtype === 'quick' ? 'quick' : 'standard',
       coverImage: isSchool 
         ? 'from-red-500 via-pink-500 to-orange-500' // School admin gradient
@@ -103,7 +103,7 @@ export default function CreateListingPage() {
     setIsSubmitting(false);
 
     if (success) {
-      alert(isSchool ? 'School event published successfully!' : 'Event submitted successfully! Waiting for moderation.');
+      alert(isSchool ? 'School event published successfully!' : (creatorEntity === 'student' ? 'Event shared successfully!' : 'Event submitted successfully! Waiting for moderation.'));
       router.push('/student/my-events');
     } else {
       alert('Failed to create event. Please try again.');
@@ -269,8 +269,8 @@ export default function CreateListingPage() {
                   <User className="h-6 w-6" />
                 </div>
                 <div>
-                  <h3 className="text-md font-bold text-[#191919] uppercase tracking-wider">Me</h3>
-                  <p className="text-xs text-[#374151] mt-0.5">Student-Owned Event. Independent activities, study groups, and meetups.</p>
+                  <h3 className="text-md font-bold text-[#191919] uppercase tracking-wider">Me - Personal Independent</h3>
+                  <p className="text-xs text-[#374151] mt-0.5">Personal events without using the school facilities.</p>
                 </div>
                 <ArrowRight className="h-5 w-5 text-[#374151] ml-auto group-hover:text-[#191919] group-hover:translate-x-1 transition-all" />
               </button>
@@ -296,25 +296,6 @@ export default function CreateListingPage() {
                 </div>
                 <ArrowRight className="h-5 w-5 text-[#374151] ml-auto group-hover:text-[#191919] group-hover:translate-x-1 transition-all" />
               </button>
-
-              {/* Option 3: School (Visible only to administrators) */}
-              {isAdmin && (
-                <button
-                  onClick={() => { setCreatorEntity('school'); setStep(4); }} // Go straight to form
-                  className="w-full text-left p-5 rounded-2xl border-2 border-black/[0.06] bg-white hover:bg-black/[0.01] hover:border-[#191919]/30 transition-all flex items-center gap-4 group cursor-pointer animate-pulse"
-                >
-                  <div className="h-12 w-12 rounded-xl bg-[var(--color-evida-coral)]/10 text-[var(--color-evida-coral)] flex items-center justify-center group-hover:scale-105 transition-transform shrink-0">
-                    <Shield className="h-6 w-6" />
-                  </div>
-                  <div>
-                    <h3 className="text-md font-bold text-[#191919] uppercase tracking-wider flex items-center gap-1.5">
-                      School <span className="bg-[var(--color-evida-coral)]/20 text-[var(--color-evida-coral)] text-[8px] font-extrabold px-1.5 py-0.5 rounded uppercase">Admin Only</span>
-                    </h3>
-                    <p className="text-xs text-[#374151] mt-0.5">School-Owned Event. Official administrative postings and university initiatives.</p>
-                  </div>
-                  <ArrowRight className="h-5 w-5 text-[#374151] ml-auto group-hover:text-[#191919] group-hover:translate-x-1 transition-all" />
-                </button>
-              )}
             </div>
 
             <div className="flex justify-start">
@@ -573,7 +554,7 @@ export default function CreateListingPage() {
                       variant="neon" 
                       icon={<Check className="h-4 w-4" />}
                     >
-                      {isSubmitting ? 'Publishing...' : creatorEntity === 'school' ? 'Publish Event' : 'Submit for Review'}
+                      {isSubmitting ? 'Publishing...' : creatorEntity === 'school' ? 'Publish Event' : (creatorEntity === 'student' ? 'Share' : 'Submit for Review')}
                     </Button>
                   </div>
                 </form>
@@ -614,6 +595,7 @@ export default function CreateListingPage() {
                           <option value="photography">Photography & Design</option>
                           <option value="food">Food Sales & Catering</option>
                           <option value="initiative">Student Initiatives & Projects</option>
+                          <option value="self-care">Self Care (hair, makeup, nails, etc)</option>
                           <option value="other">Other Student Service</option>
                         </select>
                       </div>
