@@ -10,7 +10,7 @@ import Input from '@/components/ui/Input';
 import EmptyState from '@/components/ui/EmptyState';
 import Modal from '@/components/ui/Modal';
 import Button from '@/components/ui/Button';
-import { Search, Compass, Shield, Users, GraduationCap, Megaphone, Calendar, MapPin, Mail, X, Heart, Plus, MessageSquare, Bookmark, Share2, ChevronLeft, CheckCircle2, MessageCircle, User, Home } from 'lucide-react';
+import { Search, Compass, Shield, Users, GraduationCap, Megaphone, Calendar, MapPin, Mail, X, Heart, Plus, MessageSquare, Bookmark, Share2, ChevronLeft, CheckCircle2, MessageCircle, User, Home, LayoutGrid } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Event, Promotion } from '@/lib/types';
 
@@ -345,73 +345,46 @@ export default function StudentEventsFeed() {
         ? 'w-full max-w-none h-screen overflow-hidden p-0 relative bg-[#DFDED7]' 
         : 'max-w-7xl p-6 md:p-10 space-y-8'
     }`}>
-      {/* Search & Filter Header */}
-      <div className={`space-y-4 py-4 px-6 border-b border-black/[0.04] ${
+      {/* Explore Navigation Header */}
+      <div className={`z-50 flex flex-col gap-4 border-b ${
         feedMode === 'tiktok' 
-          ? 'fixed top-0 inset-x-0 z-50 bg-[#DFDED7]/80 backdrop-blur-md w-full border-b border-black/[0.04] max-w-none' 
-          : '-mx-6 md:mx-0 md:px-0'
+          ? 'fixed top-0 inset-x-0 bg-black/45 backdrop-blur-md text-white border-white/10 w-full max-w-none px-6 py-4' 
+          : 'bg-[#DFDED7]/80 backdrop-blur-md text-[#191919] border-black/[0.04] sticky top-0 px-6 py-4 -mx-6 md:mx-0 md:px-0'
       }`}>
-        <div className="flex flex-col md:flex-row gap-4 justify-between md:items-center">
-          <div className="flex items-center gap-3">
-            <button
-              type="button"
-              onClick={() => router.back()}
-              className="h-10 w-10 rounded-full border border-black/10 flex items-center justify-center text-[#191919] hover:bg-black/5 transition-all cursor-pointer bg-white shadow-sm"
-              title="Go Back"
-            >
-              <ChevronLeft className="h-5 w-5" />
-            </button>
-            <div>
-              <h1 className="text-2xl font-extrabold text-[#191919] tracking-tight flex items-center gap-3" style={{ fontFamily: 'var(--font-display)' }}>
-                Explore Events
-              </h1>
-              <p className="text-xs text-[#4F5666] mt-0.5">Discover what's happening around campus</p>
-            </div>
-          </div>
-          
-          {/* View Mode Toggle - Immediately below the short description */}
-          <div className="flex bg-black/[0.04] p-1 rounded-full border border-black/[0.04] shrink-0 w-fit">
-            <button
-              type="button"
-              onClick={() => setFeedMode('tiktok')}
-              className={`px-4 py-1.5 rounded-full text-[10px] font-extrabold uppercase tracking-wider transition-all cursor-pointer ${
-                feedMode === 'tiktok' 
-                  ? 'bg-[#191919] text-white shadow-sm' 
-                  : 'text-[#4F5666] hover:text-[#191919]'
-              }`}
-            >
-              Feed
-            </button>
-            <button
-              type="button"
-              onClick={() => setFeedMode('grid')}
-              className={`px-4 py-1.5 rounded-full text-[10px] font-extrabold uppercase tracking-wider transition-all cursor-pointer ${
-                feedMode === 'grid' 
-                  ? 'bg-[#191919] text-white shadow-sm' 
-                  : 'text-[#4F5666] hover:text-[#191919]'
-              }`}
-            >
-              Grid
-            </button>
-          </div>
-        </div>
+        <div className="flex items-center justify-between w-full">
+          {/* Left Corner: Single switch button (Feed <-> Grid in one) */}
+          <button
+            type="button"
+            onClick={() => setFeedMode(feedMode === 'tiktok' ? 'grid' : 'tiktok')}
+            className={`h-10 w-10 rounded-full flex items-center justify-center transition-all cursor-pointer shadow-sm border ${
+              feedMode === 'tiktok' 
+                ? 'bg-black/40 backdrop-blur-md border-white/10 text-white hover:bg-black/60' 
+                : 'bg-white border-black/10 text-[#191919] hover:bg-black/5'
+            }`}
+            title={feedMode === 'tiktok' ? "Switch to Grid view" : "Switch to Feed view"}
+          >
+            {feedMode === 'tiktok' ? <LayoutGrid className="h-5 w-5" /> : <Compass className="h-5 w-5" />}
+          </button>
 
-        {/* Tab Filters */}
-        <div className="space-y-3">
-          <div className="flex bg-black/[0.04] p-1 rounded-full border border-black/[0.04] shrink-0 w-fit">
+          {/* Middle: Centered Filters (Events & Promotions) */}
+          <div className={`flex p-1 rounded-full border shadow-sm ${
+            feedMode === 'tiktok' 
+              ? 'bg-black/40 border-white/10' 
+              : 'bg-black/[0.04] border-black/[0.04]'
+          }`}>
             <button
               type="button"
               onClick={() => {
                 setSelectedTab('campus');
                 setSelectedCategory('All');
               }}
-              className={`px-5 py-2 rounded-full text-[10px] font-extrabold uppercase tracking-wider transition-all cursor-pointer ${
+              className={`px-5 py-1.5 rounded-full text-[10px] font-extrabold uppercase tracking-wider transition-all cursor-pointer ${
                 selectedTab === 'campus' 
-                  ? 'bg-[#191919] text-white font-black' 
-                  : 'text-[#4F5666] hover:text-[#191919]'
+                  ? 'bg-[#BDFB04] text-[#191919] font-black' 
+                  : (feedMode === 'tiktok' ? 'text-white/80 hover:text-white' : 'text-[#4F5666] hover:text-[#191919]')
               }`}
             >
-              Campus's events
+              Events
             </button>
             <button
               type="button"
@@ -419,15 +392,29 @@ export default function StudentEventsFeed() {
                 setSelectedTab('promotions');
                 setSelectedCategory('All');
               }}
-              className={`px-5 py-2 rounded-full text-[10px] font-extrabold uppercase tracking-wider transition-all cursor-pointer ${
+              className={`px-5 py-1.5 rounded-full text-[10px] font-extrabold uppercase tracking-wider transition-all cursor-pointer ${
                 selectedTab === 'promotions' 
-                  ? 'bg-[#191919] text-white font-black' 
-                  : 'text-[#4F5666] hover:text-[#191919]'
+                  ? 'bg-[#BDFB04] text-[#191919] font-black' 
+                  : (feedMode === 'tiktok' ? 'text-white/80 hover:text-white' : 'text-[#4F5666] hover:text-[#191919]')
               }`}
             >
               Promotions
             </button>
           </div>
+
+          {/* Right Corner: Back button */}
+          <button
+            type="button"
+            onClick={() => router.back()}
+            className={`h-10 w-10 rounded-full flex items-center justify-center transition-all cursor-pointer shadow-sm border ${
+              feedMode === 'tiktok' 
+                ? 'bg-black/40 backdrop-blur-md border-white/10 text-white hover:bg-black/60' 
+                : 'bg-white border-black/10 text-[#191919] hover:bg-black/5'
+            }`}
+            title="Go Back"
+          >
+            <ChevronLeft className="h-5 w-5" />
+          </button>
         </div>
 
         {/* Search & Category Filters - Only visible in Grid Mode */}
@@ -549,7 +536,7 @@ export default function StudentEventsFeed() {
       {/* Grid or TikTok Feed */}
       {feedMode === 'tiktok' ? (
         sortedFilteredItems.length > 0 ? (
-          <div className="relative w-full h-full flex flex-col items-center">
+          <div className="relative w-full h-full flex flex-col items-center bg-black">
             
             {/* TikTok Vertical Swipe Container */}
             <div className="h-full w-full overflow-y-scroll snap-y snap-mandatory scrollbar-none flex flex-col items-center">
@@ -588,178 +575,202 @@ export default function StudentEventsFeed() {
                 const isSaved = 'ownershipType' in item ? item.savedBy?.includes(currentUser?.name || '') : false;
 
                 return (
-                  <div key={item.id} className="snap-start shrink-0 h-full w-full flex items-center justify-center pt-28 pb-32 px-4 relative overflow-hidden bg-[#DFDED7]">
-                    {/* Blurred background image for full-screen immersive aesthetic */}
-                    {!isPromo && coverImage && !isGradient && (
-                      <div 
-                        className="absolute inset-0 bg-cover bg-center filter blur-3xl opacity-20 scale-110 z-0 select-none pointer-events-none"
-                        style={bgStyle}
+                  <div 
+                    key={item.id} 
+                    className="snap-start shrink-0 h-full w-full relative overflow-hidden flex flex-col justify-end bg-black"
+                  >
+                    {/* Full-Screen Media Background */}
+                    {isGradient ? (
+                      <div className={`absolute inset-0 w-full h-full z-0 ${bgClass}`} />
+                    ) : (
+                      <img 
+                        src={coverImage} 
+                        alt={item.title}
+                        className="absolute inset-0 w-full h-full object-cover opacity-75 z-0 select-none pointer-events-none"
                       />
                     )}
                     
-                    <div className="relative z-10 w-full max-w-md bg-white rounded-[32px] overflow-hidden border border-black/[0.04] shadow-[var(--shadow-premium-lg)] flex flex-col justify-between h-[64vh] max-h-[560px] text-left">
-                      
-                      {/* 1. Image Container */}
-                      <div 
+                    {/* Gradient Overlay for Text Readability */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/10 to-black/60 z-10 pointer-events-none" />
+
+                    {/* Bottom-Left Information Overlay */}
+                    <div className="absolute bottom-24 left-4 z-20 max-w-[72%] text-white text-left space-y-2 select-none">
+                      {/* Organization/Hoster Name */}
+                      <div className="flex items-center gap-1.5 text-xs font-black uppercase tracking-wider text-[#BDFB04]">
+                        <span>@{orgName.toLowerCase().replace(/\s+/g, '')}</span>
+                        {isOrgVerified && <VerifiedBadge className="h-4 w-4 fill-[#BDFB04] text-black" />}
+                      </div>
+
+                      {/* Event Title */}
+                      <h2 
                         onClick={() => handleCardClick(item)}
-                        className="relative aspect-[16/10] w-full overflow-hidden bg-gray-50 cursor-pointer shrink-0"
+                        className="text-lg font-extrabold uppercase leading-tight tracking-tight hover:text-white/80 transition-colors cursor-pointer"
+                        style={{ fontFamily: 'var(--font-display)' }}
                       >
-                        {isGradient ? (
-                          <div className={`absolute inset-0 ${bgClass}`} />
-                        ) : (
-                          <img 
-                            src={coverImage} 
-                            alt={item.title}
-                            className="absolute inset-0 h-full w-full object-cover"
-                          />
+                        {item.title}
+                      </h2>
+
+                      {/* Short Description */}
+                      <p className="text-white/95 text-[11px] leading-relaxed font-light line-clamp-2">
+                        {item.description || `Join us for the ${item.title}, happening soon.`}
+                      </p>
+
+                      {/* Info badges/rows (Date, Time, Location) */}
+                      <div className="flex flex-wrap items-center gap-2 pt-1">
+                        <span className="px-2 py-0.5 text-[8px] font-extrabold uppercase tracking-wider rounded-md bg-white/10 border border-white/10">
+                          {isPromo ? 'Promotion' : item.category}
+                        </span>
+                        <span className="px-2 py-0.5 text-[8px] font-extrabold uppercase tracking-wider rounded-md bg-[#BDFB04] text-[#191919]">
+                          {isPromo ? 'FREE' : (item.free ? 'FREE' : 'TICKETED')}
+                        </span>
+                        {!isPromo && !item.free && (item as Event).price && (
+                          <span className="px-2 py-0.5 text-[8px] font-extrabold uppercase tracking-wider rounded-md bg-white/20">
+                            ${(item as Event).price}
+                          </span>
                         )}
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/35 to-transparent" />
-                        
-                        {/* Category Badge top left */}
-                        <div className="absolute top-4 left-4 z-10 flex">
-                          <span className="px-3.5 py-1 text-[9px] font-extrabold tracking-wider uppercase rounded-full border border-black/5 bg-white/95 text-[#191919] shadow-sm">
-                            {isPromo ? 'Promotion' : item.category}
-                          </span>
-                        </div>
+                      </div>
 
-                        {/* Cost Badge top right */}
-                        <div className="absolute top-4 right-4 z-10 flex">
-                          <span className="px-3.5 py-1 text-[9px] font-extrabold tracking-wider uppercase rounded-full border border-black/5 bg-[#BDFB04] text-[#191919] shadow-sm">
-                            {isPromo ? 'FREE' : (item.free ? 'FREE' : 'TICKETED')}
-                          </span>
+                      <div className="flex flex-col gap-1 text-[10px] font-bold text-white/80 uppercase pt-1">
+                        <div className="flex items-center gap-1.5">
+                          <Calendar className="h-3.5 w-3.5 text-[#BDFB04]" />
+                          <span>{formattedDate} • {timeStr}</span>
+                        </div>
+                        <div className="flex items-center gap-1.5 truncate">
+                          <MapPin className="h-3.5 w-3.5 text-white/60" />
+                          <span className="truncate">{isPromo ? (item as Promotion).organizer : (item as Event).location}</span>
                         </div>
                       </div>
 
-                      {/* 2. Card Content Body */}
-                      <div className="p-6 flex flex-col flex-1 justify-between gap-3 overflow-hidden">
-                        <div className="space-y-1.5 overflow-y-auto pr-1 select-none flex-1 min-h-0">
-                          {/* Host Details */}
-                          <div className="flex items-center gap-1 text-[10px] text-[#4F5666] font-bold uppercase tracking-wider">
-                            <span>{orgName}</span>
-                            {isOrgVerified && <VerifiedBadge className="h-3.5 w-3.5" />}
+                      {/* RSVP / Contact Button inside Overlay */}
+                      <button
+                        onClick={() => handleCardClick(item)}
+                        className="mt-2 bg-[#BDFB04] text-[#191919] hover:bg-[#c5ff0a] px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-wider transition-all flex items-center justify-center gap-1.5 cursor-pointer shadow-md"
+                      >
+                        {isPromo ? 'Contact Organizer' : "I'm In"}
+                      </button>
+
+                      {/* Inline comments drawer (Floating) */}
+                      {isCommentOpen && (
+                        <div className="pt-2 bg-black/60 border border-white/10 rounded-2xl p-3 space-y-2 mt-2 backdrop-blur-sm max-w-sm">
+                          <span className="text-[8px] font-extrabold text-[#BDFB04] uppercase tracking-wider block">Comments ({itemComments.length})</span>
+                          <div className="max-h-24 overflow-y-auto space-y-1.5 pr-1 text-[10px] text-white">
+                            {itemComments.length === 0 ? (
+                              <p className="text-[9px] text-white/40 italic">No comments yet.</p>
+                            ) : (
+                              itemComments.map((c, i) => (
+                                <div key={i} className="leading-tight">
+                                  <span className="font-extrabold text-[#BDFB04]">{c.user}:</span>{' '}
+                                  <span className="text-white/90 font-light">{c.text}</span>
+                                </div>
+                              ))
+                            )}
                           </div>
-
-                          {/* Title */}
-                          <h3 
-                            onClick={() => handleCardClick(item)}
-                            className="text-[#191919] font-extrabold text-base uppercase leading-tight tracking-tight hover:text-[#191919]/80 transition-colors cursor-pointer"
-                            style={{ fontFamily: 'var(--font-display)' }}
-                          >
-                            {item.title}
-                          </h3>
-
-                          {/* Description */}
-                          <p className="text-[#4F5666] text-xs leading-relaxed font-light line-clamp-2">
-                            {item.description || `Join us for the ${item.title}, happening soon.`}
-                          </p>
-
-                          {/* Date & Time Row */}
-                          <div className="flex items-center gap-2 text-[10px] font-extrabold text-[#191919]/80 uppercase pt-2 border-t border-black/[0.04]">
-                            <Calendar className="h-3.5 w-3.5 text-[#191919]" />
-                            <span>{formattedDate} • {timeStr}</span>
+                          {/* Add comment input */}
+                          <div className="flex gap-2 pt-1 border-t border-white/10">
+                            <input
+                              value={newCommentText}
+                              onChange={(e) => setNewCommentText(e.target.value)}
+                              onKeyDown={(e) => {
+                                if (e.key === 'Enter') {
+                                  handleAddComment(item.id);
+                                }
+                              }}
+                              placeholder="Add comment..."
+                              className="flex-1 bg-white/10 border border-white/10 rounded-xl px-2.5 py-1 text-[9px] text-white placeholder-white/40 focus:outline-none focus:border-[#BDFB04]"
+                            />
+                            <button
+                              onClick={() => handleAddComment(item.id)}
+                              className="px-2 py-1 bg-[#BDFB04] text-[#191919] text-[9px] font-bold rounded-lg uppercase tracking-wider hover:bg-[#c5ff0a] transition-all"
+                            >
+                              Post
+                            </button>
                           </div>
-
-                          {/* Location Row */}
-                          <div className="flex items-center gap-2 text-[10px] font-bold text-[#7B8290] uppercase truncate">
-                            <MapPin className="h-3.5 w-3.5 text-[#7B8290]" />
-                            <span className="truncate">{isPromo ? (item as Promotion).organizer : (item as Event).location}</span>
-                          </div>
-
-                          {/* Attendees Row */}
-                          {!isPromo && (
-                            <div className="flex items-center gap-2 pt-1">
-                              <div className="flex -space-x-1.5">
-                                {['MC', 'SJ', 'AR'].map((av, i) => (
-                                  <div 
-                                    key={i} 
-                                    className="h-5 w-5 rounded-full border border-white bg-slate-200 flex items-center justify-center text-[7px] font-black text-gray-700"
-                                  >
-                                    {av}
-                                  </div>
-                                ))}
-                              </div>
-                              <span className="text-[10px] text-[#7B8290] font-semibold">
-                                +{goingCount} going
-                              </span>
-                            </div>
-                          )}
-                          
-                          {/* Inline comments drawer */}
-                          {isCommentOpen && (
-                            <div className="pt-2.5 border-t border-black/[0.04] space-y-2 mt-2">
-                              <span className="text-[8px] font-extrabold text-[#7B8290] uppercase tracking-wider block">Comments ({itemComments.length})</span>
-                              <div className="max-h-24 overflow-y-auto space-y-1.5 pr-1 text-xs">
-                                {itemComments.length === 0 ? (
-                                  <p className="text-[10px] text-gray-400 italic">No comments yet.</p>
-                                ) : (
-                                  itemComments.map((c, i) => (
-                                    <div key={i} className="text-[10px] leading-tight">
-                                      <span className="font-extrabold text-[#191919]">{c.user}:</span>{' '}
-                                      <span className="text-[#4F5666] font-light">{c.text}</span>
-                                    </div>
-                                  ))
-                                )}
-                              </div>
-                              {/* Add comment input */}
-                              <div className="flex gap-2 pt-1.5 border-t border-black/[0.04]">
-                                <input
-                                  value={newCommentText}
-                                  onChange={(e) => setNewCommentText(e.target.value)}
-                                  onKeyDown={(e) => {
-                                    if (e.key === 'Enter') {
-                                      handleAddComment(item.id);
-                                    }
-                                  }}
-                                  placeholder="Add comment..."
-                                  className="flex-1 bg-black/[0.03] border border-black/[0.04] rounded-xl px-3 py-1.5 text-[10px] text-[#191919] placeholder-[#7B8290] focus:outline-none focus:border-[#BDFB04]"
-                                />
-                                <button
-                                  onClick={() => handleAddComment(item.id)}
-                                  className="px-2.5 py-1 bg-[#191919] text-white text-[9px] font-bold rounded-lg uppercase tracking-wider hover:bg-[#2a2a2a] transition-all"
-                                >
-                                  Post
-                                </button>
-                              </div>
-                            </div>
-                          )}
                         </div>
-
-                        {/* 3. Card Footer Actions */}
-                        <div className="pt-3 border-t border-black/[0.04] flex items-center justify-between gap-2.5 shrink-0">
-                          {/* "I'm in" RSVP button */}
-                          <button
-                            onClick={() => handleCardClick(item)}
-                            className="flex-1 bg-[#191919] text-white hover:bg-black/90 py-2 rounded-xl text-[10px] font-black uppercase tracking-wider transition-all flex items-center justify-center gap-1.5 cursor-pointer shadow-sm"
-                          >
-                            {isPromo ? 'Contact Organizer' : "I'm In"}
-                          </button>
-
-                          {/* Like (Heart) toggle */}
-                          <button
-                            onClick={() => handleLikeToggle(item.id)}
-                            className={`h-9 w-9 rounded-xl border flex items-center justify-center transition-all cursor-pointer ${
-                              isLiked
-                                ? 'bg-white border-[#BDFB04] text-rose-500 shadow-sm'
-                                : 'bg-white border-black/10 text-gray-400 hover:text-rose-500'
-                            }`}
-                            title="Like Event"
-                          >
-                            <Heart className={`h-4.5 w-4.5 ${isLiked ? 'fill-rose-500 text-rose-500' : ''}`} />
-                          </button>
-
-                          {/* Comment toggler */}
-                          <button
-                            onClick={() => setCommentsOpenItem(isCommentOpen ? null : item)}
-                            className={`h-9 w-9 rounded-xl border flex items-center justify-center transition-all cursor-pointer ${
-                              isCommentOpen ? 'bg-black/5 border-black/20 text-[#191919]' : 'bg-white border-black/10 text-[#4F5666] hover:text-[#191919]'
-                            }`}
-                            title="Show Comments"
-                          >
-                            <MessageCircle className="h-4.5 w-4.5" />
-                          </button>
-                        </div>
-                      </div>
+                      )}
                     </div>
+
+                    {/* Right-Side Interaction Column Overlay */}
+                    <div className="absolute right-4 bottom-24 z-20 flex flex-col gap-4 items-center">
+                      
+                      {/* Like Action */}
+                      <div className="flex flex-col items-center gap-1">
+                        <button
+                          onClick={() => handleLikeToggle(item.id)}
+                          className={`h-11 w-11 rounded-full flex items-center justify-center backdrop-blur-md border transition-all cursor-pointer shadow-lg ${
+                            isLiked
+                              ? 'bg-rose-500 border-rose-600 text-white'
+                              : 'bg-black/40 border-white/10 text-white hover:bg-black/60'
+                          }`}
+                          title="Like Event"
+                        >
+                          <Heart className={`h-5 w-5 ${isLiked ? 'fill-white' : ''}`} />
+                        </button>
+                        <span className="text-[10px] font-extrabold text-white tracking-wide shadow-sm">{likesCount}</span>
+                      </div>
+
+                      {/* Comment Action */}
+                      <div className="flex flex-col items-center gap-1">
+                        <button
+                          onClick={() => setCommentsOpenItem(isCommentOpen ? null : item)}
+                          className={`h-11 w-11 rounded-full flex items-center justify-center backdrop-blur-md border transition-all cursor-pointer shadow-lg ${
+                            isCommentOpen 
+                              ? 'bg-[#BDFB04] border-[#c5ff0a] text-[#191919]' 
+                              : 'bg-black/40 border-white/10 text-white hover:bg-black/60'
+                          }`}
+                          title="Show Comments"
+                        >
+                          <MessageCircle className="h-5 w-5" />
+                        </button>
+                        <span className="text-[10px] font-extrabold text-white tracking-wide shadow-sm">{itemComments.length}</span>
+                      </div>
+
+                      {/* Save Action */}
+                      <div className="flex flex-col items-center gap-1">
+                        <button
+                          onClick={() => 'ownershipType' in item ? saveToggle(item.id) : undefined}
+                          className={`h-11 w-11 rounded-full flex items-center justify-center backdrop-blur-md border transition-all cursor-pointer shadow-lg ${
+                            isSaved
+                              ? 'bg-[#BDFB04] border-[#c5ff0a] text-[#191919]'
+                              : 'bg-black/40 border-white/10 text-white hover:bg-black/60'
+                          }`}
+                          title="Save Event"
+                        >
+                          <Bookmark className={`h-5 w-5 ${isSaved ? 'fill-[#191919]' : ''}`} />
+                        </button>
+                        <span className="text-[10px] font-extrabold text-white tracking-wide shadow-sm">Save</span>
+                      </div>
+
+                      {/* Share Action */}
+                      <div className="flex flex-col items-center gap-1">
+                        <button
+                          className="h-11 w-11 rounded-full bg-black/40 border border-white/10 flex items-center justify-center text-white hover:bg-black/60 transition-all cursor-pointer shadow-lg"
+                          title="Share Event"
+                          onClick={() => {
+                            if (navigator.share) {
+                              navigator.share({
+                                title: item.title,
+                                text: item.description,
+                                url: window.location.href,
+                              }).catch(() => {});
+                            } else {
+                              alert('Link copied to clipboard!');
+                            }
+                          }}
+                        >
+                          <Share2 className="h-5 w-5" />
+                        </button>
+                        <span className="text-[10px] font-extrabold text-white tracking-wide shadow-sm">Share</span>
+                      </div>
+
+                      {/* Spinning vinyl decoration */}
+                      <div className="h-11 w-11 rounded-full bg-black/80 border border-white/10 flex items-center justify-center shadow-lg animate-spin [animation-duration:6s]">
+                        <div className="h-4 w-4 rounded-full bg-[#BDFB04] border border-black flex items-center justify-center">
+                          <Compass className="h-2 w-2 text-black" />
+                        </div>
+                      </div>
+
+                    </div>
+
                   </div>
                 );
               })}

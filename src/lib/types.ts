@@ -61,6 +61,7 @@ export interface Event {
   coverImage: string;
   flyerImage?: string;
   free: boolean;
+  price?: number;
   capacity?: number;
   visibility: 'public' | 'private';
 }
