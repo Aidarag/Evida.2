@@ -342,83 +342,67 @@ export default function StudentEventsFeed() {
   return (
     <div className={`mx-auto ${
       feedMode === 'tiktok' 
-        ? 'w-full max-w-none h-screen overflow-hidden p-0 relative bg-[#DFDED7]' 
-        : 'max-w-7xl p-6 md:p-10 space-y-8'
+        ? 'w-full max-w-none h-screen overflow-hidden p-0 relative bg-black md:bg-[#0F0F0F]' 
+        : 'max-w-7xl p-6 md:p-10 space-y-8 bg-[#DFDED7]'
     }`}>
-      {/* Explore Navigation Header */}
-      <div className={`z-50 flex flex-col gap-4 border-b ${
-        feedMode === 'tiktok' 
-          ? 'fixed top-0 inset-x-0 bg-black/45 backdrop-blur-md text-white border-white/10 w-full max-w-none px-6 py-4' 
-          : 'bg-[#DFDED7]/80 backdrop-blur-md text-[#191919] border-black/[0.04] sticky top-0 px-6 py-4 -mx-6 md:mx-0 md:px-0'
-      }`}>
-        <div className="flex items-center justify-between w-full">
-          {/* Left Corner: Single switch button (Feed <-> Grid in one) */}
-          <button
-            type="button"
-            onClick={() => setFeedMode(feedMode === 'tiktok' ? 'grid' : 'tiktok')}
-            className={`h-10 w-10 rounded-full flex items-center justify-center transition-all cursor-pointer shadow-sm border ${
-              feedMode === 'tiktok' 
-                ? 'bg-black/40 backdrop-blur-md border-white/10 text-white hover:bg-black/60' 
-                : 'bg-white border-black/10 text-[#191919] hover:bg-black/5'
-            }`}
-            title={feedMode === 'tiktok' ? "Switch to Grid view" : "Switch to Feed view"}
-          >
-            <LayoutGrid className="h-5 w-5" />
-          </button>
-
-          {/* Middle: Centered Filters (Events & Promotions) */}
-          <div className={`flex p-1 rounded-full border shadow-sm ${
-            feedMode === 'tiktok' 
-              ? 'bg-black/40 border-white/10' 
-              : 'bg-black/[0.04] border-black/[0.04]'
-          }`}>
+      {/* Grid Navigation Header */}
+      {feedMode === 'grid' && (
+        <div className="z-50 flex flex-col gap-4 border-b bg-[#DFDED7]/80 backdrop-blur-md text-[#191919] border-black/[0.04] sticky top-0 px-6 py-4 -mx-6 md:mx-0 md:px-0">
+          <div className="flex items-center justify-between w-full">
+            {/* Left Corner: Single switch button (Feed <-> Grid in one) */}
             <button
               type="button"
-              onClick={() => {
-                setSelectedTab('campus');
-                setSelectedCategory('All');
-              }}
-              className={`px-5 py-1.5 rounded-full text-[10px] font-extrabold uppercase tracking-wider transition-all cursor-pointer ${
-                selectedTab === 'campus' 
-                  ? 'bg-[#BDFB04] text-[#191919] font-black' 
-                  : (feedMode === 'tiktok' ? 'text-white/80 hover:text-white' : 'text-[#4F5666] hover:text-[#191919]')
-              }`}
+              onClick={() => setFeedMode('tiktok')}
+              className="h-10 w-10 rounded-full flex items-center justify-center transition-all cursor-pointer shadow-sm border bg-white border-black/10 text-[#191919] hover:bg-black/5"
+              title="Switch to Feed view"
             >
-              Events
+              <LayoutGrid className="h-5 w-5" />
             </button>
+
+            {/* Middle: Centered Filters (Events & Promotions) */}
+            <div className="flex p-1 rounded-full border border-black/[0.04] bg-black/[0.04] shadow-sm">
+              <button
+                type="button"
+                onClick={() => {
+                  setSelectedTab('campus');
+                  setSelectedCategory('All');
+                }}
+                className={`px-5 py-1.5 rounded-full text-[10px] font-extrabold uppercase tracking-wider transition-all cursor-pointer ${
+                  selectedTab === 'campus' 
+                    ? 'bg-[#BDFB04] text-[#191919] font-black' 
+                    : 'text-[#4F5666] hover:text-[#191919]'
+                }`}
+              >
+                Events
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setSelectedTab('promotions');
+                  setSelectedCategory('All');
+                }}
+                className={`px-5 py-1.5 rounded-full text-[10px] font-extrabold uppercase tracking-wider transition-all cursor-pointer ${
+                  selectedTab === 'promotions' 
+                    ? 'bg-[#BDFB04] text-[#191919] font-black' 
+                    : 'text-[#4F5666] hover:text-[#191919]'
+                }`}
+              >
+                Promotions
+              </button>
+            </div>
+
+            {/* Right Corner: Back button */}
             <button
               type="button"
-              onClick={() => {
-                setSelectedTab('promotions');
-                setSelectedCategory('All');
-              }}
-              className={`px-5 py-1.5 rounded-full text-[10px] font-extrabold uppercase tracking-wider transition-all cursor-pointer ${
-                selectedTab === 'promotions' 
-                  ? 'bg-[#BDFB04] text-[#191919] font-black' 
-                  : (feedMode === 'tiktok' ? 'text-white/80 hover:text-white' : 'text-[#4F5666] hover:text-[#191919]')
-              }`}
+              onClick={() => router.back()}
+              className="h-10 w-10 rounded-full flex items-center justify-center transition-all cursor-pointer shadow-sm border bg-white border-black/10 text-[#191919] hover:bg-black/5"
+              title="Go Back"
             >
-              Promotions
+              <ChevronLeft className="h-5 w-5" />
             </button>
           </div>
 
-          {/* Right Corner: Back button */}
-          <button
-            type="button"
-            onClick={() => router.back()}
-            className={`h-10 w-10 rounded-full flex items-center justify-center transition-all cursor-pointer shadow-sm border ${
-              feedMode === 'tiktok' 
-                ? 'bg-black/40 backdrop-blur-md border-white/10 text-white hover:bg-black/60' 
-                : 'bg-white border-black/10 text-[#191919] hover:bg-black/5'
-            }`}
-            title="Go Back"
-          >
-            <ChevronLeft className="h-5 w-5" />
-          </button>
-        </div>
-
-        {/* Search & Category Filters - Only visible in Grid Mode */}
-        {feedMode === 'grid' && (
+          {/* Search & Category Filters */}
           <div className="space-y-4 pt-2">
             <div className="w-full md:w-96">
               <div className="relative">
@@ -493,8 +477,8 @@ export default function StudentEventsFeed() {
               </div>
             </div>
           </div>
-        )}
-      </div>
+        </div>
+      )}
  
       {/* Featured Hero (Only show in Grid mode if no search/filter applied and featured exists) */}
       {feedMode === 'grid' && featuredEvent && searchQuery === '' && selectedCategory === 'All' && selectedTab === 'campus' && (
@@ -536,302 +520,385 @@ export default function StudentEventsFeed() {
       {/* Grid or TikTok Feed */}
       {feedMode === 'tiktok' ? (
         sortedFilteredItems.length > 0 ? (
-          <div className="relative w-full h-full flex flex-col items-center bg-black">
+          <div className="relative w-full h-full flex items-center justify-center bg-black md:bg-[#0F0F0F]">
             
-            {/* TikTok Vertical Swipe Container */}
-            <div className="h-full w-full overflow-y-scroll snap-y snap-mandatory scrollbar-none flex flex-col items-center">
-              {sortedFilteredItems.map((item) => {
-                const isPromo = !('ownershipType' in item);
-                
-                // Set up cover image
-                const coverImage = isPromo 
-                  ? '/pexels-markus-winkler-1430818-12199407.jpg' 
-                  : item.coverImage;
-
-                const isGradient = coverImage ? coverImage.includes('from-') : false;
-                const bgClass = isGradient ? coverImage : '';
-                const bgStyle = (!isGradient && coverImage) ? { backgroundImage: `url(${coverImage})`, backgroundSize: 'cover', backgroundPosition: 'center' } : {};
-
-                // Date parsing
-                const dateObj = new Date(item.date);
-                const weekday = dateObj.toLocaleDateString('en-US', { weekday: 'short' }).toUpperCase();
-                const month = dateObj.toLocaleDateString('en-US', { month: 'short' }).toUpperCase();
-                const day = dateObj.getDate();
-                const formattedDate = `${weekday}, ${month} ${day}`;
-
-                const timeStr = !isPromo && (item as Event).time ? (item as Event).time : '7:00 PM';
-                const goingCount = 32 + (item.title.length * 2);
-
-                const orgName = isPromo ? item.organizer : (item as Event).organizationName || item.organizer;
-                
-                const isOrgVerified = !isPromo && (item as Event).organizationId
-                  ? organizations.find(o => o.id === (item as Event).organizationId)?.verified
-                  : false;
-
-                const isLiked = likedItems[item.id] || false;
-                const likesCount = likesCounts[item.id] || 0;
-                const itemComments = commentsMap[item.id] || [];
-                const isCommentOpen = commentsOpenItem?.id === item.id;
-                const isSaved = 'ownershipType' in item ? item.savedBy?.includes(currentUser?.name || '') : false;
-
-                return (
-                  <div 
-                    key={item.id} 
-                    className="snap-start shrink-0 h-full w-full relative overflow-hidden flex flex-col justify-end bg-black"
-                  >
-                    {/* Full-Screen Media Background */}
-                    {isGradient ? (
-                      <div className={`absolute inset-0 w-full h-full z-0 ${bgClass}`} />
-                    ) : (
-                      <img 
-                        src={coverImage} 
-                        alt={item.title}
-                        className="absolute inset-0 w-full h-full object-cover opacity-75 z-0 select-none pointer-events-none"
-                      />
-                    )}
-                    
-                    {/* Gradient Overlay for Text Readability */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/10 to-black/60 z-10 pointer-events-none" />
-
-                    {/* Bottom-Left Information Overlay */}
-                    <div className="absolute bottom-24 left-4 z-20 max-w-[72%] text-white text-left space-y-2 select-none">
-                      {/* Organization/Hoster Name */}
-                      <div className="flex items-center gap-1.5 text-xs font-black uppercase tracking-wider text-[#BDFB04]">
-                        <span>@{orgName.toLowerCase().replace(/\s+/g, '')}</span>
-                        {isOrgVerified && <VerifiedBadge className="h-4 w-4 fill-[#BDFB04] text-black" />}
-                      </div>
-
-                      {/* Event Title */}
-                      <h2 
-                        onClick={() => handleCardClick(item)}
-                        className="text-lg font-extrabold uppercase leading-tight tracking-tight hover:text-white/80 transition-colors cursor-pointer"
-                        style={{ fontFamily: 'var(--font-display)' }}
-                      >
-                        {item.title}
-                      </h2>
-
-                      {/* Short Description */}
-                      <p className="text-white/95 text-[11px] leading-relaxed font-light line-clamp-2">
-                        {item.description || `Join us for the ${item.title}, happening soon.`}
-                      </p>
-
-                      {/* Info badges/rows (Date, Time, Location) */}
-                      <div className="flex flex-wrap items-center gap-2 pt-1">
-                        <span className="px-2 py-0.5 text-[8px] font-extrabold uppercase tracking-wider rounded-md bg-white/10 border border-white/10">
-                          {isPromo ? 'Promotion' : item.category}
-                        </span>
-                        <span className="px-2 py-0.5 text-[8px] font-extrabold uppercase tracking-wider rounded-md bg-[#BDFB04] text-[#191919]">
-                          {isPromo ? 'FREE' : (item.free ? 'FREE' : 'TICKETED')}
-                        </span>
-                        {!isPromo && !item.free && (item as Event).price && (
-                          <span className="px-2 py-0.5 text-[8px] font-extrabold uppercase tracking-wider rounded-md bg-white/20">
-                            ${(item as Event).price}
-                          </span>
-                        )}
-                      </div>
-
-                      <div className="flex flex-col gap-1 text-[10px] font-bold text-white/80 uppercase pt-1">
-                        <div className="flex items-center gap-1.5">
-                          <Calendar className="h-3.5 w-3.5 text-[#BDFB04]" />
-                          <span>{formattedDate} • {timeStr}</span>
-                        </div>
-                        <div className="flex items-center gap-1.5 truncate">
-                          <MapPin className="h-3.5 w-3.5 text-white/60" />
-                          <span className="truncate">{isPromo ? (item as Promotion).organizer : (item as Event).location}</span>
-                        </div>
-                      </div>
-
-                      {/* RSVP / Contact Button inside Overlay */}
-                      <button
-                        onClick={() => handleCardClick(item)}
-                        className="mt-2 bg-[#BDFB04] text-[#191919] hover:bg-[#c5ff0a] px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-wider transition-all flex items-center justify-center gap-1.5 cursor-pointer shadow-md"
-                      >
-                        {isPromo ? 'Contact Organizer' : "I'm In"}
-                      </button>
-
-                      {/* Inline comments drawer (Floating) */}
-                      {isCommentOpen && (
-                        <div className="pt-2 bg-black/60 border border-white/10 rounded-2xl p-3 space-y-2 mt-2 backdrop-blur-sm max-w-sm">
-                          <span className="text-[8px] font-extrabold text-[#BDFB04] uppercase tracking-wider block">Comments ({itemComments.length})</span>
-                          <div className="max-h-24 overflow-y-auto space-y-1.5 pr-1 text-[10px] text-white">
-                            {itemComments.length === 0 ? (
-                              <p className="text-[9px] text-white/40 italic">No comments yet.</p>
-                            ) : (
-                              itemComments.map((c, i) => (
-                                <div key={i} className="leading-tight">
-                                  <span className="font-extrabold text-[#BDFB04]">{c.user}:</span>{' '}
-                                  <span className="text-white/90 font-light">{c.text}</span>
-                                </div>
-                              ))
-                            )}
-                          </div>
-                          {/* Add comment input */}
-                          <div className="flex gap-2 pt-1 border-t border-white/10">
-                            <input
-                              value={newCommentText}
-                              onChange={(e) => setNewCommentText(e.target.value)}
-                              onKeyDown={(e) => {
-                                if (e.key === 'Enter') {
-                                  handleAddComment(item.id);
-                                }
-                              }}
-                              placeholder="Add comment..."
-                              className="flex-1 bg-white/10 border border-white/10 rounded-xl px-2.5 py-1 text-[9px] text-white placeholder-white/40 focus:outline-none focus:border-[#BDFB04]"
-                            />
-                            <button
-                              onClick={() => handleAddComment(item.id)}
-                              className="px-2 py-1 bg-[#BDFB04] text-[#191919] text-[9px] font-bold rounded-lg uppercase tracking-wider hover:bg-[#c5ff0a] transition-all"
-                            >
-                              Post
-                            </button>
-                          </div>
-                        </div>
-                      )}
-                    </div>
-
-                    {/* Right-Side Interaction Column Overlay */}
-                    <div className="absolute right-4 bottom-24 z-20 flex flex-col gap-4 items-center">
-                      
-                      {/* Like Action */}
-                      <div className="flex flex-col items-center gap-1">
-                        <button
-                          onClick={() => handleLikeToggle(item.id)}
-                          className={`h-11 w-11 rounded-full flex items-center justify-center backdrop-blur-md border transition-all cursor-pointer shadow-lg ${
-                            isLiked
-                              ? 'bg-rose-500 border-rose-600 text-white'
-                              : 'bg-black/40 border-white/10 text-white hover:bg-black/60'
-                          }`}
-                          title="Like Event"
-                        >
-                          <Heart className={`h-5 w-5 ${isLiked ? 'fill-white' : ''}`} />
-                        </button>
-                        <span className="text-[10px] font-extrabold text-white tracking-wide shadow-sm">{likesCount}</span>
-                      </div>
-
-                      {/* Comment Action */}
-                      <div className="flex flex-col items-center gap-1">
-                        <button
-                          onClick={() => setCommentsOpenItem(isCommentOpen ? null : item)}
-                          className={`h-11 w-11 rounded-full flex items-center justify-center backdrop-blur-md border transition-all cursor-pointer shadow-lg ${
-                            isCommentOpen 
-                              ? 'bg-[#BDFB04] border-[#c5ff0a] text-[#191919]' 
-                              : 'bg-black/40 border-white/10 text-white hover:bg-black/60'
-                          }`}
-                          title="Show Comments"
-                        >
-                          <MessageCircle className="h-5 w-5" />
-                        </button>
-                        <span className="text-[10px] font-extrabold text-white tracking-wide shadow-sm">{itemComments.length}</span>
-                      </div>
-
-                      {/* Save Action */}
-                      <div className="flex flex-col items-center gap-1">
-                        <button
-                          onClick={() => 'ownershipType' in item ? saveToggle(item.id) : undefined}
-                          className={`h-11 w-11 rounded-full flex items-center justify-center backdrop-blur-md border transition-all cursor-pointer shadow-lg ${
-                            isSaved
-                              ? 'bg-[#BDFB04] border-[#c5ff0a] text-[#191919]'
-                              : 'bg-black/40 border-white/10 text-white hover:bg-black/60'
-                          }`}
-                          title="Save Event"
-                        >
-                          <Bookmark className={`h-5 w-5 ${isSaved ? 'fill-[#191919]' : ''}`} />
-                        </button>
-                        <span className="text-[10px] font-extrabold text-white tracking-wide shadow-sm">Save</span>
-                      </div>
-
-                      {/* Share Action */}
-                      <div className="flex flex-col items-center gap-1">
-                        <button
-                          className="h-11 w-11 rounded-full bg-black/40 border border-white/10 flex items-center justify-center text-white hover:bg-black/60 transition-all cursor-pointer shadow-lg"
-                          title="Share Event"
-                          onClick={() => {
-                            if (navigator.share) {
-                              navigator.share({
-                                title: item.title,
-                                text: item.description,
-                                url: window.location.href,
-                              }).catch(() => {});
-                            } else {
-                              alert('Link copied to clipboard!');
-                            }
-                          }}
-                        >
-                          <Share2 className="h-5 w-5" />
-                        </button>
-                        <span className="text-[10px] font-extrabold text-white tracking-wide shadow-sm">Share</span>
-                      </div>
-
-                      {/* Spinning vinyl decoration */}
-                      <div className="h-11 w-11 rounded-full bg-black/80 border border-white/10 flex items-center justify-center shadow-lg animate-spin [animation-duration:6s]">
-                        <div className="h-4 w-4 rounded-full bg-[#BDFB04] border border-black flex items-center justify-center">
-                          <Compass className="h-2 w-2 text-black" />
-                        </div>
-                      </div>
-
-                    </div>
-
-                  </div>
-                );
-              })}
+            {/* The Left Navigation Sidebar (Desktop/Tablet only) */}
+            <div className="hidden md:flex fixed left-10 top-1/2 -translate-y-1/2 flex-col gap-8 items-center px-4 py-8 bg-[#161616]/90 backdrop-blur-md rounded-[28px] border border-white/5 shadow-2xl w-18 z-50">
+              <Link href="/student/dashboard" className="text-white/60 hover:text-[#BDFB04] transition-all hover:scale-110">
+                <Home className="h-6 w-6" />
+              </Link>
+              <Link href="/student/events" className="text-[#BDFB04] hover:scale-110 transition-all">
+                <Compass className="h-6 w-6" />
+              </Link>
+              <Link href="/student/create" className="text-white/60 hover:text-[#BDFB04] transition-all hover:scale-110">
+                <Plus className="h-6 w-6" />
+              </Link>
+              <Link href="/student/saved" className="text-white/60 hover:text-[#BDFB04] transition-all hover:scale-110">
+                <Bookmark className="h-6 w-6" />
+              </Link>
+              <Link href="/student/profile" className="text-white/60 hover:text-[#BDFB04] transition-all hover:scale-110">
+                <User className="h-6 w-6" />
+              </Link>
             </div>
 
-            {/* Floating Persistent Bottom Navigation */}
-            <div className="fixed bottom-4 left-4 right-4 z-50 max-w-md mx-auto">
-              <nav className="flex items-center justify-around rounded-full bg-white/90 backdrop-blur-2xl border border-black/[0.04] px-2 py-2 shadow-[var(--shadow-premium-lg)]">
-                {/* Home */}
-                <Link
-                  href="/student/dashboard"
-                  className="flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-2xl text-gray-400 hover:text-[#191919] transition-colors cursor-pointer"
+            {/* Main Center Frame + Right Sidebar Layout Row on Desktop */}
+            <div className="relative flex items-center gap-6 justify-center w-full h-full max-w-lg md:max-w-xl">
+              
+              {/* The Phone-Shaped Portrait Player Frame */}
+              <div className="relative w-full h-full md:w-[380px] md:h-[82vh] md:max-h-[640px] md:rounded-[32px] md:border md:border-white/10 md:shadow-2xl overflow-hidden bg-black z-30">
+                
+                {/* Header Floating inside the phone frame wrapper */}
+                <div className="absolute top-0 inset-x-0 z-40 bg-black/35 backdrop-blur-md border-b border-white/5 px-4 py-3 flex items-center justify-between text-white">
+                  {/* Left Corner: Switch to Grid view */}
+                  <button
+                    type="button"
+                    onClick={() => setFeedMode('grid')}
+                    className="h-9 w-9 rounded-full flex items-center justify-center transition-all cursor-pointer bg-black/45 border border-white/10 text-white hover:bg-black/60 shadow-sm"
+                    title="Switch to Grid view"
+                  >
+                    <LayoutGrid className="h-4.5 w-4.5" />
+                  </button>
+
+                  {/* Middle: Centered Filters (Events & Promotions) */}
+                  <div className="flex p-0.5 rounded-full border border-white/10 bg-black/45 shadow-sm">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setSelectedTab('campus');
+                        setSelectedCategory('All');
+                      }}
+                      className={`px-4 py-1 rounded-full text-[9px] font-extrabold uppercase tracking-wider transition-all cursor-pointer ${
+                        selectedTab === 'campus' 
+                          ? 'bg-[#BDFB04] text-[#191919] font-black' 
+                          : 'text-white/80 hover:text-white'
+                      }`}
+                    >
+                      Events
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setSelectedTab('promotions');
+                        setSelectedCategory('All');
+                      }}
+                      className={`px-4 py-1 rounded-full text-[9px] font-extrabold uppercase tracking-wider transition-all cursor-pointer ${
+                        selectedTab === 'promotions' 
+                          ? 'bg-[#BDFB04] text-[#191919] font-black' 
+                          : 'text-white/80 hover:text-white'
+                      }`}
+                    >
+                      Promotions
+                    </button>
+                  </div>
+
+                  {/* Right Corner: Back button */}
+                  <button
+                    type="button"
+                    onClick={() => router.back()}
+                    className="h-9 w-9 rounded-full flex items-center justify-center transition-all cursor-pointer bg-black/45 border border-white/10 text-white hover:bg-black/60 shadow-sm"
+                    title="Go Back"
+                  >
+                    <ChevronLeft className="h-4.5 w-4.5" />
+                  </button>
+                </div>
+
+                {/* TikTok Vertical Swipe Container */}
+                <div 
+                  onScroll={handleWebFeedScroll}
+                  className="h-full w-full overflow-y-scroll snap-y snap-mandatory scrollbar-none flex flex-col items-center"
                 >
+                  {sortedFilteredItems.map((item) => {
+                    const isPromo = !('ownershipType' in item);
+                    const coverImage = isPromo ? '/pexels-markus-winkler-1430818-12199407.jpg' : item.coverImage;
+                    const isGradient = coverImage ? coverImage.includes('from-') : false;
+                    const bgClass = isGradient ? coverImage : '';
+                    const bgStyle = (!isGradient && coverImage) ? { backgroundImage: `url(${coverImage})`, backgroundSize: 'cover', backgroundPosition: 'center' } : {};
+
+                    const dateObj = new Date(item.date);
+                    const weekday = dateObj.toLocaleDateString('en-US', { weekday: 'short' }).toUpperCase();
+                    const month = dateObj.toLocaleDateString('en-US', { month: 'short' }).toUpperCase();
+                    const day = dateObj.getDate();
+                    const formattedDate = `${weekday}, ${month} ${day}`;
+                    const timeStr = !isPromo && (item as Event).time ? (item as Event).time : '7:00 PM';
+                    
+                    const orgName = isPromo ? item.organizer : (item as Event).organizationName || item.organizer;
+                    const isOrgVerified = !isPromo && (item as Event).organizationId
+                      ? organizations.find(o => o.id === (item as Event).organizationId)?.verified
+                      : false;
+
+                    const isLiked = likedItems[item.id] || false;
+                    const likesCount = likesCounts[item.id] || 0;
+                    const itemComments = commentsMap[item.id] || [];
+                    const isCommentOpen = commentsOpenItem?.id === item.id;
+                    const isSaved = 'ownershipType' in item ? item.savedBy?.includes(currentUser?.name || '') : false;
+
+                    return (
+                      <div 
+                        key={item.id} 
+                        className="snap-start shrink-0 h-full w-full relative overflow-hidden flex flex-col justify-end bg-black"
+                      >
+                        {isGradient ? (
+                          <div className={`absolute inset-0 w-full h-full z-0 ${bgClass}`} />
+                        ) : (
+                          <img 
+                            src={coverImage} 
+                            alt={item.title}
+                            className="absolute inset-0 w-full h-full object-cover opacity-75 z-0 select-none pointer-events-none"
+                          />
+                        )}
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/10 to-black/60 z-10 pointer-events-none" />
+
+                        {/* Bottom-Left Details Inside Player Frame */}
+                        <div className="absolute bottom-24 left-4 z-20 max-w-[85%] text-white text-left space-y-2 select-none">
+                          <div className="flex items-center gap-1.5 text-xs font-black uppercase tracking-wider text-[#BDFB04]">
+                            <span>@{orgName.toLowerCase().replace(/\s+/g, '')}</span>
+                            {isOrgVerified && <VerifiedBadge className="h-4 w-4 fill-[#BDFB04] text-black" />}
+                          </div>
+
+                          <h2 
+                            onClick={() => handleCardClick(item)}
+                            className="text-lg font-extrabold uppercase leading-tight tracking-tight hover:text-white/80 transition-colors cursor-pointer"
+                            style={{ fontFamily: 'var(--font-display)' }}
+                          >
+                            {item.title}
+                          </h2>
+
+                          <p className="text-white/95 text-[11px] leading-relaxed font-light line-clamp-2">
+                            {item.description || `Join us for the ${item.title}, happening soon.`}
+                          </p>
+
+                          <div className="flex flex-wrap items-center gap-2 pt-1">
+                            <span className="px-2 py-0.5 text-[8px] font-extrabold uppercase tracking-wider rounded-md bg-white/10 border border-white/10">
+                              {isPromo ? 'Promotion' : item.category}
+                            </span>
+                            <span className="px-2 py-0.5 text-[8px] font-extrabold uppercase tracking-wider rounded-md bg-[#BDFB04] text-[#191919]">
+                              {isPromo ? 'FREE' : (item.free ? 'FREE' : 'TICKETED')}
+                            </span>
+                            {!isPromo && !item.free && (item as Event).price && (
+                              <span className="px-2 py-0.5 text-[8px] font-extrabold uppercase tracking-wider rounded-md bg-white/20">
+                                ${(item as Event).price}
+                              </span>
+                            )}
+                          </div>
+
+                          <div className="flex flex-col gap-1 text-[10px] font-bold text-white/80 uppercase pt-1">
+                            <div className="flex items-center gap-1.5">
+                              <Calendar className="h-3.5 w-3.5 text-[#BDFB04]" />
+                              <span>{formattedDate} • {timeStr}</span>
+                            </div>
+                            <div className="flex items-center gap-1.5 truncate">
+                              <MapPin className="h-3.5 w-3.5 text-white/60" />
+                              <span className="truncate">{isPromo ? (item as Promotion).organizer : (item as Event).location}</span>
+                            </div>
+                          </div>
+
+                          <button
+                            onClick={() => handleCardClick(item)}
+                            className="mt-2 bg-[#BDFB04] text-[#191919] hover:bg-[#c5ff0a] px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-wider transition-all flex items-center justify-center gap-1.5 cursor-pointer shadow-md"
+                          >
+                            {isPromo ? 'Contact Organizer' : "I'm In"}
+                          </button>
+
+                          {/* Inline comments drawer (Mobile only/Fallback) */}
+                          {isCommentOpen && (
+                            <div className="pt-2 bg-black/60 border border-white/10 rounded-2xl p-3 space-y-2 mt-2 backdrop-blur-sm max-w-sm">
+                              <span className="text-[8px] font-extrabold text-[#BDFB04] uppercase tracking-wider block">Comments ({itemComments.length})</span>
+                              <div className="max-h-24 overflow-y-auto space-y-1.5 pr-1 text-[10px] text-white">
+                                {itemComments.length === 0 ? (
+                                  <p className="text-[9px] text-white/40 italic">No comments yet.</p>
+                                ) : (
+                                  itemComments.map((c, i) => (
+                                    <div key={i} className="leading-tight">
+                                      <span className="font-extrabold text-[#BDFB04]">{c.user}:</span>{' '}
+                                      <span className="text-white/90 font-light">{c.text}</span>
+                                    </div>
+                                  ))
+                                )}
+                              </div>
+                              <div className="flex gap-2 pt-1 border-t border-white/10">
+                                <input
+                                  value={newCommentText}
+                                  onChange={(e) => setNewCommentText(e.target.value)}
+                                  onKeyDown={(e) => {
+                                    if (e.key === 'Enter') {
+                                      handleAddComment(item.id);
+                                    }
+                                  }}
+                                  placeholder="Add comment..."
+                                  className="flex-1 bg-white/10 border border-white/10 rounded-xl px-2.5 py-1 text-[9px] text-white placeholder-white/40 focus:outline-none focus:border-[#BDFB04]"
+                                />
+                                <button
+                                  onClick={() => handleAddComment(item.id)}
+                                  className="px-2 py-1 bg-[#BDFB04] text-[#191919] text-[9px] font-bold rounded-lg uppercase tracking-wider hover:bg-[#c5ff0a] transition-all"
+                                >
+                                  Post
+                                </button>
+                              </div>
+                            </div>
+                          )}
+                        </div>
+
+                        {/* Mobile Interactions Overlay (Hidden on desktop) */}
+                        <div className="md:hidden absolute right-4 bottom-24 z-20 flex flex-col gap-4 items-center">
+                          <div className="flex flex-col items-center gap-1">
+                            <button
+                              onClick={() => handleLikeToggle(item.id)}
+                              className={`h-11 w-11 rounded-full flex items-center justify-center backdrop-blur-md border transition-all cursor-pointer shadow-lg ${
+                                isLiked ? 'bg-rose-500 border-rose-600 text-white' : 'bg-black/40 border-white/10 text-white'
+                              }`}
+                            >
+                              <Heart className={`h-5 w-5 ${isLiked ? 'fill-white' : ''}`} />
+                            </button>
+                            <span className="text-[10px] font-extrabold text-white">{likesCount}</span>
+                          </div>
+                          <div className="flex flex-col items-center gap-1">
+                            <button
+                              onClick={() => setCommentsOpenItem(isCommentOpen ? null : item)}
+                              className={`h-11 w-11 rounded-full flex items-center justify-center backdrop-blur-md border transition-all cursor-pointer shadow-lg ${
+                                isCommentOpen ? 'bg-[#BDFB04] border-[#c5ff0a] text-[#191919]' : 'bg-black/40 border-white/10 text-white'
+                              }`}
+                            >
+                              <MessageCircle className="h-5 w-5" />
+                            </button>
+                            <span className="text-[10px] font-extrabold text-white">{itemComments.length}</span>
+                          </div>
+                          <div className="flex flex-col items-center gap-1">
+                            <button
+                              onClick={() => saveToggle(item.id)}
+                              className={`h-11 w-11 rounded-full flex items-center justify-center backdrop-blur-md border transition-all cursor-pointer shadow-lg ${
+                                isSaved ? 'bg-[#BDFB04] border-[#c5ff0a] text-[#191919]' : 'bg-black/40 border-white/10 text-white'
+                              }`}
+                            >
+                              <Bookmark className={`h-5 w-5 ${isSaved ? 'fill-[#191919]' : ''}`} />
+                            </button>
+                            <span className="text-[10px] font-extrabold text-white">Save</span>
+                          </div>
+                        </div>
+
+                      </div>
+                  );
+                })}
+              </div>
+
+            </div>
+
+            {/* The Desktop-Only Right Interaction Column (floating outside the frame) */}
+            {(() => {
+              const activeItem = sortedFilteredItems[activeFeedIndex];
+              if (!activeItem) return null;
+
+              const activeIsLiked = likedItems[activeItem.id] || false;
+              const activeLikesCount = likesCounts[activeItem.id] || 0;
+              const activeItemComments = commentsMap[activeItem.id] || [];
+              const activeIsSaved = 'ownershipType' in activeItem ? activeItem.savedBy?.includes(currentUser?.name || '') : false;
+
+              return (
+                <div className="hidden md:flex flex-col gap-6 items-center w-16 z-30">
+                  {/* Heart Like */}
+                  <div className="flex flex-col items-center gap-1 text-white">
+                    <button
+                      onClick={() => handleLikeToggle(activeItem.id)}
+                      className={`h-12 w-12 rounded-full flex items-center justify-center border transition-all cursor-pointer shadow-lg bg-[#2c2c2c]/85 border-white/10 text-white hover:scale-105 active:scale-95 ${
+                        activeIsLiked ? 'bg-rose-500 border-rose-600 text-white' : ''
+                      }`}
+                    >
+                      <Heart className={`h-5.5 w-5.5 ${activeIsLiked ? 'fill-white' : ''}`} />
+                    </button>
+                    <span className="text-xs font-bold text-white/80">{activeLikesCount}</span>
+                  </div>
+
+                  {/* Comment Toggler */}
+                  <div className="flex flex-col items-center gap-1 text-white">
+                    <button
+                      onClick={() => setCommentsOpenItem(commentsOpenItem?.id === activeItem.id ? null : activeItem)}
+                      className={`h-12 w-12 rounded-full flex items-center justify-center border transition-all cursor-pointer shadow-lg bg-[#2c2c2c]/85 border-white/10 text-white hover:scale-105 active:scale-95 ${
+                        commentsOpenItem?.id === activeItem.id ? 'bg-[#BDFB04] border-[#c5ff0a] text-[#191919]' : ''
+                      }`}
+                    >
+                      <MessageCircle className="h-5.5 w-5.5" />
+                    </button>
+                    <span className="text-xs font-bold text-white/80">{activeItemComments.length}</span>
+                  </div>
+
+                  {/* Bookmark Save */}
+                  <div className="flex flex-col items-center gap-1 text-white">
+                    <button
+                      onClick={() => 'ownershipType' in activeItem ? saveToggle(activeItem.id) : undefined}
+                      className={`h-12 w-12 rounded-full flex items-center justify-center border transition-all cursor-pointer shadow-lg bg-[#2c2c2c]/85 border-white/10 text-white hover:scale-105 active:scale-95 ${
+                        activeIsSaved ? 'bg-[#BDFB04] border-[#c5ff0a] text-[#191919]' : ''
+                      }`}
+                    >
+                      <Bookmark className={`h-5.5 w-5.5 ${activeIsSaved ? 'fill-[#191919]' : ''}`} />
+                    </button>
+                    <span className="text-xs font-bold text-white/80">Save</span>
+                  </div>
+
+                  {/* Share Action */}
+                  <div className="flex flex-col items-center gap-1 text-white">
+                    <button
+                      onClick={() => {
+                        if (navigator.share) {
+                          navigator.share({
+                            title: activeItem.title,
+                            text: activeItem.description,
+                            url: window.location.href,
+                          }).catch(() => {});
+                        } else {
+                          alert('Link copied to clipboard!');
+                        }
+                      }}
+                      className="h-12 w-12 rounded-full flex items-center justify-center border transition-all cursor-pointer shadow-lg bg-[#2c2c2c]/85 border-white/10 text-white hover:scale-105 active:scale-95"
+                    >
+                      <Share2 className="h-5.5 w-5.5" />
+                    </button>
+                    <span className="text-xs font-bold text-white/80">Share</span>
+                  </div>
+
+                  {/* Spinning Vinyl Record decoration */}
+                  <div className="h-12 w-12 rounded-full bg-black border border-white/10 flex items-center justify-center shadow-2xl animate-spin [animation-duration:6s] mt-2">
+                    <div className="h-5 w-5 rounded-full bg-[#BDFB04] border border-black flex items-center justify-center">
+                      <Compass className="h-2.5 w-2.5 text-black" />
+                    </div>
+                  </div>
+                </div>
+              );
+            })()}
+
+            {/* Mobile Bottom Navigation Bar (Hidden on Desktop) */}
+            <div className="md:hidden fixed bottom-4 left-4 right-4 z-50 max-w-md mx-auto">
+              <nav className="flex items-center justify-around rounded-full bg-white/90 backdrop-blur-2xl border border-black/[0.04] px-2 py-2 shadow-[var(--shadow-premium-lg)]">
+                <Link href="/student/dashboard" className="flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-2xl text-gray-400 hover:text-[#191919]">
                   <Home className="h-5 w-5" />
                   <span className="text-[9px] font-bold uppercase tracking-wider">Home</span>
                 </Link>
-                
-                {/* Explore */}
-                <Link
-                  href="/student/events"
-                  className="flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-2xl text-[#191919] font-extrabold transition-colors cursor-pointer"
-                >
+                <Link href="/student/events" className="flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-2xl text-[#191919] font-extrabold">
                   <Compass className="h-5 w-5" />
                   <span className="text-[9px] font-bold uppercase tracking-wider">Explore</span>
                 </Link>
-                
-                {/* Create */}
                 <Link href="/student/create" className="-mt-6">
-                  <div className="h-14 w-14 rounded-full bg-[#BDFB04] flex items-center justify-center shadow-lg shadow-[#BDFB04]/30 cursor-pointer hover:scale-105 active:scale-95 transition-all">
+                  <div className="h-14 w-14 rounded-full bg-[#BDFB04] flex items-center justify-center shadow-lg shadow-[#BDFB04]/30 cursor-pointer">
                     <Plus className="h-6 w-6 text-[#191919] stroke-[2.5]" />
                   </div>
                 </Link>
-                
-                {/* Saved */}
-                <Link
-                  href="/student/saved"
-                  className="flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-2xl text-gray-400 hover:text-[#191919] transition-colors cursor-pointer"
-                >
+                <Link href="/student/saved" className="flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-2xl text-gray-400 hover:text-[#191919]">
                   <Bookmark className="h-5 w-5" />
                   <span className="text-[9px] font-bold uppercase tracking-wider">Saved</span>
                 </Link>
-                
-                {/* Profile */}
-                <Link
-                  href="/student/profile"
-                  className="flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-2xl text-gray-400 hover:text-[#191919] transition-colors cursor-pointer"
-                >
+                <Link href="/student/profile" className="flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-2xl text-gray-400 hover:text-[#191919]">
                   <User className="h-5 w-5" />
                   <span className="text-[9px] font-bold uppercase tracking-wider">Profile</span>
                 </Link>
               </nav>
             </div>
-            
           </div>
-        ) : (
-          <EmptyState
-            icon={<Compass className="h-8 w-8 text-gray-400" />}
-            title="No events found"
-            description="Try adjusting your search or category filters to discover campus activities."
-          />
-        )
+        </div>
+      ) : (
+        <EmptyState
+          icon={<Compass className="h-8 w-8 text-gray-400" />}
+          title="No events found"
+          description="Try adjusting your search or category filters to discover campus activities."
+        />
+      )
       ) : (
         /* Original Grid view */
         sortedFilteredItems.length > 0 ? (
