@@ -43,6 +43,7 @@ export default function StudentEventsFeed() {
   const [newCommentText, setNewCommentText] = useState('');
   const [copiedItemId, setCopiedItemId] = useState<string | null>(null);
   const [activeRightTab, setActiveRightTab] = useState<'details' | 'comments'>('details');
+  const [expandedDescItem, setExpandedDescItem] = useState<string | null>(null);
 
   const getMockComments = (id: string, title: string) => {
     const commentsPool = [
@@ -649,7 +650,7 @@ export default function StudentEventsFeed() {
                         <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/10 to-black/60 z-10 pointer-events-none" />
 
                         {/* Bottom-Left Details Inside Player Frame */}
-                        <div className="absolute bottom-24 left-4 z-20 max-w-[85%] text-white text-left space-y-2 select-none">
+                        <div className="absolute bottom-24 left-4 z-20 max-w-[85%] text-white text-left space-y-3.5 select-none">
                           <div className="flex items-center gap-1.5 text-xs font-black uppercase tracking-wider text-[#BDFB04]">
                             <span>@{orgName.toLowerCase().replace(/\s+/g, '')}</span>
                             {isOrgVerified && <VerifiedBadge className="h-4 w-4 fill-[#BDFB04] text-black" />}
@@ -657,44 +658,60 @@ export default function StudentEventsFeed() {
 
                           <h2 
                             onClick={() => handleCardClick(item)}
-                            className="text-lg font-extrabold uppercase leading-tight tracking-tight hover:text-white/80 transition-colors cursor-pointer"
+                            className="text-base font-extrabold uppercase leading-tight tracking-tight hover:text-white/80 transition-colors cursor-pointer"
                             style={{ fontFamily: 'var(--font-display)' }}
                           >
                             {item.title}
                           </h2>
 
-                          <p className="text-white/95 text-[11px] leading-relaxed font-light line-clamp-2">
-                            {item.description || `Join us for the ${item.title}, happening soon.`}
-                          </p>
+                          {/* Spacing & Two-Line Limit Description */}
+                          <div className="space-y-1">
+                            <p className={`text-white/95 text-[11px] leading-relaxed font-light ${
+                              expandedDescItem === item.id ? '' : 'line-clamp-2'
+                            }`}>
+                              {item.description || `Join us for the ${item.title}, happening soon.`}
+                            </p>
+                            {item.description && item.description.length > 90 && (
+                              <button
+                                type="button"
+                                onClick={() => setExpandedDescItem(expandedDescItem === item.id ? null : item.id)}
+                                className="text-[9px] font-bold text-[#BDFB04] uppercase tracking-wider hover:underline cursor-pointer block mt-0.5"
+                              >
+                                {expandedDescItem === item.id ? 'Read Less' : 'Read More'}
+                              </button>
+                            )}
+                          </div>
 
+                          {/* Category and Price badges spacing */}
                           <div className="flex flex-wrap items-center gap-2 pt-1">
-                            <span className="px-2 py-0.5 text-[8px] font-extrabold uppercase tracking-wider rounded-md bg-white/10 border border-white/10">
+                            <span className="px-2.5 py-1 text-[8px] font-black uppercase tracking-wider rounded-md bg-white/10 border border-white/10">
                               {isPromo ? 'Promotion' : item.category}
                             </span>
-                            <span className="px-2 py-0.5 text-[8px] font-extrabold uppercase tracking-wider rounded-md bg-[#BDFB04] text-[#191919]">
+                            <span className="px-2.5 py-1 text-[8px] font-black uppercase tracking-wider rounded-md bg-[#BDFB04] text-[#191919] shadow-sm">
                               {isPromo ? 'FREE' : (item.free ? 'FREE' : 'TICKETED')}
                             </span>
                             {!isPromo && !item.free && (item as Event).price && (
-                              <span className="px-2 py-0.5 text-[8px] font-extrabold uppercase tracking-wider rounded-md bg-white/20">
+                              <span className="px-2.5 py-1 text-[8px] font-black uppercase tracking-wider rounded-md bg-white/15 border border-white/10">
                                 ${(item as Event).price}
                               </span>
                             )}
                           </div>
 
-                          <div className="flex flex-col gap-1 text-[10px] font-bold text-white/80 uppercase pt-1">
-                            <div className="flex items-center gap-1.5">
-                              <Calendar className="h-3.5 w-3.5 text-[#BDFB04]" />
+                          {/* Date and Location section spacing & alignment */}
+                          <div className="space-y-2 pt-2 text-[10px] font-bold text-white/90 uppercase">
+                            <div className="flex items-center gap-2.5">
+                              <Calendar className="h-4 w-4 text-[#BDFB04] shrink-0" />
                               <span>{formattedDate} • {timeStr}</span>
                             </div>
-                            <div className="flex items-center gap-1.5 truncate">
-                              <MapPin className="h-3.5 w-3.5 text-white/60" />
+                            <div className="flex items-center gap-2.5 truncate">
+                              <MapPin className="h-4 w-4 text-[#BDFB04] shrink-0" />
                               <span className="truncate">{isPromo ? (item as Promotion).organizer : (item as Event).location}</span>
                             </div>
                           </div>
 
                           <button
                             onClick={() => handleCardClick(item)}
-                            className="mt-2 bg-[#BDFB04] text-[#191919] hover:bg-[#c5ff0a] px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-wider transition-all flex items-center justify-center gap-1.5 cursor-pointer shadow-md"
+                            className="mt-3 bg-[#BDFB04] text-[#191919] hover:bg-[#c5ff0a] px-5 py-2 rounded-full text-[10px] font-black uppercase tracking-wider transition-all flex items-center justify-center gap-1.5 cursor-pointer shadow-md"
                           >
                             {isPromo ? 'Contact Organizer' : "I'm In"}
                           </button>
@@ -739,8 +756,8 @@ export default function StudentEventsFeed() {
                         </div>
 
                         {/* Mobile Interactions Overlay (Hidden on desktop) */}
-                        <div className="md:hidden absolute right-4 bottom-24 z-20 flex flex-col gap-4 items-center">
-                          <div className="flex flex-col items-center gap-1">
+                        <div className="md:hidden absolute right-4 bottom-24 z-20 flex flex-col gap-5.5 items-center">
+                          <div className="flex flex-col items-center gap-1.5">
                             <button
                               onClick={() => handleLikeToggle(item.id)}
                               className={`h-11 w-11 rounded-full flex items-center justify-center backdrop-blur-md border transition-all cursor-pointer shadow-lg ${
@@ -749,9 +766,9 @@ export default function StudentEventsFeed() {
                             >
                               <Heart className={`h-5 w-5 ${isLiked ? 'fill-white' : ''}`} />
                             </button>
-                            <span className="text-[10px] font-extrabold text-white">{likesCount}</span>
+                            <span className="text-[10px] font-black text-white drop-shadow-md">{likesCount}</span>
                           </div>
-                          <div className="flex flex-col items-center gap-1">
+                          <div className="flex flex-col items-center gap-1.5">
                             <button
                               onClick={() => setCommentsOpenItem(isCommentOpen ? null : item)}
                               className={`h-11 w-11 rounded-full flex items-center justify-center backdrop-blur-md border transition-all cursor-pointer shadow-lg ${
@@ -760,9 +777,9 @@ export default function StudentEventsFeed() {
                             >
                               <MessageCircle className="h-5 w-5" />
                             </button>
-                            <span className="text-[10px] font-extrabold text-white">{itemComments.length}</span>
+                            <span className="text-[10px] font-black text-white drop-shadow-md">{itemComments.length}</span>
                           </div>
-                          <div className="flex flex-col items-center gap-1">
+                          <div className="flex flex-col items-center gap-1.5">
                             <button
                               onClick={() => saveToggle(item.id)}
                               className={`h-11 w-11 rounded-full flex items-center justify-center backdrop-blur-md border transition-all cursor-pointer shadow-lg ${
@@ -771,7 +788,7 @@ export default function StudentEventsFeed() {
                             >
                               <Bookmark className={`h-5 w-5 ${isSaved ? 'fill-[#191919]' : ''}`} />
                             </button>
-                            <span className="text-[10px] font-extrabold text-white">Save</span>
+                            <span className="text-[10px] font-black text-white drop-shadow-md">Save</span>
                           </div>
                         </div>
 
@@ -871,13 +888,13 @@ export default function StudentEventsFeed() {
                   <Home className="h-5 w-5" />
                   <span className="text-[9px] font-bold uppercase tracking-wider">Home</span>
                 </Link>
-                <Link href="/student/events" className="flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-2xl text-[#191919] font-extrabold">
-                  <Compass className="h-5 w-5" />
+                <Link href="/student/events" className="flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-2xl text-[#3B5C00] font-extrabold">
+                  <Compass className="h-5 w-5 text-[#3B5C00]" />
                   <span className="text-[9px] font-bold uppercase tracking-wider">Explore</span>
                 </Link>
-                <Link href="/student/create" className="-mt-6">
-                  <div className="h-14 w-14 rounded-full bg-[#BDFB04] flex items-center justify-center shadow-lg shadow-[#BDFB04]/30 cursor-pointer">
-                    <Plus className="h-6 w-6 text-[#191919] stroke-[2.5]" />
+                <Link href="/student/create" className="-mt-4">
+                  <div className="h-11 w-11 rounded-full bg-[#BDFB04] flex items-center justify-center shadow-md shadow-[#BDFB04]/25 cursor-pointer hover:scale-105 transition-all">
+                    <Plus className="h-5 w-5 text-[#191919] stroke-[3]" />
                   </div>
                 </Link>
                 <Link href="/student/saved" className="flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-2xl text-[#4B5563] hover:text-[#191919]">

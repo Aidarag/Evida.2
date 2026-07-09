@@ -196,12 +196,12 @@ export function MobileBottomNav({ variant = 'student' }: { variant?: 'student' |
 
           if (tab.isFab) {
             return (
-              <Link key={tab.href} href={tab.href} className="-mt-6">
+              <Link key={tab.href} href={tab.href} className="-mt-4">
                 <motion.div
-                  whileTap={{ scale: 0.9 }}
-                  className="h-14 w-14 rounded-full bg-[#BDFB04] flex items-center justify-center shadow-lg shadow-[#BDFB04]/30 cursor-pointer"
+                  whileTap={{ scale: 0.95 }}
+                  className="h-11 w-11 rounded-full bg-[#BDFB04] flex items-center justify-center shadow-md shadow-[#BDFB04]/25 cursor-pointer hover:scale-105 transition-all"
                 >
-                  <Plus className="h-6 w-6 text-[#191919] stroke-[2.5]" />
+                  <Plus className="h-5 w-5 text-[#191919] stroke-[3]" />
                 </motion.div>
               </Link>
             );
@@ -213,7 +213,7 @@ export function MobileBottomNav({ variant = 'student' }: { variant?: 'student' |
               href={tab.href}
               className={`flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-2xl transition-colors cursor-pointer ${
                 isActive 
-                  ? 'text-[#191919] font-extrabold' 
+                  ? 'text-[#3B5C00] font-extrabold' 
                   : 'text-[#4B5563] hover:text-[#191919]'
               }`}
             >

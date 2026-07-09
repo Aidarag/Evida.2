@@ -10,9 +10,9 @@ export default function StudentLayout({
   return (
     <div className="min-h-screen bg-[#DFDED7] text-gray-900 flex flex-col md:flex-row font-sans">
       {/* Mobile Top Nav (visible only on small screens) */}
-      <div className="md:hidden sticky top-0 z-40 w-full h-14 border-b border-black/[0.04] bg-[#DFDED7]/90 backdrop-blur-xl flex items-center justify-center">
+      <div className="md:hidden sticky top-0 z-40 w-full py-4 px-6 border-b border-black/[0.04] bg-[#DFDED7]/95 backdrop-blur-xl flex items-center justify-center">
         <span className="text-lg font-bold tracking-tight text-[#191919] flex items-center gap-2">
-          <EvidaLogo size={24} showText={true} />
+          <EvidaLogo size={28} showText={true} />
         </span>
       </div>
 
