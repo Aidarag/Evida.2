@@ -287,7 +287,7 @@ export default function SignupPage() {
 
       {/* Back to Home */}
       {step === 'role-selection' && (
-        <Link href="/" className="absolute top-8 left-8 text-[#4F5666] hover:text-[#191919] flex items-center gap-2 transition-colors font-bold text-xs uppercase tracking-wider">
+        <Link href="/" className="absolute top-8 left-8 text-[#374151] hover:text-[#191919] flex items-center gap-2 transition-colors font-bold text-xs uppercase tracking-wider">
           <ArrowLeft className="h-4 w-4" /> Back to Home
         </Link>
       )}
@@ -307,11 +307,11 @@ export default function SignupPage() {
                     else if (step === 'profile-onboarding') navigateTo('data-privacy', 'backward');
                     else if (step === 'school-onboarding') navigateTo('data-privacy', 'backward');
                   }}
-                  className="flex items-center gap-1.5 text-[10px] font-bold text-[#4F5666] hover:text-[#191919] transition-colors uppercase tracking-widest cursor-pointer"
+                  className="flex items-center gap-1.5 text-[10px] font-bold text-[#374151] hover:text-[#191919] transition-colors uppercase tracking-widest cursor-pointer"
                 >
                   <ArrowLeft className="h-3.5 w-3.5" /> Back
                 </button>
-                <span className="text-[9px] font-bold text-[#7B8290] uppercase tracking-widest">
+                <span className="text-[9px] font-bold text-[#4B5563] uppercase tracking-widest">
                   Step {currentStepIdx} of {totalSteps - 1}
                 </span>
               </div>
@@ -350,7 +350,7 @@ export default function SignupPage() {
                         : role === 'student' ? 'Student Registration' 
                         : 'School Registration'}
                     </h1>
-                    <p className="text-xs text-[#4F5666] mt-1.5">
+                    <p className="text-xs text-[#374151] mt-1.5">
                       {step === 'role-selection' 
                         ? 'Create your official campus account' 
                         : step === 'auth-options'
@@ -370,7 +370,7 @@ export default function SignupPage() {
               {/* ═══ STEP 1: ROLE SELECTION ═══ */}
               {step === 'role-selection' && (
                 <div className="space-y-4 pt-2">
-                  <p className="text-xs font-bold text-center text-[#4F5666] uppercase tracking-wider mb-2">
+                  <p className="text-xs font-bold text-center text-[#374151] uppercase tracking-wider mb-2">
                     Register as a Student or Institution
                   </p>
 
@@ -385,10 +385,10 @@ export default function SignupPage() {
                         </div>
                         <div>
                           <p className="text-sm font-bold text-[#191919] uppercase tracking-wide">Student</p>
-                          <p className="text-xs text-[#4F5666] mt-0.5 max-w-[220px]">Register with school email to join events and verify tickets.</p>
+                          <p className="text-xs text-[#374151] mt-0.5 max-w-[220px]">Register with school email to join events and verify tickets.</p>
                         </div>
                       </div>
-                      <ArrowRight className="h-5 w-5 text-[#4F5666] group-hover:text-[#BDFB04] group-hover:translate-x-1 transition-all" />
+                      <ArrowRight className="h-5 w-5 text-[#374151] group-hover:text-[#BDFB04] group-hover:translate-x-1 transition-all" />
                     </button>
 
                     <button
@@ -401,15 +401,15 @@ export default function SignupPage() {
                         </div>
                         <div>
                           <p className="text-sm font-bold text-[#191919] uppercase tracking-wide">School / Administration</p>
-                          <p className="text-xs text-[#4F5666] mt-0.5 max-w-[220px]">Establish department portals and coordinate calendar systems.</p>
+                          <p className="text-xs text-[#374151] mt-0.5 max-w-[220px]">Establish department portals and coordinate calendar systems.</p>
                         </div>
                       </div>
-                      <ArrowRight className="h-5 w-5 text-[#4F5666] group-hover:text-[#191919] group-hover:translate-x-1 transition-all" />
+                      <ArrowRight className="h-5 w-5 text-[#374151] group-hover:text-[#191919] group-hover:translate-x-1 transition-all" />
                     </button>
                   </div>
 
                   <div className="pt-4 border-t border-black/[0.06] text-center">
-                    <p className="text-xs text-[#4F5666]">
+                    <p className="text-xs text-[#374151]">
                       Already have an account?{' '}
                       <Link href="/login" className="text-[#191919] font-bold underline decoration-2 decoration-[#BDFB04] hover:text-[#191919]/80 transition-all">
                         Sign in here
@@ -438,7 +438,7 @@ export default function SignupPage() {
 
                   <div className="flex items-center justify-center gap-3">
                     <div className="h-px bg-black/[0.08] w-full" />
-                    <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider shrink-0">Or use email</span>
+                    <span className="text-[10px] font-bold text-[#4B5563] uppercase tracking-wider shrink-0">Or use email</span>
                     <div className="h-px bg-black/[0.08] w-full" />
                   </div>
 
@@ -446,11 +446,11 @@ export default function SignupPage() {
                     <div className="space-y-3">
                       {/* Email */}
                       <div className="space-y-1.5">
-                        <label className="text-[10px] font-bold text-[#4F5666] uppercase tracking-widest block">
+                        <label className="text-[10px] font-bold text-[#374151] uppercase tracking-widest block">
                           {role === 'student' ? 'Official School Email' : 'Institutional Email Address'}
                         </label>
                         <div className="relative">
-                          <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-gray-400">
+                          <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[#4B5563]">
                             <Mail className="h-4 w-4" />
                           </div>
                           <input
@@ -459,7 +459,7 @@ export default function SignupPage() {
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
                             placeholder={role === 'student' ? "e.g. yourname@stateuni.edu" : "e.g. admin@stateuni.edu"}
-                            className="w-full rounded-xl border-2 border-black/[0.08] bg-white py-2.5 pl-11 pr-4 text-xs text-[#191919] placeholder-gray-400 focus:outline-none focus:border-[#BDFB04] focus:ring-1 focus:ring-[#BDFB04] transition-all font-medium"
+                            className="w-full rounded-xl border-2 border-black/[0.08] bg-white py-2.5 pl-11 pr-4 text-xs text-[#191919] placeholder-[#4B5563] focus:outline-none focus:border-[#BDFB04] focus:ring-1 focus:ring-[#BDFB04] transition-all font-medium"
                           />
                         </div>
                       </div>
@@ -495,14 +495,14 @@ export default function SignupPage() {
                     <p className="text-xs font-bold text-[#191919] uppercase tracking-wider">
                       Verify School Email
                     </p>
-                    <p className="text-[11px] text-[#4F5666] leading-relaxed">
+                    <p className="text-[11px] text-[#374151] leading-relaxed">
                       We sent a verification code to <strong className="text-[#191919]">{email}</strong>. Enter the 6-digit code below.
                     </p>
                   </div>
 
                   <div className="space-y-2">
                     <div className="relative">
-                      <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-gray-400">
+                      <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[#4B5563]">
                         <KeyRound className="h-4 w-4" />
                       </div>
                       <input
@@ -530,9 +530,9 @@ export default function SignupPage() {
 
                     {/* Simulation Helper */}
                     <div className="bg-black/[0.02] border border-black/[0.06] p-3.5 rounded-xl space-y-2 text-left">
-                      <span className="text-[9px] font-bold text-gray-400 uppercase tracking-wider block text-center">Simulation Helper</span>
+                      <span className="text-[9px] font-bold text-[#4B5563] uppercase tracking-wider block text-center">Simulation Helper</span>
                       <div className="flex justify-between items-center text-[11px]">
-                        <span className="text-[#4F5666]">Simulated Code:</span>
+                        <span className="text-[#374151]">Simulated Code:</span>
                         <code className="text-[#191919] font-mono font-bold text-xs">{generatedCode}</code>
                       </div>
                       <button
@@ -554,7 +554,7 @@ export default function SignupPage() {
                     <div className="mx-auto h-12 w-12 rounded-full bg-[#BDFB04]/10 flex items-center justify-center text-[#BDFB04] border border-[#BDFB04]/20">
                       <ShieldCheck className="h-5 w-5" />
                     </div>
-                    <p className="text-[11px] text-[#4F5666] leading-relaxed max-w-xs mx-auto">
+                    <p className="text-[11px] text-[#374151] leading-relaxed max-w-xs mx-auto">
                       Before creating your account, please review how Evida handles your data and agree to our terms.
                     </p>
                   </div>
@@ -564,7 +564,7 @@ export default function SignupPage() {
                     <h3 className="text-[10px] font-extrabold text-[#191919] uppercase tracking-widest flex items-center gap-1.5">
                       <ShieldCheck className="h-3 w-3 text-[#BDFB04]" /> What data we collect
                     </h3>
-                    <ul className="text-[10px] text-[#4F5666] space-y-1.5 leading-relaxed list-disc pl-4">
+                    <ul className="text-[10px] text-[#374151] space-y-1.5 leading-relaxed list-disc pl-4">
                       <li><strong className="text-[#191919]">Account info:</strong> name, email, school, major, graduation year, profile photo</li>
                       <li><strong className="text-[#191919]">Activity data:</strong> events attended, RSVPs, saved events, organizations joined</li>
                       <li><strong className="text-[#191919]">Usage analytics:</strong> page views and interaction patterns to improve the platform</li>
@@ -574,7 +574,7 @@ export default function SignupPage() {
                     <h3 className="text-[10px] font-extrabold text-[#191919] uppercase tracking-widest flex items-center gap-1.5 pt-2">
                       <ShieldCheck className="h-3 w-3 text-[#BDFB04]" /> How we use your data
                     </h3>
-                    <ul className="text-[10px] text-[#4F5666] space-y-1.5 leading-relaxed list-disc pl-4">
+                    <ul className="text-[10px] text-[#374151] space-y-1.5 leading-relaxed list-disc pl-4">
                       <li>To personalize your event feed and recommendations</li>
                       <li>To enable RSVP, event creation, and social features</li>
                       <li>To provide analytics to your school's administration (aggregated, anonymized)</li>
@@ -584,7 +584,7 @@ export default function SignupPage() {
                     <h3 className="text-[10px] font-extrabold text-[#191919] uppercase tracking-widest flex items-center gap-1.5 pt-2">
                       <ShieldCheck className="h-3 w-3 text-[#BDFB04]" /> Your rights
                     </h3>
-                    <ul className="text-[10px] text-[#4F5666] space-y-1.5 leading-relaxed list-disc pl-4">
+                    <ul className="text-[10px] text-[#374151] space-y-1.5 leading-relaxed list-disc pl-4">
                       <li>You can request data export or account deletion at any time</li>
                       <li>You can revoke consent and deactivate your account</li>
                       <li>Data is stored securely and encrypted in transit</li>
@@ -600,7 +600,7 @@ export default function SignupPage() {
                         onChange={(e) => setConsentTerms(e.target.checked)}
                         className="mt-0.5 h-4 w-4 rounded border-2 border-black/[0.15] text-[#BDFB04] focus:ring-[#BDFB04] cursor-pointer accent-[#BDFB04]"
                       />
-                      <span className="text-[11px] text-[#4F5666] leading-relaxed group-hover:text-[#191919] transition-colors">
+                      <span className="text-[11px] text-[#374151] leading-relaxed group-hover:text-[#191919] transition-colors">
                         I agree to Evida's <strong className="text-[#191919] underline decoration-[#BDFB04]">Terms of Service</strong> and <strong className="text-[#191919] underline decoration-[#BDFB04]">Privacy Policy</strong>
                       </span>
                     </label>
@@ -612,7 +612,7 @@ export default function SignupPage() {
                         onChange={(e) => setConsentData(e.target.checked)}
                         className="mt-0.5 h-4 w-4 rounded border-2 border-black/[0.15] text-[#BDFB04] focus:ring-[#BDFB04] cursor-pointer accent-[#BDFB04]"
                       />
-                      <span className="text-[11px] text-[#4F5666] leading-relaxed group-hover:text-[#191919] transition-colors">
+                      <span className="text-[11px] text-[#374151] leading-relaxed group-hover:text-[#191919] transition-colors">
                         I consent to the collection and use of my data as described above
                       </span>
                     </label>
@@ -624,7 +624,7 @@ export default function SignupPage() {
                         onChange={(e) => setConsentAge(e.target.checked)}
                         className="mt-0.5 h-4 w-4 rounded border-2 border-black/[0.15] text-[#BDFB04] focus:ring-[#BDFB04] cursor-pointer accent-[#BDFB04]"
                       />
-                      <span className="text-[11px] text-[#4F5666] leading-relaxed group-hover:text-[#191919] transition-colors">
+                      <span className="text-[11px] text-[#374151] leading-relaxed group-hover:text-[#191919] transition-colors">
                         I am at least <strong className="text-[#191919]">18 years old</strong> or have parental/guardian consent
                       </span>
                     </label>
@@ -652,7 +652,7 @@ export default function SignupPage() {
                 <form onSubmit={handleStudentProfileSubmit} className="space-y-4 pt-1">
                   {/* Avatar Picker */}
                   <div className="flex flex-col items-center gap-3">
-                    <span className="text-[9px] font-extrabold text-[#4F5666] uppercase tracking-wider block">
+                    <span className="text-[9px] font-extrabold text-[#374151] uppercase tracking-wider block">
                       Profile Picture
                     </span>
                     <div className="relative">
@@ -692,19 +692,19 @@ export default function SignupPage() {
                     {/* First & Last Name */}
                     <div className="grid grid-cols-2 gap-3.5">
                       <div className="space-y-1.5">
-                        <label className="text-[10px] font-bold text-[#4F5666] uppercase tracking-widest block">First Name</label>
+                        <label className="text-[10px] font-bold text-[#374151] uppercase tracking-widest block">First Name</label>
                         <div className="relative">
-                          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400"><User className="h-3.5 w-3.5" /></div>
+                          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-[#4B5563]"><User className="h-3.5 w-3.5" /></div>
                           <input type="text" required value={firstName} onChange={(e) => setFirstName(e.target.value)} placeholder="e.g. Alex"
-                            className="w-full rounded-xl border-2 border-black/[0.08] bg-white py-2.5 pl-9 pr-3 text-xs text-[#191919] placeholder-gray-400 focus:outline-none focus:border-[#BDFB04] focus:ring-1 focus:ring-[#BDFB04] transition-all font-medium" />
+                            className="w-full rounded-xl border-2 border-black/[0.08] bg-white py-2.5 pl-9 pr-3 text-xs text-[#191919] placeholder-[#4B5563] focus:outline-none focus:border-[#BDFB04] focus:ring-1 focus:ring-[#BDFB04] transition-all font-medium" />
                         </div>
                       </div>
                       <div className="space-y-1.5">
-                        <label className="text-[10px] font-bold text-[#4F5666] uppercase tracking-widest block">Last Name</label>
+                        <label className="text-[10px] font-bold text-[#374151] uppercase tracking-widest block">Last Name</label>
                         <div className="relative">
-                          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400"><User className="h-3.5 w-3.5" /></div>
+                          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-[#4B5563]"><User className="h-3.5 w-3.5" /></div>
                           <input type="text" required value={lastName} onChange={(e) => setLastName(e.target.value)} placeholder="e.g. Rivera"
-                            className="w-full rounded-xl border-2 border-black/[0.08] bg-white py-2.5 pl-9 pr-3 text-xs text-[#191919] placeholder-gray-400 focus:outline-none focus:border-[#BDFB04] focus:ring-1 focus:ring-[#BDFB04] transition-all font-medium" />
+                            className="w-full rounded-xl border-2 border-black/[0.08] bg-white py-2.5 pl-9 pr-3 text-xs text-[#191919] placeholder-[#4B5563] focus:outline-none focus:border-[#BDFB04] focus:ring-1 focus:ring-[#BDFB04] transition-all font-medium" />
                         </div>
                       </div>
                     </div>
@@ -712,17 +712,17 @@ export default function SignupPage() {
                     {/* Major & Grad Year */}
                     <div className="grid grid-cols-2 gap-3.5">
                       <div className="space-y-1.5">
-                        <label className="text-[10px] font-bold text-[#4F5666] uppercase tracking-widest block">Major</label>
+                        <label className="text-[10px] font-bold text-[#374151] uppercase tracking-widest block">Major</label>
                         <div className="relative">
-                          <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-gray-400"><BookOpen className="h-4 w-4" /></div>
+                          <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[#4B5563]"><BookOpen className="h-4 w-4" /></div>
                           <input type="text" required value={major} onChange={(e) => setMajor(e.target.value)} placeholder="e.g. Computer Science"
-                            className="w-full rounded-xl border-2 border-black/[0.08] bg-white py-2.5 pl-11 pr-4 text-xs text-[#191919] placeholder-gray-400 focus:outline-none focus:border-[#BDFB04] focus:ring-1 focus:ring-[#BDFB04] transition-all font-medium" />
+                            className="w-full rounded-xl border-2 border-black/[0.08] bg-white py-2.5 pl-11 pr-4 text-xs text-[#191919] placeholder-[#4B5563] focus:outline-none focus:border-[#BDFB04] focus:ring-1 focus:ring-[#BDFB04] transition-all font-medium" />
                         </div>
                       </div>
                       <div className="space-y-1.5">
-                        <label className="text-[10px] font-bold text-[#4F5666] uppercase tracking-widest block">Grad Year</label>
+                        <label className="text-[10px] font-bold text-[#374151] uppercase tracking-widest block">Grad Year</label>
                         <div className="relative">
-                          <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-gray-400"><Calendar className="h-4 w-4" /></div>
+                          <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[#4B5563]"><Calendar className="h-4 w-4" /></div>
                           <select value={gradYear} onChange={(e) => setGradYear(e.target.value)}
                             className="w-full rounded-xl border-2 border-black/[0.08] bg-white py-2.5 pl-11 pr-4 text-xs text-[#191919] focus:outline-none focus:border-[#BDFB04] focus:ring-1 focus:ring-[#BDFB04] transition-all font-medium cursor-pointer">
                             <option value="2026">2026</option>
@@ -737,25 +737,25 @@ export default function SignupPage() {
 
                     {/* Phone (optional) */}
                     <div className="space-y-1.5">
-                      <label className="text-[10px] font-bold text-[#4F5666] uppercase tracking-widest block">
-                        Phone Number <span className="text-[#7B8290] font-normal">(optional)</span>
+                      <label className="text-[10px] font-bold text-[#374151] uppercase tracking-widest block">
+                        Phone Number <span className="text-[#4B5563] font-normal">(optional)</span>
                       </label>
                       <div className="relative">
-                        <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-gray-400"><Phone className="h-4 w-4" /></div>
+                        <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[#4B5563]"><Phone className="h-4 w-4" /></div>
                         <input type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="e.g. (555) 123-4567"
-                          className="w-full rounded-xl border-2 border-black/[0.08] bg-white py-2.5 pl-11 pr-4 text-xs text-[#191919] placeholder-gray-400 focus:outline-none focus:border-[#BDFB04] focus:ring-1 focus:ring-[#BDFB04] transition-all font-medium" />
+                          className="w-full rounded-xl border-2 border-black/[0.08] bg-white py-2.5 pl-11 pr-4 text-xs text-[#191919] placeholder-[#4B5563] focus:outline-none focus:border-[#BDFB04] focus:ring-1 focus:ring-[#BDFB04] transition-all font-medium" />
                       </div>
                     </div>
 
                     {/* Auto-detected School */}
                     <div className="space-y-1.5">
-                      <label className="text-[10px] font-bold text-[#4F5666] uppercase tracking-widest block">
+                      <label className="text-[10px] font-bold text-[#374151] uppercase tracking-widest block">
                         Campus Network (Auto-Detected)
                       </label>
                       <div className="relative">
-                        <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-gray-400"><Building className="h-4 w-4" /></div>
+                        <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[#4B5563]"><Building className="h-4 w-4" /></div>
                         <input type="text" readOnly value={detectSchool(email)}
-                          className="w-full rounded-xl border border-black/[0.06] bg-black/[0.02] py-2.5 pl-11 pr-4 text-xs text-[#4F5666] font-bold" />
+                          className="w-full rounded-xl border border-black/[0.06] bg-black/[0.02] py-2.5 pl-11 pr-4 text-xs text-[#374151] font-bold" />
                       </div>
                     </div>
                   </div>
@@ -782,19 +782,19 @@ export default function SignupPage() {
                 <form onSubmit={handleSchoolOnboardingSubmit} className="space-y-4 pt-1">
                   <div className="space-y-3">
                     <div className="space-y-1.5">
-                      <label className="text-[10px] font-bold text-[#4F5666] uppercase tracking-widest block">Administration Department</label>
+                      <label className="text-[10px] font-bold text-[#374151] uppercase tracking-widest block">Administration Department</label>
                       <div className="relative">
-                        <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-gray-400"><User className="h-4 w-4" /></div>
+                        <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[#4B5563]"><User className="h-4 w-4" /></div>
                         <input type="text" required value={department} onChange={(e) => setDepartment(e.target.value)} placeholder="e.g. Student Affairs Board"
-                          className="w-full rounded-xl border-2 border-black/[0.08] bg-white py-2.5 pl-11 pr-4 text-xs text-[#191919] placeholder-gray-400 focus:outline-none focus:border-[#BDFB04] focus:ring-1 focus:ring-[#BDFB04] transition-all font-medium" />
+                          className="w-full rounded-xl border-2 border-black/[0.08] bg-white py-2.5 pl-11 pr-4 text-xs text-[#191919] placeholder-[#4B5563] focus:outline-none focus:border-[#BDFB04] focus:ring-1 focus:ring-[#BDFB04] transition-all font-medium" />
                       </div>
                     </div>
                     <div className="space-y-1.5">
-                      <label className="text-[10px] font-bold text-[#4F5666] uppercase tracking-widest block">Institution Name</label>
+                      <label className="text-[10px] font-bold text-[#374151] uppercase tracking-widest block">Institution Name</label>
                       <div className="relative">
-                        <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-gray-400"><Building className="h-4 w-4" /></div>
+                        <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[#4B5563]"><Building className="h-4 w-4" /></div>
                         <input type="text" required value={customSchoolName} onChange={(e) => setCustomSchoolName(e.target.value)} placeholder="e.g. State University"
-                          className="w-full rounded-xl border-2 border-black/[0.08] bg-white py-2.5 pl-11 pr-4 text-xs text-[#191919] placeholder-gray-400 focus:outline-none focus:border-[#BDFB04] focus:ring-1 focus:ring-[#BDFB04] transition-all font-medium" />
+                          className="w-full rounded-xl border-2 border-black/[0.08] bg-white py-2.5 pl-11 pr-4 text-xs text-[#191919] placeholder-[#4B5563] focus:outline-none focus:border-[#BDFB04] focus:ring-1 focus:ring-[#BDFB04] transition-all font-medium" />
                       </div>
                     </div>
                   </div>
@@ -832,7 +832,7 @@ export default function SignupPage() {
                     <h2 className="text-xl font-extrabold text-[#191919] uppercase tracking-wider" style={{ fontFamily: 'var(--font-display)' }}>
                       Account Activated
                     </h2>
-                    <p className="text-xs text-[#4F5666]">
+                    <p className="text-xs text-[#374151]">
                       Welcome to Evida! Initializing your custom {role === 'student' ? 'Student' : 'Administration'} workspace...
                     </p>
                   </div>

@@ -70,7 +70,7 @@ export default function ReviewQueue({
           <div>
             <h4 className="text-sm font-bold text-white leading-snug">{event.title}</h4>
             <p className="text-[10px] text-slate-500 mt-0.5">
-              Submitted by <span className="font-semibold text-slate-400">{event.organizer}</span>
+              Submitted by <span className="font-semibold text-[#4B5563]">{event.organizer}</span>
               {event.organizationName ? ` on behalf of ${event.organizationName}` : ''}
             </p>
           </div>
@@ -86,12 +86,12 @@ export default function ReviewQueue({
           </span>
         </div>
 
-        <p className="text-xs text-slate-400 bg-slate-950/40 p-3 rounded-lg border border-white/5 line-clamp-3">
+        <p className="text-xs text-[#4B5563] bg-slate-950/40 p-3 rounded-lg border border-white/5 line-clamp-3">
           {event.description}
         </p>
 
         {/* Date, Time, Location & Stats */}
-        <div className="grid gap-3 sm:grid-cols-3 text-[11px] text-slate-400 pt-1">
+        <div className="grid gap-3 sm:grid-cols-3 text-[11px] text-[#4B5563] pt-1">
           <div className="flex items-center gap-1.5">
             <Calendar className="h-3.5 w-3.5 text-slate-500" />
             <span>{event.date} at {event.time}</span>
@@ -172,7 +172,7 @@ export default function ReviewQueue({
           <Clock className="h-5 w-5 text-indigo-400" />
           Event Moderation Queues
         </h2>
-        <p className="mt-1 text-xs text-slate-400 max-w-xl leading-relaxed">
+        <p className="mt-1 text-xs text-[#4B5563] max-w-xl leading-relaxed">
           Administer upcoming activities. Evida routes simple requests to the Fast Track queue, while routing high resource requests to the Complex queue to organize your administrative workflows.
         </p>
       </div>
@@ -194,7 +194,7 @@ export default function ReviewQueue({
               className={`flex items-center justify-between rounded-xl border p-3 text-left transition-all hover:scale-[1.01] cursor-pointer ${
                 isActive
                   ? 'bg-slate-900 text-white border-slate-700 shadow-sm'
-                  : 'bg-transparent text-slate-400 border-white/5 hover:text-slate-200 hover:bg-slate-900/10'
+                  : 'bg-transparent text-[#4B5563] border-white/5 hover:text-slate-200 hover:bg-slate-900/10'
               }`}
             >
               <div>
@@ -274,7 +274,7 @@ export default function ReviewQueue({
                   <div>
                     <h4 className="text-sm font-bold text-white leading-snug">{promo.title}</h4>
                     <p className="text-[10px] text-slate-500 mt-0.5">
-                      Submitted by <span className="font-semibold text-slate-400">{promo.organizer}</span> (Contact: {promo.contactInfo})
+                      Submitted by <span className="font-semibold text-[#4B5563]">{promo.organizer}</span> (Contact: {promo.contactInfo})
                     </p>
                   </div>
                   
@@ -283,7 +283,7 @@ export default function ReviewQueue({
                   </span>
                 </div>
 
-                <p className="text-xs text-slate-400 bg-slate-950/40 p-3 rounded-lg border border-white/5 line-clamp-3">
+                <p className="text-xs text-[#4B5563] bg-slate-950/40 p-3 rounded-lg border border-white/5 line-clamp-3">
                   {promo.description}
                 </p>
 

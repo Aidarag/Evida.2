@@ -112,7 +112,7 @@ export default function StudentDashboard({
                   className={`w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-xs font-bold transition-all cursor-pointer ${
                     isActive
                       ? 'bg-[#BDFB04] border-l-4 border-black/30 text-[#191919] shadow-sm'
-                      : 'text-[#4F5666] hover:text-[#191919] hover:bg-black/[0.03]'
+                      : 'text-[#374151] hover:text-[#191919] hover:bg-black/[0.03]'
                   }`}
                 >
                   <Icon className="h-4.5 w-4.5" />
@@ -139,7 +139,7 @@ export default function StudentDashboard({
             </div>
             <div className="truncate">
               <p className="text-xs font-bold text-[#191919]">{currentUser.name}</p>
-              <p className="text-[10px] text-[#7B8290]">{currentUser.major}</p>
+              <p className="text-[10px] text-[#4B5563]">{currentUser.major}</p>
             </div>
           </div>
         </div>
@@ -155,7 +155,7 @@ export default function StudentDashboard({
           </div>
 
           <div className="hidden md:block">
-            <span className="text-xs font-bold uppercase tracking-wider text-[#7B8290]">
+            <span className="text-xs font-bold uppercase tracking-wider text-[#4B5563]">
               CAMPUS EXPERIENCE HUB
             </span>
           </div>
@@ -164,7 +164,7 @@ export default function StudentDashboard({
           <div className="flex items-center gap-3 relative">
             <button
               onClick={() => setNotificationsOpen(!notificationsOpen)}
-              className="relative h-9 w-9 rounded-xl border border-black/10 bg-white flex items-center justify-center text-[#4F5666] hover:text-[#191919] cursor-pointer shadow-sm"
+              className="relative h-9 w-9 rounded-xl border border-black/10 bg-white flex items-center justify-center text-[#374151] hover:text-[#191919] cursor-pointer shadow-sm"
             >
               <Bell className="h-4 w-4" />
               {unreadNotifsCount > 0 && (
@@ -187,7 +187,7 @@ export default function StudentDashboard({
                     <span className="text-xs font-bold uppercase text-[#191919]">Notifications</span>
                     <button
                       onClick={() => setNotificationsOpen(false)}
-                      className="text-[#7B8290] hover:text-[#191919] cursor-pointer"
+                      className="text-[#4B5563] hover:text-[#191919] cursor-pointer"
                     >
                       <X className="h-4 w-4" />
                     </button>
@@ -195,20 +195,20 @@ export default function StudentDashboard({
 
                   <div className="space-y-2 max-h-60 overflow-y-auto pr-1">
                     {notifications.length === 0 ? (
-                      <p className="text-[10px] text-[#7B8290] italic text-center py-4">No notifications yet.</p>
+                      <p className="text-[10px] text-[#4B5563] italic text-center py-4">No notifications yet.</p>
                     ) : (
                       notifications.map((n) => (
                         <div
                           key={n.id}
                           className={`p-2.5 rounded-xl border transition-all text-left space-y-1 relative ${
                             n.read
-                              ? 'bg-slate-50 border-black/[0.04] text-[#7B8290]'
+                              ? 'bg-slate-50 border-black/[0.04] text-[#4B5563]'
                               : 'bg-[#BDFB04]/10 border-[#BDFB04]/30 text-[#191919]'
                           }`}
                         >
                           <div className="flex justify-between items-start gap-1">
                             <span className="text-[10px] font-bold text-[#191919] uppercase">{n.title}</span>
-                            <span className="text-[9px] text-[#7B8290] font-semibold">{n.timestamp}</span>
+                            <span className="text-[9px] text-[#4B5563] font-semibold">{n.timestamp}</span>
                           </div>
                           <p className="text-[10px] leading-relaxed">{n.message}</p>
                           <div className="flex justify-end gap-1.5 pt-1.5">
@@ -222,7 +222,7 @@ export default function StudentDashboard({
                             )}
                             <button
                               onClick={() => onClearNotification(n.id)}
-                              className="text-[9px] font-bold text-[#7B8290] hover:text-[#191919] hover:underline cursor-pointer"
+                              className="text-[9px] font-bold text-[#4B5563] hover:text-[#191919] hover:underline cursor-pointer"
                             >
                               Dismiss
                             </button>
@@ -303,7 +303,7 @@ export default function StudentDashboard({
                       className={`rounded-full px-4 py-2 text-xs font-bold border shrink-0 transition-all cursor-pointer ${
                         isActive
                           ? 'bg-[#BDFB04] border-[#BDFB04]/30 text-[#191919] shadow-sm font-extrabold'
-                          : 'bg-white border-black/[0.06] text-[#4F5666] hover:text-[#191919] hover:border-black/10'
+                          : 'bg-white border-black/[0.06] text-[#374151] hover:text-[#191919] hover:border-black/10'
                       }`}
                     >
                       {cat}
@@ -315,14 +315,14 @@ export default function StudentDashboard({
               {/* Search input tool */}
               <div className="relative w-full max-w-md">
                 <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4">
-                  <Search className="h-4 w-4 text-[#7B8290]" />
+                  <Search className="h-4 w-4 text-[#4B5563]" />
                 </div>
                 <input
                   type="text"
                   placeholder="Search title, venue, tag..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full rounded-2xl border border-black/10 bg-white py-3 pl-10 pr-4 text-xs text-[#191919] placeholder-[#7B8290] focus:outline-none focus:border-[#BDFB04] transition-colors shadow-sm"
+                  className="w-full rounded-2xl border border-black/10 bg-white py-3 pl-10 pr-4 text-xs text-[#191919] placeholder-[#4B5563] focus:outline-none focus:border-[#BDFB04] transition-colors shadow-sm"
                 />
               </div>
 
@@ -330,7 +330,7 @@ export default function StudentDashboard({
               {trendingEvents.length > 0 && selectedCategory === 'All' && !searchQuery && (
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
-                    <h3 className="text-xs font-extrabold tracking-widest text-[#7B8290] uppercase">
+                    <h3 className="text-xs font-extrabold tracking-widest text-[#4B5563] uppercase">
                       TRENDING EVENTS
                     </h3>
                   </div>
@@ -358,13 +358,13 @@ export default function StudentDashboard({
                           </div>
 
                           <div className="space-y-1 bg-white/85 backdrop-blur-sm p-3 rounded-2xl border border-black/5">
-                            <span className="text-[9px] font-bold text-[#7B8290] uppercase tracking-wide">
+                            <span className="text-[9px] font-bold text-[#4B5563] uppercase tracking-wide">
                               {event.organizationName || 'OFFICIAL'}
                             </span>
                             <h4 className="text-sm font-bold text-[#191919] leading-snug line-clamp-2">
                               {event.title}
                             </h4>
-                            <p className="text-[10px] text-[#4F5666] flex items-center gap-1 pt-1.5 truncate">
+                            <p className="text-[10px] text-[#374151] flex items-center gap-1 pt-1.5 truncate">
                               <MapPin className="h-3 w-3 text-[#191919]" />
                               {event.location}
                             </p>
@@ -378,15 +378,15 @@ export default function StudentDashboard({
 
               {/* General Grid feed */}
               <div className="space-y-4">
-                <h3 className="text-xs font-extrabold tracking-widest text-[#7B8290] uppercase">
+                <h3 className="text-xs font-extrabold tracking-widest text-[#4B5563] uppercase">
                   {selectedCategory === 'All' ? 'UPCOMING EXPERIENCES' : `${selectedCategory.toUpperCase()} EVENTS`}
                 </h3>
 
                 {exploreEvents.length === 0 ? (
                   <div className="flex flex-col items-center justify-center rounded-3xl border border-dashed border-black/10 bg-slate-50 py-16 text-center shadow-sm">
-                    <Calendar className="h-10 w-10 text-[#7B8290] mb-3" />
+                    <Calendar className="h-10 w-10 text-[#4B5563] mb-3" />
                     <p className="text-xs font-bold text-[#191919] uppercase">No events discovered</p>
-                    <p className="mt-1 text-[11px] text-[#4F5666] max-w-xs leading-relaxed">
+                    <p className="mt-1 text-[11px] text-[#374151] max-w-xs leading-relaxed">
                       Try updating your search query or selecting a different category.
                     </p>
                   </div>
@@ -438,7 +438,7 @@ export default function StudentDashboard({
                                   {event.ownershipType}
                                 </span>
                                 {event.organizationName && (
-                                  <span className="text-[10px] text-[#4F5666] font-semibold truncate max-w-[140px]">
+                                  <span className="text-[10px] text-[#374151] font-semibold truncate max-w-[140px]">
                                     {event.organizationName}
                                   </span>
                                 )}
@@ -447,12 +447,12 @@ export default function StudentDashboard({
                               <h4 className="text-base font-bold text-[#191919] leading-snug group-hover:text-[#191919] transition-colors line-clamp-1 uppercase">
                                 {event.title}
                               </h4>
-                              <p className="text-xs text-[#4F5666] line-clamp-2 leading-relaxed">
+                              <p className="text-xs text-[#374151] line-clamp-2 leading-relaxed">
                                 {event.description}
                               </p>
                             </div>
 
-                            <div className="flex flex-col gap-1.5 text-[10px] font-bold text-[#4F5666] pt-3 border-t border-black/[0.06] uppercase">
+                            <div className="flex flex-col gap-1.5 text-[10px] font-bold text-[#374151] pt-3 border-t border-black/[0.06] uppercase">
                               <span className="flex items-center gap-1.5">
                                 <Calendar className="h-3.5 w-3.5 text-[#191919]" />
                                 {event.date} • {event.time}
@@ -482,7 +482,7 @@ export default function StudentDashboard({
         <button
           onClick={() => setActiveTab('explore')}
           className={`flex flex-col items-center gap-1 cursor-pointer ${
-            activeTab === 'explore' ? 'text-[#191919] font-extrabold' : 'text-[#7B8290]'
+            activeTab === 'explore' ? 'text-[#191919] font-extrabold' : 'text-[#4B5563]'
           }`}
         >
           <Compass className="h-5 w-5" />
@@ -492,7 +492,7 @@ export default function StudentDashboard({
         <button
           onClick={() => setActiveTab('saved')}
           className={`flex flex-col items-center gap-1 cursor-pointer ${
-            activeTab === 'saved' ? 'text-[#191919] font-extrabold' : 'text-[#7B8290]'
+            activeTab === 'saved' ? 'text-[#191919] font-extrabold' : 'text-[#4B5563]'
           }`}
         >
           <Bookmark className="h-5 w-5" />
@@ -510,7 +510,7 @@ export default function StudentDashboard({
         <button
           onClick={() => setActiveTab('orgs')}
           className={`flex flex-col items-center gap-1 cursor-pointer ${
-            activeTab === 'orgs' ? 'text-[#191919] font-extrabold' : 'text-[#7B8290]'
+            activeTab === 'orgs' ? 'text-[#191919] font-extrabold' : 'text-[#4B5563]'
           }`}
         >
           <Users className="h-5 w-5" />
@@ -520,7 +520,7 @@ export default function StudentDashboard({
         <button
           onClick={() => setActiveTab('profile')}
           className={`flex flex-col items-center gap-1 cursor-pointer ${
-            activeTab === 'profile' ? 'text-[#191919] font-extrabold' : 'text-[#7B8290]'
+            activeTab === 'profile' ? 'text-[#191919] font-extrabold' : 'text-[#4B5563]'
           }`}
         >
           <Home className="h-5 w-5" />

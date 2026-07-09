@@ -98,11 +98,11 @@ export default function EventCard({ event, onClick, onSave, isSaved = false }: E
             setIsSavedLocal(!isSavedLocal);
           }
         }}
-        className="absolute top-4 right-4 z-20 h-8 w-8 rounded-full bg-white/85 backdrop-blur-md border border-black/[0.05] flex items-center justify-center text-gray-400 hover:text-rose-500 hover:scale-110 active:scale-95 transition-all shadow-sm cursor-pointer"
+        className="absolute top-4 right-4 z-20 h-8 w-8 rounded-full bg-white/85 backdrop-blur-md border border-black/[0.05] flex items-center justify-center text-[#4B5563] hover:text-rose-500 hover:scale-110 active:scale-95 transition-all shadow-sm cursor-pointer"
       >
         <Heart 
           className={`h-4 w-4 transition-colors ${
-            activeSaved ? 'fill-rose-500 text-rose-500' : 'text-gray-400'
+            activeSaved ? 'fill-rose-500 text-rose-500' : 'text-[#4B5563]'
           }`} 
         />
       </button>
@@ -117,7 +117,7 @@ export default function EventCard({ event, onClick, onSave, isSaved = false }: E
 
           {/* Organization Name with rosette badge */}
           {!isPromo && (event as Event).organizationName && (
-            <div className="flex items-center gap-1 text-[10px] text-[#4F5666] font-bold uppercase tracking-wider">
+            <div className="flex items-center gap-1 text-[10px] text-[#374151] font-bold uppercase tracking-wider">
               <span>{(event as Event).organizationName}</span>
               {isOrgVerified && <VerifiedBadge className="h-3.5 w-3.5" />}
             </div>
@@ -129,13 +129,13 @@ export default function EventCard({ event, onClick, onSave, isSaved = false }: E
           </h3>
           
           {/* Location Row */}
-          <div className="flex items-center gap-1.5 text-[#7B8290] text-xs font-semibold">
-            <MapPin className="h-3.5 w-3.5 shrink-0 text-[#7B8290]" />
+          <div className="flex items-center gap-1.5 text-[#4B5563] text-xs font-semibold">
+            <MapPin className="h-3.5 w-3.5 shrink-0 text-[#4B5563]" />
             <span className="truncate">{isPromo ? (event as Promotion).organizer : (event as Event).location}</span>
           </div>
 
           {/* Description */}
-          <p className="text-[#4F5666] text-xs leading-relaxed font-light line-clamp-2 pt-1">
+          <p className="text-[#374151] text-xs leading-relaxed font-light line-clamp-2 pt-1">
             {event.description || `Join us for the ${event.title}, happening soon.`}
           </p>
         </div>
@@ -148,7 +148,7 @@ export default function EventCard({ event, onClick, onSave, isSaved = false }: E
               {[
                 { initials: 'MC', bg: '#BDFB04', color: '#191919' },
                 { initials: 'SJ', bg: '#191919', color: '#fff' },
-                { initials: 'AR', bg: '#4F5666', color: '#fff' },
+                { initials: 'AR', bg: '#374151', color: '#fff' },
               ].map((av) => (
                 <div
                   key={av.initials}
@@ -159,7 +159,7 @@ export default function EventCard({ event, onClick, onSave, isSaved = false }: E
                 </div>
               ))}
             </div>
-            <span className="text-[#7B8290] text-[10px] font-bold whitespace-nowrap">
+            <span className="text-[#4B5563] text-[10px] font-bold whitespace-nowrap">
               +{goingCount} going
             </span>
           </div>

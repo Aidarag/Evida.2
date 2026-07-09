@@ -62,7 +62,7 @@ export default function LoginPage() {
 
       {/* Back to Home Button */}
       {step === 'role-selection' && (
-        <Link href="/" className="absolute top-8 left-8 text-[#4F5666] hover:text-[#191919] flex items-center gap-2 transition-colors font-bold text-xs uppercase tracking-wider">
+        <Link href="/" className="absolute top-8 left-8 text-[#374151] hover:text-[#191919] flex items-center gap-2 transition-colors font-bold text-xs uppercase tracking-wider">
           <ArrowLeft className="h-4 w-4" /> Back to Home
         </Link>
       )}
@@ -92,7 +92,7 @@ export default function LoginPage() {
                       <h1 className="text-xl font-extrabold text-[#191919] uppercase tracking-wider" style={{ fontFamily: 'var(--font-display)' }}>
                         Enter Evida
                       </h1>
-                      <p className="text-xs text-[#4F5666] mt-1.5">
+                      <p className="text-xs text-[#374151] mt-1.5">
                         Choose your access level to continue
                       </p>
                     </div>
@@ -112,10 +112,10 @@ export default function LoginPage() {
                           </div>
                           <div>
                             <p className="text-sm font-bold text-[#191919] uppercase tracking-wide">Student</p>
-                            <p className="text-xs text-[#4F5666] mt-0.5 max-w-[220px]">Join events, coordinate clubs, and verify tickets.</p>
+                            <p className="text-xs text-[#374151] mt-0.5 max-w-[220px]">Join events, coordinate clubs, and verify tickets.</p>
                           </div>
                         </div>
-                        <ArrowRight className="h-5 w-5 text-[#4F5666] group-hover:text-[#BDFB04] group-hover:translate-x-1 transition-all" />
+                        <ArrowRight className="h-5 w-5 text-[#374151] group-hover:text-[#BDFB04] group-hover:translate-x-1 transition-all" />
                       </button>
 
                       {/* School Option */}
@@ -130,10 +130,10 @@ export default function LoginPage() {
                           </div>
                           <div>
                             <p className="text-sm font-bold text-[#191919] uppercase tracking-wide">School / Administration</p>
-                            <p className="text-xs text-[#4F5666] mt-0.5 max-w-[220px]">Review event request queues, view analytics, and verify hosts.</p>
+                            <p className="text-xs text-[#374151] mt-0.5 max-w-[220px]">Review event request queues, view analytics, and verify hosts.</p>
                           </div>
                         </div>
-                        <ArrowRight className="h-5 w-5 text-[#4F5666] group-hover:text-[#191919] group-hover:translate-x-1 transition-all" />
+                        <ArrowRight className="h-5 w-5 text-[#374151] group-hover:text-[#191919] group-hover:translate-x-1 transition-all" />
                       </button>
                     </div>
 
@@ -144,7 +144,7 @@ export default function LoginPage() {
                     )}
 
                     <div className="pt-4 border-t border-black/[0.06] text-center">
-                      <p className="text-xs text-[#4F5666]">
+                      <p className="text-xs text-[#374151]">
                         Don&apos;t have an account?{' '}
                         <Link href="/signup" className="text-[#191919] font-bold underline decoration-2 decoration-[#BDFB04] hover:text-[#191919]/80 transition-all">
                           Sign up here
@@ -171,7 +171,7 @@ export default function LoginPage() {
                     <h2 className="text-xl font-extrabold text-[#191919] uppercase tracking-wider" style={{ fontFamily: 'var(--font-display)' }}>
                       Welcome to Evida
                     </h2>
-                    <p className="text-xs text-[#4F5666]">
+                    <p className="text-xs text-[#374151]">
                       Navigating to your {role === 'student' ? 'Student' : 'Administrator'} dashboard...
                     </p>
                   </div>

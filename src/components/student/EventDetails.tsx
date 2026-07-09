@@ -83,7 +83,7 @@ export default function EventDetails({
               {event.title}
             </h2>
             {event.organizationName && (
-              <p className="text-xs font-bold text-[#4F5666] mt-1.5 uppercase bg-white/90 px-3 py-1 rounded-xl w-fit shadow-sm border border-black/5 flex items-center">
+              <p className="text-xs font-bold text-[#374151] mt-1.5 uppercase bg-white/90 px-3 py-1 rounded-xl w-fit shadow-sm border border-black/5 flex items-center">
                 Hosted by {event.organizationName}
                 {isOrgVerified && <VerifiedBadge className="h-3.5 w-3.5 ml-1" />}
               </p>
@@ -99,26 +99,26 @@ export default function EventDetails({
             <div className="flex items-start gap-3 rounded-2xl bg-[#DFDED7]/25 p-4 border border-black/[0.04]">
               <Calendar className="h-4.5 w-4.5 text-[#191919] shrink-0" />
               <div>
-                <p className="font-bold text-[#7B8290] uppercase tracking-wider">Date & Time</p>
+                <p className="font-bold text-[#4B5563] uppercase tracking-wider">Date & Time</p>
                 <p className="mt-1 font-bold text-[#191919] uppercase">{event.date}</p>
-                <p className="text-[10px] text-[#4F5666] mt-0.5">{event.time} {event.endTime ? `to ${event.endTime}` : ''}</p>
+                <p className="text-[10px] text-[#374151] mt-0.5">{event.time} {event.endTime ? `to ${event.endTime}` : ''}</p>
               </div>
             </div>
 
             <div className="flex items-start gap-3 rounded-2xl bg-[#DFDED7]/25 p-4 border border-black/[0.04]">
               <MapPin className="h-4.5 w-4.5 text-[#191919] shrink-0" />
               <div>
-                <p className="font-bold text-[#7B8290] uppercase tracking-wider">Location Venue</p>
+                <p className="font-bold text-[#4B5563] uppercase tracking-wider">Location Venue</p>
                 <p className="mt-1 font-bold text-[#191919] uppercase">{event.location}</p>
-                <p className="text-[10px] text-[#4F5666] mt-0.5 capitalize">{event.locationType} Space</p>
+                <p className="text-[10px] text-[#374151] mt-0.5 capitalize">{event.locationType} Space</p>
               </div>
             </div>
           </div>
 
           {/* Description */}
           <div className="space-y-2">
-            <h4 className="text-[10px] font-bold text-[#7B8290] uppercase tracking-wider">About the experience</h4>
-            <p className="text-xs text-[#4F5666] leading-relaxed bg-[#DFDED7]/10 p-4 rounded-2xl border border-black/[0.04]">
+            <h4 className="text-[10px] font-bold text-[#4B5563] uppercase tracking-wider">About the experience</h4>
+            <p className="text-xs text-[#374151] leading-relaxed bg-[#DFDED7]/10 p-4 rounded-2xl border border-black/[0.04]">
               {event.description}
             </p>
           </div>
@@ -128,7 +128,7 @@ export default function EventDetails({
             <Info className="h-5 w-5 text-[#191919] shrink-0 mt-0.5" />
             <div>
               <p className="font-bold text-[#191919] uppercase">Review classification: {event.complexityType} queue</p>
-              <p className="text-[10px] text-[#4F5666] mt-0.5">
+              <p className="text-[10px] text-[#374151] mt-0.5">
                 {event.complexityType === 'quick' 
                   ? 'Quick event details. Auto-routed to fast approval queue for prompt publishing.' 
                   : event.complexityType === 'complex'
@@ -141,7 +141,7 @@ export default function EventDetails({
           {/* Metadata: attendees summary */}
           <div className="flex items-center justify-between border-t border-black/[0.06] pt-4 text-xs">
             <div className="flex items-center gap-3">
-              <span className="flex items-center gap-1 text-[#4F5666] font-semibold">
+              <span className="flex items-center gap-1 text-[#374151] font-semibold">
                 <Users className="h-4 w-4 text-[#191919]" />
                 <strong className="text-[#191919]">{event.attendees.length}</strong> attending
               </span>

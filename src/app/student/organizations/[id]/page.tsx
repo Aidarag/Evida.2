@@ -31,9 +31,9 @@ export default function OrganizationProfilePage() {
   if (!org) {
     return (
       <div className="min-h-screen bg-[#DFDED7] flex flex-col items-center justify-center p-6 text-center">
-        <Building className="h-16 w-16 text-[#7B8290] mb-4" />
+        <Building className="h-16 w-16 text-[#4B5563] mb-4" />
         <h2 className="text-xl font-extrabold text-[#191919] uppercase tracking-tight">Organization Not Found</h2>
-        <p className="text-xs text-[#4F5666] mt-2 max-w-sm">The organization page you are looking for does not exist or may have been deleted.</p>
+        <p className="text-xs text-[#374151] mt-2 max-w-sm">The organization page you are looking for does not exist or may have been deleted.</p>
         <button 
           onClick={() => router.push('/student/dashboard')}
           className="mt-6 inline-flex items-center gap-2 px-5 py-2.5 bg-[#BDFB04] text-[#191919] font-bold text-xs uppercase tracking-wider rounded-full shadow-md shadow-[#BDFB04]/25 hover:bg-[#d1fa3c]"
@@ -62,7 +62,7 @@ export default function OrganizationProfilePage() {
           <ArrowLeft className="h-4.5 w-4.5" />
         </button>
         <div className="truncate">
-          <span className="text-[9px] font-bold text-[#7B8290] uppercase tracking-widest block">CAMPUS DIRECTORY</span>
+          <span className="text-[9px] font-bold text-[#4B5563] uppercase tracking-widest block">CAMPUS DIRECTORY</span>
           <h1 className="text-sm font-extrabold text-[#191919] uppercase tracking-tight truncate flex items-center">
             {org.name}
             {org.verified && <VerifiedBadge className="h-3.5 w-3.5" />}
@@ -99,11 +99,11 @@ export default function OrganizationProfilePage() {
                   {org.verified && <VerifiedBadge className="h-5 w-5" />}
                 </h2>
               </div>
-              <p className="text-xs text-[#4F5666] leading-relaxed max-w-xl">
+              <p className="text-xs text-[#374151] leading-relaxed max-w-xl">
                 {org.description || 'Welcome to our official campus organization page. Follow us to stay updated with our upcoming student experiences.'}
               </p>
               
-              <div className="flex flex-wrap items-center gap-4 text-[10px] font-bold text-[#7B8290] pt-1 uppercase">
+              <div className="flex flex-wrap items-center gap-4 text-[10px] font-bold text-[#4B5563] pt-1 uppercase">
                 <span className="flex items-center gap-1">
                   <Users className="h-3.5 w-3.5 text-[#191919]" />
                   {org.members.length} members
@@ -126,7 +126,7 @@ export default function OrganizationProfilePage() {
           </div>
 
           {/* Tab Selector */}
-          <div className="flex px-6 border-t border-black/[0.06] text-xs font-bold text-[#7B8290] bg-slate-50/50">
+          <div className="flex px-6 border-t border-black/[0.06] text-xs font-bold text-[#4B5563] bg-slate-50/50">
             {[
               { id: 'home' as const, label: 'Home' },
               { id: 'events' as const, label: `Events (${orgEvents.length})` },
@@ -160,17 +160,17 @@ export default function OrganizationProfilePage() {
                 
                 {/* Highlights / About */}
                 <div className="bg-white rounded-[24px] border border-black/[0.06] p-6 space-y-4 shadow-sm text-left">
-                  <h3 className="text-xs font-extrabold tracking-widest text-[#7B8290] uppercase">// About Us</h3>
-                  <p className="text-xs text-[#4F5666] leading-relaxed">
+                  <h3 className="text-xs font-extrabold tracking-widest text-[#4B5563] uppercase">// About Us</h3>
+                  <p className="text-xs text-[#374151] leading-relaxed">
                     {org.description || 'No description provided by this campus organization.'}
                   </p>
                   
                   <div className="pt-4 border-t border-black/[0.04] grid gap-3 sm:grid-cols-2 text-xs">
-                    <div className="flex items-center gap-2 text-[#4F5666]">
+                    <div className="flex items-center gap-2 text-[#374151]">
                       <Globe className="h-4 w-4 text-[#191919]" />
                       <span>{org.name.toLowerCase().replace(/\s+/g, '')}.university.edu</span>
                     </div>
-                    <div className="flex items-center gap-2 text-[#4F5666]">
+                    <div className="flex items-center gap-2 text-[#374151]">
                       <Mail className="h-4 w-4 text-[#191919]" />
                       <span>contact@{org.name.toLowerCase().replace(/\s+/g, '')}.com</span>
                     </div>
@@ -179,7 +179,7 @@ export default function OrganizationProfilePage() {
 
                 {/* Team Roster */}
                 <div className="bg-white rounded-[24px] border border-black/[0.06] p-6 space-y-4 shadow-sm text-left">
-                  <h3 className="text-xs font-extrabold tracking-widest text-[#7B8290] uppercase">
+                  <h3 className="text-xs font-extrabold tracking-widest text-[#4B5563] uppercase">
                     // Team Roster ({org.members.length})
                   </h3>
                   <div className="grid gap-3 sm:grid-cols-2">
@@ -190,7 +190,7 @@ export default function OrganizationProfilePage() {
                         </div>
                         <div>
                           <p className="text-xs font-bold text-[#191919] uppercase">{member}</p>
-                          <p className="text-[9px] text-[#7B8290] font-semibold tracking-wider">
+                          <p className="text-[9px] text-[#4B5563] font-semibold tracking-wider">
                             {idx === 0 ? 'President' : idx === 1 ? 'Vice President' : 'Team Member'}
                           </p>
                         </div>
@@ -204,7 +204,7 @@ export default function OrganizationProfilePage() {
               {/* Right Panel: Upcoming Event Highlights list */}
               <div className="md:col-span-1 space-y-6 text-left">
                 <div className="bg-white rounded-[24px] border border-black/[0.06] p-6 space-y-4 shadow-sm">
-                  <h3 className="text-xs font-extrabold tracking-widest text-[#7B8290] uppercase">// NEXT HIGHLIGHT</h3>
+                  <h3 className="text-xs font-extrabold tracking-widest text-[#4B5563] uppercase">// NEXT HIGHLIGHT</h3>
                   {orgEvents.length > 0 ? (
                     <div 
                       onClick={() => router.push(`/events/${orgEvents[0].id}`)}
@@ -215,7 +215,7 @@ export default function OrganizationProfilePage() {
                         <div className="absolute inset-0 bg-gradient-to-t from-white via-transparent to-transparent z-10" />
                       </div>
                       <div>
-                        <span className="text-[9px] font-bold text-[#7B8290] uppercase tracking-wide block">
+                        <span className="text-[9px] font-bold text-[#4B5563] uppercase tracking-wide block">
                           {orgEvents[0].date}
                         </span>
                         <h4 className="text-sm font-bold text-[#191919] group-hover:underline uppercase mt-1 leading-snug line-clamp-1">
@@ -224,7 +224,7 @@ export default function OrganizationProfilePage() {
                       </div>
                     </div>
                   ) : (
-                    <div className="py-6 text-center text-xs text-[#7B8290] italic">
+                    <div className="py-6 text-center text-xs text-[#4B5563] italic">
                       No upcoming experiences listed.
                     </div>
                   )}
@@ -237,12 +237,12 @@ export default function OrganizationProfilePage() {
           {/* EVENTS TAB */}
           {activeTab === 'events' && (
             <div className="space-y-4 text-left">
-              <h3 className="text-xs font-extrabold tracking-widest text-[#7B8290] uppercase">// Experiences Hosted By Members</h3>
+              <h3 className="text-xs font-extrabold tracking-widest text-[#4B5563] uppercase">// Experiences Hosted By Members</h3>
               {orgEvents.length === 0 ? (
                 <div className="bg-white rounded-[24px] border border-black/[0.06] p-12 text-center shadow-sm">
-                  <Calendar className="h-10 w-10 text-[#7B8290] mx-auto mb-3" />
+                  <Calendar className="h-10 w-10 text-[#4B5563] mx-auto mb-3" />
                   <p className="text-xs font-bold text-[#191919] uppercase">No events discovered</p>
-                  <p className="text-[11px] text-[#4F5666] mt-1">Check back later for updates on upcoming group hosts.</p>
+                  <p className="text-[11px] text-[#374151] mt-1">Check back later for updates on upcoming group hosts.</p>
                 </div>
               ) : (
                 <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -267,19 +267,19 @@ export default function OrganizationProfilePage() {
           {activeTab === 'about' && (
             <div className="bg-white rounded-[28px] border border-black/[0.06] p-6 space-y-6 shadow-sm text-left">
               <div className="space-y-2">
-                <h3 className="text-xs font-extrabold tracking-widest text-[#7B8290] uppercase">// Organization Profile Overview</h3>
-                <p className="text-xs text-[#4F5666] leading-relaxed leading-relaxed">
+                <h3 className="text-xs font-extrabold tracking-widest text-[#4B5563] uppercase">// Organization Profile Overview</h3>
+                <p className="text-xs text-[#374151] leading-relaxed leading-relaxed">
                   Welcome to the LinkedIn-inspired profile directory page for the {org.name}. Here, you can search and access comprehensive listings of all active campus events and checkouts created by our verified team leaders and member roster.
                 </p>
               </div>
 
               <div className="grid gap-4 border-t border-black/[0.06] pt-6 sm:grid-cols-2 text-xs">
                 <div className="space-y-1">
-                  <p className="text-[10px] font-bold text-[#7B8290] uppercase tracking-wide">Official Name</p>
+                  <p className="text-[10px] font-bold text-[#4B5563] uppercase tracking-wide">Official Name</p>
                   <p className="font-extrabold text-[#191919] uppercase">{org.name}</p>
                 </div>
                 <div className="space-y-1">
-                  <p className="text-[10px] font-bold text-[#7B8290] uppercase tracking-wide">Verification Badge</p>
+                  <p className="text-[10px] font-bold text-[#4B5563] uppercase tracking-wide">Verification Badge</p>
                   <p className="font-extrabold text-emerald-600 uppercase flex items-center">
                     {org.verified ? 'Verified Member checkmark' : 'Campus Registered'}
                     {org.verified && <VerifiedBadge className="h-4.5 w-4.5" />}

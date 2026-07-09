@@ -194,7 +194,7 @@ export default function CalendarPage() {
           </div>
 
           {/* Week Days Headers */}
-          <div className="grid grid-cols-7 gap-1.5 sm:gap-2 mb-4 text-center font-bold text-[9px] sm:text-[10px] tracking-widest text-[#4F5666] uppercase">
+          <div className="grid grid-cols-7 gap-1.5 sm:gap-2 mb-4 text-center font-bold text-[9px] sm:text-[10px] tracking-widest text-[#374151] uppercase">
             <span>Mon</span>
             <span>Tue</span>
             <span>Wed</span>
@@ -218,7 +218,7 @@ export default function CalendarPage() {
                       ? highlight 
                         ? `${highlight.bgColor} ${highlight.borderColor}`
                         : 'bg-white border-black/[0.04] hover:bg-black/[0.01] hover:border-black/15'
-                      : 'bg-black/[0.01] border-transparent text-[#7B8290] opacity-40'
+                      : 'bg-black/[0.01] border-transparent text-[#4B5563] opacity-40'
                     }
                   `}
                 >
@@ -258,14 +258,14 @@ export default function CalendarPage() {
                   <h4 className="font-bold text-xs sm:text-sm text-[#191919] uppercase tracking-wide" style={{ fontFamily: 'var(--font-display)' }}>
                     {evt.title}
                   </h4>
-                  <div className="flex flex-col gap-1 text-[11px] text-[#4F5666] font-medium">
+                  <div className="flex flex-col gap-1 text-[11px] text-[#374151] font-medium">
                     <span className="flex items-center gap-1"><Clock className="h-3.5 w-3.5" /> {evt.time || 'All Day'}</span>
                     <span className="flex items-center gap-1"><MapPin className="h-3.5 w-3.5" /> {evt.location || 'Campus'}</span>
                   </div>
                 </div>
               ))
             ) : (
-              <div className="py-12 text-center text-xs sm:text-sm text-[#7B8290] font-light">
+              <div className="py-12 text-center text-xs sm:text-sm text-[#4B5563] font-light">
                 No events scheduled for this day. Click another date on the calendar grid to inspect.
               </div>
             )}

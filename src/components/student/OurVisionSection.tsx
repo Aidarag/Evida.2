@@ -127,7 +127,7 @@ export default function OurVisionSection() {
                 </div>
 
                 {/* Description */}
-                <p className="text-[#4F5666] text-xs sm:text-sm leading-relaxed font-light pt-1">
+                <p className="text-[#374151] text-xs sm:text-sm leading-relaxed font-light pt-1">
                   {data.description}
                 </p>
               </motion.div>

@@ -108,8 +108,8 @@ export default function SchoolDashboard({
             <div className={`h-12 w-12 rounded-xl bg-gradient-to-tr ${event.coverImage} shrink-0 opacity-80`} />
             <div>
               <h4 className="text-xs font-bold text-[#191919] uppercase">{event.title}</h4>
-              <p className="text-[10px] text-[#7B8290] mt-0.5">
-                Host: <span className="font-semibold text-[#4F5666]">{event.organizationName || event.organizer}</span>
+              <p className="text-[10px] text-[#4B5563] mt-0.5">
+                Host: <span className="font-semibold text-[#374151]">{event.organizationName || event.organizer}</span>
               </p>
             </div>
           </div>
@@ -123,12 +123,12 @@ export default function SchoolDashboard({
           </span>
         </div>
 
-        <p className="text-[11px] text-[#4F5666] bg-[#DFDED7]/25 p-3 rounded-xl border border-black/[0.04] line-clamp-2">
+        <p className="text-[11px] text-[#374151] bg-[#DFDED7]/25 p-3 rounded-xl border border-black/[0.04] line-clamp-2">
           {event.description}
         </p>
 
         {/* Location & Time details */}
-        <div className="grid gap-2 sm:grid-cols-3 text-[10px] text-[#4F5666] uppercase font-bold pt-1">
+        <div className="grid gap-2 sm:grid-cols-3 text-[10px] text-[#374151] uppercase font-bold pt-1">
           <span className="flex items-center gap-1">
             <Calendar className="h-3.5 w-3.5 text-[#191919]" />
             {event.date} at {event.time}
@@ -154,13 +154,13 @@ export default function SchoolDashboard({
         {/* Review Comments Input */}
         <div className="flex flex-col sm:flex-row items-end gap-3 pt-3 border-t border-black/[0.06]">
           <div className="w-full space-y-1">
-            <label className="text-[9px] font-bold text-[#7B8290] uppercase tracking-wide">Review Comment</label>
+            <label className="text-[9px] font-bold text-[#4B5563] uppercase tracking-wide">Review Comment</label>
             <input
               type="text"
               placeholder="e.g. Venue verified / Rejection reason (required for rejection)"
               value={feedbackText[event.id] || ''}
               onChange={(e) => setFeedbackText({ ...feedbackText, [event.id]: e.target.value })}
-              className="w-full rounded-xl border border-black/10 bg-black/[0.01] px-3 py-2 text-xs text-[#191919] placeholder-[#7B8290] focus:outline-none focus:border-[#BDFB04]"
+              className="w-full rounded-xl border border-black/10 bg-black/[0.01] px-3 py-2 text-xs text-[#191919] placeholder-[#4B5563] focus:outline-none focus:border-[#BDFB04]"
             />
           </div>
 
@@ -196,14 +196,14 @@ export default function SchoolDashboard({
             <Shield className="h-5 w-5 text-[#191919]" />
             School Administration Dashboard
           </h2>
-          <p className="text-xs text-[#4F5666] max-w-xl leading-relaxed">
+          <p className="text-xs text-[#374151] max-w-xl leading-relaxed">
             Moderate student submittals, register verified groups, and monitor real-time campus statistics.
           </p>
         </div>
       </div>
 
       {/* Sub-tab navigation */}
-      <div className="flex space-x-1 rounded-xl bg-[#DFDED7]/40 p-1 border border-black/[0.04] w-fit text-xs font-bold text-[#4F5666]">
+      <div className="flex space-x-1 rounded-xl bg-[#DFDED7]/40 p-1 border border-black/[0.04] w-fit text-xs font-bold text-[#374151]">
         <button
           onClick={() => setSubTab('overview')}
           className={`rounded-lg px-4 py-2 transition-all cursor-pointer ${
@@ -246,29 +246,29 @@ export default function SchoolDashboard({
           <div className="space-y-6">
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
               <div className="rounded-[24px] border border-black/[0.06] bg-white p-5 space-y-1 shadow-sm">
-                <span className="text-[9px] font-bold text-[#7B8290] uppercase tracking-widest block">Total Postings</span>
+                <span className="text-[9px] font-bold text-[#4B5563] uppercase tracking-widest block">Total Postings</span>
                 <p className="text-2xl font-bold text-[#191919]">{totalPostings}</p>
-                <p className="text-[10px] text-[#4F5666]">
+                <p className="text-[10px] text-[#374151]">
                   <span className="text-emerald-600 font-semibold">{approvedEvents.length}</span> published • <span className="text-rose-600 font-semibold">{rejectedEvents.length}</span> rejected
                 </p>
               </div>
 
               <div className="rounded-[24px] border border-black/[0.06] bg-white p-5 space-y-1 shadow-sm">
-                <span className="text-[9px] font-bold text-[#7B8290] uppercase tracking-widest block">Pending Reviews</span>
+                <span className="text-[9px] font-bold text-[#4B5563] uppercase tracking-widest block">Pending Reviews</span>
                 <p className="text-2xl font-bold text-[#191919]">{pendingEvents.length}</p>
-                <p className="text-[10px] text-[#4F5666]">Needs administrative actions</p>
+                <p className="text-[10px] text-[#374151]">Needs administrative actions</p>
               </div>
 
               <div className="rounded-[24px] border border-black/[0.06] bg-white p-5 space-y-1 shadow-sm">
-                <span className="text-[9px] font-bold text-[#7B8290] uppercase tracking-widest block">Total RSVPs</span>
+                <span className="text-[9px] font-bold text-[#4B5563] uppercase tracking-widest block">Total RSVPs</span>
                 <p className="text-2xl font-bold text-[#191919]">{totalRSVPs}</p>
-                <p className="text-[10px] text-[#4F5666]">Across all experiences</p>
+                <p className="text-[10px] text-[#374151]">Across all experiences</p>
               </div>
 
               <div className="rounded-[24px] border border-black/[0.06] bg-white p-5 space-y-1 shadow-sm">
-                <span className="text-[9px] font-bold text-[#7B8290] uppercase tracking-widest block">Groups Registered</span>
+                <span className="text-[9px] font-bold text-[#4B5563] uppercase tracking-widest block">Groups Registered</span>
                 <p className="text-2xl font-bold text-[#191919]">{organizations.length}</p>
-                <p className="text-[10px] text-[#4F5666]">
+                <p className="text-[10px] text-[#374151]">
                   <span className="text-emerald-600 font-semibold">{organizations.filter(o => o.verified).length}</span> verified groups
                 </p>
               </div>
@@ -278,14 +278,14 @@ export default function SchoolDashboard({
             <div className="grid gap-6 md:grid-cols-2">
               {/* Popular categories */}
               <div className="rounded-[24px] border border-black/[0.06] bg-white p-6 space-y-4 shadow-sm">
-                <h3 className="text-xs font-bold text-[#4F5666] uppercase tracking-widest flex items-center gap-1.5">
+                <h3 className="text-xs font-bold text-[#374151] uppercase tracking-widest flex items-center gap-1.5">
                   <Layers className="h-4 w-4 text-[#191919]" />
                   Event Queues Split
                 </h3>
                 
                 <div className="space-y-3 text-xs">
                   <div className="space-y-1.5">
-                    <div className="flex justify-between font-bold text-[#4F5666]">
+                    <div className="flex justify-between font-bold text-[#374151]">
                       <span>Fast Track Queue (Quick)</span>
                       <span>{events.filter(e => e.complexityType === 'quick').length}</span>
                     </div>
@@ -298,7 +298,7 @@ export default function SchoolDashboard({
                   </div>
 
                   <div className="space-y-1.5">
-                    <div className="flex justify-between font-bold text-[#4F5666]">
+                    <div className="flex justify-between font-bold text-[#374151]">
                       <span>Standard Queue</span>
                       <span>{events.filter(e => e.complexityType === 'standard').length}</span>
                     </div>
@@ -311,7 +311,7 @@ export default function SchoolDashboard({
                   </div>
 
                   <div className="space-y-1.5">
-                    <div className="flex justify-between font-bold text-[#4F5666]">
+                    <div className="flex justify-between font-bold text-[#374151]">
                       <span>Complex Queue (High Oversight)</span>
                       <span>{events.filter(e => e.complexityType === 'complex').length}</span>
                     </div>
@@ -327,7 +327,7 @@ export default function SchoolDashboard({
 
               {/* Group activity */}
               <div className="rounded-[24px] border border-black/[0.06] bg-white p-6 space-y-4 shadow-sm">
-                <h3 className="text-xs font-bold text-[#4F5666] uppercase tracking-widest flex items-center gap-1.5">
+                <h3 className="text-xs font-bold text-[#374151] uppercase tracking-widest flex items-center gap-1.5">
                   <BarChart3 className="h-4 w-4 text-[#191919]" />
                   Active Organizations
                 </h3>
@@ -335,7 +335,7 @@ export default function SchoolDashboard({
                 <div className="space-y-3 text-xs">
                   {organizations.slice(0, 3).map((org) => (
                     <div key={org.id} className="flex items-center justify-between gap-4">
-                      <span className="font-bold text-[#4F5666] w-1/2 truncate uppercase">{org.name}</span>
+                      <span className="font-bold text-[#374151] w-1/2 truncate uppercase">{org.name}</span>
                       <div className="w-1/2 flex items-center gap-3">
                         <div className="h-2 w-full bg-slate-100 rounded-full overflow-hidden border border-black/5">
                           <div
@@ -358,7 +358,7 @@ export default function SchoolDashboard({
           <div className="space-y-6">
             
             {/* Queue switch */}
-            <div className="flex space-x-2 border-b border-black/[0.06] pb-3 text-xs font-bold text-[#7B8290]">
+            <div className="flex space-x-2 border-b border-black/[0.06] pb-3 text-xs font-bold text-[#4B5563]">
               <button
                 onClick={() => setActiveQueue('fast')}
                 className={`pb-3 border-b-2 transition-colors cursor-pointer ${
@@ -389,21 +389,21 @@ export default function SchoolDashboard({
             <div className="space-y-4">
               {activeQueue === 'fast' && (
                 fastQueue.length === 0 ? (
-                  <p className="text-xs text-[#7B8290] italic text-center py-10">Fast track queue cleared!</p>
+                  <p className="text-xs text-[#4B5563] italic text-center py-10">Fast track queue cleared!</p>
                 ) : (
                   fastQueue.map((event) => renderApprovalCard(event))
                 )
               )}
               {activeQueue === 'standard' && (
                 standardQueue.length === 0 ? (
-                  <p className="text-xs text-[#7B8290] italic text-center py-10">Standard queue cleared!</p>
+                  <p className="text-xs text-[#4B5563] italic text-center py-10">Standard queue cleared!</p>
                 ) : (
                   standardQueue.map((event) => renderApprovalCard(event))
                 )
               )}
               {activeQueue === 'complex' && (
                 complexQueue.length === 0 ? (
-                  <p className="text-xs text-[#7B8290] italic text-center py-10">Complex queue cleared!</p>
+                  <p className="text-xs text-[#4B5563] italic text-center py-10">Complex queue cleared!</p>
                 ) : (
                   complexQueue.map((event) => renderApprovalCard(event))
                 )
@@ -419,7 +419,7 @@ export default function SchoolDashboard({
             
             {/* Registered list */}
             <div className="md:col-span-2 rounded-[24px] border border-black/[0.06] bg-white p-6 space-y-4 shadow-sm">
-              <h4 className="text-xs font-bold text-[#4F5666] uppercase tracking-widest">Registered Groups ({organizations.length})</h4>
+              <h4 className="text-xs font-bold text-[#374151] uppercase tracking-widest">Registered Groups ({organizations.length})</h4>
               <div className="space-y-3">
                 {organizations.map((org) => (
                   <div
@@ -432,7 +432,7 @@ export default function SchoolDashboard({
                       </div>
                       <div>
                         <h5 className="text-xs font-bold text-[#191919] uppercase">{org.name}</h5>
-                        <p className="text-[10px] text-[#7B8290]">Registered by student members</p>
+                        <p className="text-[10px] text-[#4B5563]">Registered by student members</p>
                       </div>
                     </div>
 
@@ -458,36 +458,36 @@ export default function SchoolDashboard({
                   <Building className="h-4 w-4 text-[#191919]" />
                   Create Club Profile
                 </h4>
-                <p className="text-[10px] text-[#7B8290]">Establish verified campus group files instantly.</p>
+                <p className="text-[10px] text-[#4B5563]">Establish verified campus group files instantly.</p>
               </div>
 
               <form onSubmit={handleOrgSubmit} className="space-y-4 pt-2">
                 <div className="space-y-1.5">
-                  <label className="text-[10px] font-bold text-[#4F5666] uppercase tracking-wide">Club Title</label>
+                  <label className="text-[10px] font-bold text-[#374151] uppercase tracking-wide">Club Title</label>
                   <input
                     type="text"
                     required
                     value={orgName}
                     onChange={(e) => setOrgName(e.target.value)}
                     placeholder="e.g. Hiking Association"
-                    className="w-full rounded-xl border border-black/10 bg-black/[0.01] px-3 py-2 text-xs text-[#191919] placeholder-[#7B8290] focus:outline-none focus:border-[#BDFB04]"
+                    className="w-full rounded-xl border border-black/10 bg-black/[0.01] px-3 py-2 text-xs text-[#191919] placeholder-[#4B5563] focus:outline-none focus:border-[#BDFB04]"
                   />
                 </div>
 
                 <div className="space-y-1.5">
-                  <label className="text-[10px] font-bold text-[#4F5666] uppercase tracking-wide">Description</label>
+                  <label className="text-[10px] font-bold text-[#374151] uppercase tracking-wide">Description</label>
                   <textarea
                     required
                     rows={3}
                     value={orgDesc}
                     onChange={(e) => setOrgDesc(e.target.value)}
                     placeholder="Mission statement..."
-                    className="w-full rounded-xl border border-black/10 bg-black/[0.01] px-3 py-2 text-xs text-[#191919] placeholder-[#7B8290] focus:outline-none focus:border-[#BDFB04] resize-none"
+                    className="w-full rounded-xl border border-black/10 bg-black/[0.01] px-3 py-2 text-xs text-[#191919] placeholder-[#4B5563] focus:outline-none focus:border-[#BDFB04] resize-none"
                   />
                 </div>
 
                 <div className="space-y-1.5">
-                  <label className="text-[10px] font-bold text-[#4F5666] uppercase tracking-wide">Color Scheme</label>
+                  <label className="text-[10px] font-bold text-[#374151] uppercase tracking-wide">Color Scheme</label>
                   <select
                     value={orgColor}
                     onChange={(e) => setOrgColor(e.target.value)}
@@ -516,7 +516,7 @@ export default function SchoolDashboard({
         {subTab === 'featured' && (
           /* Featured Manager layout */
           <div className="rounded-[24px] border border-black/[0.06] bg-white p-6 space-y-4 shadow-sm">
-            <h4 className="text-xs font-bold text-[#4F5666] uppercase tracking-widest">Featured Events Selector</h4>
+            <h4 className="text-xs font-bold text-[#374151] uppercase tracking-widest">Featured Events Selector</h4>
             <div className="space-y-3 text-xs">
               {approvedEvents.map((event) => (
                 <div
@@ -527,7 +527,7 @@ export default function SchoolDashboard({
                     <div className={`h-8 w-8 rounded-lg bg-gradient-to-tr ${event.coverImage} shrink-0 opacity-80`} />
                     <div>
                       <h5 className="font-extrabold text-[#191919] uppercase">{event.title}</h5>
-                      <span className="text-[10px] text-[#7B8290] uppercase">
+                      <span className="text-[10px] text-[#4B5563] uppercase">
                         {event.date} • {event.location}
                       </span>
                     </div>
@@ -538,7 +538,7 @@ export default function SchoolDashboard({
                     className={`rounded-full px-4 py-1.5 text-[9px] font-bold uppercase tracking-wider border transition-colors cursor-pointer ${
                       event.featured
                         ? 'bg-[#BDFB04]/25 text-[#191919] border-[#BDFB04]/30'
-                        : 'bg-white border-black/10 text-[#4F5666] hover:bg-[#BDFB04]'
+                        : 'bg-white border-black/10 text-[#374151] hover:bg-[#BDFB04]'
                     }`}
                   >
                     {event.featured ? 'Featured' : 'Mark Featured'}

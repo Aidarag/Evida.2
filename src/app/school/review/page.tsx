@@ -37,7 +37,7 @@ export default function ReviewQueuePage() {
       <div className="space-y-6">
         <div>
           <h1 className="text-3xl font-extrabold text-[#191919] tracking-tight">Review Queue</h1>
-          <p className="text-sm text-[#4F5666] mt-1">Review and approve pending student activities.</p>
+          <p className="text-sm text-[#374151] mt-1">Review and approve pending student activities.</p>
         </div>
 
         {/* Tabs */}
@@ -66,14 +66,14 @@ export default function ReviewQueuePage() {
                   <div className="flex items-start justify-between">
                     <div>
                       <h3 className="text-lg font-bold text-[#191919]">{event.title}</h3>
-                      <p className="text-sm text-[#4F5666] mt-1 line-clamp-2">{event.description}</p>
+                      <p className="text-sm text-[#374151] mt-1 line-clamp-2">{event.description}</p>
                     </div>
                     <span className={`px-2.5 py-1 rounded-full border text-[10px] font-bold uppercase tracking-wider ${getComplexityColor(event.complexityType)}`}>
                       {event.complexityType}
                     </span>
                   </div>
 
-                  <div className="grid grid-cols-2 gap-4 text-xs font-medium text-[#4F5666]">
+                  <div className="grid grid-cols-2 gap-4 text-xs font-medium text-[#374151]">
                     <div className="flex items-center gap-2">
                       <Calendar className="h-4 w-4 text-[#191919]/70" />
                       {new Date(event.date).toLocaleDateString()} at {event.time}
@@ -115,7 +115,7 @@ export default function ReviewQueuePage() {
             </motion.div>
           )) : (
             <EmptyState
-              icon={<ClipboardList className="h-8 w-8 text-[#4F5666]" />}
+              icon={<ClipboardList className="h-8 w-8 text-[#374151]" />}
               title="Queue is empty"
               description="There are no pending events requiring review at this time."
             />

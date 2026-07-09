@@ -15,7 +15,7 @@ module.exports = {
         "surface": "#FFFFFF",
         // Text
         "primary-text": "#191919",
-        "secondary-text": "#4F5666",
+        "secondary-text": "#374151",
         // Borders
         "border": "rgba(25,25,25,0.08)",
         // Neon accent (reserved for CTA, FAB, QR)

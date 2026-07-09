@@ -53,7 +53,7 @@ export default function FAQPage() {
           <h1 className="text-4xl md:text-5xl font-extrabold uppercase tracking-tighter text-[#191919]" style={{ fontFamily: 'var(--font-display)' }}>
             Got Questions?<br />We got answers.
           </h1>
-          <p className="text-sm text-[#4F5666] max-w-lg mx-auto font-light leading-relaxed">
+          <p className="text-sm text-[#374151] max-w-lg mx-auto font-light leading-relaxed">
             Everything you need to know about Evida event scheduling, promotions, and verification guidelines.
           </p>
         </div>
@@ -78,7 +78,7 @@ export default function FAQPage() {
                     animate={{ rotate: isOpen ? 180 : 0 }}
                     transition={{ type: 'spring', stiffness: 200, damping: 20 }}
                     className={`h-8 w-8 rounded-full flex items-center justify-center shrink-0 transition-colors ${
-                      isOpen ? 'bg-[#BDFB04] text-[#191919]' : 'bg-black/5 text-[#4F5666]'
+                      isOpen ? 'bg-[#BDFB04] text-[#191919]' : 'bg-black/5 text-[#374151]'
                     }`}
                   >
                     <ChevronDown className="h-4 w-4" />
@@ -93,7 +93,7 @@ export default function FAQPage() {
                       exit={{ height: 0, opacity: 0 }}
                       transition={{ duration: 0.25, ease: 'easeInOut' }}
                     >
-                      <div className="px-6 pb-6 pt-1 text-xs text-[#4F5666] leading-relaxed font-light border-t border-black/[0.03]">
+                      <div className="px-6 pb-6 pt-1 text-xs text-[#374151] leading-relaxed font-light border-t border-black/[0.03]">
                         {item.answer}
                       </div>
                     </motion.div>
@@ -106,7 +106,7 @@ export default function FAQPage() {
 
         {/* Footer Accent */}
         <div className="pt-8 text-center">
-          <p className="text-[10px] font-bold text-[#4F5666] uppercase tracking-wider flex items-center justify-center gap-1.5">
+          <p className="text-[10px] font-bold text-[#374151] uppercase tracking-wider flex items-center justify-center gap-1.5">
             <Sparkles className="h-3.5 w-3.5 text-[#BDFB04]" />
             Still confused? Contact hello@evida.app
           </p>

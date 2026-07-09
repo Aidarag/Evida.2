@@ -31,7 +31,7 @@ interface AnalyticsViewProps {
 export default function AnalyticsView({ analytics }: AnalyticsViewProps) {
   if (!analytics) {
     return (
-      <div className="flex h-64 items-center justify-center rounded-2xl border border-white/5 bg-slate-900/10 text-slate-400">
+      <div className="flex h-64 items-center justify-center rounded-2xl border border-white/5 bg-slate-900/10 text-[#4B5563]">
         Loading engagement analytics...
       </div>
     );
@@ -56,7 +56,7 @@ export default function AnalyticsView({ analytics }: AnalyticsViewProps) {
           <div className="space-y-1">
             <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wide">Total Event Postings</span>
             <p className="text-2xl font-extrabold text-white">{analytics.totalEvents}</p>
-            <p className="text-[10px] text-slate-400">
+            <p className="text-[10px] text-[#4B5563]">
               <span className="text-emerald-400 font-semibold">{analytics.approvedCount}</span> approved • <span className="text-amber-400 font-semibold">{analytics.pendingCount}</span> pending
             </p>
           </div>
@@ -70,7 +70,7 @@ export default function AnalyticsView({ analytics }: AnalyticsViewProps) {
           <div className="space-y-1">
             <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wide">Total Student RSVPs</span>
             <p className="text-2xl font-extrabold text-white">{analytics.totalRSVPs}</p>
-            <p className="text-[10px] text-slate-400">
+            <p className="text-[10px] text-[#4B5563]">
               Across all approved campus events
             </p>
           </div>
@@ -84,7 +84,7 @@ export default function AnalyticsView({ analytics }: AnalyticsViewProps) {
           <div className="space-y-1">
             <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wide">Expressions of Interest</span>
             <p className="text-2xl font-extrabold text-white">{analytics.totalInterested}</p>
-            <p className="text-[10px] text-slate-400">
+            <p className="text-[10px] text-[#4B5563]">
               Students marking events as "Interested"
             </p>
           </div>
@@ -98,7 +98,7 @@ export default function AnalyticsView({ analytics }: AnalyticsViewProps) {
           <div className="space-y-1">
             <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wide">Event Approval Rate</span>
             <p className="text-2xl font-extrabold text-white">{approvalRate}%</p>
-            <p className="text-[10px] text-slate-400">
+            <p className="text-[10px] text-[#4B5563]">
               Ratio of approved to total requests
             </p>
           </div>
@@ -113,7 +113,7 @@ export default function AnalyticsView({ analytics }: AnalyticsViewProps) {
         {/* Participation SVG Area Chart */}
         <div className="md:col-span-2 rounded-2xl glass-card p-6 border border-white/5 space-y-4">
           <div className="flex items-center justify-between">
-            <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
+            <h3 className="text-xs font-bold text-[#4B5563] uppercase tracking-wider flex items-center gap-1.5">
               <TrendingUp className="h-4 w-4 text-indigo-400" />
               RSVP Participation Trend
             </h3>
@@ -193,7 +193,7 @@ export default function AnalyticsView({ analytics }: AnalyticsViewProps) {
 
         {/* Categorization & Scale distributions */}
         <div className="md:col-span-1 rounded-2xl glass-card p-6 border border-white/5 space-y-5">
-          <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
+          <h3 className="text-xs font-bold text-[#4B5563] uppercase tracking-wider flex items-center gap-1.5">
             <Layers className="h-4 w-4 text-indigo-400" />
             Classification Breakdown
           </h3>
@@ -268,7 +268,7 @@ export default function AnalyticsView({ analytics }: AnalyticsViewProps) {
                 />
               </div>
 
-              <div className="flex items-center gap-3 text-[10px] text-slate-400 font-semibold pt-1">
+              <div className="flex items-center gap-3 text-[10px] text-[#4B5563] font-semibold pt-1">
                 <span className="flex items-center gap-1">
                   <span className="h-2 w-2 rounded-full bg-emerald-500" /> Student
                 </span>
@@ -286,7 +286,7 @@ export default function AnalyticsView({ analytics }: AnalyticsViewProps) {
 
       {/* Top Organizations & Group stats */}
       <div className="rounded-2xl glass-card p-6 border border-white/5 space-y-4">
-        <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
+        <h3 className="text-xs font-bold text-[#4B5563] uppercase tracking-wider flex items-center gap-1.5">
           <BarChart3 className="h-4 w-4 text-indigo-400" />
           Top Organizations by Activity Volume
         </h3>

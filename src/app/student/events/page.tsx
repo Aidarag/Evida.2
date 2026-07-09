@@ -370,7 +370,7 @@ export default function StudentEventsFeed() {
                 className={`px-5 py-1.5 rounded-full text-[10px] font-extrabold uppercase tracking-wider transition-all cursor-pointer ${
                   selectedTab === 'campus' 
                     ? 'bg-[#BDFB04] text-[#191919] font-black' 
-                    : 'text-[#4F5666] hover:text-[#191919]'
+                    : 'text-[#374151] hover:text-[#191919]'
                 }`}
               >
                 Events
@@ -384,7 +384,7 @@ export default function StudentEventsFeed() {
                 className={`px-5 py-1.5 rounded-full text-[10px] font-extrabold uppercase tracking-wider transition-all cursor-pointer ${
                   selectedTab === 'promotions' 
                     ? 'bg-[#BDFB04] text-[#191919] font-black' 
-                    : 'text-[#4F5666] hover:text-[#191919]'
+                    : 'text-[#374151] hover:text-[#191919]'
                 }`}
               >
                 Promotions
@@ -406,7 +406,7 @@ export default function StudentEventsFeed() {
           <div className="space-y-4 pt-2">
             <div className="w-full md:w-96">
               <div className="relative">
-                <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
+                <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-[#4B5563]" />
                 <Input
                   placeholder="Search events, organizers, or keywords..."
                   className="pl-12 rounded-full"
@@ -419,7 +419,7 @@ export default function StudentEventsFeed() {
             {/* Matched Organizations */}
             {matchedOrgs.length > 0 && (
               <div className="space-y-2 mt-2 max-w-md">
-                <span className="text-[9px] font-bold text-[#4F5666] uppercase tracking-[0.2em] block pl-1">// MATCHED ORGANIZATIONS</span>
+                <span className="text-[9px] font-bold text-[#374151] uppercase tracking-[0.2em] block pl-1">// MATCHED ORGANIZATIONS</span>
                 {matchedOrgs.map(org => (
                   <div 
                     key={org.id} 
@@ -435,10 +435,10 @@ export default function StudentEventsFeed() {
                           {org.name}
                           {org.verified && <VerifiedBadge className="h-3 w-3 ml-1" />}
                         </h4>
-                        <p className="text-[9px] text-[#4F5666]">{org.members.length} members • Campus Group</p>
+                        <p className="text-[9px] text-[#374151]">{org.members.length} members • Campus Group</p>
                       </div>
                     </div>
-                    <span className="text-[9px] font-bold text-[#7B8290] group-hover:text-[#191919] transition-colors uppercase">View →</span>
+                    <span className="text-[9px] font-bold text-[#4B5563] group-hover:text-[#191919] transition-colors uppercase">View →</span>
                   </div>
                 ))}
               </div>
@@ -446,7 +446,7 @@ export default function StudentEventsFeed() {
 
             {/* Category Filters */}
             <div className="space-y-3 pt-1">
-              <span className="text-[9px] font-bold text-[#4F5666] uppercase tracking-[0.2em] block pl-1">// Category</span>
+              <span className="text-[9px] font-bold text-[#374151] uppercase tracking-[0.2em] block pl-1">// Category</span>
               <div className="flex gap-2.5 overflow-x-auto pb-3 scrollbar-hide -mx-6 px-6 md:mx-0 md:px-0">
                 {categories.map((cat) => {
                   const isActive = selectedCategory === cat;
@@ -460,7 +460,7 @@ export default function StudentEventsFeed() {
                       className={`relative shrink-0 px-5.5 py-2.5 h-9.5 rounded-full text-[10px] font-extrabold uppercase tracking-wider cursor-pointer select-none transition-colors duration-200 ${
                         isActive
                           ? 'text-[#191919]'
-                          : 'bg-black/[0.02] border border-black/[0.06] text-[#4F5666] hover:bg-black/[0.04] hover:text-[#191919]'
+                          : 'bg-black/[0.02] border border-black/[0.06] text-[#374151] hover:bg-black/[0.04] hover:text-[#191919]'
                       }`}
                     >
                       {isActive && (
@@ -867,7 +867,7 @@ export default function StudentEventsFeed() {
             {/* Mobile Bottom Navigation Bar (Hidden on Desktop) */}
             <div className="md:hidden fixed bottom-4 left-4 right-4 z-50 max-w-md mx-auto">
               <nav className="flex items-center justify-around rounded-full bg-white/90 backdrop-blur-2xl border border-black/[0.04] px-2 py-2 shadow-[var(--shadow-premium-lg)]">
-                <Link href="/student/dashboard" className="flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-2xl text-gray-400 hover:text-[#191919]">
+                <Link href="/student/dashboard" className="flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-2xl text-[#4B5563] hover:text-[#191919]">
                   <Home className="h-5 w-5" />
                   <span className="text-[9px] font-bold uppercase tracking-wider">Home</span>
                 </Link>
@@ -880,11 +880,11 @@ export default function StudentEventsFeed() {
                     <Plus className="h-6 w-6 text-[#191919] stroke-[2.5]" />
                   </div>
                 </Link>
-                <Link href="/student/saved" className="flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-2xl text-gray-400 hover:text-[#191919]">
+                <Link href="/student/saved" className="flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-2xl text-[#4B5563] hover:text-[#191919]">
                   <Bookmark className="h-5 w-5" />
                   <span className="text-[9px] font-bold uppercase tracking-wider">Saved</span>
                 </Link>
-                <Link href="/student/profile" className="flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-2xl text-gray-400 hover:text-[#191919]">
+                <Link href="/student/profile" className="flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-2xl text-[#4B5563] hover:text-[#191919]">
                   <User className="h-5 w-5" />
                   <span className="text-[9px] font-bold uppercase tracking-wider">Profile</span>
                 </Link>
@@ -894,7 +894,7 @@ export default function StudentEventsFeed() {
         </div>
       ) : (
         <EmptyState
-          icon={<Compass className="h-8 w-8 text-gray-400" />}
+          icon={<Compass className="h-8 w-8 text-[#4B5563]" />}
           title="No events found"
           description="Try adjusting your search or category filters to discover campus activities."
         />
@@ -928,7 +928,7 @@ export default function StudentEventsFeed() {
           </div>
         ) : (
           <EmptyState
-            icon={<Compass className="h-8 w-8 text-gray-400" />}
+            icon={<Compass className="h-8 w-8 text-[#4B5563]" />}
             title="No events found"
             description="Try adjusting your search or category filters to discover campus activities."
           />
@@ -979,7 +979,7 @@ export default function StudentEventsFeed() {
               <div className="p-6 space-y-6">
                 <div className="space-y-4">
                   {/* Category & Date */}
-                  <div className="flex flex-wrap items-center gap-4 text-xs font-medium text-[#4F5666]">
+                  <div className="flex flex-wrap items-center gap-4 text-xs font-medium text-[#374151]">
                     <span className="bg-black/5 px-2.5 py-1 rounded-full text-[#191919] capitalize">
                       Category: {selectedPromo.category}
                     </span>
@@ -992,7 +992,7 @@ export default function StudentEventsFeed() {
                   {/* Description */}
                   <div className="space-y-2">
                     <h3 className="text-xs font-bold text-gray-500 uppercase tracking-widest">About this Promotion</h3>
-                    <p className="text-sm text-[#4F5666] leading-relaxed whitespace-pre-wrap">
+                    <p className="text-sm text-[#374151] leading-relaxed whitespace-pre-wrap">
                       {selectedPromo.description}
                     </p>
                   </div>
@@ -1002,10 +1002,10 @@ export default function StudentEventsFeed() {
                     <h3 className="text-xs font-bold text-gray-500 uppercase tracking-widest">Organizer Information</h3>
                     <div className="space-y-2">
                       <div className="flex items-center gap-2 text-xs text-[#191919]">
-                        <span className="text-gray-400">Name:</span>
+                        <span className="text-[#4B5563]">Name:</span>
                         <span className="font-bold">{selectedPromo.organizer}</span>
                       </div>
-                      <div className="flex items-center gap-2 text-xs text-[#4F5666]">
+                      <div className="flex items-center gap-2 text-xs text-[#374151]">
                         <Mail className="h-3.5 w-3.5 text-[#BDFB04] shrink-0" />
                         <span className="break-all">{selectedPromo.contactInfo}</span>
                       </div>

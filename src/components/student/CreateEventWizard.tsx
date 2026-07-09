@@ -166,7 +166,7 @@ export default function CreateEventWizard({
         {/* Close Button */}
         <button
           onClick={onClose}
-          className="absolute right-6 top-6 rounded-xl p-2 text-[#4F5666] hover:bg-black/5 hover:text-[#191919] transition-colors cursor-pointer z-30"
+          className="absolute right-6 top-6 rounded-xl p-2 text-[#374151] hover:bg-black/5 hover:text-[#191919] transition-colors cursor-pointer z-30"
         >
           <X className="h-4.5 w-4.5" />
         </button>
@@ -185,7 +185,7 @@ export default function CreateEventWizard({
             {/* Myself vs Org */}
             <div className="grid gap-4 sm:grid-cols-2">
               <div className="space-y-1.5">
-                <label className="text-[10px] font-bold text-[#4F5666] uppercase tracking-wide">Host Persona</label>
+                <label className="text-[10px] font-bold text-[#374151] uppercase tracking-wide">Host Persona</label>
                 <select
                   value={ownershipType}
                   onChange={(e) => setOwnershipType(e.target.value as any)}
@@ -200,7 +200,7 @@ export default function CreateEventWizard({
 
               {ownershipType === 'organization' && userOrgs.length > 0 && (
                 <div className="space-y-1.5">
-                  <label className="text-[10px] font-bold text-[#4F5666] uppercase tracking-wide">Select Hosting Group</label>
+                  <label className="text-[10px] font-bold text-[#374151] uppercase tracking-wide">Select Hosting Group</label>
                   <select
                     value={selectedOrgId}
                     onChange={(e) => setSelectedOrgId(e.target.value)}
@@ -219,20 +219,20 @@ export default function CreateEventWizard({
             <div className="grid gap-4 sm:grid-cols-2">
               {/* Title */}
               <div className="space-y-1.5">
-                <label className="text-[10px] font-bold text-[#4F5666] uppercase tracking-wide">Event Title *</label>
+                <label className="text-[10px] font-bold text-[#374151] uppercase tracking-wide">Event Title *</label>
                 <input
                   type="text"
                   required
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
                   placeholder="e.g. Greek Yard Show"
-                  className="w-full rounded-2xl border border-black/[0.08] bg-white py-3 px-3.5 text-xs text-[#191919] placeholder-gray-400 focus:outline-none focus:border-[#BDFB04] focus:ring-1 focus:ring-[#BDFB04] transition-all font-medium"
+                  className="w-full rounded-2xl border border-black/[0.08] bg-white py-3 px-3.5 text-xs text-[#191919] placeholder-[#4B5563] focus:outline-none focus:border-[#BDFB04] focus:ring-1 focus:ring-[#BDFB04] transition-all font-medium"
                 />
               </div>
 
               {/* Category */}
               <div className="space-y-1.5">
-                <label className="text-[10px] font-bold text-[#4F5666] uppercase tracking-wide">Category</label>
+                <label className="text-[10px] font-bold text-[#374151] uppercase tracking-wide">Category</label>
                 <select
                   value={category}
                   onChange={(e) => setCategory(e.target.value)}
@@ -250,21 +250,21 @@ export default function CreateEventWizard({
 
             {/* Description */}
             <div className="space-y-1.5">
-              <label className="text-[10px] font-bold text-[#4F5666] uppercase tracking-wide">Description</label>
+              <label className="text-[10px] font-bold text-[#374151] uppercase tracking-wide">Description</label>
               <textarea
                 required
                 rows={3}
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
                 placeholder="Details of step performance lineups, entry requirements..."
-                className="w-full rounded-2xl border border-black/[0.08] bg-white py-3 px-3.5 text-xs text-[#191919] placeholder-gray-400 focus:outline-none focus:border-[#BDFB04] focus:ring-1 focus:ring-[#BDFB04] transition-all font-medium resize-none"
+                className="w-full rounded-2xl border border-black/[0.08] bg-white py-3 px-3.5 text-xs text-[#191919] placeholder-[#4B5563] focus:outline-none focus:border-[#BDFB04] focus:ring-1 focus:ring-[#BDFB04] transition-all font-medium resize-none"
               />
             </div>
 
             {/* Date & times */}
             <div className="grid gap-4 sm:grid-cols-3">
               <div className="space-y-1.5">
-                <label className="text-[10px] font-bold text-[#4F5666] uppercase tracking-wide">Date *</label>
+                <label className="text-[10px] font-bold text-[#374151] uppercase tracking-wide">Date *</label>
                 <input
                   type="date"
                   required
@@ -275,7 +275,7 @@ export default function CreateEventWizard({
               </div>
 
               <div className="space-y-1.5">
-                <label className="text-[10px] font-bold text-[#4F5666] uppercase tracking-wide">Start Time *</label>
+                <label className="text-[10px] font-bold text-[#374151] uppercase tracking-wide">Start Time *</label>
                 <input
                   type="time"
                   required
@@ -286,7 +286,7 @@ export default function CreateEventWizard({
               </div>
 
               <div className="space-y-1.5">
-                <label className="text-[10px] font-bold text-[#4F5666] uppercase tracking-wide">End Time</label>
+                <label className="text-[10px] font-bold text-[#374151] uppercase tracking-wide">End Time</label>
                 <input
                   type="time"
                   value={endTime}
@@ -299,19 +299,19 @@ export default function CreateEventWizard({
             {/* Location & Cover Gradient */}
             <div className="grid gap-4 sm:grid-cols-2">
               <div className="space-y-1.5">
-                <label className="text-[10px] font-bold text-[#4F5666] uppercase tracking-wide">Location *</label>
+                <label className="text-[10px] font-bold text-[#374151] uppercase tracking-wide">Location *</label>
                 <input
                   type="text"
                   required
                   value={location}
                   onChange={(e) => setLocation(e.target.value)}
                   placeholder="e.g. Alumni Amphitheater"
-                  className="w-full rounded-2xl border border-black/[0.08] bg-white py-3 px-3.5 text-xs text-[#191919] placeholder-gray-400 focus:outline-none focus:border-[#BDFB04] focus:ring-1 focus:ring-[#BDFB04] transition-all font-medium"
+                  className="w-full rounded-2xl border border-black/[0.08] bg-white py-3 px-3.5 text-xs text-[#191919] placeholder-[#4B5563] focus:outline-none focus:border-[#BDFB04] focus:ring-1 focus:ring-[#BDFB04] transition-all font-medium"
                 />
               </div>
 
               <div className="space-y-1.5">
-                <label className="text-[10px] font-bold text-[#4F5666] uppercase tracking-wide">Location LocationType</label>
+                <label className="text-[10px] font-bold text-[#374151] uppercase tracking-wide">Location LocationType</label>
                 <select
                   value={locationType}
                   onChange={(e) => setLocationType(e.target.value as any)}
@@ -326,7 +326,7 @@ export default function CreateEventWizard({
 
             {/* Poster cover selector */}
             <div className="space-y-2">
-              <label className="text-[10px] font-bold text-[#4F5666] uppercase tracking-wide">Choose Event Cover Style (Behance Neon Gradients)</label>
+              <label className="text-[10px] font-bold text-[#374151] uppercase tracking-wide">Choose Event Cover Style (Behance Neon Gradients)</label>
               <div className="grid grid-cols-3 sm:grid-cols-6 gap-2">
                 {gradients.map((grad) => (
                   <button
@@ -348,7 +348,7 @@ export default function CreateEventWizard({
             {/* Ticket details: price & capacity */}
             <div className="grid gap-4 sm:grid-cols-3">
               <div className="space-y-1.5">
-                <label className="text-[10px] font-bold text-[#4F5666] uppercase tracking-wide">Admission Price</label>
+                <label className="text-[10px] font-bold text-[#374151] uppercase tracking-wide">Admission Price</label>
                 <select
                   value={isFree ? 'free' : 'paid'}
                   onChange={(e) => setIsFree(e.target.value === 'free')}
@@ -360,18 +360,18 @@ export default function CreateEventWizard({
               </div>
 
               <div className="space-y-1.5">
-                <label className="text-[10px] font-bold text-[#4F5666] uppercase tracking-wide">Capacity (Optional)</label>
+                <label className="text-[10px] font-bold text-[#374151] uppercase tracking-wide">Capacity (Optional)</label>
                 <input
                   type="number"
                   placeholder="Unlimited"
                   value={capacity}
                   onChange={(e) => setCapacity(e.target.value)}
-                  className="w-full rounded-2xl border border-black/[0.08] bg-white py-3 px-3.5 text-xs text-[#191919] placeholder-gray-400 focus:outline-none focus:border-[#BDFB04] focus:ring-1 focus:ring-[#BDFB04] transition-all font-medium"
+                  className="w-full rounded-2xl border border-black/[0.08] bg-white py-3 px-3.5 text-xs text-[#191919] placeholder-[#4B5563] focus:outline-none focus:border-[#BDFB04] focus:ring-1 focus:ring-[#BDFB04] transition-all font-medium"
                 />
               </div>
 
               <div className="space-y-1.5">
-                <label className="text-[10px] font-bold text-[#4F5666] uppercase tracking-wide">Visibility</label>
+                <label className="text-[10px] font-bold text-[#374151] uppercase tracking-wide">Visibility</label>
                 <select
                   value={visibility}
                   onChange={(e) => setVisibility(e.target.value as any)}
@@ -386,7 +386,7 @@ export default function CreateEventWizard({
             {/* Smart parameters */}
             <div className="grid gap-4 sm:grid-cols-2 pt-2 border-t border-black/[0.06]">
               <div className="space-y-1.5">
-                <label className="text-[10px] font-bold text-[#4F5666] uppercase tracking-wide flex items-center gap-1.5">
+                <label className="text-[10px] font-bold text-[#374151] uppercase tracking-wide flex items-center gap-1.5">
                   <Users className="h-4 w-4 text-slate-500" />
                   Estimated Attendance
                 </label>
@@ -429,7 +429,7 @@ export default function CreateEventWizard({
                 <h5 className="text-xs font-bold uppercase tracking-wider">Smart Classification Insight</h5>
               </div>
               <p className="text-[11px] font-bold text-[#191919] mt-1.5">{preview.name}</p>
-              <ul className="mt-2 pl-4 list-disc text-[10px] space-y-1 text-[#4F5666] font-medium">
+              <ul className="mt-2 pl-4 list-disc text-[10px] space-y-1 text-[#374151] font-medium">
                 {preview.bullets.map((bullet, idx) => (
                   <li key={idx}>{bullet}</li>
                 ))}
@@ -441,7 +441,7 @@ export default function CreateEventWizard({
               <button
                 type="button"
                 onClick={onClose}
-                className="rounded-full border border-black/[0.08] bg-white hover:bg-black/[0.02] py-3 px-6 text-xs font-bold text-[#4F5666] transition-colors cursor-pointer"
+                className="rounded-full border border-black/[0.08] bg-white hover:bg-black/[0.02] py-3 px-6 text-xs font-bold text-[#374151] transition-colors cursor-pointer"
               >
                 Cancel
               </button>
@@ -463,14 +463,14 @@ export default function CreateEventWizard({
 
             <div className="space-y-2">
               <h3 className="text-lg font-extrabold uppercase tracking-tight text-white">Event Submitted For Review</h3>
-              <p className="text-xs text-[#4F5666] leading-relaxed max-w-sm mx-auto">
+              <p className="text-xs text-[#374151] leading-relaxed max-w-sm mx-auto">
                 Your campus experience has been uploaded successfully! School administration will examine the scheduling details in the moderation queues.
               </p>
             </div>
 
             <div className="border border-black/[0.06] bg-black/[0.02] p-4 rounded-2xl flex items-center justify-between text-left max-w-sm mx-auto text-xs">
               <div className="flex flex-col">
-                <span className="text-[10px] text-[#4F5666] uppercase font-semibold">Live Moderation Status</span>
+                <span className="text-[10px] text-[#374151] uppercase font-semibold">Live Moderation Status</span>
                 <span className="font-extrabold text-[#191919] mt-0.5">Submitted → Under Review</span>
               </div>
               <span className="rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/20 px-2.5 py-0.5 text-[9px] font-extrabold uppercase tracking-wide">

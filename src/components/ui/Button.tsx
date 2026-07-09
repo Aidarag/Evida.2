@@ -23,7 +23,7 @@ const variantStyles: Record<ButtonVariant, string> = {
   neon:
     'bg-[#BDFB04] text-[#191919] font-bold shadow-[0_4px_14px_rgba(25, 25, 25, 0.1)] hover:bg-[#BDFB04]/90 border border-transparent',
   ghost:
-    'bg-transparent border border-[#191919]/20 hover:border-[#191919]/20 text-[#4F5666] hover:text-[#191919] hover:bg-[#191919]/[0.02] backdrop-blur-md',
+    'bg-transparent border border-[#191919]/20 hover:border-[#191919]/20 text-[#374151] hover:text-[#191919] hover:bg-[#191919]/[0.02] backdrop-blur-md',
   danger:
     'bg-red-600 text-white font-bold hover:bg-red-700 border border-transparent',
 };

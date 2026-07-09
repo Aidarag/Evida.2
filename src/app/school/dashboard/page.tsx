@@ -33,7 +33,7 @@ export default function SchoolDashboardPage() {
           <h1 className="text-3xl md:text-4xl font-extrabold text-[#191919] tracking-tight" style={{ fontFamily: 'var(--font-display)' }}>
             Administrator Overview
           </h1>
-          <p className="text-[#4F5666]">System status and pending actions for Evida Admin.</p>
+          <p className="text-[#374151]">System status and pending actions for Evida Admin.</p>
         </div>
       </div>
 
@@ -48,7 +48,7 @@ export default function SchoolDashboardPage() {
           </div>
           <div>
             <div className="text-3xl font-bold text-[#191919]">{complexQueue.length}</div>
-            <p className="text-sm font-medium text-[#4F5666]">Complex events pending review</p>
+            <p className="text-sm font-medium text-[#374151]">Complex events pending review</p>
           </div>
         </Card>
 
@@ -61,7 +61,7 @@ export default function SchoolDashboardPage() {
           </div>
           <div>
             <div className="text-3xl font-bold text-[#191919]">{standardQueue.length}</div>
-            <p className="text-sm font-medium text-[#4F5666]">Standard events pending review</p>
+            <p className="text-sm font-medium text-[#374151]">Standard events pending review</p>
           </div>
         </Card>
 
@@ -74,7 +74,7 @@ export default function SchoolDashboardPage() {
           </div>
           <div>
             <div className="text-3xl font-bold text-[#191919]">{quickQueue.length}</div>
-            <p className="text-sm font-medium text-[#4F5666]">Quick events pending review</p>
+            <p className="text-sm font-medium text-[#374151]">Quick events pending review</p>
           </div>
         </Card>
       </div>
@@ -119,15 +119,15 @@ export default function SchoolDashboardPage() {
           <h2 className="text-xl font-bold text-[#191919]" style={{ fontFamily: 'var(--font-display)' }}>Global Statistics</h2>
           <Card className="p-6 divide-y divide-black/[0.06]">
             <div className="py-4 flex justify-between items-center first:pt-0">
-              <span className="text-[#4F5666]">Total Approved Events</span>
+              <span className="text-[#374151]">Total Approved Events</span>
               <span className="font-bold text-[#191919]">{totalApproved}</span>
             </div>
             <div className="py-4 flex justify-between items-center">
-              <span className="text-[#4F5666]">Registered Organizations</span>
+              <span className="text-[#374151]">Registered Organizations</span>
               <span className="font-bold text-[#191919]">{organizations.length}</span>
             </div>
             <div className="py-4 flex justify-between items-center border-b-0 pb-0">
-              <span className="text-[#4F5666]">Total Student RSVPs</span>
+              <span className="text-[#374151]">Total Student RSVPs</span>
               <span className="font-bold text-[#191919]">
                 {events.reduce((acc, ev) => acc + ev.attendees.length, 0)}
               </span>

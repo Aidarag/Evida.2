@@ -69,7 +69,7 @@ export default function CreatePromoModal({
         {/* Close button */}
         <button
           onClick={onClose}
-          className="absolute right-4 top-4 rounded-lg p-1.5 text-slate-400 hover:bg-[#FFFDE1]/5 hover:text-white transition-colors cursor-pointer"
+          className="absolute right-4 top-4 rounded-lg p-1.5 text-[#4B5563] hover:bg-[#FFFDE1]/5 hover:text-white transition-colors cursor-pointer"
         >
           <X className="h-4.5 w-4.5" />
         </button>
@@ -81,7 +81,7 @@ export default function CreatePromoModal({
               <Sparkles className="h-5 w-5 text-violet-400" />
               Post Campus Promotion
             </h2>
-            <p className="mt-1 text-xs text-slate-400">
+            <p className="mt-1 text-xs text-[#4B5563]">
               Advertise your peer tutoring, photography business, food sales, or other student initiatives.
             </p>
           </div>
@@ -89,7 +89,7 @@ export default function CreatePromoModal({
           <div className="grid gap-4 sm:grid-cols-2">
             {/* Title */}
             <div className="space-y-1.5">
-              <label className="text-xs font-bold text-slate-400 uppercase tracking-wide">Promo Title *</label>
+              <label className="text-xs font-bold text-[#4B5563] uppercase tracking-wide">Promo Title *</label>
               <input
                 type="text"
                 required
@@ -102,7 +102,7 @@ export default function CreatePromoModal({
 
             {/* Category */}
             <div className="space-y-1.5">
-              <label className="text-xs font-bold text-slate-400 uppercase tracking-wide">Category *</label>
+              <label className="text-xs font-bold text-[#4B5563] uppercase tracking-wide">Category *</label>
               <select
                 value={category}
                 onChange={(e) => setCategory(e.target.value as any)}
@@ -119,7 +119,7 @@ export default function CreatePromoModal({
 
           {/* Contact Info */}
           <div className="space-y-1.5">
-            <label className="text-xs font-bold text-slate-400 uppercase tracking-wide">Contact Details *</label>
+            <label className="text-xs font-bold text-[#4B5563] uppercase tracking-wide">Contact Details *</label>
             <input
               type="text"
               required
@@ -132,7 +132,7 @@ export default function CreatePromoModal({
 
           {/* Description */}
           <div className="space-y-1.5">
-            <label className="text-xs font-bold text-slate-400 uppercase tracking-wide">Description *</label>
+            <label className="text-xs font-bold text-[#4B5563] uppercase tracking-wide">Description *</label>
             <textarea
               required
               rows={4}
@@ -144,7 +144,7 @@ export default function CreatePromoModal({
           </div>
 
           {/* Disclaimer */}
-          <div className="rounded-xl border border-amber-500/10 bg-amber-500/5 p-3 text-[11px] text-slate-400 leading-relaxed">
+          <div className="rounded-xl border border-amber-500/10 bg-amber-500/5 p-3 text-[11px] text-[#4B5563] leading-relaxed">
             Note: Promotions are moderated separately from events. All advertisements are screened for campus guidelines before appearing on the public feed.
           </div>
 

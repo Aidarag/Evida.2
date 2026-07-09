@@ -59,7 +59,7 @@ export default function OrgManager({
       <div className="md:col-span-2 space-y-4">
         {/* Search */}
         <div className="flex items-center justify-between gap-4 border-b border-slate-800 pb-4">
-          <h3 className="text-sm font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
+          <h3 className="text-sm font-bold text-[#4B5563] uppercase tracking-wider flex items-center gap-1.5">
             <Building className="h-4 w-4 text-indigo-400" />
             Registered Campus Groups ({organizations.length})
           </h3>
@@ -102,7 +102,7 @@ export default function OrgManager({
                   </span>
                 </div>
 
-                <p className="text-xs text-slate-400 mt-2 line-clamp-3">
+                <p className="text-xs text-[#4B5563] mt-2 line-clamp-3">
                   {org.description}
                 </p>
               </div>

@@ -54,7 +54,7 @@ export default function SavedEvents({
     <div className="space-y-6">
       
       {/* Sub-tab picker */}
-      <div className="flex space-x-2 border-b border-black/[0.06] pb-4 text-xs font-bold text-[#7B8290]">
+      <div className="flex space-x-2 border-b border-black/[0.06] pb-4 text-xs font-bold text-[#4B5563]">
         <button
           onClick={() => setSubTab('saved')}
           className={`pb-3 border-b-2 transition-all cursor-pointer flex items-center gap-1.5 ${
@@ -89,9 +89,9 @@ export default function SavedEvents({
       {/* Grid List */}
       {activeList.length === 0 ? (
         <div className="flex flex-col items-center justify-center rounded-3xl border border-dashed border-black/10 bg-slate-50 py-16 text-center max-w-sm mx-auto shadow-sm">
-          <Sparkles className="h-10 w-10 text-[#7B8290] mb-3" />
+          <Sparkles className="h-10 w-10 text-[#4B5563] mb-3" />
           <p className="text-xs font-bold text-[#191919] uppercase">{copy.title}</p>
-          <p className="mt-1 text-[11px] text-[#4F5666] px-4 leading-relaxed">
+          <p className="mt-1 text-[11px] text-[#374151] px-4 leading-relaxed">
             {copy.message}
           </p>
         </div>
@@ -123,7 +123,7 @@ export default function SavedEvents({
 
               <div className="p-5 space-y-3">
                 <div>
-                  <span className="text-[9px] font-bold text-[#7B8290] uppercase tracking-wide block">
+                  <span className="text-[9px] font-bold text-[#4B5563] uppercase tracking-wide block">
                     {event.organizationName || event.organizer}
                   </span>
                   <h4 className="text-sm font-bold text-[#191919] leading-snug group-hover:text-[#191919] transition-colors mt-1 line-clamp-1 uppercase">
@@ -131,7 +131,7 @@ export default function SavedEvents({
                   </h4>
                 </div>
 
-                <div className="flex flex-col gap-1 text-[10px] font-bold text-[#4F5666] pt-3 border-t border-black/[0.06] uppercase">
+                <div className="flex flex-col gap-1 text-[10px] font-bold text-[#374151] pt-3 border-t border-black/[0.06] uppercase">
                   <span className="flex items-center gap-1.5">
                     <Calendar className="h-3.5 w-3.5 text-[#191919]" />
                     {event.date} • {event.time}

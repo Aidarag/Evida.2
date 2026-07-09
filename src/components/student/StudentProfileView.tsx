@@ -65,7 +65,7 @@ export default function StudentProfileView({
 
         {/* Organizations Memberships */}
         <div className="rounded-2xl glass-card p-5 border border-white/5 space-y-4">
-          <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
+          <h4 className="text-xs font-bold text-[#4B5563] uppercase tracking-wider flex items-center gap-1.5">
             <Building className="h-4 w-4 text-indigo-400" />
             Verified Organizations ({userOrgs.length})
           </h4>
@@ -77,7 +77,7 @@ export default function StudentProfileView({
                 <div key={org.id} className="flex items-center justify-between rounded-xl bg-slate-900/40 p-3 border border-white/5">
                   <div>
                     <h5 className="text-xs font-bold text-white">{org.name}</h5>
-                    <p className="text-[10px] text-slate-400 mt-0.5 line-clamp-1">{org.description}</p>
+                    <p className="text-[10px] text-[#4B5563] mt-0.5 line-clamp-1">{org.description}</p>
                   </div>
                   {org.verified && (
                     <span className="flex h-5 w-5 items-center justify-center rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20" title="Verified Campus Group">
@@ -95,7 +95,7 @@ export default function StudentProfileView({
       <div className="md:col-span-2 space-y-6">
         {/* My Created Events Queue */}
         <div className="rounded-2xl glass-card p-6 border border-white/5 space-y-4">
-          <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
+          <h4 className="text-xs font-bold text-[#4B5563] uppercase tracking-wider flex items-center gap-1.5">
             <Calendar className="h-4 w-4 text-indigo-400" />
             Events Created & Managed
           </h4>
@@ -126,10 +126,10 @@ export default function StudentProfileView({
                       <span className="text-[10px] text-slate-500 font-semibold">{event.date} at {event.time}</span>
                     </div>
                     <h5 className="text-xs sm:text-sm font-bold text-white mt-1.5">{event.title}</h5>
-                    <p className="text-[11px] text-slate-400 mt-1 line-clamp-1">{event.location}</p>
+                    <p className="text-[11px] text-[#4B5563] mt-1 line-clamp-1">{event.location}</p>
                   </div>
 
-                  <div className="flex items-center gap-3 text-xs text-slate-400 shrink-0">
+                  <div className="flex items-center gap-3 text-xs text-[#4B5563] shrink-0">
                     <span className="bg-slate-800/80 px-2 py-1 rounded-lg border border-white/5">
                       <span className="font-semibold text-slate-200">{event.attendees.length}</span> Going
                     </span>
@@ -145,7 +145,7 @@ export default function StudentProfileView({
 
         {/* My Created Promotions Queue */}
         <div className="rounded-2xl glass-card p-6 border border-white/5 space-y-4">
-          <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
+          <h4 className="text-xs font-bold text-[#4B5563] uppercase tracking-wider flex items-center gap-1.5">
             <Sparkles className="h-4 w-4 text-violet-400" />
             Promotions & Peer Services Posted
           </h4>
@@ -179,10 +179,10 @@ export default function StudentProfileView({
                     <span className="text-[10px] text-slate-500">{promo.date}</span>
                   </div>
                   <h5 className="text-xs sm:text-sm font-bold text-white mt-1.5">{promo.title}</h5>
-                  <p className="text-[11px] text-slate-400 mt-1">{promo.description}</p>
+                  <p className="text-[11px] text-[#4B5563] mt-1">{promo.description}</p>
                   
                   {promo.feedback && (
-                    <div className="mt-2.5 p-2 rounded bg-slate-950/60 border border-white/5 text-[10px] text-slate-400 font-mono">
+                    <div className="mt-2.5 p-2 rounded bg-slate-950/60 border border-white/5 text-[10px] text-[#4B5563] font-mono">
                       <strong className="text-rose-400 font-bold">Feedback:</strong> "{promo.feedback}"
                     </div>
                   )}

@@ -74,11 +74,11 @@ export default function FeaturedEventCard({ event, onClick }: FeaturedEventCardP
           e.stopPropagation();
           setIsSaved(!isSaved);
         }}
-        className="absolute top-4 right-4 z-20 h-8 w-8 rounded-full bg-white/85 backdrop-blur-md border border-black/[0.05] flex items-center justify-center text-gray-400 hover:text-rose-500 hover:scale-110 active:scale-95 transition-all shadow-sm cursor-pointer"
+        className="absolute top-4 right-4 z-20 h-8 w-8 rounded-full bg-white/85 backdrop-blur-md border border-black/[0.05] flex items-center justify-center text-[#4B5563] hover:text-rose-500 hover:scale-110 active:scale-95 transition-all shadow-sm cursor-pointer"
       >
         <Heart 
           className={`h-4 w-4 transition-colors ${
-            isSaved ? 'fill-rose-500 text-rose-500' : 'text-gray-400'
+            isSaved ? 'fill-rose-500 text-rose-500' : 'text-[#4B5563]'
           }`} 
         />
       </button>
@@ -97,13 +97,13 @@ export default function FeaturedEventCard({ event, onClick }: FeaturedEventCardP
           </h3>
           
           {/* Location Row */}
-          <div className="flex items-center gap-1.5 text-[#7B8290] text-xs font-semibold">
-            <MapPin className="h-3.5 w-3.5 shrink-0 text-[#7B8290]" />
+          <div className="flex items-center gap-1.5 text-[#4B5563] text-xs font-semibold">
+            <MapPin className="h-3.5 w-3.5 shrink-0 text-[#4B5563]" />
             <span className="truncate">{event.location}</span>
           </div>
 
           {/* Description */}
-          <p className="text-[#4F5666] text-xs leading-relaxed font-light line-clamp-2 pt-1">
+          <p className="text-[#374151] text-xs leading-relaxed font-light line-clamp-2 pt-1">
             {event.description || `Join us for the ${event.title}, happening at ${event.location}.`}
           </p>
         </div>
@@ -129,7 +129,7 @@ export default function FeaturedEventCard({ event, onClick }: FeaturedEventCardP
                 className="h-6 w-6 rounded-full border-2 border-white object-cover"
               />
             </div>
-            <span className="text-[#7B8290] text-[10px] font-bold whitespace-nowrap">
+            <span className="text-[#4B5563] text-[10px] font-bold whitespace-nowrap">
               +{goingCount} going
             </span>
           </div>

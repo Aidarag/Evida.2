@@ -162,7 +162,7 @@ export default function StudentDashboardPage() {
           <h1 className="text-3xl font-black text-[#191919] uppercase tracking-tight" style={{ fontFamily: 'var(--font-display)' }}>
             My campus life
           </h1>
-          <p className="text-xs text-[#4F5666] font-semibold tracking-wide uppercase mt-1">
+          <p className="text-xs text-[#374151] font-semibold tracking-wide uppercase mt-1">
             Hello, {currentUser.name.split(' ')[0]} • Official School & Organization Events
           </p>
         </div>
@@ -171,18 +171,18 @@ export default function StudentDashboardPage() {
         <div className="flex flex-wrap items-center gap-3">
           {/* Stats Badges */}
           <div className="bg-white/80 border border-black/[0.04] rounded-2xl px-4 py-2 flex flex-col min-w-[90px] shadow-sm">
-            <span className="text-[9px] font-bold text-[#7B8290] uppercase tracking-wider">My RSVPs</span>
+            <span className="text-[9px] font-bold text-[#4B5563] uppercase tracking-wider">My RSVPs</span>
             <span className="text-xs font-black text-[#191919] mt-0.5">{rsvpEventsList.length} Going</span>
           </div>
           <div className="bg-white/80 border border-black/[0.04] rounded-2xl px-4 py-2 flex flex-col min-w-[90px] shadow-sm">
-            <span className="text-[9px] font-bold text-[#7B8290] uppercase tracking-wider">My Saved</span>
+            <span className="text-[9px] font-bold text-[#4B5563] uppercase tracking-wider">My Saved</span>
             <span className="text-xs font-black text-[#191919] mt-0.5">{savedEventsList.length} Saved</span>
           </div>
 
-          <Link href="/student/saved" className="h-10 w-10 rounded-xl bg-white border border-black/[0.04] flex items-center justify-center text-[#4F5666] hover:text-[#191919] transition-colors shadow-sm">
+          <Link href="/student/saved" className="h-10 w-10 rounded-xl bg-white border border-black/[0.04] flex items-center justify-center text-[#374151] hover:text-[#191919] transition-colors shadow-sm">
             <Bookmark className="h-4.5 w-4.5" />
           </Link>
-          <Link href="/student/my-events" className="h-10 w-10 rounded-xl bg-white border border-black/[0.04] flex items-center justify-center text-[#4F5666] hover:text-[#191919] transition-colors shadow-sm relative">
+          <Link href="/student/my-events" className="h-10 w-10 rounded-xl bg-white border border-black/[0.04] flex items-center justify-center text-[#374151] hover:text-[#191919] transition-colors shadow-sm relative">
             <Bell className="h-4.5 w-4.5" />
             {unreadNotifs.length > 0 && (
               <span className="absolute top-1 right-1 h-2.5 w-2.5 rounded-full bg-[#BDFB04] border-2 border-white" />
@@ -195,16 +195,16 @@ export default function StudentDashboardPage() {
       <div className="bg-white/40 border border-black/[0.03] rounded-3xl p-4 space-y-3 shadow-sm">
         <div className="flex gap-2">
           <div className="relative flex-1">
-            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-[#7B8290]" />
+            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-[#4B5563]" />
             <input 
               type="text" 
               placeholder="Search title, venue, host or keywords..." 
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full bg-white border border-black/[0.06] text-[#191919] placeholder-gray-400 rounded-full pl-10 pr-4 py-2.5 text-xs focus:outline-none focus:border-[#BDFB04] transition-all shadow-inner"
+              className="w-full bg-white border border-black/[0.06] text-[#191919] placeholder-[#4B5563] rounded-full pl-10 pr-4 py-2.5 text-xs focus:outline-none focus:border-[#BDFB04] transition-all shadow-inner"
             />
           </div>
-          <Link href="/student/events" className="h-10 w-10 rounded-xl bg-white border border-black/[0.06] flex items-center justify-center text-[#4F5666] hover:text-[#BDFB04] transition-colors shrink-0 shadow-sm">
+          <Link href="/student/events" className="h-10 w-10 rounded-xl bg-white border border-black/[0.06] flex items-center justify-center text-[#374151] hover:text-[#BDFB04] transition-colors shrink-0 shadow-sm">
             <SlidersHorizontal className="h-4 w-4" />
           </Link>
         </div>
@@ -220,7 +220,7 @@ export default function StudentDashboardPage() {
                 className={`flex items-center gap-1.5 shrink-0 px-3.5 py-1.5 rounded-full text-[9px] font-extrabold uppercase tracking-wider transition-all cursor-pointer ${
                   isActive 
                     ? 'bg-[#BDFB04] text-[#191919] shadow-sm' 
-                    : 'bg-white border border-black/[0.04] text-[#4F5666] hover:bg-white hover:text-[#191919]'
+                    : 'bg-white border border-black/[0.04] text-[#374151] hover:bg-white hover:text-[#191919]'
                 }`}
               >
                 <cat.icon className="h-3 w-3" />
@@ -237,8 +237,8 @@ export default function StudentDashboardPage() {
         {/* Main Events Feed Column */}
         <div className="lg:col-span-2 space-y-5">
           <div className="flex items-center justify-between">
-            <h2 className="text-xs font-black tracking-widest text-[#7B8290] uppercase">// Upcoming Experiences</h2>
-            <span className="text-[10px] font-bold text-[#4F5666]">Showing {sortedFilteredEvents.length} events</span>
+            <h2 className="text-xs font-black tracking-widest text-[#4B5563] uppercase">// Upcoming Experiences</h2>
+            <span className="text-[10px] font-bold text-[#374151]">Showing {sortedFilteredEvents.length} events</span>
           </div>
 
           {sortedFilteredEvents.length > 0 ? (
@@ -304,7 +304,7 @@ export default function StudentDashboardPage() {
                         <div className="flex items-center gap-1.5">
                           <p 
                             onClick={() => event.organizationId && router.push(`/student/organizations/${event.organizationId}`)}
-                            className={`text-[10px] font-extrabold text-[#4F5666] uppercase tracking-wider flex items-center leading-none ${event.organizationId ? 'cursor-pointer hover:underline' : ''}`}
+                            className={`text-[10px] font-extrabold text-[#374151] uppercase tracking-wider flex items-center leading-none ${event.organizationId ? 'cursor-pointer hover:underline' : ''}`}
                           >
                             {event.organizationName || event.organizer}
                             {event.organizationId && organizations.find(o => o.id === event.organizationId)?.verified && (
@@ -323,7 +323,7 @@ export default function StudentDashboardPage() {
                         </h3>
 
                         {/* Description */}
-                        <p className="text-xs text-[#4F5666] leading-relaxed line-clamp-2">
+                        <p className="text-xs text-[#374151] leading-relaxed line-clamp-2">
                           {event.description}
                         </p>
                       </div>
@@ -334,8 +334,8 @@ export default function StudentDashboardPage() {
                           <Calendar className="h-3.5 w-3.5 text-[#191919]" />
                           <span>{monthName} {day} • {event.time}</span>
                         </div>
-                        <div className="flex items-center gap-2 text-[10px] font-bold text-[#7B8290] uppercase truncate">
-                          <MapPin className="h-3.5 w-3.5 text-[#7B8290]" />
+                        <div className="flex items-center gap-2 text-[10px] font-bold text-[#4B5563] uppercase truncate">
+                          <MapPin className="h-3.5 w-3.5 text-[#4B5563]" />
                           <span className="truncate">{event.location}</span>
                         </div>
                       </div>
@@ -353,7 +353,7 @@ export default function StudentDashboardPage() {
                               </div>
                             ))}
                           </div>
-                          <span className="text-[10px] text-[#7B8290] font-semibold">
+                          <span className="text-[10px] text-[#4B5563] font-semibold">
                             {event.attendees.length} attending
                           </span>
                         </div>
@@ -363,7 +363,7 @@ export default function StudentDashboardPage() {
                       {eventComments.length > 0 && (
                         <button
                           onClick={() => setCommentOpen(isCommentOpen ? null : event.id)}
-                          className="text-[10px] font-bold text-[#7B8290] hover:text-[#191919] text-left underline flex items-center gap-1 cursor-pointer"
+                          className="text-[10px] font-bold text-[#4B5563] hover:text-[#191919] text-left underline flex items-center gap-1 cursor-pointer"
                         >
                           Show comments ({eventComments.length})
                         </button>
@@ -382,7 +382,7 @@ export default function StudentDashboardPage() {
                               {eventComments.map((c, i) => (
                                 <div key={i} className="text-[10px] leading-tight">
                                   <span className="font-extrabold text-[#191919]">{c.user}:</span>{' '}
-                                  <span className="text-[#4F5666]">{c.text}</span>
+                                  <span className="text-[#374151]">{c.text}</span>
                                 </div>
                               ))}
                             </div>
@@ -419,7 +419,7 @@ export default function StudentDashboardPage() {
                           className={`h-9 w-9 rounded-xl border flex items-center justify-center transition-all cursor-pointer ${
                             isSaved
                               ? 'bg-white border-[#BDFB04] text-rose-500 shadow-sm'
-                              : 'bg-white border-black/10 text-gray-400 hover:text-rose-500'
+                              : 'bg-white border-black/10 text-[#4B5563] hover:text-rose-500'
                           }`}
                           title={isSaved ? "Saved" : "Save Event"}
                         >
@@ -430,7 +430,7 @@ export default function StudentDashboardPage() {
                         <button
                           onClick={() => setCommentOpen(isCommentOpen ? null : event.id)}
                           className={`h-9 w-9 rounded-xl border flex items-center justify-center transition-all cursor-pointer ${
-                            isCommentOpen ? 'bg-black/5 border-black/20 text-[#191919]' : 'bg-white border-black/10 text-[#4F5666] hover:text-[#191919]'
+                            isCommentOpen ? 'bg-black/5 border-black/20 text-[#191919]' : 'bg-white border-black/10 text-[#374151] hover:text-[#191919]'
                           }`}
                           title="Add comment"
                         >
@@ -446,7 +446,7 @@ export default function StudentDashboardPage() {
                             onChange={(e) => setCommentText(e.target.value)}
                             onKeyDown={(e) => e.key === 'Enter' && handleComment(event.id)}
                             placeholder="Add comment..."
-                            className="flex-1 bg-black/[0.03] border border-black/[0.04] rounded-xl px-3 py-1.5 text-[11px] text-[#191919] placeholder-[#7B8290] focus:outline-none focus:border-[#BDFB04]"
+                            className="flex-1 bg-black/[0.03] border border-black/[0.04] rounded-xl px-3 py-1.5 text-[11px] text-[#191919] placeholder-[#4B5563] focus:outline-none focus:border-[#BDFB04]"
                           />
                           <button 
                             onClick={() => handleComment(event.id)}
@@ -464,7 +464,7 @@ export default function StudentDashboardPage() {
               })}
             </div>
           ) : (
-            <div className="w-full text-center py-20 bg-white rounded-3xl border border-black/[0.04] text-sm text-[#7B8290] font-light shadow-sm">
+            <div className="w-full text-center py-20 bg-white rounded-3xl border border-black/[0.04] text-sm text-[#4B5563] font-light shadow-sm">
               No official school or organization events discovered matching filters.
             </div>
           )}
@@ -476,7 +476,7 @@ export default function StudentDashboardPage() {
           {/* Matched Organizations Widget */}
           {matchedOrgs.length > 0 && (
             <div className="bg-white border border-black/[0.04] rounded-3xl p-5 shadow-sm space-y-4">
-              <h3 className="text-xs font-black tracking-widest text-[#7B8290] uppercase">// MATCHED GROUPS</h3>
+              <h3 className="text-xs font-black tracking-widest text-[#4B5563] uppercase">// MATCHED GROUPS</h3>
               <div className="space-y-2">
                 {matchedOrgs.map((org) => (
                   <div 
@@ -493,10 +493,10 @@ export default function StudentDashboardPage() {
                           {org.name}
                           {org.verified && <VerifiedBadge className="h-3.5 w-3.5 ml-1 shrink-0" />}
                         </h4>
-                        <p className="text-[9px] text-[#7B8290]">{org.members.length} members</p>
+                        <p className="text-[9px] text-[#4B5563]">{org.members.length} members</p>
                       </div>
                     </div>
-                    <span className="text-[10px] font-bold text-[#7B8290] shrink-0">→</span>
+                    <span className="text-[10px] font-bold text-[#4B5563] shrink-0">→</span>
                   </div>
                 ))}
               </div>
@@ -506,7 +506,7 @@ export default function StudentDashboardPage() {
           {/* My Schedule Widget */}
           <div className="bg-white border border-black/[0.04] rounded-3xl p-5 shadow-sm space-y-4">
             <div className="flex items-center justify-between">
-              <h3 className="text-xs font-black tracking-widest text-[#7B8290] uppercase">// My Schedule</h3>
+              <h3 className="text-xs font-black tracking-widest text-[#4B5563] uppercase">// My Schedule</h3>
               <span className="text-[9px] font-extrabold text-[#BDFB04] bg-[#BDFB04]/10 px-2 py-0.5 rounded-full">
                 {rsvpEventsList.length} going
               </span>
@@ -528,7 +528,7 @@ export default function StudentDashboardPage() {
                     >
                       {/* Date Badge */}
                       <div className="h-11 w-11 rounded-xl bg-white border border-black/[0.04] shadow-sm flex flex-col items-center justify-center shrink-0">
-                        <span className="text-[9px] font-extrabold uppercase text-[#7B8290] leading-none">{monthName}</span>
+                        <span className="text-[9px] font-extrabold uppercase text-[#4B5563] leading-none">{monthName}</span>
                         <span className="text-sm font-black text-[#191919] mt-0.5 leading-none">{day}</span>
                       </div>
                       
@@ -537,7 +537,7 @@ export default function StudentDashboardPage() {
                         <h4 className="text-xs font-bold text-[#191919] truncate uppercase group-hover:text-[#BDFB04] transition-colors leading-snug">
                           {event.title}
                         </h4>
-                        <p className="text-[9px] text-[#7B8290] mt-0.5 truncate uppercase">
+                        <p className="text-[9px] text-[#4B5563] mt-0.5 truncate uppercase">
                           {event.time} • {event.location}
                         </p>
                       </div>
@@ -546,7 +546,7 @@ export default function StudentDashboardPage() {
                 })}
               </div>
             ) : (
-              <p className="text-[11px] text-[#7B8290] italic text-center py-4 bg-slate-50/50 rounded-2xl">
+              <p className="text-[11px] text-[#4B5563] italic text-center py-4 bg-slate-50/50 rounded-2xl">
                 You haven't RSVP'd to any events yet.
               </p>
             )}
@@ -554,7 +554,7 @@ export default function StudentDashboardPage() {
 
           {/* Campus Groups Widget */}
           <div className="bg-white border border-black/[0.04] rounded-3xl p-5 shadow-sm space-y-4">
-            <h3 className="text-xs font-black tracking-widest text-[#7B8290] uppercase">// Verified campus groups</h3>
+            <h3 className="text-xs font-black tracking-widest text-[#4B5563] uppercase">// Verified campus groups</h3>
             <div className="space-y-2.5">
               {organizations.slice(0, 5).map((org) => (
                 <div 
@@ -574,10 +574,10 @@ export default function StudentDashboardPage() {
                         {org.name}
                         {org.verified && <VerifiedBadge className="h-3.5 w-3.5 shrink-0" />}
                       </p>
-                      <p className="text-[9px] text-[#7B8290]">{org.members.length} members</p>
+                      <p className="text-[9px] text-[#4B5563]">{org.members.length} members</p>
                     </div>
                   </div>
-                  <span className="text-[10px] text-[#7B8290] group-hover:text-[#191919] shrink-0 font-bold">→</span>
+                  <span className="text-[10px] text-[#4B5563] group-hover:text-[#191919] shrink-0 font-bold">→</span>
                 </div>
               ))}
             </div>

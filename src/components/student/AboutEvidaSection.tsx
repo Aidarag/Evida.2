@@ -29,7 +29,7 @@ export default function AboutEvidaSection() {
         {/* 1. Header Row */}
         <div className="flex flex-col md:flex-row md:justify-between md:items-end gap-6 mb-12">
           <div>
-            <span className="text-[#7B8290] text-xs font-bold tracking-[0.25em] uppercase block mb-3">ABOUT US</span>
+            <span className="text-[#4B5563] text-xs font-bold tracking-[0.25em] uppercase block mb-3">ABOUT US</span>
             <h2 className="text-[#191919] font-extrabold text-5xl md:text-7xl uppercase tracking-tighter leading-[0.9]" style={{ fontFamily: 'var(--font-display)' }}>
               CAMPUS LIFE<br />BUILDERS
             </h2>
@@ -59,14 +59,14 @@ export default function AboutEvidaSection() {
         {/* 3. "Why Evida Exists?" — Two-Column Text */}
         <div className="grid grid-cols-1 md:grid-cols-12 gap-8 mb-20 items-start text-left">
           <div className="md:col-span-3">
-            <span className="text-[#7B8290] text-xs font-bold tracking-[0.25em] uppercase block pt-2">
+            <span className="text-[#4B5563] text-xs font-bold tracking-[0.25em] uppercase block pt-2">
               WHY EVIDA EXISTS?
             </span>
           </div>
           <div className="md:col-span-9">
             <p className="text-[#191919] font-extrabold text-xl md:text-3xl lg:text-4xl leading-tight tracking-tight uppercase" style={{ fontFamily: 'var(--font-display)' }}>
               Evida is the digital home of campus life.{' '}
-              <span className="text-[#4F5666] font-normal lowercase normal-case">
+              <span className="text-[#374151] font-normal lowercase normal-case">
                 Discover events, organizations, and opportunities in one place. Built for students and institutions, Evida makes it easier to explore, connect, and create unforgettable experiences.
               </span>
             </p>
@@ -82,7 +82,7 @@ export default function AboutEvidaSection() {
           className="flex flex-col items-center"
         >
           {/* Caption above phone */}
-          <p className="text-[#7B8290] text-xs font-bold tracking-[0.25em] uppercase mb-8 text-center">
+          <p className="text-[#4B5563] text-xs font-bold tracking-[0.25em] uppercase mb-8 text-center">
             SEE THE EXPERIENCE
           </p>
 

@@ -18,7 +18,7 @@ export default function Chip({ label, active = false, onClick, className = '' }:
         text-xs font-medium transition-all duration-200 cursor-pointer
         ${active
           ? 'bg-[#191919] text-white border border-transparent font-bold shadow-sm'
-          : 'bg-black/[0.04] text-[#4F5666] border border-transparent hover:bg-black/[0.08] hover:text-[#191919]'
+          : 'bg-black/[0.04] text-[#374151] border border-transparent hover:bg-black/[0.08] hover:text-[#191919]'
         }
         ${className}
       `}

@@ -29,7 +29,7 @@ export default function AnalyticsPage() {
     <div className="p-6 md:p-10 space-y-8 max-w-6xl mx-auto">
       <div className="space-y-2">
         <h1 className="text-3xl font-extrabold text-[#191919] tracking-tight">Engagement Analytics</h1>
-        <p className="text-sm text-[#4F5666]">Campus-wide metrics and event performance data.</p>
+        <p className="text-sm text-[#374151]">Campus-wide metrics and event performance data.</p>
       </div>
 
       {/* Top Stats */}
@@ -39,7 +39,7 @@ export default function AnalyticsPage() {
             <div className="h-10 w-10 rounded-xl bg-[#80B0EC]/10 flex items-center justify-center text-[#191919]/70">
               <CalendarDays className="h-5 w-5" />
             </div>
-            <span className="text-xs font-bold text-[#4F5666] uppercase tracking-wider">Total Events</span>
+            <span className="text-xs font-bold text-[#374151] uppercase tracking-wider">Total Events</span>
           </div>
           <div className="text-3xl font-bold text-[#191919]">{totalApproved}</div>
         </Card>
@@ -49,7 +49,7 @@ export default function AnalyticsPage() {
             <div className="h-10 w-10 rounded-xl bg-[#eb5e28]/10 flex items-center justify-center text-[#191919]">
               <Users className="h-5 w-5" />
             </div>
-            <span className="text-xs font-bold text-[#4F5666] uppercase tracking-wider">Total RSVPs</span>
+            <span className="text-xs font-bold text-[#374151] uppercase tracking-wider">Total RSVPs</span>
           </div>
           <div className="text-3xl font-bold text-[#191919]">{totalRsvps}</div>
         </Card>
@@ -59,7 +59,7 @@ export default function AnalyticsPage() {
             <div className="h-10 w-10 rounded-xl bg-[#EE3D5A]/10 flex items-center justify-center text-[#191919]">
               <Activity className="h-5 w-5" />
             </div>
-            <span className="text-xs font-bold text-[#4F5666] uppercase tracking-wider">Total Views</span>
+            <span className="text-xs font-bold text-[#374151] uppercase tracking-wider">Total Views</span>
           </div>
           <div className="text-3xl font-bold text-[#191919]">{totalViews}</div>
         </Card>
@@ -69,7 +69,7 @@ export default function AnalyticsPage() {
             <div className="h-10 w-10 rounded-xl bg-purple-500/10 flex items-center justify-center text-[#191919]">
               <TrendingUp className="h-5 w-5" />
             </div>
-            <span className="text-xs font-bold text-[#4F5666] uppercase tracking-wider">Active Orgs</span>
+            <span className="text-xs font-bold text-[#374151] uppercase tracking-wider">Active Orgs</span>
           </div>
           <div className="text-3xl font-bold text-[#191919]">{organizations.filter(o => o.verified).length}</div>
         </Card>
@@ -88,7 +88,7 @@ export default function AnalyticsPage() {
                 <div key={category} className="space-y-1.5">
                   <div className="flex justify-between text-xs font-medium">
                     <span className="text-[#191919]">{category}</span>
-                    <span className="text-[#4F5666]">{count} events ({percentage}%)</span>
+                    <span className="text-[#374151]">{count} events ({percentage}%)</span>
                   </div>
                   <div className="w-full bg-black/[0.04] rounded-full h-2 overflow-hidden">
                     <motion.div 
@@ -114,7 +114,7 @@ export default function AnalyticsPage() {
               .slice(0, 5)
               .map((org, index) => (
                 <div key={org.id} className="flex items-center gap-4">
-                  <div className="h-8 w-8 rounded-full bg-[#FFFDE1]/[0.06] flex items-center justify-center text-xs font-bold text-[#4F5666]">
+                  <div className="h-8 w-8 rounded-full bg-[#FFFDE1]/[0.06] flex items-center justify-center text-xs font-bold text-[#374151]">
                     #{index + 1}
                   </div>
                   <div className="flex-1">

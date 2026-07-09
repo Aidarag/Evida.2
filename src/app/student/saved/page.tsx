@@ -32,7 +32,7 @@ export default function SavedEventsPage() {
       <div className="space-y-6">
         <div>
           <h1 className="text-3xl font-extrabold text-[#191919] tracking-tight">Your Events</h1>
-          <p className="text-sm text-[#4F5666] mt-1">Keep track of everything you're interested in.</p>
+          <p className="text-sm text-[#374151] mt-1">Keep track of everything you're interested in.</p>
         </div>
 
         {/* Tabs */}

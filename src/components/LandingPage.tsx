@@ -35,7 +35,7 @@ export default function LandingPage({
           <div className="flex items-center gap-4">
             <button
               onClick={onLogin}
-              className="text-xs font-bold text-[#4F5666] hover:text-[#191919] px-3 py-1.5 transition-colors cursor-pointer"
+              className="text-xs font-bold text-[#374151] hover:text-[#191919] px-3 py-1.5 transition-colors cursor-pointer"
             >
               Sign In
             </button>
@@ -80,7 +80,7 @@ export default function LandingPage({
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
-            className="text-sm text-[#4F5666] max-w-lg mx-auto md:mx-0 leading-relaxed"
+            className="text-sm text-[#374151] max-w-lg mx-auto md:mx-0 leading-relaxed"
           >
             Evida is a premium engagement experience. Students discover events, track RSVPs, and promote initiatives, while universities manage campus activities and monitor real-time attendance analytics.
           </motion.p>
@@ -130,7 +130,7 @@ export default function LandingPage({
               <h3 className="text-xl font-extrabold text-[#191919] leading-tight">
                 Homecoming Kickoff Rally 2026
               </h3>
-              <div className="flex items-center justify-between text-xs text-[#4F5666] font-semibold">
+              <div className="flex items-center justify-between text-xs text-[#374151] font-semibold">
                 <span>OCTOBER 9 • plaza</span>
                 <span className="font-extrabold text-[#191919] bg-[#BDFB04] px-2 py-0.5 rounded shadow-sm text-[10px]">FREE TICKET</span>
               </div>
@@ -144,7 +144,7 @@ export default function LandingPage({
         <div className="mx-auto max-w-7xl px-6 space-y-8">
           <div className="text-center space-y-2">
             <h2 className="text-2xl font-extrabold tracking-tight text-[#191919] uppercase">TRENDING EXPERIENCES</h2>
-            <p className="text-xs text-[#4F5666]">Live feed of the most anticipated campus gatherings</p>
+            <p className="text-xs text-[#374151]">Live feed of the most anticipated campus gatherings</p>
           </div>
 
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -165,7 +165,7 @@ export default function LandingPage({
                   <h4 className="text-sm font-bold text-[#191919] mt-1.5 leading-snug">
                     {event.title}
                   </h4>
-                  <div className="flex justify-between items-center text-[10px] text-[#4F5666] mt-2 font-semibold">
+                  <div className="flex justify-between items-center text-[10px] text-[#374151] mt-2 font-semibold">
                     <span>{event.date}</span>
                     <span className="capitalize">{event.location}</span>
                   </div>
@@ -180,7 +180,7 @@ export default function LandingPage({
       <section className="mx-auto max-w-7xl px-6 py-20 space-y-16">
         <div className="text-center space-y-2 max-w-lg mx-auto">
           <h2 className="text-2xl font-extrabold text-[#191919] uppercase">CAMPUS ENGAGEMENT SIMPLIFIED</h2>
-          <p className="text-xs text-[#4F5666]">We bridge the gap between student groups and university staff.</p>
+          <p className="text-xs text-[#374151]">We bridge the gap between student groups and university staff.</p>
         </div>
 
         <div className="grid gap-8 md:grid-cols-3">
@@ -189,7 +189,7 @@ export default function LandingPage({
               <Calendar className="h-5 w-5" />
             </div>
             <h3 className="text-sm font-bold text-[#191919] uppercase">1. Discover & RSVP</h3>
-            <p className="text-xs text-[#4F5666] leading-relaxed">
+            <p className="text-xs text-[#374151] leading-relaxed">
               Explore a unified campus event board. RSVP, save events, or add them directly to your personal calendar in one click.
             </p>
           </div>
@@ -199,7 +199,7 @@ export default function LandingPage({
               <Trophy className="h-5 w-5" />
             </div>
             <h3 className="text-sm font-bold text-[#191919] uppercase">2. Build Communities</h3>
-            <p className="text-xs text-[#4F5666] leading-relaxed">
+            <p className="text-xs text-[#374151] leading-relaxed">
               Create events representing yourself or student organizations you belong to. Host fundraisers, athletic games, or showcases.
             </p>
           </div>
@@ -209,7 +209,7 @@ export default function LandingPage({
               <Shield className="h-5 w-5" />
             </div>
             <h3 className="text-sm font-bold text-[#191919] uppercase">3. Smart Review Queue</h3>
-            <p className="text-xs text-[#4F5666] leading-relaxed">
+            <p className="text-xs text-[#374151] leading-relaxed">
               Evida analyzes event resources in real-time, routing basic requests to fast approval queues to minimize administrative workload.
             </p>
           </div>
@@ -225,7 +225,7 @@ export default function LandingPage({
             <h3 className="text-lg font-extrabold text-[#191919] tracking-tight uppercase flex items-center gap-2">
               <Users className="h-5 w-5 text-[#191919]" /> For Students & Leaders
             </h3>
-            <ul className="space-y-3.5 text-xs text-[#4F5666] font-medium">
+            <ul className="space-y-3.5 text-xs text-[#374151] font-medium">
               <li className="flex items-start gap-2.5">
                 <span className="h-1.5 w-1.5 rounded-full bg-[#BDFB04] mt-1.5 shrink-0 border border-black/10" />
                 Explore upcoming mixers, career nights, and Greek showcases.
@@ -247,7 +247,7 @@ export default function LandingPage({
             <h3 className="text-lg font-extrabold text-[#191919] tracking-tight uppercase flex items-center gap-2">
               <Shield className="h-5 w-5 text-[#191919]" /> For Universities
             </h3>
-            <ul className="space-y-3.5 text-xs text-[#4F5666] font-medium">
+            <ul className="space-y-3.5 text-xs text-[#374151] font-medium">
               <li className="flex items-start gap-2.5">
                 <span className="h-1.5 w-1.5 rounded-full bg-[#BDFB04] mt-1.5 shrink-0 border border-black/10" />
                 Establish full oversight of student gatherings.
@@ -268,7 +268,7 @@ export default function LandingPage({
       {/* Footer */}
       <footer className="border-t border-black/[0.06] py-10 bg-[#191919] text-center space-y-3">
         <p className="text-xs font-bold text-white uppercase tracking-wider">EVIDA CAMPUS PLATFORM</p>
-        <p className="text-[10px] text-[#7B8290]">© 2026 Evida Inc. Premium Campus Experience.</p>
+        <p className="text-[10px] text-[#4B5563]">© 2026 Evida Inc. Premium Campus Experience.</p>
       </footer>
     </div>
   );

@@ -68,7 +68,7 @@ export default function Modal({ isOpen, onClose, children, title, size = 'md' }:
                   onClick={onClose}
                   className="h-10 w-10 rounded-full bg-black/5 hover:bg-black/10 flex items-center justify-center transition-colors cursor-pointer"
                 >
-                  <X className="h-4 w-4 text-[#4F5666]" />
+                  <X className="h-4 w-4 text-[#374151]" />
                 </button>
               </div>
             )}

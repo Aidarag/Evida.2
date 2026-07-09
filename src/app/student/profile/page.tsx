@@ -233,20 +233,20 @@ export default function StudentProfilePage() {
           <h1 className="text-2xl font-extrabold text-[#191919] uppercase tracking-tight leading-tight" style={{ fontFamily: 'var(--font-display)' }}>
             {currentUser.name}
           </h1>
-          <p className="text-sm text-[#4F5666]">@{currentUser.username}</p>
+          <p className="text-sm text-[#374151]">@{currentUser.username}</p>
         </div>
 
         {/* Badges */}
         <div className="flex flex-wrap gap-2">
-          <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white border border-black/[0.07] text-[10px] font-semibold text-[#4F5666]">
+          <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white border border-black/[0.07] text-[10px] font-semibold text-[#374151]">
             <Award className="h-3 w-3 text-[#BDFB04]" />
             {currentUser.major || 'Undeclared'}
           </span>
-          <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white border border-black/[0.07] text-[10px] font-semibold text-[#4F5666]">
+          <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white border border-black/[0.07] text-[10px] font-semibold text-[#374151]">
             <Calendar className="h-3 w-3 text-[#BDFB04]" />
             Class of {currentUser.graduationYear}
           </span>
-          <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white border border-black/[0.07] text-[10px] font-semibold text-[#4F5666]">
+          <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white border border-black/[0.07] text-[10px] font-semibold text-[#374151]">
             <Shield className="h-3 w-3 text-[#BDFB04]" />
             {currentUser.school}
           </span>
@@ -259,14 +259,14 @@ export default function StudentProfilePage() {
           {[
             { label: 'Attended', value: totalRsvps, Icon: CalendarCheck, color: '#BDFB04', bg: '#BDFB0418' },
             { label: 'Hosted', value: totalCreated, Icon: Star, color: '#191919', bg: '#19191910' },
-            { label: 'Saved', value: totalSaved, Icon: BookOpen, color: '#4F5666', bg: '#4F566612' },
+            { label: 'Saved', value: totalSaved, Icon: BookOpen, color: '#374151', bg: '#37415112' },
           ].map(stat => (
             <div key={stat.label} className="bg-white rounded-2xl p-4 flex flex-col items-center gap-2 shadow-sm border border-black/[0.04]">
               <div className="h-8 w-8 rounded-xl flex items-center justify-center" style={{ background: stat.bg }}>
                 <stat.Icon className="h-4 w-4" style={{ color: stat.color }} />
               </div>
               <div className="text-2xl font-extrabold text-[#191919]">{stat.value}</div>
-              <div className="text-[9px] font-bold text-[#4F5666] uppercase tracking-widest">{stat.label}</div>
+              <div className="text-[9px] font-bold text-[#374151] uppercase tracking-widest">{stat.label}</div>
             </div>
           ))}
         </div>
@@ -289,15 +289,15 @@ export default function StudentProfilePage() {
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="font-bold text-[#191919] text-sm uppercase tracking-tight truncate">{org.name}</p>
-                    <p className="text-[10px] text-[#4F5666]">{org.verified ? '✓ Verified organization' : 'Student group'}</p>
+                    <p className="text-[10px] text-[#374151]">{org.verified ? '✓ Verified organization' : 'Student group'}</p>
                   </div>
                 </div>
               ))}
             </div>
           ) : (
             <div className="bg-white rounded-2xl p-6 text-center border border-black/[0.04]">
-              <Users className="h-8 w-8 text-[#4F5666]/30 mx-auto mb-2" />
-              <p className="text-xs text-[#4F5666]">Not a member of any organizations yet.</p>
+              <Users className="h-8 w-8 text-[#374151]/30 mx-auto mb-2" />
+              <p className="text-xs text-[#374151]">Not a member of any organizations yet.</p>
             </div>
           )}
 
@@ -310,7 +310,7 @@ export default function StudentProfilePage() {
             if (joinableOrgs.length === 0) return null;
             return (
               <div className="bg-white rounded-2xl p-4 border border-black/[0.04] shadow-sm space-y-3 mt-3">
-                <h3 className="text-[9px] font-extrabold text-[#4F5666] uppercase tracking-wider">// Apply for Membership</h3>
+                <h3 className="text-[9px] font-extrabold text-[#374151] uppercase tracking-wider">// Apply for Membership</h3>
                 <div className="flex gap-2">
                   <select
                     value={newOrgSelection}
@@ -342,7 +342,7 @@ export default function StudentProfilePage() {
             if (pendingUserRequests.length === 0) return null;
             return (
               <div className="space-y-2 mt-4">
-                <h3 className="text-[9px] font-extrabold text-[#4F5666] uppercase tracking-wider block pl-1">// Pending Applications</h3>
+                <h3 className="text-[9px] font-extrabold text-[#374151] uppercase tracking-wider block pl-1">// Pending Applications</h3>
                 {pendingUserRequests.map(req => (
                   <div key={req.id} className="bg-white rounded-2xl p-4 flex items-center justify-between border border-amber-500/20 bg-amber-500/[0.02] shadow-sm">
                     <div className="min-w-0 flex-1 pr-3">
@@ -365,7 +365,7 @@ export default function StudentProfilePage() {
         {/* Account Actions */}
         <div className="space-y-3">
           <h2 className="text-xs font-extrabold text-[#191919] flex items-center gap-2 uppercase tracking-widest">
-            <Settings className="h-3.5 w-3.5 text-[#4F5666]" /> Account Actions
+            <Settings className="h-3.5 w-3.5 text-[#374151]" /> Account Actions
           </h2>
           <div className="bg-white rounded-2xl overflow-hidden divide-y divide-black/[0.05] border border-black/[0.04] shadow-sm">
 
@@ -379,9 +379,9 @@ export default function StudentProfilePage() {
               </div>
               <div className="flex-1 text-left">
                 <p className="text-sm font-bold text-[#191919] uppercase tracking-tight">Edit Profile</p>
-                <p className="text-[10px] text-[#4F5666]">Customize details, banner &amp; avatar</p>
+                <p className="text-[10px] text-[#374151]">Customize details, banner &amp; avatar</p>
               </div>
-              <ChevronRight className="h-4 w-4 text-[#4F5666]/40 group-hover:text-[#191919]/50 transition-colors shrink-0" />
+              <ChevronRight className="h-4 w-4 text-[#374151]/40 group-hover:text-[#191919]/50 transition-colors shrink-0" />
             </button>
 
             {/* Edit Profile Inline Panel */}
@@ -402,7 +402,7 @@ export default function StudentProfilePage() {
                       { label: 'Graduation Year', value: editYear, set: setEditYear, type: 'text' },
                     ].map(field => (
                       <div key={field.label} className="space-y-1">
-                        <label className="text-[9px] font-bold text-[#4F5666] uppercase tracking-widest">{field.label}</label>
+                        <label className="text-[9px] font-bold text-[#374151] uppercase tracking-widest">{field.label}</label>
                         <input
                           type={field.type}
                           value={field.value}
@@ -414,7 +414,7 @@ export default function StudentProfilePage() {
 
                     {/* Avatar Customizer */}
                     <div className="space-y-2">
-                      <label className="text-[9px] font-bold text-[#4F5666] uppercase tracking-widest block">Choose Avatar Emoji</label>
+                      <label className="text-[9px] font-bold text-[#374151] uppercase tracking-widest block">Choose Avatar Emoji</label>
                       <div className="flex flex-wrap gap-1.5 max-h-24 overflow-y-auto bg-white p-2 rounded-xl border border-black/[0.08]">
                         {PRESET_AVATARS.map(emoji => (
                           <button
@@ -432,7 +432,7 @@ export default function StudentProfilePage() {
                         ))}
                       </div>
                       <div className="space-y-1 pt-1">
-                        <label className="text-[8px] font-bold text-[#4F5666] uppercase tracking-wider block pl-0.5">Or Custom Initials/Emoji</label>
+                        <label className="text-[8px] font-bold text-[#374151] uppercase tracking-wider block pl-0.5">Or Custom Initials/Emoji</label>
                         <input
                           type="text"
                           maxLength={3}
@@ -446,7 +446,7 @@ export default function StudentProfilePage() {
 
                     {/* Banner Customizer */}
                     <div className="space-y-2">
-                      <label className="text-[9px] font-bold text-[#4F5666] uppercase tracking-widest block">Select Banner Preset</label>
+                      <label className="text-[9px] font-bold text-[#374151] uppercase tracking-widest block">Select Banner Preset</label>
                       <div className="grid grid-cols-5 gap-1.5">
                         {PROFILE_BANNERS.map((banner, index) => (
                           <button
@@ -464,7 +464,7 @@ export default function StudentProfilePage() {
                         ))}
                       </div>
                       <div className="space-y-1 pt-1">
-                        <label className="text-[8px] font-bold text-[#4F5666] uppercase tracking-wider block pl-0.5">Or Paste Custom Image URL</label>
+                        <label className="text-[8px] font-bold text-[#374151] uppercase tracking-wider block pl-0.5">Or Paste Custom Image URL</label>
                         <input
                           type="text"
                           value={editBanner}
@@ -485,7 +485,7 @@ export default function StudentProfilePage() {
                       </button>
                       <button
                         onClick={() => setEditOpen(false)}
-                        className="h-10 w-10 rounded-xl bg-black/[0.05] flex items-center justify-center text-[#4F5666] hover:text-[#191919] transition-colors"
+                        className="h-10 w-10 rounded-xl bg-black/[0.05] flex items-center justify-center text-[#374151] hover:text-[#191919] transition-colors"
                       >
                         <X className="h-4 w-4" />
                       </button>
@@ -506,9 +506,9 @@ export default function StudentProfilePage() {
               </div>
               <div className="flex-1 text-left">
                 <p className="text-sm font-bold text-[#191919] uppercase tracking-tight">Notifications</p>
-                <p className="text-[10px] text-[#4F5666]">Manage your alerts</p>
+                <p className="text-[10px] text-[#374151]">Manage your alerts</p>
               </div>
-              <ChevronDown className={`h-4 w-4 text-[#4F5666]/40 transition-transform duration-200 shrink-0 ${notifOpen ? 'rotate-180' : ''}`} />
+              <ChevronDown className={`h-4 w-4 text-[#374151]/40 transition-transform duration-200 shrink-0 ${notifOpen ? 'rotate-180' : ''}`} />
             </button>
 
             <AnimatePresence>
@@ -530,7 +530,7 @@ export default function StudentProfilePage() {
                       <div key={item.key} className="flex items-center justify-between gap-3">
                         <div className="flex-1 min-w-0">
                           <p className="text-xs font-bold text-[#191919] uppercase tracking-tight">{item.label}</p>
-                          <p className="text-[10px] text-[#4F5666] font-normal">{item.desc}</p>
+                          <p className="text-[10px] text-[#374151] font-normal">{item.desc}</p>
                         </div>
                         <button
                           onClick={() => toggleNotif(item.key)}
@@ -574,9 +574,9 @@ export default function StudentProfilePage() {
               {membershipRequests.filter(r => r.status === 'pending').map(req => (
                 <div key={req.id} className="bg-white rounded-2xl p-4 border border-black/[0.04] shadow-sm flex flex-col justify-between gap-4">
                   <div>
-                    <span className="text-[9px] font-bold text-[#4F5666] uppercase tracking-widest block">// JOIN REQUEST</span>
+                    <span className="text-[9px] font-bold text-[#374151] uppercase tracking-widest block">// JOIN REQUEST</span>
                     <h4 className="text-sm font-extrabold text-[#191919] uppercase tracking-tight mt-1">{req.studentName}</h4>
-                    <p className="text-xs text-[#4F5666] mt-0.5">Wants to join: <strong className="text-[#191919]">{req.orgName}</strong></p>
+                    <p className="text-xs text-[#374151] mt-0.5">Wants to join: <strong className="text-[#191919]">{req.orgName}</strong></p>
                   </div>
                   <div className="flex gap-2 w-full">
                     <button
@@ -598,7 +598,7 @@ export default function StudentProfilePage() {
           ) : (
             <div className="bg-white rounded-2xl p-8 text-center border border-black/[0.04] shadow-sm">
               <UserCheck className="h-10 w-10 text-emerald-500/20 mx-auto mb-2" />
-              <p className="text-xs text-[#4F5666]">No pending student membership requests.</p>
+              <p className="text-xs text-[#374151]">No pending student membership requests.</p>
             </div>
           )}
         </div>

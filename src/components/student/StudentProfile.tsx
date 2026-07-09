@@ -49,15 +49,15 @@ export default function StudentProfile({
         <div className="grid grid-cols-3 gap-3 w-full pt-6 mt-6 border-t border-black/[0.06] text-center">
           <div>
             <p className="text-sm font-bold text-[#191919]">{totalRsvps}</p>
-            <p className="text-[9px] font-bold text-[#7B8290] uppercase tracking-wide">RSVPs</p>
+            <p className="text-[9px] font-bold text-[#4B5563] uppercase tracking-wide">RSVPs</p>
           </div>
           <div>
             <p className="text-sm font-bold text-[#191919]">{totalCreated}</p>
-            <p className="text-[9px] font-bold text-[#7B8290] uppercase tracking-wide">Posts</p>
+            <p className="text-[9px] font-bold text-[#4B5563] uppercase tracking-wide">Posts</p>
           </div>
           <div>
             <p className="text-sm font-bold text-[#191919]">{totalSaved}</p>
-            <p className="text-[9px] font-bold text-[#7B8290] uppercase tracking-wide">Saves</p>
+            <p className="text-[9px] font-bold text-[#4B5563] uppercase tracking-wide">Saves</p>
           </div>
         </div>
       </div>
@@ -67,19 +67,19 @@ export default function StudentProfile({
         
         {/* Bio Data info */}
         <div className="rounded-[28px] border border-black/[0.06] bg-white p-6 space-y-4 shadow-sm">
-          <span className="text-[9px] font-bold uppercase text-[#7B8290]">Education Details</span>
+          <span className="text-[9px] font-bold uppercase text-[#4B5563]">Education Details</span>
           
           <div className="grid gap-4 sm:grid-cols-2 text-xs">
             <div>
-              <p className="text-[10px] font-bold text-[#7B8290] uppercase tracking-wide">University School</p>
+              <p className="text-[10px] font-bold text-[#4B5563] uppercase tracking-wide">University School</p>
               <p className="font-extrabold text-[#191919] mt-1 uppercase">{currentUser.school || 'General Science Division'}</p>
             </div>
             <div>
-              <p className="text-[10px] font-bold text-[#7B8290] uppercase tracking-wide">Major / Academic Study</p>
+              <p className="text-[10px] font-bold text-[#4B5563] uppercase tracking-wide">Major / Academic Study</p>
               <p className="font-extrabold text-[#191919] mt-1 uppercase">{currentUser.major}</p>
             </div>
             <div>
-              <p className="text-[10px] font-bold text-[#7B8290] uppercase tracking-wide">Class Graduation Year</p>
+              <p className="text-[10px] font-bold text-[#4B5563] uppercase tracking-wide">Class Graduation Year</p>
               <p className="font-extrabold text-[#191919] mt-1">{currentUser.gradYear}</p>
             </div>
           </div>
@@ -87,11 +87,11 @@ export default function StudentProfile({
 
         {/* Organization memberships */}
         <div className="rounded-[28px] border border-black/[0.06] bg-white p-6 space-y-4 shadow-sm">
-          <span className="text-[9px] font-bold uppercase text-[#7B8290]">Verified Group Memberships</span>
+          <span className="text-[9px] font-bold uppercase text-[#4B5563]">Verified Group Memberships</span>
 
           <div className="space-y-2.5">
             {userOrgs.length === 0 ? (
-              <p className="text-xs text-[#7B8290] italic">Not registered as a member of any campus group.</p>
+              <p className="text-xs text-[#4B5563] italic">Not registered as a member of any campus group.</p>
             ) : (
               userOrgs.map((org) => (
                 <div

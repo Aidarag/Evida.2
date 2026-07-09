@@ -77,7 +77,7 @@ export default function EventFeed({
             <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-white flex items-center gap-2">
               Welcome back, <span className="text-[var(--color-evida-lime)]">{currentUser.name}</span>!
             </h1>
-            <p className="mt-2 text-sm text-slate-400 max-w-xl">
+            <p className="mt-2 text-sm text-[#4B5563] max-w-xl">
               Discover verified campus activities, RSVP to events, or share your tutoring/photography services with the campus community.
             </p>
           </div>
@@ -108,7 +108,7 @@ export default function EventFeed({
             className={`border-b-2 px-1 pb-4 text-sm font-bold transition-all ${
               activeTab === 'events'
                 ? 'border-indigo-500 text-white'
-                : 'border-transparent text-slate-400 hover:text-slate-200'
+                : 'border-transparent text-[#4B5563] hover:text-slate-200'
             }`}
           >
             All Events
@@ -118,7 +118,7 @@ export default function EventFeed({
             className={`border-b-2 px-1 pb-4 text-sm font-bold transition-all ${
               activeTab === 'my-rsvps'
                 ? 'border-indigo-500 text-white'
-                : 'border-transparent text-slate-400 hover:text-slate-200'
+                : 'border-transparent text-[#4B5563] hover:text-slate-200'
             }`}
           >
             My RSVPs & Interested
@@ -128,7 +128,7 @@ export default function EventFeed({
             className={`border-b-2 px-1 pb-4 text-sm font-bold transition-all ${
               activeTab === 'promos'
                 ? 'border-indigo-500 text-white'
-                : 'border-transparent text-slate-400 hover:text-slate-200'
+                : 'border-transparent text-[#4B5563] hover:text-slate-200'
             }`}
           >
             Promotions & Ads
@@ -162,7 +162,7 @@ export default function EventFeed({
                 className={`rounded-lg px-2.5 py-1 font-semibold capitalize border transition-all ${
                   ownershipFilter === type
                     ? 'bg-slate-800 text-white border-slate-700'
-                    : 'bg-transparent text-slate-400 border-transparent hover:text-slate-200'
+                    : 'bg-transparent text-[#4B5563] border-transparent hover:text-slate-200'
                 }`}
               >
                 {type === 'all' ? 'All' : `${type}`}
@@ -179,7 +179,7 @@ export default function EventFeed({
                 className={`rounded-lg px-2.5 py-1 font-semibold capitalize border transition-all ${
                   complexityFilter === comp
                     ? 'bg-slate-800 text-white border-slate-700'
-                    : 'bg-transparent text-slate-400 border-transparent hover:text-slate-200'
+                    : 'bg-transparent text-[#4B5563] border-transparent hover:text-slate-200'
                 }`}
               >
                 {comp === 'all' ? 'All' : `${comp}`}
@@ -258,14 +258,14 @@ export default function EventFeed({
                       </p>
                     )}
 
-                    <p className="mt-2 text-xs text-slate-400 line-clamp-2">
+                    <p className="mt-2 text-xs text-[#4B5563] line-clamp-2">
                       {event.description}
                     </p>
                   </div>
 
                   {/* Metadata and Stats */}
                   <div className="mt-5 pt-4 border-t border-white/5 space-y-3">
-                    <div className="flex flex-col gap-1.5 text-[11px] text-slate-400">
+                    <div className="flex flex-col gap-1.5 text-[11px] text-[#4B5563]">
                       <div className="flex items-center gap-1.5">
                         <Calendar className="h-3.5 w-3.5 text-slate-500" />
                         <span>{event.date} at {event.time}</span>
@@ -278,11 +278,11 @@ export default function EventFeed({
 
                     <div className="flex items-center justify-between text-xs pt-1">
                       <div className="flex items-center gap-3">
-                        <span className="flex items-center gap-1 text-slate-400" title="RSVPs">
+                        <span className="flex items-center gap-1 text-[#4B5563]" title="RSVPs">
                           <Users className="h-3.5 w-3.5 text-indigo-400" />
                           <strong className="text-slate-200 font-semibold">{event.attendees.length}</strong>
                         </span>
-                        <span className="flex items-center gap-1 text-slate-400" title="Interested">
+                        <span className="flex items-center gap-1 text-[#4B5563]" title="Interested">
                           <Heart className="h-3.5 w-3.5 text-rose-400" />
                           <strong className="text-slate-200 font-semibold">{event.interested.length}</strong>
                         </span>
@@ -344,13 +344,13 @@ export default function EventFeed({
                   <h3 className="text-base font-extrabold text-white">
                     {promo.title}
                   </h3>
-                  <p className="mt-2 text-xs text-slate-400">
+                  <p className="mt-2 text-xs text-[#4B5563]">
                     {promo.description}
                   </p>
                 </div>
 
                 {/* Organizer details */}
-                <div className="mt-5 pt-4 border-t border-white/5 flex flex-col gap-1.5 text-[11px] text-slate-400">
+                <div className="mt-5 pt-4 border-t border-white/5 flex flex-col gap-1.5 text-[11px] text-[#4B5563]">
                   <div>
                     <span className="font-semibold text-slate-300">Posted by:</span> {promo.organizer}
                   </div>

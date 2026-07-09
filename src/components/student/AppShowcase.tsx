@@ -176,7 +176,7 @@ export default function AppShowcase() {
                   className={`px-5 py-2 rounded-full text-[10px] font-bold uppercase tracking-wider transition-all duration-300 cursor-pointer ${
                     activeTab === tab.id 
                       ? 'bg-white text-[#191919] shadow-sm'
-                      : 'text-[#4F5666] hover:text-[#191919]'
+                      : 'text-[#374151] hover:text-[#191919]'
                   }`}
                   style={{ fontFamily: 'var(--font-display)' }}
                 >
@@ -188,7 +188,7 @@ export default function AppShowcase() {
             <h2 className="text-[#191919] font-extrabold text-3xl md:text-5xl uppercase tracking-tight leading-[1.05]" style={{ fontFamily: 'var(--font-display)' }}>
               {currentTab.title}
             </h2>
-            <p className="text-[#4F5666] text-sm md:text-base font-light">
+            <p className="text-[#374151] text-sm md:text-base font-light">
               {currentTab.subtitle}
             </p>
           </div>
@@ -218,7 +218,7 @@ export default function AppShowcase() {
                         <h4 className="text-sm font-bold text-[#191919] uppercase tracking-wide" style={{ fontFamily: 'var(--font-display)' }}>
                           {pt.name}
                         </h4>
-                        <p className="text-[#4F5666] text-xs sm:text-sm font-light leading-relaxed">
+                        <p className="text-[#374151] text-xs sm:text-sm font-light leading-relaxed">
                           {pt.desc}
                         </p>
                         
@@ -520,7 +520,7 @@ export default function AppShowcase() {
           </div>
 
           {/* Mobile floating tip icon */}
-          <div className="absolute -bottom-6 flex items-center gap-1.5 text-[9px] font-bold text-gray-400 uppercase tracking-widest pointer-events-none select-none">
+          <div className="absolute -bottom-6 flex items-center gap-1.5 text-[9px] font-bold text-[#4B5563] uppercase tracking-widest pointer-events-none select-none">
             <span className="h-1.5 w-1.5 rounded-full bg-[#BDFB04] animate-ping"></span>
             Click elements inside phone to interact
           </div>

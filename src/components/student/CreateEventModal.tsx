@@ -153,7 +153,7 @@ export default function CreateEventModal({
         {/* Close Button */}
         <button
           onClick={onClose}
-          className="absolute right-4 top-4 rounded-lg p-1.5 text-slate-400 hover:bg-[#FFFDE1]/5 hover:text-white transition-colors cursor-pointer"
+          className="absolute right-4 top-4 rounded-lg p-1.5 text-[#4B5563] hover:bg-[#FFFDE1]/5 hover:text-white transition-colors cursor-pointer"
         >
           <X className="h-4.5 w-4.5" />
         </button>
@@ -165,7 +165,7 @@ export default function CreateEventModal({
               <Sparkles className="h-5 w-5 text-indigo-400" />
               Create Campus Activity
             </h2>
-            <p className="mt-1.5 text-xs text-slate-400">
+            <p className="mt-1.5 text-xs text-[#4B5563]">
               Submit your event. Our platform categorizes your event in real-time to speed up administration.
             </p>
           </div>
@@ -173,7 +173,7 @@ export default function CreateEventModal({
           <div className="grid gap-4 sm:grid-cols-2">
             {/* Title */}
             <div className="space-y-1.5">
-              <label className="text-xs font-bold text-slate-400 uppercase tracking-wide">Event Title *</label>
+              <label className="text-xs font-bold text-[#4B5563] uppercase tracking-wide">Event Title *</label>
               <input
                 type="text"
                 required
@@ -186,7 +186,7 @@ export default function CreateEventModal({
 
             {/* Ownership */}
             <div className="space-y-1.5">
-              <label className="text-xs font-bold text-slate-400 uppercase tracking-wide">Who is organizing? *</label>
+              <label className="text-xs font-bold text-[#4B5563] uppercase tracking-wide">Who is organizing? *</label>
               <select
                 value={ownershipType}
                 onChange={(e) => setOwnershipType(e.target.value as any)}
@@ -203,7 +203,7 @@ export default function CreateEventModal({
           {/* Org details if Organization is selected */}
           {ownershipType === 'organization' && userOrgs.length > 0 && (
             <div className="space-y-1.5 rounded-xl border border-dashed border-white/10 bg-slate-900/20 p-3.5">
-              <label className="text-xs font-bold text-slate-400 uppercase tracking-wide flex items-center gap-1.5">
+              <label className="text-xs font-bold text-[#4B5563] uppercase tracking-wide flex items-center gap-1.5">
                 <Building className="h-3.5 w-3.5 text-indigo-400" />
                 Select Organization *
               </label>
@@ -223,7 +223,7 @@ export default function CreateEventModal({
 
           {/* Description */}
           <div className="space-y-1.5">
-            <label className="text-xs font-bold text-slate-400 uppercase tracking-wide">Description & Details *</label>
+            <label className="text-xs font-bold text-[#4B5563] uppercase tracking-wide">Description & Details *</label>
             <textarea
               required
               rows={3}
@@ -237,7 +237,7 @@ export default function CreateEventModal({
           <div className="grid gap-4 sm:grid-cols-2">
             {/* Date */}
             <div className="space-y-1.5">
-              <label className="text-xs font-bold text-slate-400 uppercase tracking-wide flex items-center gap-1">
+              <label className="text-xs font-bold text-[#4B5563] uppercase tracking-wide flex items-center gap-1">
                 <Calendar className="h-3.5 w-3.5 text-slate-500" /> Date *
               </label>
               <input
@@ -251,7 +251,7 @@ export default function CreateEventModal({
 
             {/* Time */}
             <div className="space-y-1.5">
-              <label className="text-xs font-bold text-slate-400 uppercase tracking-wide flex items-center gap-1">
+              <label className="text-xs font-bold text-[#4B5563] uppercase tracking-wide flex items-center gap-1">
                 Time *
               </label>
               <input
@@ -267,7 +267,7 @@ export default function CreateEventModal({
           <div className="grid gap-4 sm:grid-cols-2">
             {/* Location */}
             <div className="space-y-1.5">
-              <label className="text-xs font-bold text-slate-400 uppercase tracking-wide flex items-center gap-1">
+              <label className="text-xs font-bold text-[#4B5563] uppercase tracking-wide flex items-center gap-1">
                 <MapPin className="h-3.5 w-3.5 text-slate-500" /> Location *
               </label>
               <input
@@ -282,7 +282,7 @@ export default function CreateEventModal({
 
             {/* Location Type */}
             <div className="space-y-1.5">
-              <label className="text-xs font-bold text-slate-400 uppercase tracking-wide">Location Type</label>
+              <label className="text-xs font-bold text-[#4B5563] uppercase tracking-wide">Location Type</label>
               <select
                 value={locationType}
                 onChange={(e) => setLocationType(e.target.value as any)}
@@ -299,7 +299,7 @@ export default function CreateEventModal({
           <div className="grid gap-4 sm:grid-cols-2 pt-2 border-t border-white/5">
             {/* Estimated Attendance */}
             <div className="space-y-1.5">
-              <label className="text-xs font-bold text-slate-400 uppercase tracking-wide flex items-center gap-1">
+              <label className="text-xs font-bold text-[#4B5563] uppercase tracking-wide flex items-center gap-1">
                 <Users className="h-3.5 w-3.5 text-slate-500" /> Expected Attendance
               </label>
               <input
@@ -342,7 +342,7 @@ export default function CreateEventModal({
                 Real-Time Review Classification: {preview.name}
               </h4>
             </div>
-            <ul className="mt-2 pl-5 list-disc text-[11px] space-y-1 text-slate-400">
+            <ul className="mt-2 pl-5 list-disc text-[11px] space-y-1 text-[#4B5563]">
               {preview.bullets.map((bullet, idx) => (
                 <li key={idx}>{bullet}</li>
               ))}

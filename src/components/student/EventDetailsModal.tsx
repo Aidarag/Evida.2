@@ -52,7 +52,7 @@ export default function EventDetailsModal({
         {/* Close Button */}
         <button
           onClick={onClose}
-          className="absolute right-4 top-4 rounded-lg p-1.5 text-slate-400 hover:bg-[#FFFDE1]/5 hover:text-white transition-colors cursor-pointer"
+          className="absolute right-4 top-4 rounded-lg p-1.5 text-[#4B5563] hover:bg-[#FFFDE1]/5 hover:text-white transition-colors cursor-pointer"
         >
           <X className="h-4.5 w-4.5" />
         </button>
@@ -100,13 +100,13 @@ export default function EventDetailsModal({
               </p>
             )}
             <p className="mt-1 text-xs text-slate-500">
-              Created by <span className="font-semibold text-slate-400">{event.organizer}</span>
+              Created by <span className="font-semibold text-[#4B5563]">{event.organizer}</span>
             </p>
           </div>
 
           {/* Event description */}
           <div className="space-y-2">
-            <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider">About the Event</h4>
+            <h4 className="text-xs font-bold text-[#4B5563] uppercase tracking-wider">About the Event</h4>
             <p className="text-sm text-slate-300 leading-relaxed bg-slate-900/40 p-4 rounded-xl border border-white/5">
               {event.description}
             </p>
@@ -119,7 +119,7 @@ export default function EventDetailsModal({
               <div>
                 <p className="text-[11px] font-semibold uppercase tracking-wider text-slate-500">Date & Time</p>
                 <p className="mt-0.5 text-sm font-bold text-slate-200">{event.date}</p>
-                <p className="text-xs text-slate-400">{event.time}</p>
+                <p className="text-xs text-[#4B5563]">{event.time}</p>
               </div>
             </div>
 
@@ -128,7 +128,7 @@ export default function EventDetailsModal({
               <div>
                 <p className="text-[11px] font-semibold uppercase tracking-wider text-slate-500">Location</p>
                 <p className="mt-0.5 text-sm font-bold text-slate-200">{event.location}</p>
-                <p className="text-xs text-slate-400 capitalize">{event.locationType} Event</p>
+                <p className="text-xs text-[#4B5563] capitalize">{event.locationType} Event</p>
               </div>
             </div>
           </div>
@@ -139,7 +139,7 @@ export default function EventDetailsModal({
               <HelpCircle className="h-4.5 w-4.5 text-indigo-400" />
               <h5 className="text-xs font-bold text-indigo-300 uppercase tracking-wider">Smart Classification Insight</h5>
             </div>
-            <p className="text-xs text-slate-400 leading-relaxed">
+            <p className="text-xs text-[#4B5563] leading-relaxed">
               {getCategorizationExplanation()}
             </p>
             {(event.fundingRequested || event.transportationNeeded) && (
@@ -162,7 +162,7 @@ export default function EventDetailsModal({
           <div className="grid gap-4 sm:grid-cols-2">
             {/* Going List */}
             <div className="space-y-2">
-              <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
+              <h4 className="text-xs font-bold text-[#4B5563] uppercase tracking-wider flex items-center gap-1.5">
                 <Users className="h-3.5 w-3.5 text-emerald-400" />
                 Going ({event.attendees.length})
               </h4>
@@ -182,7 +182,7 @@ export default function EventDetailsModal({
 
             {/* Interested List */}
             <div className="space-y-2">
-              <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
+              <h4 className="text-xs font-bold text-[#4B5563] uppercase tracking-wider flex items-center gap-1.5">
                 <Heart className="h-3.5 w-3.5 text-rose-400 fill-rose-400/25" />
                 Interested ({event.interested.length})
               </h4>
@@ -246,7 +246,7 @@ export default function EventDetailsModal({
                     </div>
                   </div>
                   {event.feedback && (
-                    <div className="mt-1 p-2 rounded bg-slate-900/60 border border-white/5 font-mono text-[11px] text-slate-400">
+                    <div className="mt-1 p-2 rounded bg-slate-900/60 border border-white/5 font-mono text-[11px] text-[#4B5563]">
                       Reason: "{event.feedback}"
                     </div>
                   )}

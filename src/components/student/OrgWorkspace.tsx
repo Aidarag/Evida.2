@@ -43,9 +43,9 @@ export default function OrgWorkspace({
   if (userOrgs.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center rounded-3xl border border-dashed border-black/10 bg-slate-50 py-16 text-center max-w-md mx-auto shadow-sm">
-        <Building className="h-10 w-10 text-[#7B8290] mb-3" />
+        <Building className="h-10 w-10 text-[#4B5563] mb-3" />
         <p className="text-xs font-bold text-[#191919] uppercase">No Organization Memberships</p>
-        <p className="mt-1 text-[11px] text-[#4F5666] px-4 leading-relaxed">
+        <p className="mt-1 text-[11px] text-[#374151] px-4 leading-relaxed">
           You are not registered as a member of any campus group. Join an organization to unlock team metrics and host organization-owned events.
         </p>
       </div>
@@ -64,7 +64,7 @@ export default function OrgWorkspace({
           <div>
             <h3 className="text-base font-extrabold text-[#191919] uppercase">Organization Workspace</h3>
             <div className="flex items-center gap-1.5 mt-0.5">
-              <span className="text-[10px] text-[#7B8290] font-bold uppercase">Active Desk:</span>
+              <span className="text-[10px] text-[#4B5563] font-bold uppercase">Active Desk:</span>
               <select
                 value={selectedOrgId}
                 onChange={(e) => setSelectedOrgId(e.target.value)}
@@ -98,7 +98,7 @@ export default function OrgWorkspace({
             {/* Info Card */}
             <div className="rounded-[24px] border border-black/[0.06] bg-white p-5 space-y-4 shadow-sm">
               <div className="flex items-center justify-between">
-                <span className="text-[9px] font-bold uppercase text-[#7B8290]">Group Details</span>
+                <span className="text-[9px] font-bold uppercase text-[#4B5563]">Group Details</span>
                 {activeOrg.verified && (
                   <span className="flex items-center gap-0.5 text-emerald-600 text-[9px] font-extrabold uppercase">
                     <ShieldCheck className="h-3.5 w-3.5" /> Verified
@@ -106,18 +106,18 @@ export default function OrgWorkspace({
                 )}
               </div>
               <h4 className="text-sm font-bold text-[#191919] uppercase">{activeOrg.name}</h4>
-              <p className="text-[11px] text-[#4F5666] leading-relaxed">
+              <p className="text-[11px] text-[#374151] leading-relaxed">
                 {activeOrg.description}
               </p>
 
               {/* Members */}
               <div className="space-y-2 pt-3 border-t border-black/[0.06]">
-                <span className="text-[9px] font-bold text-[#7B8290] uppercase tracking-wide flex items-center gap-1">
+                <span className="text-[9px] font-bold text-[#4B5563] uppercase tracking-wide flex items-center gap-1">
                   <Users className="h-3.5 w-3.5 text-[#191919]" /> Team Roster ({activeOrg.members.length})
                 </span>
                 <div className="flex flex-wrap gap-1.5">
                   {activeOrg.members.map((member) => (
-                    <span key={member} className="rounded-lg bg-slate-50 px-2 py-1 text-[10px] text-[#4F5666] font-semibold border border-black/[0.06]">
+                    <span key={member} className="rounded-lg bg-slate-50 px-2 py-1 text-[10px] text-[#374151] font-semibold border border-black/[0.06]">
                       {member}
                     </span>
                   ))}
@@ -127,23 +127,23 @@ export default function OrgWorkspace({
 
             {/* Basic Analytics */}
             <div className="rounded-[24px] border border-black/[0.06] bg-white p-5 space-y-4 shadow-sm">
-              <span className="text-[9px] font-bold uppercase text-[#7B8290]">Engagement Metrics</span>
+              <span className="text-[9px] font-bold uppercase text-[#4B5563]">Engagement Metrics</span>
               
               <div className="grid grid-cols-3 gap-2 text-center">
                 <div className="bg-[#DFDED7]/25 p-3 rounded-2xl border border-black/[0.04] space-y-1">
                   <Eye className="h-4 w-4 text-[#191919] mx-auto" />
                   <p className="text-sm font-extrabold text-[#191919]">{totalViews}</p>
-                  <p className="text-[8px] text-[#7B8290] uppercase font-bold">Views</p>
+                  <p className="text-[8px] text-[#4B5563] uppercase font-bold">Views</p>
                 </div>
                 <div className="bg-[#DFDED7]/25 p-3 rounded-2xl border border-black/[0.04] space-y-1">
                   <Bookmark className="h-4 w-4 text-emerald-600 mx-auto" />
                   <p className="text-sm font-extrabold text-[#191919]">{totalSaves}</p>
-                  <p className="text-[8px] text-[#7B8290] uppercase font-bold">Saves</p>
+                  <p className="text-[8px] text-[#4B5563] uppercase font-bold">Saves</p>
                 </div>
                 <div className="bg-[#DFDED7]/25 p-3 rounded-2xl border border-black/[0.04] space-y-1">
                   <Users className="h-4 w-4 text-[#191919] mx-auto" />
                   <p className="text-sm font-extrabold text-[#191919]">{totalRSVPs}</p>
-                  <p className="text-[8px] text-[#7B8290] uppercase font-bold">RSVPs</p>
+                  <p className="text-[8px] text-[#4B5563] uppercase font-bold">RSVPs</p>
                 </div>
               </div>
             </div>
@@ -154,7 +154,7 @@ export default function OrgWorkspace({
             <div className="rounded-[24px] border border-black/[0.06] bg-white p-6 space-y-5 shadow-sm">
               
               {/* Tab Selector */}
-              <div className="flex space-x-4 border-b border-black/[0.06] pb-3 text-xs font-bold text-[#7B8290]">
+              <div className="flex space-x-4 border-b border-black/[0.06] pb-3 text-xs font-bold text-[#4B5563]">
                 <button
                   onClick={() => setActiveTab('approved')}
                   className={`pb-3 border-b-2 transition-colors cursor-pointer flex items-center gap-1.5 ${
@@ -188,7 +188,7 @@ export default function OrgWorkspace({
               <div className="space-y-3.5 max-h-96 overflow-y-auto pr-1">
                 {activeTab === 'approved' && (
                   approvedEvents.length === 0 ? (
-                    <p className="text-xs text-[#7B8290] italic text-center py-8">No published events for this organization.</p>
+                    <p className="text-xs text-[#4B5563] italic text-center py-8">No published events for this organization.</p>
                   ) : (
                     approvedEvents.map((event) => (
                       <div
@@ -198,7 +198,7 @@ export default function OrgWorkspace({
                       >
                         <div>
                           <h5 className="text-xs font-bold text-[#191919] uppercase">{event.title}</h5>
-                          <p className="text-[10px] text-[#7B8290] mt-1 uppercase">
+                          <p className="text-[10px] text-[#4B5563] mt-1 uppercase">
                             {event.date} • {event.time} • {event.location}
                           </p>
                         </div>
@@ -212,7 +212,7 @@ export default function OrgWorkspace({
 
                 {activeTab === 'pending' && (
                   pendingEvents.length === 0 ? (
-                    <p className="text-xs text-[#7B8290] italic text-center py-8">No events currently pending moderation.</p>
+                    <p className="text-xs text-[#4B5563] italic text-center py-8">No events currently pending moderation.</p>
                   ) : (
                     pendingEvents.map((event) => (
                       <div
@@ -226,7 +226,7 @@ export default function OrgWorkspace({
                             {event.complexityType} queue
                           </span>
                         </div>
-                        <p className="text-[10px] text-[#7B8290] uppercase">
+                        <p className="text-[10px] text-[#4B5563] uppercase">
                           {event.date} • {event.time} • {event.location}
                         </p>
                       </div>
@@ -236,7 +236,7 @@ export default function OrgWorkspace({
 
                 {activeTab === 'rejected' && (
                   rejectedEvents.length === 0 ? (
-                    <p className="text-xs text-[#7B8290] italic text-center py-8">No rejected event records found.</p>
+                    <p className="text-xs text-[#4B5563] italic text-center py-8">No rejected event records found.</p>
                   ) : (
                     rejectedEvents.map((event) => (
                       <div
@@ -246,7 +246,7 @@ export default function OrgWorkspace({
                       >
                         <div>
                           <h5 className="text-xs font-bold text-[#191919] uppercase">{event.title}</h5>
-                          <p className="text-[10px] text-[#7B8290] mt-0.5 uppercase">
+                          <p className="text-[10px] text-[#4B5563] mt-0.5 uppercase">
                             {event.date} • {event.time}
                           </p>
                         </div>

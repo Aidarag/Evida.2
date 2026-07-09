@@ -91,7 +91,7 @@ export default function HowItWorksPage() {
                     <h3 className="font-bold text-base text-[#191919] uppercase tracking-wide" style={{ fontFamily: 'var(--font-display)' }}>
                       {step.title}
                     </h3>
-                    <p className="text-[#4F5666] text-xs sm:text-sm leading-relaxed font-light">
+                    <p className="text-[#374151] text-xs sm:text-sm leading-relaxed font-light">
                       {step.description}
                     </p>
                   </div>
