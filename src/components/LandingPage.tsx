@@ -206,9 +206,6 @@ export default function LandingPage({
             <a href="#about" className="text-[10px] font-black text-[#4B5563] hover:text-[#191919] uppercase tracking-widest transition-all">
               About
             </a>
-            <a href="#vision" className="text-[10px] font-black text-[#4B5563] hover:text-[#191919] uppercase tracking-widest transition-all">
-              Vision
-            </a>
             <a href="#how-it-works" className="text-[10px] font-black text-[#4B5563] hover:text-[#191919] uppercase tracking-widest transition-all">
               How It Works
             </a>
@@ -823,32 +820,6 @@ export default function LandingPage({
               </div>
             </div>
 
-          </div>
-        </div>
-      </section>
-
-      {/* Vision Section */}
-      <section id="vision" className="mx-auto max-w-7xl px-6 py-20 space-y-12">
-        <div className="text-center space-y-3 max-w-lg mx-auto">
-          <span className="text-[10px] font-black tracking-widest text-[#4B5563] uppercase">Our Vision</span>
-          <h2 className="text-3xl font-extrabold tracking-tight text-[#191919] uppercase">Empowering Campus Communities</h2>
-        </div>
-
-        <div className="bg-[#191919] text-white rounded-[32px] p-8 md:p-12 relative overflow-hidden border border-black/5 shadow-lg text-left">
-          <div className="absolute right-0 bottom-0 translate-x-10 translate-y-10 w-96 h-96 rounded-full bg-[#BDFB04]/5 blur-[120px] pointer-events-none"></div>
-          <div className="max-w-2xl space-y-6">
-            <p className="text-lg md:text-2xl font-black uppercase text-[#BDFB04] leading-snug tracking-wide">
-              Fostering connection, visibility, and frictionless student activities.
-            </p>
-            <p className="text-sm text-gray-300 leading-relaxed font-light">
-              We believe campus life should be vibrant and accessible. Scrambled group chats, lost flyers, and outdated university software divide student organizations and isolate students. Evida rebuilds campus interaction from the ground up, delivering a premium engagement framework that unites activities, services, and administration.
-            </p>
-            <div className="pt-2 flex items-center gap-3">
-              <span className="h-8 w-8 rounded-lg bg-[#BDFB04]/10 border border-[#BDFB04]/20 flex items-center justify-center text-[#BDFB04]">
-                <Sparkles className="h-4 w-4" />
-              </span>
-              <span className="text-[10px] font-black uppercase tracking-wider text-[#BDFB04]">Designed for instant access</span>
-            </div>
           </div>
         </div>
       </section>
