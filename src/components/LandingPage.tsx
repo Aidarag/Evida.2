@@ -750,58 +750,77 @@ export default function LandingPage({
       {/* About Section */}
       <section id="about" className="bg-[#DFDED7]/35 border-y border-black/[0.06] py-20">
         <div className="mx-auto max-w-7xl px-6 space-y-12">
-          <div className="text-center space-y-3 max-w-lg mx-auto">
-            <span className="text-[10px] font-black tracking-widest text-[#4B5563] uppercase">About Evida</span>
-            <h2 className="text-3xl font-extrabold tracking-tight text-[#191919] uppercase">The Digital Center of Campus Life</h2>
-            <p className="text-xs text-[#374151] leading-relaxed">
-              We replace fragmented group chats, physical flyers, and archaic university portals with a single premium interface designed for high-density student hubs.
-            </p>
+          <div className="text-center space-y-3 max-w-xl mx-auto">
+            <span className="text-[10px] font-black tracking-widest text-[#4B5563] uppercase">Built for Everyone</span>
+            <h2 className="text-3xl md:text-5xl font-black uppercase tracking-tighter text-[#191919]" style={{ fontFamily: 'var(--font-display)' }}>
+              One platform. Two ways to connect.
+            </h2>
           </div>
 
-          <div className="grid gap-12 md:grid-cols-2">
-            {/* Students */}
-            <div className="rounded-[28px] border border-black/[0.04] bg-white p-8 space-y-6 relative overflow-hidden shadow-sm">
-              <div className="absolute -right-20 -top-20 h-40 w-40 rounded-full bg-[#BDFB04]/10 blur-3xl"></div>
-              <h3 className="text-lg font-extrabold text-[#191919] tracking-tight uppercase flex items-center gap-2">
-                <Users className="h-5 w-5 text-[#191919]" /> For Students & Leaders
-              </h3>
-              <ul className="space-y-3.5 text-xs text-[#374151] font-medium text-left">
-                <li className="flex items-start gap-2.5">
-                  <span className="h-1.5 w-1.5 rounded-full bg-[#BDFB04] mt-1.5 shrink-0 border border-black/10" />
-                  Explore upcoming mixers, career nights, and club showcases.
-                </li>
-                <li className="flex items-start gap-2.5">
-                  <span className="h-1.5 w-1.5 rounded-full bg-[#BDFB04] mt-1.5 shrink-0 border border-black/10" />
-                  Submit events representing verified campus student organizations.
-                </li>
-                <li className="flex items-start gap-2.5">
-                  <span className="h-1.5 w-1.5 rounded-full bg-[#BDFB04] mt-1.5 shrink-0 border border-black/10" />
-                  Advertise peer tutoring, photowalks, or marketplace items.
-                </li>
-              </ul>
+          <div className="grid gap-8 md:grid-cols-2">
+            
+            {/* Students Card */}
+            <div className="rounded-[28px] border border-black/[0.04] bg-white overflow-hidden shadow-sm flex flex-col hover:shadow-md transition-all">
+              <div className="relative h-48 w-full bg-[url('/pexels-maorattias-5191958.jpg')] bg-cover bg-center" />
+              <div className="p-8 space-y-4 text-left">
+                <span className="text-[9px] font-black text-gray-400 uppercase tracking-widest block">For Students</span>
+                <h3 className="text-lg font-extrabold text-[#191919] uppercase tracking-tight leading-tight">
+                  Discover events, join groups, and promote your initiatives.
+                </h3>
+                <ul className="space-y-2.5 text-xs text-[#374151] font-medium pt-2">
+                  <li className="flex items-start gap-2.5">
+                    <span className="h-1.5 w-1.5 rounded-full bg-[#BDFB04] mt-1.5 shrink-0 border border-black/10" />
+                    Discover campus events and stay in the loop.
+                  </li>
+                  <li className="flex items-start gap-2.5">
+                    <span className="h-1.5 w-1.5 rounded-full bg-[#BDFB04] mt-1.5 shrink-0 border border-black/10" />
+                    Join organizations and meet new people.
+                  </li>
+                  <li className="flex items-start gap-2.5">
+                    <span className="h-1.5 w-1.5 rounded-full bg-[#BDFB04] mt-1.5 shrink-0 border border-black/10" />
+                    RSVP to campus activities in one tap.
+                  </li>
+                  <li className="flex items-start gap-2.5">
+                    <span className="h-1.5 w-1.5 rounded-full bg-[#BDFB04] mt-1.5 shrink-0 border border-black/10" />
+                    Create your own independent student events.
+                  </li>
+                  <li className="flex items-start gap-2.5">
+                    <span className="h-1.5 w-1.5 rounded-full bg-[#BDFB04] mt-1.5 shrink-0 border border-black/10" />
+                    Promote local businesses, tutoring services, photography, food sales, and other student initiatives.
+                  </li>
+                </ul>
+              </div>
             </div>
 
-            {/* School */}
-            <div className="rounded-[28px] border border-black/[0.04] bg-white p-8 space-y-6 relative overflow-hidden shadow-sm">
-              <div className="absolute -right-20 -top-20 h-40 w-40 rounded-full bg-[#BDFB04]/10 blur-3xl"></div>
-              <h3 className="text-lg font-extrabold text-[#191919] tracking-tight uppercase flex items-center gap-2">
-                <Shield className="h-5 w-5 text-[#191919]" /> For Universities
-              </h3>
-              <ul className="space-y-3.5 text-xs text-[#374151] font-medium text-left">
-                <li className="flex items-start gap-2.5">
-                  <span className="h-1.5 w-1.5 rounded-full bg-[#BDFB04] mt-1.5 shrink-0 border border-black/10" />
-                  Maintain administrative oversight and student safety guards.
-                </li>
-                <li className="flex items-start gap-2.5">
-                  <span className="h-1.5 w-1.5 rounded-full bg-[#BDFB04] mt-1.5 shrink-0 border border-black/10" />
-                  Manage and approve events with clean reviewer queues and feedback.
-                </li>
-                <li className="flex items-start gap-2.5">
-                  <span className="h-1.5 w-1.5 rounded-full bg-[#BDFB04] mt-1.5 shrink-0 border border-black/10" />
-                  Monitor campus engagement trends and attendance records.
-                </li>
-              </ul>
+            {/* School & Org Card */}
+            <div className="rounded-[28px] border border-black/[0.04] bg-white overflow-hidden shadow-sm flex flex-col hover:shadow-md transition-all">
+              <div className="relative h-48 w-full bg-[url('/pexels-gu-ko-2150570603-31827067.jpg')] bg-cover bg-center" />
+              <div className="p-8 space-y-4 text-left">
+                <span className="text-[9px] font-black text-gray-400 uppercase tracking-widest block">For Schools & Organizations</span>
+                <h3 className="text-lg font-extrabold text-[#191919] uppercase tracking-tight leading-tight">
+                  Publish events, coordinate groups, and monitor engagement.
+                </h3>
+                <ul className="space-y-2.5 text-xs text-[#374151] font-medium pt-2">
+                  <li className="flex items-start gap-2.5">
+                    <span className="h-1.5 w-1.5 rounded-full bg-[#BDFB04] mt-1.5 shrink-0 border border-black/10" />
+                    Publish official events and share group announcements.
+                  </li>
+                  <li className="flex items-start gap-2.5">
+                    <span className="h-1.5 w-1.5 rounded-full bg-[#BDFB04] mt-1.5 shrink-0 border border-black/10" />
+                    Manage organization members and assign specific moderation roles.
+                  </li>
+                  <li className="flex items-start gap-2.5">
+                    <span className="h-1.5 w-1.5 rounded-full bg-[#BDFB04] mt-1.5 shrink-0 border border-black/10" />
+                    Approve group membership requests seamlessly.
+                  </li>
+                  <li className="flex items-start gap-2.5">
+                    <span className="h-1.5 w-1.5 rounded-full bg-[#BDFB04] mt-1.5 shrink-0 border border-black/10" />
+                    Increase student engagement across all departments.
+                  </li>
+                </ul>
+              </div>
             </div>
+
           </div>
         </div>
       </section>
