@@ -644,60 +644,60 @@ export default function LandingPage({
             <p className="text-xs text-[#4B5563]">We simplify communication and activities for everyone on campus.</p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-4 border border-black/[0.06] rounded-[32px] overflow-hidden bg-white shadow-sm">
+          <div className="grid grid-cols-2 border border-black/[0.06] rounded-[32px] overflow-hidden bg-white shadow-sm max-w-4xl mx-auto">
             
             {/* Step 1 */}
-            <div className="p-8 space-y-4 text-left border-b md:border-b-0 md:border-r border-black/[0.06]">
-              <span className="text-[8px] font-black uppercase tracking-widest text-gray-400 block">Step 01</span>
+            <div className="p-6 sm:p-8 space-y-3.5 text-left border-r border-b border-black/[0.06]">
+              <span className="text-[8px] sm:text-[9px] font-black uppercase tracking-widest text-gray-400 block">Step 01</span>
               <div className="h-9 w-9 rounded-full bg-black/5 flex items-center justify-center text-[#191919] border border-black/5 shadow-inner">
-                <Mail className="h-4 w-4" />
+                <Mail className="h-4.5 w-4.5 stroke-[1.8]" />
               </div>
-              <h3 className="text-sm font-extrabold text-[#191919] leading-snug">
+              <h3 className="text-sm sm:text-base font-extrabold text-[#191919] leading-snug">
                 Sign up with your school email
               </h3>
-              <p className="text-xs text-[#4B5563] leading-relaxed font-medium">
+              <p className="text-[11px] sm:text-xs text-[#4B5563] leading-relaxed font-medium">
                 Students verify their identity using their official university email to ensure a secure, trusted environment.
               </p>
             </div>
 
             {/* Step 2 */}
-            <div className="p-8 space-y-4 text-left border-b md:border-b-0 md:border-r border-black/[0.06]">
-              <span className="text-[8px] font-black uppercase tracking-widest text-gray-400 block">Step 02</span>
+            <div className="p-6 sm:p-8 space-y-3.5 text-left border-b border-black/[0.06]">
+              <span className="text-[8px] sm:text-[9px] font-black uppercase tracking-widest text-gray-400 block">Step 02</span>
               <div className="h-9 w-9 rounded-full bg-black/5 flex items-center justify-center text-[#191919] border border-black/5 shadow-inner">
-                <Search className="h-4 w-4" />
+                <Search className="h-4.5 w-4.5 stroke-[1.8]" />
               </div>
-              <h3 className="text-sm font-extrabold text-[#191919] leading-snug">
+              <h3 className="text-sm sm:text-base font-extrabold text-[#191919] leading-snug">
                 Discover campus life
               </h3>
-              <p className="text-xs text-[#4B5563] leading-relaxed font-medium">
+              <p className="text-[11px] sm:text-xs text-[#4B5563] leading-relaxed font-medium">
                 Browse events, student organizations, promotions, and opportunities personalized specifically to your campus.
               </p>
             </div>
 
             {/* Step 3 */}
-            <div className="p-8 space-y-4 text-left border-b md:border-b-0 md:border-r border-black/[0.06]">
-              <span className="text-[8px] font-black uppercase tracking-widest text-gray-400 block">Step 03</span>
+            <div className="p-6 sm:p-8 space-y-3.5 text-left border-r border-black/[0.06]">
+              <span className="text-[8px] sm:text-[9px] font-black uppercase tracking-widest text-gray-400 block">Step 03</span>
               <div className="h-9 w-9 rounded-full bg-black/5 flex items-center justify-center text-[#191919] border border-black/5 shadow-inner">
-                <Users className="h-4 w-4" />
+                <Users className="h-4.5 w-4.5 stroke-[1.8]" />
               </div>
-              <h3 className="text-sm font-extrabold text-[#191919] leading-snug">
+              <h3 className="text-sm sm:text-base font-extrabold text-[#191919] leading-snug">
                 Connect with peers
               </h3>
-              <p className="text-xs text-[#4B5563] leading-relaxed font-medium">
+              <p className="text-[11px] sm:text-xs text-[#4B5563] leading-relaxed font-medium">
                 Join organizations, RSVP to events, interact with your campus community, and discover new experiences.
               </p>
             </div>
 
             {/* Step 4 */}
-            <div className="p-8 space-y-4 text-left">
-              <span className="text-[8px] font-black uppercase tracking-widest text-gray-400 block">Step 04</span>
+            <div className="p-6 sm:p-8 space-y-3.5 text-left">
+              <span className="text-[8px] sm:text-[9px] font-black uppercase tracking-widest text-gray-400 block">Step 04</span>
               <div className="h-9 w-9 rounded-full bg-black/5 flex items-center justify-center text-[#191919] border border-black/5 shadow-inner">
-                <Plus className="h-4 w-4" />
+                <Plus className="h-4.5 w-4.5 stroke-[1.8]" />
               </div>
-              <h3 className="text-sm font-extrabold text-[#191919] leading-snug">
+              <h3 className="text-sm sm:text-base font-extrabold text-[#191919] leading-snug">
                 Create new content
               </h3>
-              <p className="text-xs text-[#4B5563] leading-relaxed font-medium">
+              <p className="text-[11px] sm:text-xs text-[#4B5563] leading-relaxed font-medium">
                 Allow every verified student to create events, promotions, and activities. Organization members simply receive additional management permissions.
               </p>
             </div>
