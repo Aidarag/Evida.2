@@ -48,17 +48,42 @@ export default function LandingPage({
 
   // Smartphone Showcase States
   const [phoneActive, setPhoneActive] = useState(false);
-  const [activeScreen, setActiveScreen] = useState(0);
-  const [feedRsvp, setFeedRsvp] = useState(false);
-  const [detailRsvp, setDetailRsvp] = useState(false);
+  const [currentView, setCurrentView] = useState<'feed' | 'details'>('feed');
+  const [scrollProgress, setScrollProgress] = useState(0); // 0 to 100
   const [rsvpConfirmed, setRsvpConfirmed] = useState(false);
+
+  const feedScrollRef = useRef<HTMLDivElement>(null);
+  const detailsScrollRef = useRef<HTMLDivElement>(null);
 
   const handlePhoneClick = () => {
     if (!phoneActive) {
       setPhoneActive(true);
-      setActiveScreen(0);
+      setCurrentView('feed');
+      setScrollProgress(0);
       setRsvpConfirmed(false);
+      setTimeout(() => {
+        if (feedScrollRef.current) feedScrollRef.current.scrollTop = 0;
+        if (detailsScrollRef.current) detailsScrollRef.current.scrollTop = 0;
+      }, 50);
     }
+  };
+
+  const handleCardTap = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setCurrentView('details');
+    setScrollProgress(0);
+    setTimeout(() => {
+      if (detailsScrollRef.current) detailsScrollRef.current.scrollTop = 0;
+    }, 50);
+  };
+
+  const handleBackTap = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setCurrentView('feed');
+    setScrollProgress(0);
+    setTimeout(() => {
+      if (feedScrollRef.current) feedScrollRef.current.scrollTop = 0;
+    }, 50);
   };
 
   const handleRsvpClick = (e: React.MouseEvent) => {
@@ -68,15 +93,20 @@ export default function LandingPage({
     setTimeout(() => {
       setPhoneActive(false);
       setRsvpConfirmed(false);
-      setActiveScreen(0);
+      setCurrentView('feed');
+      setScrollProgress(0);
     }, 1500);
   };
 
-  const handleScreenTap = () => {
-    if (activeScreen < 4) {
-      setActiveScreen(prev => prev + 1);
-    }
+  const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
+    const target = e.currentTarget;
+    const progress = (target.scrollTop / (target.scrollHeight - target.clientHeight)) * 100;
+    setScrollProgress(progress);
   };
+
+  const activeStep = currentView === 'feed'
+    ? (scrollProgress < 30 ? 0 : (scrollProgress < 75 ? 1 : 2))
+    : (scrollProgress < 50 ? 3 : 4);
 
   // References for scroll animations
   const sectionRef = useRef<HTMLDivElement>(null);
@@ -88,106 +118,6 @@ export default function LandingPage({
   // Scale and Lift animations for the smartphone shell
   const phoneScale = useTransform(scrollYProgress, [0, 0.4, 0.8], [0.9, 1.05, 1]);
   const phoneY = useTransform(scrollYProgress, [0, 0.4, 0.8], [60, -10, 0]);
-
-  // Lock page scrolling when smartphone interactive mode is active
-  useEffect(() => {
-    if (phoneActive) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = '';
-    }
-    return () => {
-      document.body.style.overflow = '';
-    };
-  }, [phoneActive]);
-
-  // Handle scroll hijacking inside active smartphone demo
-  useEffect(() => {
-    if (!phoneActive) return;
-
-    let isTransitioning = false;
-
-    const handleWheel = (e: WheelEvent) => {
-      e.preventDefault(); // prevent landing page scrolling
-
-      if (isTransitioning) return;
-
-      if (e.deltaY > 30) {
-        // Scroll down inside demo
-        if (activeScreen < 4) {
-          isTransitioning = true;
-          setActiveScreen(prev => prev + 1);
-          setTimeout(() => { isTransitioning = false; }, 600);
-        } else {
-          // Reached end screen, release scroll control
-          setPhoneActive(false);
-        }
-      } else if (e.deltaY < -30) {
-        // Scroll up inside demo
-        if (activeScreen > 0) {
-          isTransitioning = true;
-          setActiveScreen(prev => prev - 1);
-          setTimeout(() => { isTransitioning = false; }, 600);
-        } else {
-          // Reached top screen, release scroll control
-          setPhoneActive(false);
-        }
-      }
-    };
-
-    window.addEventListener('wheel', handleWheel, { passive: false });
-    return () => {
-      window.removeEventListener('wheel', handleWheel);
-    };
-  }, [phoneActive, activeScreen]);
-
-  // Handle mobile swipe hijacking inside active smartphone demo
-  useEffect(() => {
-    if (!phoneActive) return;
-
-    let touchStartY = 0;
-    let isTransitioning = false;
-
-    const handleTouchStart = (e: TouchEvent) => {
-      touchStartY = e.touches[0].clientY;
-    };
-
-    const handleTouchMove = (e: TouchEvent) => {
-      e.preventDefault(); // prevent landing page swipe scrolling
-
-      if (isTransitioning) return;
-
-      const touchEndY = e.touches[0].clientY;
-      const diffY = touchStartY - touchEndY; // positive means swipe up (scroll down)
-
-      if (diffY > 55) {
-        // Scroll down
-        if (activeScreen < 4) {
-          isTransitioning = true;
-          setActiveScreen(prev => prev + 1);
-          setTimeout(() => { isTransitioning = false; }, 600);
-        } else {
-          setPhoneActive(false);
-        }
-      } else if (diffY < -55) {
-        // Scroll up
-        if (activeScreen > 0) {
-          isTransitioning = true;
-          setActiveScreen(prev => prev - 1);
-          setTimeout(() => { isTransitioning = false; }, 600);
-        } else {
-          setPhoneActive(false);
-        }
-      }
-    };
-
-    window.addEventListener('touchstart', handleTouchStart, { passive: true });
-    window.addEventListener('touchmove', handleTouchMove, { passive: false });
-    return () => {
-      window.removeEventListener('touchstart', handleTouchStart);
-      window.removeEventListener('touchmove', handleTouchMove);
-    };
-  }, [phoneActive, activeScreen]);
 
   const toggleFaq = (index: number) => {
     setFaqOpenIndex(faqOpenIndex === index ? null : index);
@@ -340,7 +270,7 @@ export default function LandingPage({
               <div className="h-1 bg-black/10 rounded-full w-28 overflow-hidden">
                 <motion.div 
                   className="h-full bg-[#191919]"
-                  animate={{ width: `${(activeScreen + 1) * 20}%` }}
+                  animate={{ width: `${(activeStep + 1) * 20}%` }}
                   transition={{ duration: 0.3 }}
                 />
               </div>
@@ -349,47 +279,47 @@ export default function LandingPage({
             <div className="space-y-3 pt-2">
               <div className="flex items-center gap-3 transition-all duration-300">
                 <div className={`h-5 w-5 rounded-full border flex items-center justify-center text-[9px] font-black transition-all ${
-                  activeScreen === 0 
+                  activeStep === 0 
                     ? 'bg-[#191919] border-[#191919] text-[#BDFB04] scale-110 shadow-md' 
                     : 'bg-white border-black/10 text-gray-400'
                 }`}>1</div>
-                <span className={`text-[9px] font-black uppercase tracking-wider ${activeScreen === 0 ? 'text-[#191919]' : 'text-gray-400'}`}>Dashboard</span>
+                <span className={`text-[9px] font-black uppercase tracking-wider ${activeStep === 0 ? 'text-[#191919]' : 'text-gray-400'}`}>Dashboard</span>
               </div>
 
               <div className="flex items-center gap-3 transition-all duration-300">
                 <div className={`h-5 w-5 rounded-full border flex items-center justify-center text-[9px] font-black transition-all ${
-                  activeScreen === 1 
+                  activeStep === 1 
                     ? 'bg-[#191919] border-[#191919] text-[#BDFB04] scale-110 shadow-md' 
                     : 'bg-white border-black/10 text-gray-400'
                 }`}>2</div>
-                <span className={`text-[9px] font-black uppercase tracking-wider ${activeScreen === 1 ? 'text-[#191919]' : 'text-gray-400'}`}>Discover</span>
+                <span className={`text-[9px] font-black uppercase tracking-wider ${activeStep === 1 ? 'text-[#191919]' : 'text-gray-400'}`}>Discover</span>
               </div>
 
               <div className="flex items-center gap-3 transition-all duration-300">
                 <div className={`h-5 w-5 rounded-full border flex items-center justify-center text-[9px] font-black transition-all ${
-                  activeScreen === 2 
+                  activeStep === 2 
                     ? 'bg-[#191919] border-[#191919] text-[#BDFB04] scale-110 shadow-md' 
                     : 'bg-white border-black/10 text-gray-400'
                 }`}>3</div>
-                <span className={`text-[9px] font-black uppercase tracking-wider ${activeScreen === 2 ? 'text-[#191919]' : 'text-gray-400'}`}>Experiences</span>
+                <span className={`text-[9px] font-black uppercase tracking-wider ${activeStep === 2 ? 'text-[#191919]' : 'text-gray-400'}`}>Experiences</span>
               </div>
 
               <div className="flex items-center gap-3 transition-all duration-300">
                 <div className={`h-5 w-5 rounded-full border flex items-center justify-center text-[9px] font-black transition-all ${
-                  activeScreen === 3 
+                  activeStep === 3 
                     ? 'bg-[#191919] border-[#191919] text-[#BDFB04] scale-110 shadow-md' 
                     : 'bg-white border-black/10 text-gray-400'
                 }`}>4</div>
-                <span className={`text-[9px] font-black uppercase tracking-wider ${activeScreen === 3 ? 'text-[#191919]' : 'text-gray-400'}`}>Details</span>
+                <span className={`text-[9px] font-black uppercase tracking-wider ${activeStep === 3 ? 'text-[#191919]' : 'text-gray-400'}`}>Details</span>
               </div>
 
               <div className="flex items-center gap-3 transition-all duration-300">
                 <div className={`h-5 w-5 rounded-full border flex items-center justify-center text-[9px] font-black transition-all ${
-                  activeScreen === 4 
+                  activeStep === 4 
                     ? 'bg-[#191919] border-[#191919] text-[#BDFB04] scale-110 shadow-md' 
                     : 'bg-white border-black/10 text-gray-400'
                 }`}>5</div>
-                <span className={`text-[9px] font-black uppercase tracking-wider ${activeScreen === 4 ? 'text-[#191919]' : 'text-gray-400'}`}>RSVP</span>
+                <span className={`text-[9px] font-black uppercase tracking-wider ${activeStep === 4 ? 'text-[#191919]' : 'text-gray-400'}`}>RSVP</span>
               </div>
             </div>
           </div>
@@ -398,7 +328,7 @@ export default function LandingPage({
           <motion.div
             style={{ scale: phoneScale, y: phoneY }}
             onClick={handlePhoneClick}
-            className={`relative max-w-[310px] w-full aspect-[9/19.5] rounded-[44px] border-[10px] border-neutral-950 shadow-2xl bg-neutral-900 z-20 cursor-pointer overflow-hidden touch-none select-none ${
+            className={`relative max-w-[310px] w-full aspect-[9/19.5] rounded-[44px] border-[10px] border-neutral-950 shadow-2xl bg-neutral-900 z-20 cursor-pointer overflow-hidden select-none ${
               phoneActive ? 'ring-4 ring-[#BDFB04]/30' : 'hover:scale-[1.02] transition-transform duration-300'
             }`}
           >
@@ -426,8 +356,8 @@ export default function LandingPage({
             {/* Locked screen guide overlay */}
             {!phoneActive && (
               <div className="absolute inset-0 bg-black/40 backdrop-blur-xs z-30 flex flex-col items-center justify-center text-center p-6 text-white space-y-4">
-                <div className="h-12 w-12 rounded-full bg-neutral-800 border border-white/10 flex items-center justify-center shadow-lg animate-bounce">
-                  <EvidaLogo size={22} showText={false} lightMode={false} />
+                <div className="h-12 w-12 rounded-full bg-white border border-black/[0.06] flex items-center justify-center shadow-lg animate-bounce">
+                  <EvidaLogo size={22} showText={false} lightMode={true} />
                 </div>
                 <div className="space-y-1">
                   <span className="block text-[10px] font-black uppercase tracking-widest text-[#BDFB04]">Take a tour</span>
@@ -436,55 +366,69 @@ export default function LandingPage({
               </div>
             )}
 
-            {/* User Journey Screens */}
-            <div className="w-full h-full relative z-10 overflow-hidden bg-[#ECECE5] touch-none">
-              <AnimatePresence mode="wait">
-                <motion.div
-                  key={activeScreen}
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 0.3 }}
-                  className="w-full h-full relative select-none"
-                  onClick={handleScreenTap}
+            {/* User Journey Screens (Native Scrollable Containers like Posh) */}
+            <div className="w-full h-full relative z-10 overflow-hidden bg-[#ECECE5]">
+              {currentView === 'feed' ? (
+                <div 
+                  ref={feedScrollRef}
+                  onScroll={handleScroll}
+                  className="w-full h-full overflow-y-auto scrollbar-none relative scroll-smooth"
                 >
-                  <img
-                    src={`/tour-${activeScreen + 1}.png`}
-                    alt={`Tour Screen ${activeScreen + 1}`}
-                    className="w-full h-full object-fill select-none pointer-events-none"
+                  <div className="flex flex-col w-full">
+                    <img src="/tour-1.png" alt="Dashboard top" className="w-full h-auto select-none pointer-events-none" />
+                    <img src="/tour-2.png" alt="Dashboard bottom" className="w-full h-auto select-none pointer-events-none" />
+                    <img src="/tour-3.png" alt="Experiences" className="w-full h-auto select-none pointer-events-none" />
+                  </div>
+
+                  {/* Hotspot for Career Fair card on Feed page */}
+                  <div 
+                    onClick={handleCardTap}
+                    className="absolute top-[138%] left-1/2 -translate-x-1/2 w-[85%] h-[12%] cursor-pointer z-30 group"
+                  >
+                    <div className="absolute inset-0 border-2 border-[#BDFB04] rounded-2xl animate-pulse" />
+                    <div className="absolute bottom-2 right-2 bg-[#BDFB04] text-[#191919] text-[6px] font-black uppercase tracking-wider px-1.5 py-0.5 rounded shadow">
+                      Tap Card
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <div 
+                  ref={detailsScrollRef}
+                  onScroll={handleScroll}
+                  className="w-full h-full overflow-y-auto scrollbar-none relative scroll-smooth"
+                >
+                  <div className="flex flex-col w-full">
+                    <img src="/tour-4.png" alt="Details hero" className="w-full h-auto select-none pointer-events-none" />
+                    <img src="/tour-5.png" alt="Details RSVP" className="w-full h-auto select-none pointer-events-none" />
+                  </div>
+
+                  {/* Back button hotspot */}
+                  <div 
+                    onClick={handleBackTap}
+                    className="absolute top-[3%] left-[4%] w-[10%] h-[5%] cursor-pointer z-30"
                   />
 
-                  {/* Hotspots & interactive elements on top of the images */}
-                  {activeScreen === 1 && (
-                    <div className="absolute bottom-[2%] left-1/2 -translate-x-1/2 w-[85%] h-[20%] cursor-pointer z-30 group">
-                      {/* Pulsing card indicator */}
-                      <div className="absolute inset-0 border-2 border-[#BDFB04] rounded-2xl animate-pulse" />
-                      <div className="absolute bottom-2 right-2 bg-[#BDFB04] text-[#191919] text-[6px] font-black uppercase tracking-wider px-1.5 py-0.5 rounded shadow">
-                        Tap Card
+                  {/* RSVP button hotspot */}
+                  <div 
+                    onClick={handleRsvpClick}
+                    className="absolute top-[168%] left-1/2 -translate-x-1/2 w-[85%] h-[7%] cursor-pointer z-30 group"
+                  >
+                    {rsvpConfirmed ? (
+                      <div className="absolute inset-0 bg-[#BDFB04] rounded-xl flex items-center justify-center gap-1.5 text-[#191919] font-black uppercase tracking-widest text-[9px] shadow-lg border border-white/20 animate-bounce">
+                        <Check className="h-3.5 w-3.5 text-[#191919] stroke-[3]" />
+                        <span>Going!</span>
                       </div>
-                    </div>
-                  )}
-
-                  {activeScreen === 4 && (
-                    <div className="absolute bottom-[6%] left-1/2 -translate-x-1/2 w-[85%] h-[12%] cursor-pointer z-30 group" onClick={handleRsvpClick}>
-                      {/* Pulsing RSVP indicator */}
-                      {rsvpConfirmed ? (
-                        <div className="absolute inset-0 bg-[#BDFB04] rounded-xl flex items-center justify-center gap-1.5 text-[#191919] font-black uppercase tracking-widest text-[9px] shadow-lg border border-white/20 animate-bounce">
-                          <Check className="h-3.5 w-3.5 text-[#191919] stroke-[3]" />
-                          <span>Going!</span>
+                    ) : (
+                      <>
+                        <div className="absolute inset-0 border-2 border-[#BDFB04] rounded-xl animate-pulse" />
+                        <div className="absolute inset-0 bg-transparent flex items-center justify-center text-[#BDFB04] text-[7px] font-black uppercase tracking-widest pointer-events-none">
+                          Tap to RSVP
                         </div>
-                      ) : (
-                        <>
-                          <div className="absolute inset-0 border-2 border-[#BDFB04] rounded-xl animate-pulse" />
-                          <div className="absolute inset-0 bg-transparent flex items-center justify-center text-[#BDFB04] text-[7px] font-black uppercase tracking-widest pointer-events-none">
-                            Tap to RSVP
-                          </div>
-                        </>
-                      )}
-                    </div>
-                  )}
-                </motion.div>
-              </AnimatePresence>
+                      </>
+                    )}
+                  </div>
+                </div>
+              )}
             </div>
           </motion.div>
 
@@ -515,10 +459,10 @@ export default function LandingPage({
                     Take a tour
                   </span>
                   <p className="text-[9px] text-gray-300 leading-snug">
-                    Use your mouse scroll wheel or swipe up/down on your phone to navigate pages.
+                    Scroll naturally inside the phone screens or tap the interactive hotspots to complete the tour.
                   </p>
                   <span className="block text-[8px] text-gray-500 font-bold uppercase pt-1">
-                    {activeScreen === 2 ? 'Scroll down to exit →' : 'Scroll down to continue'}
+                    {activeStep === 4 ? 'Confirm RSVP to exit →' : 'Scroll down to continue'}
                   </span>
                 </motion.div>
               )}
