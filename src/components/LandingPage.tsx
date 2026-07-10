@@ -21,7 +21,9 @@ import {
   Battery,
   Signal,
   ArrowLeft,
-  GraduationCap
+  GraduationCap,
+  Mail,
+  Plus
 } from 'lucide-react';
 import { Event } from '@/lib/types';
 import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
@@ -853,43 +855,74 @@ export default function LandingPage({
 
       {/* How It Works Section */}
       <section id="how-it-works" className="bg-[#DFDED7]/35 border-t border-black/[0.06] py-20">
-        <div className="mx-auto max-w-7xl px-6 space-y-16">
-          <div className="text-center space-y-2 max-w-lg mx-auto">
-            <span className="text-[10px] font-black tracking-widest text-[#4B5563] uppercase">How it works</span>
-            <h2 className="text-3xl font-extrabold text-[#191919] uppercase">Campus Engagement Simplified</h2>
-            <p className="text-xs text-[#374151]">We bridge the gap between student groups and university staff.</p>
+        <div className="mx-auto max-w-7xl px-6 space-y-12">
+          
+          <div className="text-center space-y-3 max-w-lg mx-auto">
+            <span className="text-[10px] font-black tracking-widest text-[#4B5563] uppercase">How It Works</span>
+            <h2 className="text-3xl md:text-5xl font-black uppercase tracking-tighter text-[#191919]" style={{ fontFamily: 'var(--font-display)' }}>
+              Four steps. One outcome: being connected.
+            </h2>
+            <p className="text-xs text-[#4B5563]">We simplify communication and activities for everyone on campus.</p>
           </div>
 
-          <div className="grid gap-8 md:grid-cols-3">
-            <div className="rounded-[24px] bg-white border border-black/[0.04] p-6 space-y-4 shadow-sm text-left">
-              <div className="h-10 w-10 rounded-xl bg-[#BDFB04]/20 flex items-center justify-center text-[#191919] border border-[#BDFB04]/30">
-                <Calendar className="h-5 w-5" />
+          <div className="grid grid-cols-1 md:grid-cols-4 border border-black/[0.06] rounded-[32px] overflow-hidden bg-white shadow-sm">
+            
+            {/* Step 1 */}
+            <div className="p-8 space-y-4 text-left border-b md:border-b-0 md:border-r border-black/[0.06]">
+              <span className="text-[8px] font-black uppercase tracking-widest text-gray-400 block">Step 01</span>
+              <div className="h-9 w-9 rounded-full bg-black/5 flex items-center justify-center text-[#191919] border border-black/5 shadow-inner">
+                <Mail className="h-4 w-4" />
               </div>
-              <h3 className="text-sm font-bold text-[#191919] uppercase">1. Discover & RSVP</h3>
-              <p className="text-xs text-[#374151] leading-relaxed">
-                Explore a unified campus event board. RSVP, save events, or add them directly to your personal calendar in one click.
+              <h3 className="text-sm font-extrabold text-[#191919] leading-snug">
+                Sign up with your school email
+              </h3>
+              <p className="text-xs text-[#4B5563] leading-relaxed font-medium">
+                Students verify their identity using their official university email to ensure a secure, trusted environment.
               </p>
             </div>
 
-            <div className="rounded-[24px] bg-white border border-black/[0.04] p-6 space-y-4 shadow-sm text-left">
-              <div className="h-10 w-10 rounded-xl bg-[#BDFB04]/20 flex items-center justify-center text-[#191919] border border-[#BDFB04]/30">
-                <Trophy className="h-5 w-5" />
+            {/* Step 2 */}
+            <div className="p-8 space-y-4 text-left border-b md:border-b-0 md:border-r border-black/[0.06]">
+              <span className="text-[8px] font-black uppercase tracking-widest text-gray-400 block">Step 02</span>
+              <div className="h-9 w-9 rounded-full bg-black/5 flex items-center justify-center text-[#191919] border border-black/5 shadow-inner">
+                <Search className="h-4 w-4" />
               </div>
-              <h3 className="text-sm font-bold text-[#191919] uppercase">2. Build Communities</h3>
-              <p className="text-xs text-[#374151] leading-relaxed">
-                Create events representing yourself or student organizations you belong to. Host fundraisers, athletic games, or showcases.
+              <h3 className="text-sm font-extrabold text-[#191919] leading-snug">
+                Discover campus life
+              </h3>
+              <p className="text-xs text-[#4B5563] leading-relaxed font-medium">
+                Browse events, student organizations, promotions, and opportunities personalized specifically to your campus.
               </p>
             </div>
 
-            <div className="rounded-[24px] bg-white border border-black/[0.04] p-6 space-y-4 shadow-sm text-left">
-              <div className="h-10 w-10 rounded-xl bg-[#BDFB04]/20 flex items-center justify-center text-[#191919] border border-[#BDFB04]/30">
-                <Shield className="h-5 w-5" />
+            {/* Step 3 */}
+            <div className="p-8 space-y-4 text-left border-b md:border-b-0 md:border-r border-black/[0.06]">
+              <span className="text-[8px] font-black uppercase tracking-widest text-gray-400 block">Step 03</span>
+              <div className="h-9 w-9 rounded-full bg-black/5 flex items-center justify-center text-[#191919] border border-black/5 shadow-inner">
+                <Users className="h-4 w-4" />
               </div>
-              <h3 className="text-sm font-bold text-[#191919] uppercase">3. Smart Review Queue</h3>
-              <p className="text-xs text-[#374151] leading-relaxed">
-                Evida analyzes event resources in real-time, routing basic requests to fast approval queues to minimize administrative workload.
+              <h3 className="text-sm font-extrabold text-[#191919] leading-snug">
+                Connect with peers
+              </h3>
+              <p className="text-xs text-[#4B5563] leading-relaxed font-medium">
+                Join organizations, RSVP to events, interact with your campus community, and discover new experiences.
               </p>
             </div>
+
+            {/* Step 4 */}
+            <div className="p-8 space-y-4 text-left">
+              <span className="text-[8px] font-black uppercase tracking-widest text-gray-400 block">Step 04</span>
+              <div className="h-9 w-9 rounded-full bg-black/5 flex items-center justify-center text-[#191919] border border-black/5 shadow-inner">
+                <Plus className="h-4 w-4" />
+              </div>
+              <h3 className="text-sm font-extrabold text-[#191919] leading-snug">
+                Create new content
+              </h3>
+              <p className="text-xs text-[#4B5563] leading-relaxed font-medium">
+                Allow every verified student to create events, promotions, and activities. Organization members simply receive additional management permissions.
+              </p>
+            </div>
+
           </div>
         </div>
       </section>
