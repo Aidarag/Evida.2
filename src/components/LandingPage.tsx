@@ -951,30 +951,34 @@ export default function LandingPage({
       </section>
 
       {/* Get Started CTA Section */}
-      <section id="waitlist" className="py-24 bg-[#191919] text-white relative border-t border-black">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-neutral-900 via-[#191919] to-[#191919] z-0" />
-        
-        <div className="relative z-10 max-w-xl mx-auto px-6 text-center space-y-8">
-          <div className="space-y-3">
-            <span className="rounded-full bg-[#BDFB04]/10 border border-[#BDFB04]/30 px-3.5 py-1.5 text-[9px] font-black uppercase tracking-widest text-[#BDFB04] inline-block animate-pulse">
-              Fall 2026 Rollout
-            </span>
-            <h2 className="text-3xl md:text-5xl font-black uppercase tracking-tighter" style={{ fontFamily: 'var(--font-display)' }}>
-              Ready to Experience Evida?
-            </h2>
-            <p className="text-xs text-gray-400 font-medium max-w-sm mx-auto leading-relaxed">
-              Explore your campus events, support student communities, or manage administrative approvals in a single unified dashboard.
-            </p>
-          </div>
+      <section id="waitlist" className="mx-auto max-w-7xl px-4 md:px-6 py-16 w-full relative z-10">
+        <div className="relative w-full rounded-[32px] md:rounded-[48px] overflow-hidden border border-black/5 shadow-2xl min-h-[400px] flex flex-col justify-center items-center p-8 md:p-16 text-white text-center">
+          {/* Background image & overlays */}
+          <div className="absolute inset-0 bg-[url('/pexels-gasparzaldo-13464806.jpg')] bg-cover bg-center z-0" />
+          <div className="absolute inset-0 bg-black/75 z-10" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/40 to-black/60 z-10" />
 
-          <div className="pt-4 flex justify-center">
-            <button
-              onClick={onLogin}
-              className="rounded-full bg-[#BDFB04] hover:bg-[#d1fa3c] px-8 py-4 text-xs font-black text-[#191919] uppercase tracking-wider shadow-lg shadow-[#BDFB04]/20 transition-all hover:scale-[1.03] cursor-pointer flex items-center justify-center gap-2"
-            >
-              <span>Get Started</span>
-              <ArrowRight className="h-4 w-4 text-[#191919]" />
-            </button>
+          {/* Content */}
+          <div className="relative z-20 space-y-6 max-w-xl">
+            <span className="inline-block rounded-full bg-[#BDFB04]/10 border border-[#BDFB04]/20 px-3.5 py-1.5 text-[9px] font-black uppercase tracking-widest text-[#BDFB04]">
+              ● Limited Access Spots
+            </span>
+            <h2 className="text-3xl md:text-5xl font-extrabold tracking-tighter uppercase leading-[0.95] text-white">
+              Ready to Experience <br />
+              <span className="text-[#BDFB04]">Campus Differently?</span>
+            </h2>
+            <p className="text-xs md:text-sm text-gray-300 leading-relaxed font-medium">
+              Join the Evida waitlist and be among the first students to discover a simpler way to explore events, organizations, promotions, and opportunities across campus.
+            </p>
+            <div className="pt-4 flex justify-center">
+              <button
+                onClick={onLogin}
+                className="flex items-center gap-2 rounded-full bg-[#BDFB04] hover:bg-[#d1fa3c] px-8 py-4 text-xs font-black text-[#191919] shadow-lg shadow-[#BDFB04]/20 hover:scale-[1.03] transition-all cursor-pointer uppercase tracking-wider"
+              >
+                <span>Join the Waitlist</span>
+                <ArrowRight className="h-4 w-4 text-[#191919]" />
+              </button>
+            </div>
           </div>
         </div>
       </section>
