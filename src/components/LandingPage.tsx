@@ -29,6 +29,7 @@ import {
 import { Event } from '@/lib/types';
 import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
 import EvidaLogo from '@/components/ui/EvidaLogo';
+import Link from 'next/link';
 
 interface LandingPageProps {
   featuredEvents: Event[];
@@ -172,14 +173,20 @@ export default function LandingPage({
             </a>
           </nav>
 
-          {/* Right side single CTA */}
-          <div className="flex items-center">
+          {/* Right side CTAs (Sign In / Sign Up) */}
+          <div className="flex items-center gap-2 sm:gap-3">
             <button
               onClick={onLogin}
-              className="rounded-full bg-[#BDFB04] text-[#191919] text-[10px] font-black px-5 py-2.5 hover:bg-[#d1fa3c] transition-all hover:scale-[1.02] border border-black/5 cursor-pointer shadow-sm uppercase tracking-wider"
+              className="rounded-full bg-[#BDFB04] text-[#191919] text-[9px] sm:text-[10px] font-black px-3.5 sm:px-5 py-2 sm:py-2.5 hover:bg-[#d1fa3c] transition-all hover:scale-[1.02] border border-black/5 cursor-pointer shadow-sm uppercase tracking-wider flex items-center justify-center"
             >
-              Get Started
+              Sign In
             </button>
+            <Link
+              href="/signup"
+              className="rounded-full bg-[#BDFB04] text-[#191919] text-[9px] sm:text-[10px] font-black px-3.5 sm:px-5 py-2 sm:py-2.5 hover:bg-[#d1fa3c] transition-all hover:scale-[1.02] border border-black/5 cursor-pointer shadow-sm uppercase tracking-wider flex items-center justify-center"
+            >
+              Sign Up
+            </Link>
           </div>
         </div>
       </header>
