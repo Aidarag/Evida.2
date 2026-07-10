@@ -392,30 +392,50 @@ export default function StudentEventsFeed() {
               </button>
             </div>
 
-            {/* Right Corner: Back button */}
+            {/* Right Corner: Search Toggle Button */}
             <button
               type="button"
-              onClick={() => router.back()}
-              className="h-10 w-10 rounded-full flex items-center justify-center transition-all cursor-pointer shadow-sm border bg-white border-black/10 text-[#191919] hover:bg-black/5"
-              title="Go Back"
+              onClick={() => {
+                if (searchOpen) {
+                  setSearchQuery('');
+                }
+                setSearchOpen(!searchOpen);
+              }}
+              className={`h-10 w-10 rounded-full flex items-center justify-center transition-all cursor-pointer shadow-sm border transition-colors ${
+                searchOpen
+                  ? 'bg-[#BDFB04] border-[#BDFB04]/30 text-[#191919] hover:bg-[#d1fa3c]'
+                  : 'bg-white border-black/10 text-[#191919] hover:bg-black/5'
+              }`}
+              title={searchOpen ? "Close Search" : "Search Events"}
             >
-              <ChevronLeft className="h-5 w-5" />
+              {searchOpen ? <X className="h-5 w-5" /> : <Search className="h-5 w-5" />}
             </button>
           </div>
 
           {/* Search & Category Filters */}
           <div className="space-y-4 pt-2">
-            <div className="w-full md:w-96">
-              <div className="relative">
-                <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-[#4B5563]" />
-                <Input
-                  placeholder="Search events, organizers, or keywords..."
-                  className="pl-12 rounded-full"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                />
-              </div>
-            </div>
+            <AnimatePresence>
+              {searchOpen && (
+                <motion.div
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: 'auto' }}
+                  exit={{ opacity: 0, height: 0 }}
+                  transition={{ duration: 0.2 }}
+                  className="w-full md:w-96 overflow-hidden pb-1"
+                >
+                  <div className="relative">
+                    <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-[#4B5563]" />
+                    <Input
+                      placeholder="Search events, organizers, or keywords..."
+                      className="pl-12 rounded-full w-full"
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      autoFocus
+                    />
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
 
             {/* Matched Organizations */}
             {matchedOrgs.length > 0 && (
@@ -592,14 +612,17 @@ export default function StudentEventsFeed() {
                     </button>
                   </div>
 
-                  {/* Right Corner: Back button */}
+                  {/* Right Corner: Search Button */}
                   <button
                     type="button"
-                    onClick={() => router.back()}
+                    onClick={() => {
+                      setFeedMode('grid');
+                      setSearchOpen(true);
+                    }}
                     className="h-9 w-9 rounded-full flex items-center justify-center transition-all cursor-pointer bg-black/45 border border-white/10 text-white hover:bg-black/60 shadow-sm"
-                    title="Go Back"
+                    title="Search Events"
                   >
-                    <ChevronLeft className="h-4.5 w-4.5" />
+                    <Search className="h-4.5 w-4.5" />
                   </button>
                 </div>
 
