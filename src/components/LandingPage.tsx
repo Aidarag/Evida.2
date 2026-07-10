@@ -398,7 +398,7 @@ export default function LandingPage({
           <motion.div
             style={{ scale: phoneScale, y: phoneY }}
             onClick={handlePhoneClick}
-            className={`relative max-w-[310px] w-full aspect-[9/19.5] rounded-[44px] border-[10px] border-neutral-950 shadow-2xl bg-neutral-900 z-20 cursor-pointer overflow-hidden ${
+            className={`relative max-w-[310px] w-full aspect-[9/19.5] rounded-[44px] border-[10px] border-neutral-950 shadow-2xl bg-neutral-900 z-20 cursor-pointer overflow-hidden touch-none select-none ${
               phoneActive ? 'ring-4 ring-[#BDFB04]/30' : 'hover:scale-[1.02] transition-transform duration-300'
             }`}
           >
@@ -426,7 +426,7 @@ export default function LandingPage({
             {/* Locked screen guide overlay */}
             {!phoneActive && (
               <div className="absolute inset-0 bg-black/40 backdrop-blur-xs z-30 flex flex-col items-center justify-center text-center p-6 text-white space-y-4">
-                <div className="h-12 w-12 rounded-full bg-[#BDFB04] flex items-center justify-center shadow-lg animate-bounce">
+                <div className="h-12 w-12 rounded-full bg-neutral-800 border border-white/10 flex items-center justify-center shadow-lg animate-bounce">
                   <EvidaLogo size={22} showText={false} lightMode={false} />
                 </div>
                 <div className="space-y-1">
@@ -437,7 +437,7 @@ export default function LandingPage({
             )}
 
             {/* User Journey Screens */}
-            <div className="w-full h-full relative z-10 overflow-hidden bg-[#ECECE5]">
+            <div className="w-full h-full relative z-10 overflow-hidden bg-[#ECECE5] touch-none">
               <AnimatePresence mode="wait">
                 <motion.div
                   key={activeScreen}
@@ -451,7 +451,7 @@ export default function LandingPage({
                   <img
                     src={`/tour-${activeScreen + 1}.png`}
                     alt={`Tour Screen ${activeScreen + 1}`}
-                    className="w-full h-full object-cover select-none pointer-events-none"
+                    className="w-full h-full object-fill select-none pointer-events-none"
                   />
 
                   {/* Hotspots & interactive elements on top of the images */}
