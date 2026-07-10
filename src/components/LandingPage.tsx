@@ -155,89 +155,68 @@ export default function LandingPage({
         </div>
       </header>
 
-      {/* Hero Section */}
-      <section className="relative mx-auto max-w-7xl px-6 pt-16 pb-20 md:pt-24 md:pb-28 flex flex-col md:flex-row items-center gap-12 z-10 w-full">
-        <div className="absolute top-1/4 left-1/3 -translate-x-1/2 -translate-y-1/2 w-80 h-80 rounded-full bg-[#BDFB04]/10 blur-[100px] pointer-events-none"></div>
-        <div className="absolute top-1/2 right-10 w-80 h-80 rounded-full bg-[#DFDED7]/30 blur-[80px] pointer-events-none"></div>
+      {/* Hero Section - Wenspire Visual Style */}
+      <section className="mx-auto max-w-7xl px-4 md:px-6 pt-8 pb-12 w-full">
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          className="relative w-full rounded-[32px] md:rounded-[48px] overflow-hidden border border-black/5 shadow-2xl min-h-[520px] md:min-h-[600px] flex flex-col justify-between p-8 md:p-16 text-white"
+        >
+          {/* Background image & gradient overlays */}
+          <div className="absolute inset-0 bg-[url('/pexels-amine-1285347-9371719.jpg')] bg-cover bg-center z-0" />
+          <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/75 to-transparent z-10" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/30 z-10" />
 
-        {/* Text */}
-        <div className="md:w-1/2 space-y-6 text-center md:text-left">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-          >
-            <span className="rounded-full bg-[#BDFB04]/15 border border-[#BDFB04]/30 px-4 py-1.5 text-[10px] font-black uppercase tracking-widest text-[#191919] inline-block">
-              Campus Events • Organizations • Promotions
+          {/* Top Row: Floating Badge */}
+          <div className="relative z-20 flex items-center justify-start">
+            <span className="flex items-center gap-1.5 rounded-full bg-white/10 border border-white/20 px-3.5 py-1.5 text-[9px] font-black uppercase tracking-widest text-[#BDFB04] backdrop-blur-md">
+              <span className="h-1.5 w-1.5 rounded-full bg-[#BDFB04] animate-pulse" />
+              Now in Private Beta
             </span>
-          </motion.div>
-          
-          <motion.h1
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.1 }}
-            className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tighter text-[#191919] leading-[0.95]"
-          >
-            Everything Happening on Campus. <br />
-            <span className="bg-[#BDFB04] text-[#191919] px-4 py-1.5 rounded-2xl inline-block mt-2 shadow-sm border border-[#BDFB04]/40">
-              All in One Place.
-            </span>
-          </motion.h1>
+          </div>
 
-          <motion.p
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            className="text-sm text-[#374151] max-w-lg mx-auto md:mx-0 leading-relaxed font-medium"
-          >
-            Evida is the platform that brings together campus events, student organizations, promotions, and opportunities into one modern experience for students and schools. Discover what's happening, connect with groups, and never miss out on campus life.
-          </motion.p>
-
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.3 }}
-            className="flex flex-wrap items-center justify-center md:justify-start gap-4 pt-2"
-          >
-            <button
-              onClick={handleScrollToWaitlist}
-              className="flex items-center gap-2 rounded-full bg-[#BDFB04] hover:bg-[#d1fa3c] px-6 py-3.5 text-xs font-extrabold text-[#191919] shadow-lg shadow-[#BDFB04]/25 hover:scale-[1.03] transition-all cursor-pointer uppercase tracking-wider"
-            >
-              Join the Waitlist
-              <ArrowRight className="h-4 w-4 text-[#191919]" />
-            </button>
-          </motion.div>
-        </div>
-
-        {/* Cinematic Card Preview - Displays generated campus life image */}
-        <div className="md:w-1/2 w-full flex justify-center">
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.8 }}
-            className="relative w-full max-w-[380px] aspect-[3/4] rounded-[32px] overflow-hidden border border-black/[0.08] shadow-xl float-glowing"
-          >
-            <div className="absolute inset-0 bg-gradient-to-tr from-[#BDFB04]/25 via-transparent to-transparent z-10" />
-            <div className="absolute inset-0 bg-[url('/pexels-hanna-elesha-abraham-1587801282-27498756.jpg')] bg-cover bg-center" />
-            
-            {/* Overlay Gradient */}
-            <div className="absolute inset-0 bg-gradient-to-t from-white via-white/10 to-transparent z-10" />
-
-            {/* Poster contents */}
-            <div className="absolute inset-x-6 bottom-6 z-20 space-y-3">
-              <span className="rounded-full bg-[#BDFB04] px-2.5 py-0.5 text-[9px] font-black text-[#191919] uppercase tracking-wider shadow-sm">
-                Built for Students & Schools
-              </span>
-              <h3 className="text-xl font-extrabold text-[#191919] leading-tight">
-                Connect. Discover. Lead.
-              </h3>
-              <div className="flex items-center justify-between text-xs text-[#374151] font-semibold">
-                <span>FALL 2026 RELEASE</span>
-                <span className="font-extrabold text-[#191919] bg-[#BDFB04] px-2.5 py-0.5 rounded shadow-sm text-[9px]">JOIN WAITLIST</span>
-              </div>
+          {/* Middle Row: Content */}
+          <div className="relative z-20 space-y-6 max-w-2xl text-left my-auto pt-10 pb-10">
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tighter leading-[0.95] text-white">
+              Everything Happening <br className="hidden sm:inline" /> on Campus. <br />
+              <span className="text-[#BDFB04]">All in One Place.</span>
+            </h1>
+            <p className="text-xs sm:text-sm text-gray-300 max-w-lg leading-relaxed font-medium">
+              Evida is the platform that brings together campus events, student organizations, promotions, and opportunities into one modern experience for students and schools. Discover what's happening, connect with groups, and never miss out on campus life.
+            </p>
+            <div>
+              <button
+                onClick={handleScrollToWaitlist}
+                className="flex items-center gap-2 rounded-full bg-[#BDFB04] hover:bg-[#d1fa3c] px-7 py-4 text-xs font-black text-[#191919] shadow-lg shadow-[#BDFB04]/20 hover:scale-[1.03] transition-all cursor-pointer uppercase tracking-wider"
+              >
+                Join the Waitlist
+                <ArrowRight className="h-4 w-4 text-[#191919]" />
+              </button>
             </div>
-          </motion.div>
-        </div>
+          </div>
+
+          {/* Bottom Row: Additional waitlist info / badge */}
+          <div className="relative z-20 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-t border-white/10 pt-6">
+            <div className="flex items-center gap-2">
+              <span className="text-[10px] font-black uppercase tracking-widest text-gray-400">
+                Campus Events • Organizations • Promotions
+              </span>
+            </div>
+
+            {/* Waitlist Queue Counter */}
+            <div className="flex items-center gap-3 bg-black/40 backdrop-blur-md border border-white/10 rounded-full px-4 py-2 w-fit">
+              <div className="flex -space-x-2">
+                <div className="h-6 w-6 rounded-full border border-neutral-900 bg-[#BDFB04] text-neutral-900 flex items-center justify-center text-[8px] font-black">JD</div>
+                <div className="h-6 w-6 rounded-full border border-neutral-900 bg-blue-500 text-white flex items-center justify-center text-[8px] font-black">AM</div>
+                <div className="h-6 w-6 rounded-full border border-neutral-900 bg-purple-500 text-white flex items-center justify-center text-[8px] font-black">SK</div>
+              </div>
+              <span className="text-[10px] font-bold text-white uppercase tracking-wider">
+                {isSubmitted ? `You are #${queueNumber}` : '1,240+ on the waitlist'} ●
+              </span>
+            </div>
+          </div>
+        </motion.div>
       </section>
 
       {/* About Section */}
