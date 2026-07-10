@@ -237,7 +237,7 @@ export default function StudentDashboardPage() {
         {/* Main Events Feed Column */}
         <div className="lg:col-span-2 space-y-5">
           <div className="flex items-center justify-between">
-            <h2 className="text-xs font-black tracking-widest text-[#4B5563] uppercase">// Upcoming Experiences</h2>
+            <h2 className="text-xs font-black tracking-widest text-[#191919] uppercase">Upcoming Experiences</h2>
             <span className="text-[10px] font-bold text-[#374151]">Showing {sortedFilteredEvents.length} events</span>
           </div>
 
@@ -476,7 +476,7 @@ export default function StudentDashboardPage() {
           {/* Matched Organizations Widget */}
           {matchedOrgs.length > 0 && (
             <div className="bg-white border border-black/[0.04] rounded-3xl p-5 shadow-sm space-y-4">
-              <h3 className="text-xs font-black tracking-widest text-[#4B5563] uppercase">// MATCHED GROUPS</h3>
+              <h3 className="text-xs font-black tracking-widest text-[#191919] uppercase">Matched Groups</h3>
               <div className="space-y-2">
                 {matchedOrgs.map((org) => (
                   <div 
@@ -506,7 +506,7 @@ export default function StudentDashboardPage() {
           {/* My Schedule Widget */}
           <div className="bg-white border border-black/[0.04] rounded-3xl p-5 shadow-sm space-y-4">
             <div className="flex items-center justify-between">
-              <h3 className="text-xs font-black tracking-widest text-[#4B5563] uppercase">// My Schedule</h3>
+              <h3 className="text-xs font-black tracking-widest text-[#191919] uppercase">My Schedule</h3>
               <span className="text-[9px] font-extrabold text-[#BDFB04] bg-[#BDFB04]/10 px-2 py-0.5 rounded-full">
                 {rsvpEventsList.length} going
               </span>
@@ -554,7 +554,7 @@ export default function StudentDashboardPage() {
 
           {/* Campus Groups Widget */}
           <div className="bg-white border border-black/[0.04] rounded-3xl p-5 shadow-sm space-y-4">
-            <h3 className="text-xs font-black tracking-widest text-[#4B5563] uppercase">// Verified campus groups</h3>
+            <h3 className="text-xs font-black tracking-widest text-[#191919] uppercase">Verified Campus Groups</h3>
             <div className="space-y-2.5">
               {organizations.slice(0, 5).map((org) => (
                 <div 

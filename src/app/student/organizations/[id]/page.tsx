@@ -255,7 +255,7 @@ export default function OrganizationProfilePage() {
                 
                 {/* Highlights / About */}
                 <div className="bg-white rounded-[24px] border border-black/[0.06] p-6 space-y-4 shadow-sm text-left">
-                  <h3 className="text-xs font-extrabold tracking-widest text-[#4B5563] uppercase">// About Us</h3>
+                  <h3 className="text-xs font-extrabold tracking-widest text-[#191919] uppercase">About Us</h3>
                   <p className="text-xs text-[#374151] leading-relaxed">
                     {org.description || 'No description provided by this campus organization.'}
                   </p>
@@ -299,7 +299,7 @@ export default function OrganizationProfilePage() {
               {/* Right Panel: Upcoming Event Highlights list */}
               <div className="md:col-span-1 space-y-6 text-left">
                 <div className="bg-white rounded-[24px] border border-black/[0.06] p-6 space-y-4 shadow-sm">
-                  <h3 className="text-xs font-extrabold tracking-widest text-[#4B5563] uppercase">// NEXT HIGHLIGHT</h3>
+                  <h3 className="text-xs font-extrabold tracking-widest text-[#191919] uppercase">Next Highlight</h3>
                   {orgEvents.length > 0 ? (
                     <div 
                       onClick={() => router.push(`/events/${orgEvents[0].id}`)}
@@ -332,7 +332,7 @@ export default function OrganizationProfilePage() {
           {/* EVENTS TAB */}
           {activeTab === 'events' && (
             <div className="space-y-4 text-left">
-              <h3 className="text-xs font-extrabold tracking-widest text-[#4B5563] uppercase">// Experiences Hosted By Members</h3>
+              <h3 className="text-xs font-extrabold tracking-widest text-[#191919] uppercase">Experiences Hosted by Members</h3>
               {orgEvents.length === 0 ? (
                 <div className="bg-white rounded-[24px] border border-black/[0.06] p-12 text-center shadow-sm">
                   <Calendar className="h-10 w-10 text-[#4B5563] mx-auto mb-3" />
@@ -362,7 +362,7 @@ export default function OrganizationProfilePage() {
           {activeTab === 'about' && (
             <div className="bg-white rounded-[28px] border border-black/[0.06] p-6 space-y-6 shadow-sm text-left">
               <div className="space-y-2">
-                <h3 className="text-xs font-extrabold tracking-widest text-[#4B5563] uppercase">// Organization Profile Overview</h3>
+                <h3 className="text-xs font-extrabold tracking-widest text-[#191919] uppercase">Organization Profile Overview</h3>
                 <p className="text-xs text-[#374151] leading-relaxed leading-relaxed">
                   Welcome to the LinkedIn-inspired profile directory page for the {org.name}. Here, you can search and access comprehensive listings of all active campus events and checkouts created by our verified team leaders and member roster.
                 </p>
@@ -390,7 +390,7 @@ export default function OrganizationProfilePage() {
               
               {/* Member Roster & Role Manager */}
               <div className="bg-white rounded-[24px] border border-black/[0.06] p-6 space-y-4 shadow-sm">
-                <h3 className="text-xs font-extrabold tracking-widest text-[#4B5563] uppercase">// Manage Member Roles</h3>
+                <h3 className="text-xs font-extrabold tracking-widest text-[#191919] uppercase">Manage Member Roles</h3>
                 <div className="space-y-3">
                   {org.members.map((member) => {
                     const currentRole = org.memberRoles?.[member] || (org.members[0] === member ? 'President' : 'Member');
@@ -434,13 +434,13 @@ export default function OrganizationProfilePage() {
 
               {/* Pending Membership Requests */}
               <div className="bg-white rounded-[24px] border border-black/[0.06] p-6 space-y-4 shadow-sm">
-                <h3 className="text-xs font-extrabold tracking-widest text-[#4B5563] uppercase">// Pending Membership Applications</h3>
+                <h3 className="text-xs font-extrabold tracking-widest text-[#191919] uppercase">Pending Membership Applications</h3>
                 {membershipRequests.filter(r => r.orgId === org.id && r.status === 'pending').length > 0 ? (
                   <div className="grid gap-3 sm:grid-cols-2">
                     {membershipRequests.filter(r => r.orgId === org.id && r.status === 'pending').map((req) => (
                       <div key={req.id} className="bg-slate-50 rounded-2xl p-4 border border-black/[0.04] flex flex-col justify-between gap-4">
                         <div>
-                          <span className="text-[9px] font-bold text-[#4B5563] uppercase tracking-widest block">// APPLICATION</span>
+                          <span className="text-[9px] font-bold text-[#191919] uppercase tracking-widest block">Application</span>
                           <h4 className="text-xs font-extrabold text-[#191919] uppercase tracking-tight mt-1">{req.studentName}</h4>
                           <p className="text-[9px] text-[#4B5563]">Wants to join this organization</p>
                         </div>

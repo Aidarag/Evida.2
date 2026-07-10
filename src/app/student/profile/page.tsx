@@ -311,7 +311,7 @@ export default function StudentProfilePage() {
 
         {/* Bio Section */}
         <div className="mt-6 pt-6 border-t border-black/[0.05] text-left space-y-2">
-          <div className="text-[10px] font-black text-[#4B5563] uppercase tracking-widest">// Biography</div>
+          <div className="text-[10px] font-black text-[#191919] uppercase tracking-widest">Biography</div>
           <p className="text-xs text-[#374151] leading-relaxed max-w-2xl">{bio}</p>
           
           {/* Social links */}
@@ -338,7 +338,7 @@ export default function StudentProfilePage() {
         <div className="grid sm:grid-cols-2 gap-6 mt-6 pt-6 border-t border-black/[0.05] text-left">
           {/* Interests */}
           <div className="space-y-2">
-            <div className="text-[10px] font-black text-[#4B5563] uppercase tracking-widest">// Areas of Interest</div>
+            <div className="text-[10px] font-black text-[#191919] uppercase tracking-widest">Areas of Interest</div>
             <div className="flex flex-wrap gap-2">
               {interests.map(item => (
                 <span key={item} className="px-2.5 py-1 rounded-lg bg-black/[0.03] border border-black/[0.06] text-[10px] text-[#374151] font-bold uppercase">
@@ -350,7 +350,7 @@ export default function StudentProfilePage() {
           
           {/* Achievements */}
           <div className="space-y-2">
-            <div className="text-[10px] font-black text-[#4B5563] uppercase tracking-widest">// Achievements & Badges</div>
+            <div className="text-[10px] font-black text-[#191919] uppercase tracking-widest">Achievements & Badges</div>
             <div className="flex flex-wrap gap-2">
               {achievements.map(badge => (
                 <span key={badge} className="px-2.5 py-1 rounded-lg bg-[#BDFB04]/10 border border-[#BDFB04]/30 text-[10px] text-[#3B5C00] font-black uppercase tracking-wider flex items-center gap-1">
@@ -457,7 +457,7 @@ export default function StudentProfilePage() {
             
             return (
               <div className="bg-white rounded-2xl p-5 border border-black/[0.04] shadow-sm space-y-4 mt-3 text-left">
-                <div className="text-[10px] font-black text-[#4B5563] uppercase tracking-wider">// Apply for Membership</div>
+                <div className="text-[10px] font-black text-[#191919] uppercase tracking-wider">Apply for Membership</div>
                 
                 {/* Search & Filters */}
                 <div className="flex flex-col sm:flex-row gap-2">
@@ -539,7 +539,7 @@ export default function StudentProfilePage() {
             if (pendingUserRequests.length === 0) return null;
             return (
               <div className="space-y-2 mt-4">
-                <h3 className="text-[9px] font-bold text-[#4B5563] uppercase tracking-wider block pl-1">// Pending Applications</h3>
+                <h3 className="text-[9px] font-bold text-[#191919] uppercase tracking-wider block pl-1">Pending Applications</h3>
                 {pendingUserRequests.map(req => (
                   <div key={req.id} className="bg-white rounded-2xl p-4 flex items-center justify-between border border-amber-500/20 bg-amber-500/[0.02] shadow-sm">
                     <div className="min-w-0 flex-1 pr-3">
@@ -806,7 +806,7 @@ export default function StudentProfilePage() {
               {membershipRequests.filter(r => r.status === 'pending').map(req => (
                 <div key={req.id} className="bg-white rounded-2xl p-4 border border-black/[0.04] shadow-sm flex flex-col justify-between gap-4">
                   <div>
-                    <span className="text-[9px] font-bold text-[#374151] uppercase tracking-widest block">// JOIN REQUEST</span>
+                    <span className="text-[9px] font-bold text-[#191919] uppercase tracking-widest block">Join Request</span>
                     <h4 className="text-sm font-extrabold text-[#191919] uppercase tracking-tight mt-1">{req.studentName}</h4>
                     <p className="text-xs text-[#374151] mt-0.5">Wants to join: <strong className="text-[#191919]">{req.orgName}</strong></p>
                   </div>
@@ -840,7 +840,7 @@ export default function StudentProfilePage() {
       <div className="px-5 md:px-10 mt-8 space-y-6 text-left">
         {/* Upcoming events */}
         <div className="space-y-3">
-          <div className="text-[11px] font-black text-[#4B5563] uppercase tracking-widest">// My Upcoming Experiences</div>
+          <div className="text-[11px] font-black text-[#191919] uppercase tracking-widest">My Upcoming Experiences</div>
           {upcomingEvents.length > 0 ? (
             <div className="grid gap-4 sm:grid-cols-2">
               {upcomingEvents.map(event => (
@@ -866,7 +866,7 @@ export default function StudentProfilePage() {
 
         {/* Recently Attended */}
         <div className="space-y-3">
-          <div className="text-[11px] font-black text-[#4B5563] uppercase tracking-widest">// Recently Attended</div>
+          <div className="text-[11px] font-black text-[#191919] uppercase tracking-widest">Recently Attended</div>
           {pastEvents.length > 0 ? (
             <div className="grid gap-4 sm:grid-cols-2">
               {pastEvents.map(event => (
