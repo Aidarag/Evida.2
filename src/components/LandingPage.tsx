@@ -688,11 +688,12 @@ export default function LandingPage({
           <div className="grid gap-12 sm:grid-cols-2 lg:grid-cols-4 text-left">
             
             {/* Card 1 */}
-            <div className="space-y-3">
+            <div className="space-y-2">
               <span className="text-4xl md:text-5xl font-black text-[#191919] tracking-tight block" style={{ fontFamily: 'var(--font-display)' }}>
                 89%
               </span>
-              <h3 className="text-[10px] font-black uppercase tracking-widest text-[#191919]">
+              <div className="h-1 w-8 bg-[#BDFB04] rounded-full my-2" />
+              <h3 className="text-sm font-extrabold text-[#191919] leading-snug">
                 Miss important opportunities
               </h3>
               <p className="text-xs text-[#4B5563] leading-relaxed font-medium">
@@ -701,11 +702,12 @@ export default function LandingPage({
             </div>
 
             {/* Card 2 */}
-            <div className="space-y-3">
+            <div className="space-y-2">
               <span className="text-4xl md:text-5xl font-black text-[#191919] tracking-tight block" style={{ fontFamily: 'var(--font-display)' }}>
                 36%
               </span>
-              <h3 className="text-[10px] font-black uppercase tracking-widest text-[#191919]">
+              <div className="h-1 w-8 bg-[#BDFB04] rounded-full my-2" />
+              <h3 className="text-sm font-extrabold text-[#191919] leading-snug">
                 Never participate
               </h3>
               <p className="text-xs text-[#4B5563] leading-relaxed font-medium">
@@ -714,11 +716,12 @@ export default function LandingPage({
             </div>
 
             {/* Card 3 */}
-            <div className="space-y-3">
+            <div className="space-y-2">
               <span className="text-4xl md:text-5xl font-black text-[#191919] tracking-tight block" style={{ fontFamily: 'var(--font-display)' }}>
                 31%
               </span>
-              <h3 className="text-[10px] font-black uppercase tracking-widest text-[#191919]">
+              <div className="h-1 w-8 bg-[#BDFB04] rounded-full my-2" />
+              <h3 className="text-sm font-extrabold text-[#191919] leading-snug">
                 Don’t know what’s happening
               </h3>
               <p className="text-xs text-[#4B5563] leading-relaxed font-medium">
@@ -727,11 +730,12 @@ export default function LandingPage({
             </div>
 
             {/* Card 4 */}
-            <div className="space-y-3">
+            <div className="space-y-2">
               <span className="text-4xl md:text-5xl font-black text-[#191919] tracking-tight block" style={{ fontFamily: 'var(--font-display)' }}>
                 26%
               </span>
-              <h3 className="text-[10px] font-black uppercase tracking-widest text-[#191919]">
+              <div className="h-1 w-8 bg-[#BDFB04] rounded-full my-2" />
+              <h3 className="text-sm font-extrabold text-[#191919] leading-snug">
                 Check campus email daily
               </h3>
               <p className="text-xs text-[#4B5563] leading-relaxed font-medium">
