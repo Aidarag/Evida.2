@@ -209,9 +209,6 @@ export default function LandingPage({
             <a href="#how-it-works" className="text-[10px] font-black text-[#4B5563] hover:text-[#191919] uppercase tracking-widest transition-all">
               How It Works
             </a>
-            <a href="#featured" className="text-[10px] font-black text-[#4B5563] hover:text-[#191919] uppercase tracking-widest transition-all">
-              Featured Events
-            </a>
             <a href="#faq" className="text-[10px] font-black text-[#4B5563] hover:text-[#191919] uppercase tracking-widest transition-all">
               FAQ
             </a>
@@ -895,86 +892,6 @@ export default function LandingPage({
             </div>
 
           </div>
-        </div>
-      </section>
-
-      {/* Featured Events Section */}
-      <section id="featured" className="py-20">
-        <div className="mx-auto max-w-7xl px-6 space-y-8">
-          <div className="text-center space-y-2">
-            <span className="text-[10px] font-black tracking-widest text-[#4B5563] uppercase">Experiences</span>
-            <h2 className="text-3xl font-extrabold tracking-tight text-[#191919] uppercase">Trending Experiences</h2>
-            <p className="text-xs text-[#374151]">Get a sneak peek of upcoming campus gatherings and initiatives.</p>
-          </div>
-
-          {featuredEvents.length > 0 ? (
-            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-              {featuredEvents.slice(0, 3).map((event) => (
-                <div
-                  key={event.id}
-                  onClick={onLogin}
-                  className="group relative rounded-[24px] aspect-[4/3] overflow-hidden border border-black/[0.06] bg-white cursor-pointer transition-all hover:border-[#BDFB04] shadow-sm hover:shadow-md"
-                >
-                  <div className={`absolute inset-0 bg-gradient-to-tr ${event.coverImage} opacity-20 group-hover:opacity-30 transition-opacity`} />
-                  <div className="absolute inset-0 bg-gradient-to-t from-white via-white/50 to-transparent z-10" />
-                  
-                  <div className="absolute inset-x-5 bottom-5 z-20 flex flex-col justify-end text-left">
-                    <span className="text-[10px] font-bold text-[#191919] bg-[#BDFB04]/30 px-2 py-0.5 rounded-md w-fit uppercase tracking-wide">
-                      {event.organizationName || 'CAMPUS HUB'}
-                    </span>
-                    <h4 className="text-sm font-bold text-[#191919] mt-1.5 leading-snug">
-                      {event.title}
-                    </h4>
-                    <div className="flex justify-between items-center text-[10px] text-[#374151] mt-2 font-semibold">
-                      <span>{event.date}</span>
-                      <span className="capitalize">{event.location}</span>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-              <div className="group relative rounded-[24px] aspect-[4/3] overflow-hidden border border-black/[0.06] bg-white cursor-pointer transition-all hover:border-[#BDFB04] shadow-sm hover:shadow-md">
-                <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=600&auto=format&fit=crop&q=80')] bg-cover bg-center opacity-40 group-hover:scale-102 transition-transform duration-500" />
-                <div className="absolute inset-0 bg-gradient-to-t from-white via-white/40 to-transparent z-10" />
-                <div className="absolute inset-x-5 bottom-5 z-20 text-left">
-                  <span className="text-[9px] font-black text-[#191919] bg-[#BDFB04] px-2 py-0.5 rounded uppercase tracking-wider">ACM CHAPTER</span>
-                  <h4 className="text-sm font-black text-[#191919] mt-1 uppercase">Tech Hackathon 2026</h4>
-                  <div className="flex justify-between text-[10px] text-[#4B5563] mt-1.5 font-bold">
-                    <span>OCTOBER 15</span>
-                    <span>ENGINEERING HALL</span>
-                  </div>
-                </div>
-              </div>
-
-              <div className="group relative rounded-[24px] aspect-[4/3] overflow-hidden border border-black/[0.06] bg-white cursor-pointer transition-all hover:border-[#BDFB04] shadow-sm hover:shadow-md">
-                <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1511578314322-379afb476865?w=600&auto=format&fit=crop&q=80')] bg-cover bg-center opacity-40 group-hover:scale-102 transition-transform duration-500" />
-                <div className="absolute inset-0 bg-gradient-to-t from-white via-white/40 to-transparent z-10" />
-                <div className="absolute inset-x-5 bottom-5 z-20 text-left">
-                  <span className="text-[9px] font-black text-[#191919] bg-[#BDFB04] px-2 py-0.5 rounded uppercase tracking-wider">STUDENT UNION</span>
-                  <h4 className="text-sm font-black text-[#191919] mt-1 uppercase">Autumn Music Festival</h4>
-                  <div className="flex justify-between text-[10px] text-[#4B5563] mt-1.5 font-bold">
-                    <span>OCTOBER 24</span>
-                    <span>CAMPUS QUAD</span>
-                  </div>
-                </div>
-              </div>
-
-              <div className="group relative rounded-[24px] aspect-[4/3] overflow-hidden border border-black/[0.06] bg-white cursor-pointer transition-all hover:border-[#BDFB04] shadow-sm hover:shadow-md">
-                <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1523580494863-6f30312245d5?w=600&auto=format&fit=crop&q=80')] bg-cover bg-center opacity-40 group-hover:scale-102 transition-transform duration-500" />
-                <div className="absolute inset-0 bg-gradient-to-t from-white via-white/40 to-transparent z-10" />
-                <div className="absolute inset-x-5 bottom-5 z-20 text-left">
-                  <span className="text-[9px] font-black text-[#191919] bg-[#BDFB04] px-2 py-0.5 rounded uppercase tracking-wider">CREATIVE COLLECTIVE</span>
-                  <h4 className="text-sm font-black text-[#191919] mt-1 uppercase">Art Showcase & Gallery</h4>
-                  <div className="flex justify-between text-[10px] text-[#4B5563] mt-1.5 font-bold">
-                    <span>NOVEMBER 12</span>
-                    <span>STUDENT CENTER</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
         </div>
       </section>
 
