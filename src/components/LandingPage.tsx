@@ -49,6 +49,13 @@ export default function LandingPage({
   const [feedRsvp, setFeedRsvp] = useState(false);
   const [detailRsvp, setDetailRsvp] = useState(false);
 
+  const handlePhoneClick = () => {
+    if (!phoneActive) {
+      setPhoneActive(true);
+      setActiveScreen(0);
+    }
+  };
+
   // References for scroll animations
   const sectionRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
