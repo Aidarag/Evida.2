@@ -48,7 +48,7 @@ export default function LandingPage({
 
   // Smartphone Showcase States
   const [phoneActive, setPhoneActive] = useState(false);
-  const [currentView, setCurrentView] = useState<'feed' | 'details'>('feed');
+  const [currentView, setCurrentView] = useState<'feed' | 'explore' | 'details'>('feed');
   const [scrollProgress, setScrollProgress] = useState(0); // 0 to 100
   const [rsvpConfirmed, setRsvpConfirmed] = useState(false);
 
@@ -106,7 +106,9 @@ export default function LandingPage({
 
   const activeStep = currentView === 'feed'
     ? (scrollProgress < 30 ? 0 : (scrollProgress < 75 ? 1 : 2))
-    : (scrollProgress < 50 ? 3 : 4);
+    : currentView === 'explore'
+      ? 1
+      : (scrollProgress < 50 ? 3 : 4);
 
   // References for scroll animations
   const sectionRef = useRef<HTMLDivElement>(null);
@@ -367,68 +369,349 @@ export default function LandingPage({
             )}
 
             {/* User Journey Screens (Native Scrollable Containers like Posh) */}
-            <div className="w-full h-full relative z-10 overflow-hidden bg-[#ECECE5]">
-              {currentView === 'feed' ? (
+            <div className="w-full h-full relative z-10 overflow-hidden bg-[#121212] touch-none">
+              
+              {/* Bottom Tab Navigation */}
+              <div className="absolute bottom-0 inset-x-0 bg-[#121212]/95 backdrop-blur-md border-t border-white/5 py-1.5 px-6 flex justify-between items-center z-30">
+                <button 
+                  onClick={(e) => { e.stopPropagation(); setCurrentView('feed'); }}
+                  className={`flex flex-col items-center gap-0.5 transition-colors duration-200 ${currentView === 'feed' ? 'text-[#BDFB04]' : 'text-gray-500 hover:text-gray-300'}`}
+                >
+                  <Compass className="h-4.5 w-4.5" />
+                  <span className="text-[6px] font-black uppercase tracking-wider">Feed</span>
+                </button>
+                <button 
+                  onClick={(e) => { e.stopPropagation(); setCurrentView('explore'); }}
+                  className={`flex flex-col items-center gap-0.5 transition-colors duration-200 ${currentView === 'explore' ? 'text-[#BDFB04]' : 'text-gray-500 hover:text-gray-300'}`}
+                >
+                  <Search className="h-4.5 w-4.5" />
+                  <span className="text-[6px] font-black uppercase tracking-wider">Explore</span>
+                </button>
+                <div className="h-8 w-8 rounded-full bg-[#BDFB04] text-[#191919] flex items-center justify-center -translate-y-2 border-4 border-[#121212] shadow-lg">
+                  <Plus className="h-4 w-4 stroke-[3]" />
+                </div>
+                <button 
+                  onClick={(e) => { e.stopPropagation(); }}
+                  className="flex flex-col items-center gap-0.5 text-gray-600 cursor-not-allowed"
+                >
+                  <Calendar className="h-4.5 w-4.5" />
+                  <span className="text-[6px] font-black uppercase tracking-wider">Calendar</span>
+                </button>
+              </div>
+
+              {currentView === 'feed' && (
                 <div 
                   ref={feedScrollRef}
                   onScroll={handleScroll}
-                  className="w-full h-full overflow-y-auto scrollbar-none relative scroll-smooth"
+                  className="w-full h-full overflow-y-auto scrollbar-none relative scroll-smooth pt-8 pb-14 text-white"
                 >
-                  <div className="flex flex-col w-full">
-                    <img src="/tour-1.png" alt="Dashboard top" className="w-full h-auto select-none pointer-events-none" />
-                    <img src="/tour-2.png" alt="Dashboard bottom" className="w-full h-auto select-none pointer-events-none" />
-                    <img src="/tour-3.png" alt="Experiences" className="w-full h-auto select-none pointer-events-none" />
-                  </div>
-
-                  {/* Hotspot for Career Fair card on Feed page */}
-                  <div 
-                    onClick={handleCardTap}
-                    className="absolute top-[138%] left-1/2 -translate-x-1/2 w-[85%] h-[12%] cursor-pointer z-30 group"
-                  >
-                    <div className="absolute inset-0 border-2 border-[#BDFB04] rounded-2xl animate-pulse" />
-                    <div className="absolute bottom-2 right-2 bg-[#BDFB04] text-[#191919] text-[6px] font-black uppercase tracking-wider px-1.5 py-0.5 rounded shadow">
-                      Tap Card
+                  {/* Mini Feed Header */}
+                  <div className="flex items-center justify-between px-4 py-3 border-b border-white/5 bg-[#121212] z-20">
+                    <span className="text-[9px] font-black tracking-widest text-[#BDFB04]">EVIDA</span>
+                    <div className="flex gap-2">
+                      <span className="text-[7px] font-black uppercase text-[#BDFB04] border-b border-[#BDFB04] pb-0.5">For You</span>
+                      <span className="text-[7px] font-bold uppercase text-gray-500">Campus</span>
                     </div>
                   </div>
+
+                  {/* Staggered Feed Cards */}
+                  <motion.div 
+                    variants={{
+                      hidden: { opacity: 0 },
+                      show: {
+                        opacity: 1,
+                        transition: { staggerChildren: 0.12 }
+                      }
+                    }}
+                    initial="hidden"
+                    animate="show"
+                    className="p-3 space-y-4"
+                  >
+                    {/* Card 1: Rave */}
+                    <motion.div 
+                      variants={{
+                        hidden: { opacity: 0, y: 30, scale: 0.95 },
+                        show: { opacity: 1, y: 0, scale: 1, transition: { type: "spring", stiffness: 100, damping: 14 } }
+                      }}
+                      className="relative h-44 rounded-2xl overflow-hidden border border-white/5 flex flex-col justify-end p-4 group"
+                    >
+                      <div className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105" style={{ backgroundImage: `url('/pexels-amine-1285347-9371719.jpg')` }} />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent z-10" />
+                      
+                      {/* Sidebar buttons mockup */}
+                      <div className="absolute right-3 bottom-14 flex flex-col gap-2 z-20 items-center">
+                        <div className="h-6 w-6 rounded-full bg-black/40 border border-white/10 flex items-center justify-center text-rose-500 shadow"><Heart className="h-3 w-3 fill-rose-500" /></div>
+                        <div className="h-6 w-6 rounded-full bg-black/40 border border-white/10 flex items-center justify-center text-white shadow"><MessageCircle className="h-3 w-3" /></div>
+                      </div>
+
+                      <div className="relative z-10 space-y-1">
+                        <span className="bg-[#BDFB04] text-[#191919] font-black px-1 py-0.5 rounded text-[5px] uppercase tracking-wider">Verified Org</span>
+                        <h4 className="text-[10px] font-black uppercase tracking-tight text-white leading-tight">Welcome Back Neon Rave</h4>
+                        <p className="text-[6px] text-gray-300 line-clamp-1">Campus Board • Oct 5 • Student Plaza</p>
+                      </div>
+                    </motion.div>
+
+                    {/* Card 2: Career Fair (Action Card) */}
+                    <motion.div 
+                      variants={{
+                        hidden: { opacity: 0, y: 30, scale: 0.95 },
+                        show: { opacity: 1, y: 0, scale: 1, transition: { type: "spring", stiffness: 100, damping: 14 } }
+                      }}
+                      onClick={handleCardTap}
+                      className="relative h-44 rounded-2xl overflow-hidden border-2 border-[#BDFB04] flex flex-col justify-end p-4 group cursor-pointer shadow-[0_0_12px_rgba(189,251,4,0.15)]"
+                    >
+                      <div className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105 animate-pulse-slow" style={{ backgroundImage: `url('/pexels-rdne-7648057.jpg')` }} />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent z-10" />
+                      
+                      {/* Pulse circle indicators */}
+                      <div className="absolute top-3 right-3 bg-[#BDFB04] text-[#191919] text-[6px] font-black uppercase tracking-wider px-1.5 py-0.5 rounded shadow animate-bounce z-20">
+                        Tap to Explore
+                      </div>
+
+                      <div className="relative z-10 space-y-1">
+                        <span className="bg-[#BDFB04] text-[#191919] font-black px-1 py-0.5 rounded text-[5px] uppercase tracking-wider">Featured</span>
+                        <h4 className="text-[10px] font-black uppercase tracking-tight text-white leading-tight">Career Fair Networking Night</h4>
+                        <p className="text-[6px] text-gray-300 line-clamp-1">Business Club • Oct 12 • Student Center</p>
+                      </div>
+                    </motion.div>
+
+                    {/* Card 3: Autumn Fest */}
+                    <motion.div 
+                      variants={{
+                        hidden: { opacity: 0, y: 30, scale: 0.95 },
+                        show: { opacity: 1, y: 0, scale: 1, transition: { type: "spring", stiffness: 100, damping: 14 } }
+                      }}
+                      className="relative h-44 rounded-2xl overflow-hidden border border-white/5 flex flex-col justify-end p-4 group"
+                    >
+                      <div className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105" style={{ backgroundImage: `url('/pexels-yaroslav-shuraev-8513385.jpg')` }} />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent z-10" />
+                      
+                      <div className="relative z-10 space-y-1">
+                        <span className="bg-neutral-800 text-gray-400 font-bold px-1 py-0.5 rounded text-[5px] uppercase tracking-wider">Greek Life</span>
+                        <h4 className="text-[10px] font-black uppercase tracking-tight text-white leading-tight">Autumn Concert & Social</h4>
+                        <p className="text-[6px] text-gray-300 line-clamp-1">Greek Council • Oct 18 • Fraternity Quad</p>
+                      </div>
+                    </motion.div>
+                  </motion.div>
                 </div>
-              ) : (
+              )}
+
+              {currentView === 'explore' && (
                 <div 
-                  ref={detailsScrollRef}
+                  ref={feedScrollRef}
                   onScroll={handleScroll}
-                  className="w-full h-full overflow-y-auto scrollbar-none relative scroll-smooth"
+                  className="w-full h-full overflow-y-auto scrollbar-none pt-8 pb-14 text-white bg-[#121212]"
                 >
-                  <div className="flex flex-col w-full">
-                    <img src="/tour-4.png" alt="Details hero" className="w-full h-auto select-none pointer-events-none" />
-                    <img src="/tour-5.png" alt="Details RSVP" className="w-full h-auto select-none pointer-events-none" />
+                  {/* Search Bar Block */}
+                  <div className="px-3 pt-2 bg-[#121212] space-y-3 pb-3 border-b border-white/5">
+                    <div className="relative">
+                      <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3 w-3 text-gray-500" />
+                      <input 
+                        type="text" 
+                        disabled 
+                        placeholder="Search events, clubs..." 
+                        className="w-full bg-neutral-900 border border-white/5 rounded-lg py-1 pl-8 text-[8px] text-white"
+                      />
+                    </div>
+                    <div className="flex gap-1 overflow-x-auto scrollbar-none">
+                      <span className="shrink-0 px-2.5 py-0.5 bg-[#BDFB04] text-[#191919] text-[6px] font-black rounded-full uppercase">All</span>
+                      <span className="shrink-0 px-2.5 py-0.5 bg-white/5 border border-white/10 text-gray-400 text-[6px] font-bold rounded-full uppercase">Parties</span>
+                      <span className="shrink-0 px-2.5 py-0.5 bg-white/5 border border-white/10 text-gray-400 text-[6px] font-bold rounded-full uppercase">Sports</span>
+                      <span className="shrink-0 px-2.5 py-0.5 bg-white/5 border border-white/10 text-gray-400 text-[6px] font-bold rounded-full uppercase">Academic</span>
+                    </div>
                   </div>
 
-                  {/* Back button hotspot */}
-                  <div 
-                    onClick={handleBackTap}
-                    className="absolute top-[3%] left-[4%] w-[10%] h-[5%] cursor-pointer z-30"
-                  />
-
-                  {/* RSVP button hotspot */}
-                  <div 
-                    onClick={handleRsvpClick}
-                    className="absolute top-[168%] left-1/2 -translate-x-1/2 w-[85%] h-[7%] cursor-pointer z-30 group"
-                  >
-                    {rsvpConfirmed ? (
-                      <div className="absolute inset-0 bg-[#BDFB04] rounded-xl flex items-center justify-center gap-1.5 text-[#191919] font-black uppercase tracking-widest text-[9px] shadow-lg border border-white/20 animate-bounce">
-                        <Check className="h-3.5 w-3.5 text-[#191919] stroke-[3]" />
-                        <span>Going!</span>
-                      </div>
-                    ) : (
-                      <>
-                        <div className="absolute inset-0 border-2 border-[#BDFB04] rounded-xl animate-pulse" />
-                        <div className="absolute inset-0 bg-transparent flex items-center justify-center text-[#BDFB04] text-[7px] font-black uppercase tracking-widest pointer-events-none">
-                          Tap to RSVP
+                  {/* Grid layout */}
+                  <div className="p-3">
+                    <span className="block text-[7px] font-black text-gray-500 uppercase tracking-widest mb-2">Popular Events</span>
+                    
+                    <motion.div 
+                      variants={{
+                        hidden: { opacity: 0 },
+                        show: {
+                          opacity: 1,
+                          transition: { staggerChildren: 0.08 }
+                        }
+                      }}
+                      initial="hidden"
+                      animate="show"
+                      className="grid grid-cols-2 gap-2"
+                    >
+                      {/* Grid Item 1: Career Center (Target) */}
+                      <motion.div 
+                        variants={{
+                          hidden: { opacity: 0, scale: 0.92 },
+                          show: { opacity: 1, scale: 1, transition: { type: "spring", stiffness: 120, damping: 14 } }
+                        }}
+                        onClick={handleCardTap}
+                        className="bg-neutral-900/60 border border-[#BDFB04]/30 rounded-xl p-1.5 space-y-1.5 cursor-pointer hover:border-[#BDFB04] transition-all"
+                      >
+                        <div className="aspect-[4/3] bg-cover bg-center rounded-lg" style={{ backgroundImage: `url('/pexels-rdne-7648057.jpg')` }} />
+                        <div>
+                          <h5 className="text-[7.5px] font-black text-white uppercase tracking-tight truncate leading-tight">Career Networking</h5>
+                          <p className="text-[5.5px] text-gray-500 truncate leading-none">Business Club</p>
                         </div>
-                      </>
-                    )}
+                      </motion.div>
+
+                      {/* Grid Item 2 */}
+                      <motion.div 
+                        variants={{
+                          hidden: { opacity: 0, scale: 0.92 },
+                          show: { opacity: 1, scale: 1 }
+                        }}
+                        className="bg-neutral-900/40 border border-white/5 rounded-xl p-1.5 space-y-1.5"
+                      >
+                        <div className="aspect-[4/3] bg-cover bg-center rounded-lg" style={{ backgroundImage: `url('/pexels-yaroslav-shuraev-8513385.jpg')` }} />
+                        <div>
+                          <h5 className="text-[7.5px] font-black text-white uppercase tracking-tight truncate leading-tight">Autumn Social</h5>
+                          <p className="text-[5.5px] text-gray-500 truncate leading-none">Greek Council</p>
+                        </div>
+                      </motion.div>
+
+                      {/* Grid Item 3 */}
+                      <motion.div 
+                        variants={{
+                          hidden: { opacity: 0, scale: 0.92 },
+                          show: { opacity: 1, scale: 1 }
+                        }}
+                        className="bg-neutral-900/40 border border-white/5 rounded-xl p-1.5 space-y-1.5"
+                      >
+                        <div className="aspect-[4/3] bg-cover bg-center rounded-lg" style={{ backgroundImage: `url('/pexels-amine-1285347-9371719.jpg')` }} />
+                        <div>
+                          <h5 className="text-[7.5px] font-black text-white uppercase tracking-tight truncate leading-tight">Welcome Rave</h5>
+                          <p className="text-[5.5px] text-gray-500 truncate leading-none">Campus Board</p>
+                        </div>
+                      </motion.div>
+
+                      {/* Grid Item 4 */}
+                      <motion.div 
+                        variants={{
+                          hidden: { opacity: 0, scale: 0.92 },
+                          show: { opacity: 1, scale: 1 }
+                        }}
+                        className="bg-neutral-900/40 border border-white/5 rounded-xl p-1.5 space-y-1.5"
+                      >
+                        <div className="aspect-[4/3] bg-cover bg-center rounded-lg" style={{ backgroundImage: `url('/pexels-rdne-7648057.jpg')` }} />
+                        <div>
+                          <h5 className="text-[7.5px] font-black text-white uppercase tracking-tight truncate leading-tight">Greek Tailgate</h5>
+                          <p className="text-[5.5px] text-gray-500 truncate leading-none">Greek Council</p>
+                        </div>
+                      </motion.div>
+                    </motion.div>
                   </div>
                 </div>
               )}
+
+              {currentView === 'details' && (
+                <div 
+                  ref={detailsScrollRef}
+                  onScroll={handleScroll}
+                  className="w-full h-full overflow-y-auto scrollbar-none pt-8 pb-14 text-white bg-[#121212]"
+                >
+                  {/* Hero Cover Header */}
+                  <div className="relative h-36 w-full bg-cover bg-center" style={{ backgroundImage: `url('/pexels-rdne-7648057.jpg')` }}>
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#121212] via-transparent to-black/30" />
+                    <button 
+                      onClick={handleBackTap}
+                      className="absolute top-2.5 left-2.5 h-6 w-6 rounded-full bg-black/60 backdrop-blur-md flex items-center justify-center text-white border border-white/10"
+                    >
+                      <ArrowLeft className="h-3.5 w-3.5" />
+                    </button>
+                  </div>
+
+                  {/* Staggered Content Details */}
+                  <motion.div 
+                    variants={{
+                      hidden: { opacity: 0 },
+                      show: {
+                        opacity: 1,
+                        transition: { staggerChildren: 0.1 }
+                      }
+                    }}
+                    initial="hidden"
+                    animate="show"
+                    className="p-3.5 space-y-4 text-left"
+                  >
+                    {/* Header Group */}
+                    <motion.div 
+                      variants={{
+                        hidden: { opacity: 0, y: 15, scale: 0.97 },
+                        show: { opacity: 1, y: 0, scale: 1, transition: { type: "spring", stiffness: 120 } }
+                      }}
+                      className="space-y-1.5"
+                    >
+                      <span className="bg-[#BDFB04] text-[#191919] font-black px-1.5 py-0.5 rounded text-[5px] uppercase tracking-wider w-fit block">Verified Host</span>
+                      <h4 className="text-[12px] font-black uppercase tracking-tight leading-tight text-white">Career Fair Networking Night</h4>
+                      <p className="text-[5.5px] text-gray-400">HOSTED BY BUSINESS CLUB & CAREER CENTER</p>
+                    </motion.div>
+
+                    {/* Metadata Lists */}
+                    <motion.div 
+                      variants={{
+                        hidden: { opacity: 0, y: 15 },
+                        show: { opacity: 1, y: 0 }
+                      }}
+                      className="space-y-2 border-y border-white/5 py-2.5 text-gray-300"
+                    >
+                      <div className="flex items-center gap-2">
+                        <Clock className="h-3.5 w-3.5 text-[#BDFB04]" />
+                        <span className="text-[6.5px] font-bold">WEDNESDAY, OCT 12 • 2:00 PM - 5:00 PM</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <MapPin className="h-3.5 w-3.5 text-[#BDFB04]" />
+                        <span className="text-[6.5px] font-bold">STUDENT CENTER MAIN HALL</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Trophy className="h-3.5 w-3.5 text-[#BDFB04]" />
+                        <span className="text-[6.5px] font-bold">FREE TICKET REQUIRED</span>
+                      </div>
+                    </motion.div>
+
+                    {/* Description Paragraph */}
+                    <motion.div 
+                      variants={{
+                        hidden: { opacity: 0, y: 15 },
+                        show: { opacity: 1, y: 0 }
+                      }}
+                      className="space-y-1"
+                    >
+                      <span className="block text-[7px] font-black text-gray-500 uppercase tracking-widest">About Event</span>
+                      <p className="text-[7.5px] text-gray-300 leading-relaxed font-light">
+                        Connect with over 50 recruiters from leading tech, finance, and creative industries. Prepare your resume and dress professionally. First 100 check-ins receive a free portfolio binder.
+                      </p>
+                    </motion.div>
+
+                    {/* RSVP Action Hotspot wrapper */}
+                    <motion.div 
+                      variants={{
+                        hidden: { opacity: 0, scale: 0.95 },
+                        show: { opacity: 1, scale: 1, transition: { delay: 0.2 } }
+                      }}
+                      className="pt-2"
+                    >
+                      <button
+                        onClick={handleRsvpClick}
+                        className={`w-full py-2.5 rounded-xl text-[8px] font-black uppercase tracking-widest transition-all flex items-center justify-center gap-1.5 cursor-pointer shadow-md ${
+                          rsvpConfirmed 
+                            ? 'bg-[#BDFB04] text-[#191919] animate-bounce shadow-[0_0_12px_rgba(189,251,4,0.35)]' 
+                            : 'bg-white text-[#191919] hover:bg-[#BDFB04] hover:text-[#191919] border border-black/5 hover:shadow-[0_0_12px_rgba(189,251,4,0.25)]'
+                        }`}
+                      >
+                        {rsvpConfirmed ? (
+                          <>
+                            <Check className="h-3.5 w-3.5 text-[#191919] stroke-[3]" />
+                            <span>Going!</span>
+                          </>
+                        ) : (
+                          <span>RSVP NOW</span>
+                        )}
+                      </button>
+                    </motion.div>
+
+                  </motion.div>
+                </div>
+              )}
+
             </div>
           </motion.div>
 
