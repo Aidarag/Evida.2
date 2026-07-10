@@ -4,6 +4,7 @@ import React from 'react';
 import { ArrowRight, Sparkles, Calendar, Shield, Users, Trophy } from 'lucide-react';
 import { Event } from '@/lib/types';
 import { motion } from 'framer-motion';
+import EvidaLogo from '@/components/ui/EvidaLogo';
 
 interface LandingPageProps {
   featuredEvents: Event[];
@@ -24,12 +25,7 @@ export default function LandingPage({
       <header className="sticky top-0 z-40 w-full border-b border-black/[0.06] bg-white/80 backdrop-blur-md">
         <div className="mx-auto max-w-7xl px-6 h-16 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#BDFB04] shadow-md shadow-[#BDFB04]/20">
-              <Sparkles className="h-5 w-5 text-[#191919] font-extrabold" />
-            </div>
-            <span className="text-xl font-bold tracking-wider text-[#191919]">
-              EVIDA
-            </span>
+            <EvidaLogo size={36} lightMode={true} text="EVIDA" />
           </div>
 
           <div className="flex items-center gap-4">
