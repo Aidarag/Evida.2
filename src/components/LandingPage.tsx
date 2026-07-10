@@ -51,11 +51,30 @@ export default function LandingPage({
   const [activeScreen, setActiveScreen] = useState(0);
   const [feedRsvp, setFeedRsvp] = useState(false);
   const [detailRsvp, setDetailRsvp] = useState(false);
+  const [rsvpConfirmed, setRsvpConfirmed] = useState(false);
 
   const handlePhoneClick = () => {
     if (!phoneActive) {
       setPhoneActive(true);
       setActiveScreen(0);
+      setRsvpConfirmed(false);
+    }
+  };
+
+  const handleRsvpClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (rsvpConfirmed) return;
+    setRsvpConfirmed(true);
+    setTimeout(() => {
+      setPhoneActive(false);
+      setRsvpConfirmed(false);
+      setActiveScreen(0);
+    }, 1500);
+  };
+
+  const handleScreenTap = () => {
+    if (activeScreen < 4) {
+      setActiveScreen(prev => prev + 1);
     }
   };
 
@@ -95,7 +114,7 @@ export default function LandingPage({
 
       if (e.deltaY > 30) {
         // Scroll down inside demo
-        if (activeScreen < 2) {
+        if (activeScreen < 4) {
           isTransitioning = true;
           setActiveScreen(prev => prev + 1);
           setTimeout(() => { isTransitioning = false; }, 600);
@@ -143,7 +162,7 @@ export default function LandingPage({
 
       if (diffY > 55) {
         // Scroll down
-        if (activeScreen < 2) {
+        if (activeScreen < 4) {
           isTransitioning = true;
           setActiveScreen(prev => prev + 1);
           setTimeout(() => { isTransitioning = false; }, 600);
@@ -317,42 +336,60 @@ export default function LandingPage({
           {/* Left Side: Demo Progress Indicators (Visible in interactive mode) */}
           <div className="hidden md:flex flex-col gap-4 text-left min-w-[160px]">
             <div className="space-y-1.5">
-              <span className="block text-[8px] font-black uppercase tracking-wider text-[#4B5563]">Preview Progress</span>
+              <span className="block text-[8px] font-black uppercase tracking-wider text-[#4B5563]">Tour Progress</span>
               <div className="h-1 bg-black/10 rounded-full w-28 overflow-hidden">
                 <motion.div 
                   className="h-full bg-[#191919]"
-                  animate={{ width: `${(activeScreen + 1) * 33.3}%` }}
+                  animate={{ width: `${(activeScreen + 1) * 20}%` }}
                   transition={{ duration: 0.3 }}
                 />
               </div>
             </div>
 
-            <div className="space-y-4 pt-2">
+            <div className="space-y-3 pt-2">
               <div className="flex items-center gap-3 transition-all duration-300">
-                <div className={`h-6 w-6 rounded-full border flex items-center justify-center text-[10px] font-black transition-all ${
+                <div className={`h-5 w-5 rounded-full border flex items-center justify-center text-[9px] font-black transition-all ${
                   activeScreen === 0 
                     ? 'bg-[#191919] border-[#191919] text-[#BDFB04] scale-110 shadow-md' 
                     : 'bg-white border-black/10 text-gray-400'
                 }`}>1</div>
-                <span className={`text-[10px] font-black uppercase tracking-wider ${activeScreen === 0 ? 'text-[#191919]' : 'text-gray-400'}`}>Home Feed</span>
+                <span className={`text-[9px] font-black uppercase tracking-wider ${activeScreen === 0 ? 'text-[#191919]' : 'text-gray-400'}`}>Dashboard</span>
               </div>
 
               <div className="flex items-center gap-3 transition-all duration-300">
-                <div className={`h-6 w-6 rounded-full border flex items-center justify-center text-[10px] font-black transition-all ${
+                <div className={`h-5 w-5 rounded-full border flex items-center justify-center text-[9px] font-black transition-all ${
                   activeScreen === 1 
                     ? 'bg-[#191919] border-[#191919] text-[#BDFB04] scale-110 shadow-md' 
                     : 'bg-white border-black/10 text-gray-400'
                 }`}>2</div>
-                <span className={`text-[10px] font-black uppercase tracking-wider ${activeScreen === 1 ? 'text-[#191919]' : 'text-gray-400'}`}>Explore Events</span>
+                <span className={`text-[9px] font-black uppercase tracking-wider ${activeScreen === 1 ? 'text-[#191919]' : 'text-gray-400'}`}>Discover</span>
               </div>
 
               <div className="flex items-center gap-3 transition-all duration-300">
-                <div className={`h-6 w-6 rounded-full border flex items-center justify-center text-[10px] font-black transition-all ${
+                <div className={`h-5 w-5 rounded-full border flex items-center justify-center text-[9px] font-black transition-all ${
                   activeScreen === 2 
                     ? 'bg-[#191919] border-[#191919] text-[#BDFB04] scale-110 shadow-md' 
                     : 'bg-white border-black/10 text-gray-400'
                 }`}>3</div>
-                <span className={`text-[10px] font-black uppercase tracking-wider ${activeScreen === 2 ? 'text-[#191919]' : 'text-gray-400'}`}>Event Details</span>
+                <span className={`text-[9px] font-black uppercase tracking-wider ${activeScreen === 2 ? 'text-[#191919]' : 'text-gray-400'}`}>Experiences</span>
+              </div>
+
+              <div className="flex items-center gap-3 transition-all duration-300">
+                <div className={`h-5 w-5 rounded-full border flex items-center justify-center text-[9px] font-black transition-all ${
+                  activeScreen === 3 
+                    ? 'bg-[#191919] border-[#191919] text-[#BDFB04] scale-110 shadow-md' 
+                    : 'bg-white border-black/10 text-gray-400'
+                }`}>4</div>
+                <span className={`text-[9px] font-black uppercase tracking-wider ${activeScreen === 3 ? 'text-[#191919]' : 'text-gray-400'}`}>Details</span>
+              </div>
+
+              <div className="flex items-center gap-3 transition-all duration-300">
+                <div className={`h-5 w-5 rounded-full border flex items-center justify-center text-[9px] font-black transition-all ${
+                  activeScreen === 4 
+                    ? 'bg-[#191919] border-[#191919] text-[#BDFB04] scale-110 shadow-md' 
+                    : 'bg-white border-black/10 text-gray-400'
+                }`}>5</div>
+                <span className={`text-[9px] font-black uppercase tracking-wider ${activeScreen === 4 ? 'text-[#191919]' : 'text-gray-400'}`}>RSVP</span>
               </div>
             </div>
           </div>
@@ -399,239 +436,55 @@ export default function LandingPage({
               </div>
             )}
 
-            {/* Vertical screens wrapper */}
-            <div 
-              className="w-full h-full flex flex-col transition-transform duration-500 ease-out z-10"
-              style={{ transform: `translateY(-${activeScreen * 100}%)` }}
-            >
-              
-              {/* Screen 1: Home Feed */}
-              <div className="w-full h-full shrink-0 relative bg-black pt-8 pb-4 flex flex-col justify-between overflow-hidden text-left">
-                {/* App Bar */}
-                <div className="px-4 py-2 border-b border-white/5 flex items-center justify-between text-white">
-                  <span className="text-[10px] font-black tracking-widest text-[#BDFB04]">EVIDA</span>
-                  <div className="flex gap-2">
-                    <span className="text-[8px] font-black uppercase text-[#BDFB04] border-b border-[#BDFB04] pb-0.5">For You</span>
-                    <span className="text-[8px] font-bold uppercase text-gray-400">Campus</span>
-                  </div>
-                </div>
-
-                {/* Feed Card */}
-                <div className="flex-1 relative m-2 rounded-2xl overflow-hidden border border-white/10 flex flex-col justify-end p-4">
-                  <div className="absolute inset-0 bg-[url('/pexels-amine-1285347-9371719.jpg')] bg-cover bg-center" />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black via-black/30 to-transparent" />
-
-                  {/* Sidebar stats overlay */}
-                  <div className="absolute right-3 bottom-16 flex flex-col gap-3.5 z-20 text-white items-center">
-                    <div className="flex flex-col items-center">
-                      <button className="h-8 w-8 rounded-full bg-black/40 border border-white/10 flex items-center justify-center text-rose-500 shadow-md">
-                        <Heart className="h-4 w-4 fill-rose-500" />
-                      </button>
-                      <span className="text-[7px] font-bold mt-0.5">1.2K</span>
-                    </div>
-                    <div className="flex flex-col items-center">
-                      <button className="h-8 w-8 rounded-full bg-black/40 border border-white/10 flex items-center justify-center text-white shadow-md">
-                        <MessageCircle className="h-4 w-4" />
-                      </button>
-                      <span className="text-[7px] font-bold mt-0.5">48</span>
-                    </div>
-                    <div className="flex flex-col items-center">
-                      <button className="h-8 w-8 rounded-full bg-black/40 border border-white/10 flex items-center justify-center text-white shadow-md">
-                        <Bookmark className="h-4 w-4" />
-                      </button>
-                      <span className="text-[7px] font-bold mt-0.5">180</span>
-                    </div>
-                  </div>
-
-                  {/* Details */}
-                  <div className="relative z-10 text-white space-y-2 max-w-[80%]">
-                    <span className="rounded bg-[#BDFB04] text-[#191919] font-black px-1.5 py-0.5 text-[7px] tracking-wider uppercase">
-                      Campus Board
-                    </span>
-                    <h3 className="text-[12px] font-black uppercase tracking-tight leading-none text-white">
-                      Welcome Back Neon Rave
-                    </h3>
-                    <p className="text-[8px] text-gray-300 leading-tight line-clamp-2">
-                      Light up the night! Join us for a high-energy neon rave with laser shows, electronic music, and food trucks.
-                    </p>
-                  </div>
-                </div>
-
-                {/* RSVP Bottom Bar */}
-                <div className="px-4 pt-1 pb-2 flex gap-2">
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setFeedRsvp(!feedRsvp);
-                    }}
-                    className={`flex-1 py-2 rounded-xl text-[8px] font-black uppercase tracking-wider transition-all flex items-center justify-center gap-1 cursor-pointer ${
-                      feedRsvp 
-                        ? 'bg-[#BDFB04]/20 border border-[#BDFB04]/30 text-[#BDFB04]' 
-                        : 'bg-[#BDFB04] text-[#191919] hover:bg-[#d1fa3c]'
-                    }`}
-                  >
-                    {feedRsvp ? (
-                      <>
-                        <Check className="h-3 w-3" />
-                        <span>Going!</span>
-                      </>
-                    ) : (
-                      <span>I'm In</span>
-                    )}
-                  </button>
-                </div>
-              </div>
-
-              {/* Screen 2: Explore Events */}
-              <div className="w-full h-full shrink-0 relative bg-[#121212] pt-8 pb-4 flex flex-col justify-start overflow-hidden px-3 text-left">
-                {/* Search Bar */}
-                <div className="relative mt-2">
-                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-gray-500" />
-                  <input
-                    type="text"
-                    disabled
-                    placeholder="Search events, groups..."
-                    className="w-full bg-neutral-900 border border-white/5 rounded-xl py-2 pl-9 pr-3 text-[9px] text-white focus:outline-none"
+            {/* User Journey Screens */}
+            <div className="w-full h-full relative z-10 overflow-hidden bg-[#ECECE5]">
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={activeScreen}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.3 }}
+                  className="w-full h-full relative select-none"
+                  onClick={handleScreenTap}
+                >
+                  <img
+                    src={`/tour-${activeScreen + 1}.png`}
+                    alt={`Tour Screen ${activeScreen + 1}`}
+                    className="w-full h-full object-cover select-none pointer-events-none"
                   />
-                </div>
 
-                {/* Category Chips */}
-                <div className="flex gap-1.5 overflow-x-auto py-3 scrollbar-none">
-                  <span className="shrink-0 px-2.5 py-1 bg-[#BDFB04] text-[#191919] text-[7px] font-black rounded-full uppercase tracking-wider">All</span>
-                  <span className="shrink-0 px-2.5 py-1 bg-white/5 border border-white/10 text-gray-400 text-[7px] font-bold rounded-full uppercase tracking-wider">Parties</span>
-                  <span className="shrink-0 px-2.5 py-1 bg-white/5 border border-white/10 text-gray-400 text-[7px] font-bold rounded-full uppercase tracking-wider">Sports</span>
-                  <span className="shrink-0 px-2.5 py-1 bg-white/5 border border-white/10 text-gray-400 text-[7px] font-bold rounded-full uppercase tracking-wider">Academic</span>
-                </div>
-
-                {/* Grid items */}
-                <span className="block text-[8px] font-black text-gray-400 uppercase tracking-widest mb-2">Popular Events</span>
-                <div className="grid grid-cols-2 gap-2 flex-1 overflow-y-auto scrollbar-none pb-4">
-                  
-                  {/* Grid Item 1 - Link to detail screen */}
-                  <div 
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setActiveScreen(2);
-                    }}
-                    className="bg-neutral-900 border border-white/5 rounded-xl overflow-hidden p-1.5 space-y-1.5 cursor-pointer hover:border-[#BDFB04]/30 transition-all"
-                  >
-                    <div className="aspect-[4/3] bg-[url('/pexels-amine-1285347-9371719.jpg')] bg-cover bg-center rounded-lg" />
-                    <div>
-                      <h4 className="text-[8px] font-black text-white uppercase tracking-tight truncate">Neon Rave 2026</h4>
-                      <p className="text-[6px] text-gray-400 truncate">Campus Board</p>
-                    </div>
-                  </div>
-
-                  <div className="bg-neutral-900 border border-white/5 rounded-xl overflow-hidden p-1.5 space-y-1.5">
-                    <div className="aspect-[4/3] bg-[url('/pexels-yaroslav-shuraev-8513385.jpg')] bg-cover bg-center rounded-lg" />
-                    <div>
-                      <h4 className="text-[8px] font-black text-white uppercase tracking-tight truncate">Autumn Concert</h4>
-                      <p className="text-[6px] text-gray-400 truncate">Student Union</p>
-                    </div>
-                  </div>
-
-                  <div className="bg-neutral-900 border border-white/5 rounded-xl overflow-hidden p-1.5 space-y-1.5">
-                    <div className="aspect-[4/3] bg-[url('/pexels-cottonbro-5989925.jpg')] bg-cover bg-center rounded-lg" />
-                    <div>
-                      <h4 className="text-[8px] font-black text-white uppercase tracking-tight truncate">Greek Tailgate</h4>
-                      <p className="text-[6px] text-gray-400 truncate">Greek Council</p>
-                    </div>
-                  </div>
-
-                  <div className="bg-neutral-900 border border-white/5 rounded-xl overflow-hidden p-1.5 space-y-1.5">
-                    <div className="aspect-[4/3] bg-[url('/pexels-rdne-7648057.jpg')] bg-cover bg-center rounded-lg" />
-                    <div>
-                      <h4 className="text-[8px] font-black text-white uppercase tracking-tight truncate">Art Showcase</h4>
-                      <p className="text-[6px] text-gray-400 truncate">Fine Arts Club</p>
-                    </div>
-                  </div>
-
-                </div>
-              </div>
-
-              {/* Screen 3: Event Details */}
-              <div className="w-full h-full shrink-0 relative bg-[#121212] pt-8 pb-4 flex flex-col justify-between overflow-hidden text-left text-white">
-                
-                {/* Header Back Button */}
-                <div className="absolute top-8 left-3 z-30">
-                  <button 
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setActiveScreen(1);
-                    }}
-                    className="h-6 w-6 rounded-full bg-black/60 border border-white/10 flex items-center justify-center text-white"
-                  >
-                    <ArrowLeft className="h-3.5 w-3.5" />
-                  </button>
-                </div>
-
-                {/* Scrollable details wrapper */}
-                <div className="flex-1 overflow-y-auto scrollbar-none">
-                  <div className="h-44 w-full bg-[url('/pexels-amine-1285347-9371719.jpg')] bg-cover bg-center relative">
-                    <div className="absolute inset-0 bg-gradient-to-t from-[#121212] via-transparent to-black/40" />
-                  </div>
-
-                  <div className="p-4 space-y-4">
-                    <div className="space-y-1.5">
-                      <span className="rounded bg-[#BDFB04] text-[#191919] font-black px-1.5 py-0.5 text-[6px] tracking-wider uppercase w-fit block">
-                        Verified Org
-                      </span>
-                      <h3 className="text-[14px] font-black uppercase tracking-tight leading-tight">
-                        Welcome Back Neon Rave
-                      </h3>
-                      <p className="text-[7px] text-gray-400">HOSTED BY CAMPUS ACTIVITIES BOARD</p>
-                    </div>
-
-                    <div className="space-y-2 border-y border-white/5 py-3">
-                      <div className="flex items-center gap-2 text-gray-300">
-                        <Clock className="h-3 w-3 text-[#BDFB04]" />
-                        <span className="text-[7px] font-semibold">FRIDAY, OCT 5 • 9:00 PM - 1:00 AM</span>
-                      </div>
-                      <div className="flex items-center gap-2 text-gray-300">
-                        <MapPin className="h-3 w-3 text-[#BDFB04]" />
-                        <span className="text-[7px] font-semibold">STUDENT PLAZA (OUTDOOR)</span>
-                      </div>
-                      <div className="flex items-center gap-2 text-gray-300">
-                        <Trophy className="h-3 w-3 text-[#BDFB04]" />
-                        <span className="text-[7px] font-semibold">FREE ENTRY (RSVP REQUIRED)</span>
+                  {/* Hotspots & interactive elements on top of the images */}
+                  {activeScreen === 1 && (
+                    <div className="absolute bottom-[2%] left-1/2 -translate-x-1/2 w-[85%] h-[20%] cursor-pointer z-30 group">
+                      {/* Pulsing card indicator */}
+                      <div className="absolute inset-0 border-2 border-[#BDFB04] rounded-2xl animate-pulse" />
+                      <div className="absolute bottom-2 right-2 bg-[#BDFB04] text-[#191919] text-[6px] font-black uppercase tracking-wider px-1.5 py-0.5 rounded shadow">
+                        Tap Card
                       </div>
                     </div>
+                  )}
 
-                    <div className="space-y-1">
-                      <span className="block text-[8px] font-black text-gray-400 uppercase tracking-widest">Description</span>
-                      <p className="text-[8px] text-gray-300 leading-relaxed font-light">
-                        Join us for the legendary Welcome Back Rave. High-powered lasers, glow-in-the-dark paint, and campus DJs. Free food vouchers for the first 300 students. Register now to claim your entry ticket.
-                      </p>
+                  {activeScreen === 4 && (
+                    <div className="absolute bottom-[6%] left-1/2 -translate-x-1/2 w-[85%] h-[12%] cursor-pointer z-30 group" onClick={handleRsvpClick}>
+                      {/* Pulsing RSVP indicator */}
+                      {rsvpConfirmed ? (
+                        <div className="absolute inset-0 bg-[#BDFB04] rounded-xl flex items-center justify-center gap-1.5 text-[#191919] font-black uppercase tracking-widest text-[9px] shadow-lg border border-white/20 animate-bounce">
+                          <Check className="h-3.5 w-3.5 text-[#191919] stroke-[3]" />
+                          <span>Going!</span>
+                        </div>
+                      ) : (
+                        <>
+                          <div className="absolute inset-0 border-2 border-[#BDFB04] rounded-xl animate-pulse" />
+                          <div className="absolute inset-0 bg-transparent flex items-center justify-center text-[#BDFB04] text-[7px] font-black uppercase tracking-widest pointer-events-none">
+                            Tap to RSVP
+                          </div>
+                        </>
+                      )}
                     </div>
-                  </div>
-                </div>
-
-                {/* RSVP Bottom Bar */}
-                <div className="px-4 pt-1 pb-2 border-t border-white/5 bg-[#121212] z-20">
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setDetailRsvp(!detailRsvp);
-                    }}
-                    className={`w-full py-2.5 rounded-xl text-[8px] font-black uppercase tracking-wider transition-all flex items-center justify-center gap-1 cursor-pointer ${
-                      detailRsvp 
-                        ? 'bg-emerald-500/20 border border-emerald-500/30 text-emerald-400' 
-                        : 'bg-[#BDFB04] text-[#191919] hover:bg-[#d1fa3c]'
-                    }`}
-                  >
-                    {detailRsvp ? (
-                      <>
-                        <Check className="h-3 w-3" />
-                        <span>Ticket Claimed!</span>
-                      </>
-                    ) : (
-                      <span>Claim Free Ticket</span>
-                    )}
-                  </button>
-                </div>
-
-              </div>
-
+                  )}
+                </motion.div>
+              </AnimatePresence>
             </div>
           </motion.div>
 
