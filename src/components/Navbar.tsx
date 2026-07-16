@@ -3,7 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Home, Compass, Plus, Bookmark, User, Settings, BarChart3, Shield, Star, ClipboardList, Building2, Menu, X } from 'lucide-react';
+import { Home, Compass, Plus, Bookmark, User, Settings, BarChart3, Shield, Star, ClipboardList, Building2, Menu, X, Calendar } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 import EvidaLogo from '@/components/ui/EvidaLogo';
@@ -166,8 +166,8 @@ export function MobileBottomNav({ variant = 'student' }: { variant?: 'student' |
 
   const studentTabs = [
     { href: '/student/dashboard', icon: Home, label: 'Home' },
-    { href: '/student/create', icon: Plus, label: 'Create', isFab: true },
-    { href: '/student/saved', icon: Bookmark, label: 'Saved' },
+    { href: '/student/explore', icon: Compass, label: 'Explore' },
+    { href: '/calendar', icon: Calendar, label: 'Calendar' },
     { href: '/student/profile', icon: User, label: 'Profile' },
   ];
 
@@ -182,7 +182,7 @@ export function MobileBottomNav({ variant = 'student' }: { variant?: 'student' |
   const tabs = variant === 'school' ? schoolTabs : studentTabs;
 
   return (
-    <div className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-xl border-t border-[#D8D2BC]/30 pb-5 pt-1.5 shadow-[0_-4px_20px_rgba(0,0,0,0.03)]">
+    <div className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-xl border-t border-[#D8D2BC]/30 pb-5 pt-2 shadow-[0_-4px_20px_rgba(0,0,0,0.03)]">
       <motion.nav
         initial={{ y: 20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
@@ -193,26 +193,13 @@ export function MobileBottomNav({ variant = 'student' }: { variant?: 'student' |
           const isActive = pathname === tab.href || pathname.startsWith(tab.href + '/');
           const Icon = tab.icon;
 
-          if (tab.isFab) {
-            return (
-              <Link key={tab.href} href={tab.href} className="-mt-6">
-                <motion.div
-                  whileTap={{ scale: 0.95 }}
-                  className="h-12 w-12 rounded-full bg-[#FD5C05] flex items-center justify-center shadow-lg shadow-[#FD5C05]/25 cursor-pointer hover:scale-105 transition-all border-4 border-white"
-                >
-                  <Plus className="h-5 w-5 text-[#2A2621] stroke-[3]" />
-                </motion.div>
-              </Link>
-            );
-          }
-
           return (
             <Link
               key={tab.href}
               href={tab.href}
-              className={`flex flex-col items-center gap-0.5 px-3 py-1 transition-colors cursor-pointer ${
+              className={`flex flex-col items-center gap-1 px-3 py-1 transition-colors cursor-pointer ${
                 isActive 
-                  ? 'text-[#3B5C00] font-extrabold' 
+                  ? 'text-[#FD5C05] font-black' 
                   : 'text-[#5A554E] hover:text-[#2A2621]'
               }`}
             >
@@ -233,11 +220,11 @@ export function DesktopSidebar({ variant = 'student' }: { variant?: 'student' | 
   const pathname = usePathname();
 
   const studentLinks = [
-    { href: '/student/dashboard', icon: Home, label: 'Dashboard' },
-    { href: '/student/create', icon: Plus, label: 'Create' },
-    { href: '/student/saved', icon: Bookmark, label: 'Saved Events' },
-    { href: '/student/my-events', icon: Star, label: 'My Events' },
+    { href: '/student/dashboard', icon: Home, label: 'Home' },
+    { href: '/student/explore', icon: Compass, label: 'Explore' },
+    { href: '/calendar', icon: Calendar, label: 'Calendar' },
     { href: '/student/profile', icon: User, label: 'Profile' },
+    { href: '/student/create', icon: Plus, label: 'Create Event' },
   ];
 
   const schoolLinks = [

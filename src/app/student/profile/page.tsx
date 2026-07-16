@@ -66,8 +66,7 @@ export default function StudentProfilePage() {
   // Active Tab State
   const [activeTab, setActiveTab] = useState<'going' | 'saved' | 'hosted' | 'orgs'>('going');
 
-  // Settings toggle state
-  const [settingsOpen, setSettingsOpen] = useState(false);
+
 
   // Notifications settings state
   const [notifOpen, setNotifOpen] = useState(false);
@@ -236,7 +235,6 @@ export default function StudentProfilePage() {
     setEditClassification(currentUser.classification || 'Senior');
     setEditOpen(true);
     setNotifOpen(false);
-    setSettingsOpen(false);
   };
 
   const saveEdit = async () => {
@@ -360,7 +358,6 @@ export default function StudentProfilePage() {
             <button
               onClick={() => {
                 setNotifOpen(!notifOpen);
-                setSettingsOpen(false);
               }}
               className={`h-9 w-9 rounded-xl border flex items-center justify-center transition-all cursor-pointer shadow-sm relative shrink-0 ${
                 notifOpen ? 'bg-[#FD5C05] border-[#FD5C05] text-white' : 'bg-white border-black/[0.06] text-[#2A2621] hover:bg-slate-50'
@@ -371,57 +368,15 @@ export default function StudentProfilePage() {
               <span className="absolute top-1.5 right-1.5 h-2 w-2 rounded-full bg-red-500 animate-pulse" />
             </button>
 
-            {/* Settings Toggle Icon */}
-            <button
-              onClick={() => {
-                setSettingsOpen(!settingsOpen);
-                setNotifOpen(false);
-              }}
-              className={`h-9 w-9 rounded-xl border flex items-center justify-center transition-all cursor-pointer shadow-sm shrink-0 ${
-                settingsOpen ? 'bg-[#2A2621] border-[#2A2621] text-white' : 'bg-white border-black/[0.06] text-[#2A2621] hover:bg-slate-50'
-              }`}
+            {/* Settings Link Button */}
+            <Link
+              href="/student/settings"
+              className="h-9 w-9 rounded-xl border border-black/[0.06] bg-white text-[#2A2621] hover:bg-slate-50 flex items-center justify-center transition-all shadow-sm shrink-0"
             >
               <Settings className="h-4 w-4" />
-            </button>
+            </Link>
           </div>
         </div>
-
-        {/* ── Settings Slide Panel ── */}
-        <AnimatePresence>
-          {settingsOpen && (
-            <motion.div
-              initial={{ height: 0, opacity: 0 }}
-              animate={{ height: 'auto', opacity: 1 }}
-              exit={{ height: 0, opacity: 0 }}
-              className="overflow-hidden bg-white border border-black/[0.04] rounded-[28px] p-6 shadow-sm space-y-4 text-left mb-6"
-            >
-              <div className="flex justify-between items-center border-b border-black/[0.04] pb-2">
-                <h3 className="text-xs font-black uppercase tracking-wider flex items-center gap-1.5">
-                  <Settings className="h-4 w-4 text-[#FD5C05]" /> Account Settings
-                </h3>
-                <button
-                  onClick={() => setSettingsOpen(false)}
-                  className="text-[10px] font-bold text-red-500 hover:underline uppercase"
-                >
-                  Close
-                </button>
-              </div>
-
-              <div className="flex items-center justify-between p-3 bg-red-500/[0.02] border border-red-500/10 rounded-2xl">
-                <div>
-                  <p className="text-xs font-black uppercase text-red-600 tracking-wider">Log Out</p>
-                  <p className="text-[10px] text-[#5A554E] mt-0.5">Safely log out of your current session on Evida.</p>
-                </div>
-                <button
-                  onClick={handleLogout}
-                  className="bg-red-500 text-white hover:bg-red-600 px-4 py-2 rounded-xl text-xs font-black uppercase tracking-wider transition-all cursor-pointer shadow-sm"
-                >
-                  Sign Out
-                </button>
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
 
         {/* ── Notifications Slide Panel ── */}
         <AnimatePresence>
