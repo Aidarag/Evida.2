@@ -3,7 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Home, Compass, Plus, Bookmark, User, Settings, BarChart3, Shield, Star, ClipboardList, Building2, Menu, X, Calendar, ChevronDown, ArrowRight } from 'lucide-react';
+import { Home, Compass, Plus, Bookmark, User, Settings, BarChart3, Shield, Star, ClipboardList, Building2, Menu, X, Calendar, ChevronDown, ArrowRight, Bell } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useUser } from '@/lib/context/UserContext';
 import { useEvents } from '@/lib/context/EventContext';
@@ -99,12 +99,20 @@ export function DesktopNav({ variant = 'student' }: { variant?: 'student' | 'sch
             )}
             {/* Student Logged In */}
             {variant === 'student' && (
-              <>
+              <div className="flex items-center gap-3">
                 <Link href="/student/create" className="px-5 py-2 rounded-full bg-[#FD5C05] text-[#2A2621] text-[11px] font-bold uppercase tracking-wider hover:bg-[#CC3D00] transition-colors shadow-[0_4px_12px_rgba(189,251,4,0.15)]">
                   Create
                 </Link>
+                <NotificationBell />
+                <Link 
+                  href="/student/settings" 
+                  className="h-9 w-9 rounded-full bg-[#EAE4CF]/40 border border-[#2A2621]/10 hover:bg-[#EAE4CF]/60 hover:border-[#FD5C05]/30 transition-all flex items-center justify-center text-[#2A2621] cursor-pointer shadow-sm shrink-0"
+                  title="Settings"
+                >
+                  <Settings className="h-4.5 w-4.5" />
+                </Link>
                 <ProfileSwitcher />
-              </>
+              </div>
             )}
             {/* School Logged In */}
             {variant === 'school' && (
@@ -595,6 +603,124 @@ export function ProfileSwitcher() {
           </motion.div>
         </div>
       )}
+    </div>
+  );
+}
+
+export function NotificationBell() {
+  const { notifications, markNotificationRead, clearNotification } = useEvents();
+  const [dropdownOpen, setDropdownOpen] = React.useState(false);
+  const dropdownRef = React.useRef<HTMLDivElement>(null);
+
+  React.useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setDropdownOpen(false);
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  const unreadCount = notifications.filter(n => !n.read).length;
+
+  const handleMarkAllRead = async () => {
+    try {
+      const unreadList = notifications.filter(n => !n.read);
+      for (const notif of unreadList) {
+        await markNotificationRead(notif.id);
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  return (
+    <div className="relative inline-block text-left" ref={dropdownRef}>
+      <button
+        onClick={() => setDropdownOpen(!dropdownOpen)}
+        className={`h-9 w-9 rounded-full border flex items-center justify-center transition-all cursor-pointer shadow-sm relative shrink-0 ${
+          dropdownOpen 
+            ? 'bg-[#FD5C05]/10 border-[#FD5C05]/30 text-[#FD5C05]' 
+            : 'bg-[#EAE4CF]/40 border-[#2A2621]/10 text-[#2A2621] hover:bg-[#EAE4CF]/60 hover:border-[#FD5C05]/30'
+        }`}
+        title="Notifications"
+      >
+        <Bell className="h-4.5 w-4.5" />
+        {unreadCount > 0 && (
+          <span className="absolute top-1.5 right-1.5 h-2 w-2 rounded-full bg-red-500 animate-pulse" />
+        )}
+      </button>
+
+      <AnimatePresence>
+        {dropdownOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: 8, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 8, scale: 0.95 }}
+            transition={{ duration: 0.15 }}
+            className="absolute right-0 mt-2.5 w-80 rounded-2xl bg-white border border-black/[0.06] shadow-lg z-50 overflow-hidden divide-y divide-black/[0.04] text-left font-sans"
+          >
+            {/* Header */}
+            <div className="p-3 bg-[#EAE4CF]/20 flex items-center justify-between">
+              <span className="text-[10px] font-extrabold uppercase tracking-wider text-[#5A554E] flex items-center gap-1.5">
+                <Bell className="h-3.5 w-3.5 text-[#FD5C05]" /> Notifications ({unreadCount} unread)
+              </span>
+              {unreadCount > 0 && (
+                <button
+                  onClick={handleMarkAllRead}
+                  className="text-[9px] font-black uppercase text-[#FD5C05] hover:text-[#CC3D00] transition-colors cursor-pointer"
+                >
+                  Mark all read
+                </button>
+              )}
+            </div>
+
+            {/* List */}
+            <div className="max-h-64 overflow-y-auto divide-y divide-black/[0.03] p-1.5 space-y-1">
+              {notifications.length > 0 ? (
+                notifications.map(notif => (
+                  <div
+                    key={notif.id}
+                    className={`p-2.5 rounded-xl transition-all relative flex flex-col gap-1 text-xs ${
+                      notif.read ? 'opacity-65 hover:bg-black/[0.01]' : 'bg-[#FD5C05]/5 font-semibold hover:bg-[#FD5C05]/10'
+                    }`}
+                  >
+                    <div className="flex justify-between items-start gap-2">
+                      <p className="font-extrabold text-[#2A2621] uppercase text-[9px] tracking-wider">
+                        {notif.title}
+                      </p>
+                      <button
+                        onClick={() => clearNotification(notif.id)}
+                        className="text-[#5A554E] hover:text-[#2A2621] text-[9px] font-bold"
+                        title="Dismiss"
+                      >
+                        ✕
+                      </button>
+                    </div>
+                    <p className="text-[11px] text-[#2A2621] leading-relaxed font-semibold">{notif.message}</p>
+                    <div className="flex justify-between items-center mt-1 text-[8px] text-[#5A554E] font-medium">
+                      <span>{notif.timestamp}</span>
+                      {!notif.read && (
+                        <button
+                          onClick={() => markNotificationRead(notif.id)}
+                          className="text-[#FD5C05] font-black uppercase"
+                        >
+                          Mark read
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <div className="py-8 text-center text-xs text-[#5A554E] font-medium">
+                  No new notifications.
+                </div>
+              )}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

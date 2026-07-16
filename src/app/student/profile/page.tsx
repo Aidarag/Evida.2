@@ -68,14 +68,7 @@ export default function StudentProfilePage() {
 
 
 
-  // Notifications settings state
-  const [notifOpen, setNotifOpen] = useState(false);
-  const [notifSettings, setNotifSettings] = useState({
-    newEvents: true,
-    rsvpReminders: true,
-    orgUpdates: true,
-    promotions: false,
-  });
+
 
   // Calendar Date State
   const [calendarDate, setCalendarDate] = useState<Date>(new Date(2026, 9, 1)); // October 2026
@@ -234,7 +227,6 @@ export default function StudentProfilePage() {
     setEditInstagram(currentUser.socials?.instagram || '');
     setEditClassification(currentUser.classification || 'Senior');
     setEditOpen(true);
-    setNotifOpen(false);
   };
 
   const saveEdit = async () => {
@@ -339,106 +331,6 @@ export default function StudentProfilePage() {
   return (
     <div className="min-h-screen bg-[#D8D2BC] text-[#2A2621] font-sans pb-32">
       <div className="max-w-5xl mx-auto px-4 py-8 md:py-12 space-y-8">
-        
-        {/* ── Compact Top Header Bar ── */}
-        <div className="flex items-center justify-between border-b border-black/[0.06] pb-3 mb-6">
-          {/* Top-left: Evida Logo and Wordmark */}
-          <Link href="/student/dashboard" className="flex items-center gap-2 group">
-            <span className="h-6 w-6 rounded bg-[#FD5C05] flex items-center justify-center text-white text-[10px] font-black tracking-tighter select-none">
-              E
-            </span>
-            <span className="text-xl font-black uppercase tracking-tighter text-[#2A2621] group-hover:text-[#FD5C05] transition-colors" style={{ fontFamily: 'var(--font-display)' }}>
-              Evida
-            </span>
-          </Link>
-
-          {/* Top-right: Notification and Settings icons */}
-          <div className="flex items-center gap-2">
-            {/* Bell Toggle Icon */}
-            <button
-              onClick={() => {
-                setNotifOpen(!notifOpen);
-              }}
-              className={`h-9 w-9 rounded-xl border flex items-center justify-center transition-all cursor-pointer shadow-sm relative shrink-0 ${
-                notifOpen ? 'bg-[#FD5C05] border-[#FD5C05] text-white' : 'bg-white border-black/[0.06] text-[#2A2621] hover:bg-slate-50'
-              }`}
-            >
-              <Bell className="h-4 w-4" />
-              {/* Notification dot */}
-              <span className="absolute top-1.5 right-1.5 h-2 w-2 rounded-full bg-red-500 animate-pulse" />
-            </button>
-
-            {/* Settings Link Button */}
-            <Link
-              href="/student/settings"
-              className="h-9 w-9 rounded-xl border border-black/[0.06] bg-white text-[#2A2621] hover:bg-slate-50 flex items-center justify-center transition-all shadow-sm shrink-0"
-            >
-              <Settings className="h-4 w-4" />
-            </Link>
-          </div>
-        </div>
-
-        {/* ── Notifications Slide Panel ── */}
-        <AnimatePresence>
-          {notifOpen && (
-            <motion.div
-              initial={{ height: 0, opacity: 0 }}
-              animate={{ height: 'auto', opacity: 1 }}
-              exit={{ height: 0, opacity: 0 }}
-              className="overflow-hidden bg-white border border-black/[0.04] rounded-[28px] p-6 shadow-sm space-y-4 text-left"
-            >
-              <div className="flex justify-between items-center border-b border-black/[0.04] pb-2">
-                <h3 className="text-xs font-black uppercase tracking-wider flex items-center gap-1.5">
-                  <Bell className="h-4 w-4 text-[#FD5C05]" /> Notifications & Config
-                </h3>
-                <button
-                  onClick={() => setNotifOpen(false)}
-                  className="text-[10px] font-bold text-red-500 hover:underline uppercase"
-                >
-                  Close
-                </button>
-              </div>
-
-              {/* Notification alerts */}
-              <div className="grid gap-3 sm:grid-cols-2">
-                <div className="p-3 bg-black/[0.01] rounded-xl border border-black/[0.03] text-xs">
-                  <p className="font-bold text-[#2A2621] uppercase text-[9px] tracking-wider text-[#FD5C05]">System Reminder</p>
-                  <p className="text-[10px] text-[#5A554E] mt-0.5">Livingstone College Homecoming tailgate calendar sync starts soon!</p>
-                </div>
-                <div className="p-3 bg-black/[0.01] rounded-xl border border-black/[0.03] text-xs">
-                  <p className="font-bold text-[#2A2621] uppercase text-[9px] tracking-wider text-[#FD5C05]">Group Updates</p>
-                  <p className="text-[10px] text-[#5A554E] mt-0.5">Your application to join the Student Council has been approved.</p>
-                </div>
-              </div>
-
-              {/* Configuration options */}
-              <div className="pt-2 border-t border-black/[0.04] space-y-3">
-                <p className="text-[10px] font-black uppercase text-[#5A554E] tracking-wider">Alert Configurations</p>
-                <div className="grid sm:grid-cols-3 gap-4">
-                  {[
-                    { key: 'newEvents' as const, label: 'New Events', desc: 'Alerts when match interest' },
-                    { key: 'rsvpReminders' as const, label: 'RSVP Reminders', desc: 'Reminders 24 hours prior' },
-                    { key: 'orgUpdates' as const, label: 'Club Announcements', desc: 'Updates from campus groups' },
-                  ].map(nItem => (
-                    <div key={nItem.key} className="flex items-center justify-between gap-3 text-xs p-3 bg-slate-50 rounded-xl border border-black/[0.02]">
-                      <div className="flex-1 min-w-0">
-                        <p className="font-extrabold text-[#2A2621] uppercase tracking-wide text-[9px]">{nItem.label}</p>
-                        <p className="text-[9px] text-[#5A554E]">{nItem.desc}</p>
-                      </div>
-                      <button
-                        type="button"
-                        onClick={() => setNotifSettings(prev => ({ ...prev, [nItem.key]: !prev[nItem.key] }))}
-                        className={`relative h-5 w-9 rounded-full shrink-0 transition-colors ${notifSettings[nItem.key] ? 'bg-[#FD5C05]' : 'bg-black/10'}`}
-                      >
-                        <div className={`absolute top-0.5 h-4 w-4 rounded-full bg-white shadow transition-transform ${notifSettings[nItem.key] ? 'translate-x-4.5' : 'translate-x-0.5'}`} />
-                      </button>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
 
         {/* ── User Profile Card Section (TikTok Center Inspired) ── */}
         <div className="bg-white border border-black/[0.04] rounded-[28px] p-8 shadow-sm flex flex-col items-center text-center space-y-6">

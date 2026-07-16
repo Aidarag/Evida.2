@@ -1141,15 +1141,6 @@
   ],
   "notifications": [
     {
-      "id": "notif-1",
-      "title": "RSVP Confirmed",
-      "message": "Your spot at the Homecoming Kickoff Rally is locked in! Doors open at 17:30.",
-      "type": "rsvp",
-      "timestamp": "2 hours ago",
-      "read": false,
-      "username": "michael_c"
-    },
-    {
       "id": "notif-2",
       "title": "Event Approved",
       "message": "Your event \"STEM Innovation Expo\" has been approved by Dean Dean and is now published.",

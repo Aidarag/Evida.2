@@ -1,6 +1,8 @@
 import React from 'react';
-import { DesktopNav, DesktopSidebar, MobileBottomNav, ProfileSwitcher } from '@/components/Navbar';
+import { DesktopNav, DesktopSidebar, MobileBottomNav, ProfileSwitcher, NotificationBell } from '@/components/Navbar';
 import EvidaLogo from '@/components/ui/EvidaLogo';
+import Link from 'next/link';
+import { Settings } from 'lucide-react';
 
 export default function StudentLayout({
   children,
@@ -14,7 +16,17 @@ export default function StudentLayout({
         <span className="text-lg font-bold tracking-tight text-[#2A2621] flex items-center gap-2">
           <EvidaLogo size={30} showText={true} />
         </span>
-        <ProfileSwitcher />
+        <div className="flex items-center gap-2">
+          <NotificationBell />
+          <Link 
+            href="/student/settings" 
+            className="h-8 w-8 rounded-full bg-white border border-black/[0.06] flex items-center justify-center text-[#2A2621] hover:bg-slate-50 transition-all shadow-sm shrink-0"
+            title="Settings"
+          >
+            <Settings className="h-3.5 w-3.5" />
+          </Link>
+          <ProfileSwitcher />
+        </div>
       </div>
 
       <DesktopSidebar variant="student" />
