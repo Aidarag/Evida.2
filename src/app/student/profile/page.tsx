@@ -6,6 +6,7 @@ import { useEvents } from '@/lib/context/EventContext';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
+import EventCard from '@/components/student/EventCard';
 import { 
   LogOut, 
   Settings, 
@@ -28,7 +29,8 @@ import {
   FileText, 
   Sparkles, 
   Mail,
-  UserCheck 
+  UserCheck,
+  Heart
 } from 'lucide-react';
 import Button from '@/components/ui/Button';
 import VerifiedBadge from '@/components/ui/VerifiedBadge';
@@ -81,6 +83,29 @@ export default function StudentProfilePage() {
 
   // Active Tab State
   const [activeTab, setActiveTab] = useState<'going' | 'saved' | 'hosted' | 'orgs'>('going');
+  const [toast, setToast] = useState<{ message: string; undoId: string } | null>(null);
+
+  const handleUnlike = (eventId: string) => {
+    saveToggle(eventId);
+    setToast({
+      message: 'Removed from Saved',
+      undoId: eventId
+    });
+  };
+
+  const handleUndo = () => {
+    if (toast?.undoId) {
+      saveToggle(toast.undoId);
+      setToast(null);
+    }
+  };
+
+  useEffect(() => {
+    if (toast) {
+      const timer = setTimeout(() => setToast(null), 4000);
+      return () => clearTimeout(timer);
+    }
+  }, [toast]);
 
 
 
@@ -529,7 +554,7 @@ export default function StudentProfilePage() {
           <div className="flex gap-6 sm:gap-12 md:gap-16">
             {[
               { id: 'going' as const, label: 'Going', count: attendedEvents.length, Icon: CalendarCheck },
-              { id: 'saved' as const, label: 'Saved', count: savedEvents.length, Icon: BookOpen },
+              { id: 'saved' as const, label: 'Saved', count: savedEvents.length, Icon: Heart },
               { id: 'hosted' as const, label: 'Hosted', count: hostedCount, Icon: Star },
               { id: 'orgs' as const, label: 'Organizations', count: myOrgs.length, Icon: Users },
             ].map(tab => (
@@ -749,41 +774,36 @@ export default function StudentProfilePage() {
               {/* TAB 2: SAVED */}
               {activeTab === 'saved' && (
                 <div className="space-y-4 text-left">
-                  <h3 className="text-sm font-black uppercase tracking-wider text-[#2A2621]">Bookmarked Events ({savedEvents.length})</h3>
+                  <h3 className="text-sm font-black uppercase tracking-wider text-[#2A2621]">Saved Events ({savedEvents.length})</h3>
                   {savedEvents.length > 0 ? (
                     <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3">
-                      {savedEvents.map(evt => (
-                        <div 
-                          key={evt.id}
-                          onClick={() => router.push(`/events/${evt.id}`)}
-                          className="bg-white border border-black/[0.04] rounded-2xl overflow-hidden hover:border-[#FD5C05]/40 hover:scale-[1.01] transition-all cursor-pointer shadow-sm flex flex-col h-full group"
-                        >
-                          <div className="h-32 w-full bg-[#FD5C05]/10 shrink-0 relative">
-                            {evt.coverImage.includes('from-') ? (
-                              <div className={`w-full h-full bg-gradient-to-br ${evt.coverImage}`} />
-                            ) : (
-                              <img src={evt.coverImage} className="w-full h-full object-cover" alt="" />
-                            )}
-                            <span className="absolute top-2 right-2 text-[8px] font-black uppercase tracking-wider bg-black/60 backdrop-blur-[2px] text-white px-2 py-0.5 rounded">
-                              {evt.category}
-                            </span>
-                          </div>
-                          <div className="p-4 flex-1 flex flex-col justify-between space-y-3">
-                            <div>
-                              <p className="font-bold text-xs text-[#2A2621] uppercase tracking-wide line-clamp-2">{evt.title}</p>
-                              <p className="text-[9px] text-[#5A554E] font-medium mt-1">{evt.date} • {evt.time}</p>
-                            </div>
-                            <p className="text-[10px] text-[#5A554E] font-bold uppercase tracking-wider flex items-center gap-1">
-                              <MapPin className="h-3 w-3 text-[#FD5C05]" /> {evt.location}
-                            </p>
-                          </div>
-                        </div>
-                      ))}
+                      <AnimatePresence mode="popLayout">
+                        {savedEvents.map(evt => (
+                          <motion.div
+                            key={evt.id}
+                            layout
+                            initial={{ opacity: 0, scale: 0.95 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            exit={{ opacity: 0, scale: 0.95 }}
+                            transition={{ duration: 0.2 }}
+                          >
+                            <EventCard 
+                              event={evt}
+                              onClick={() => router.push(`/events/${evt.id}`)}
+                              isSaved={evt.savedBy?.includes(currentUser.name)}
+                              onSave={(e) => {
+                                e.stopPropagation();
+                                handleUnlike(evt.id);
+                              }}
+                            />
+                          </motion.div>
+                        ))}
+                      </AnimatePresence>
                     </div>
                   ) : (
                     <div className="bg-white rounded-2xl p-8 border border-black/[0.04] text-center">
-                      <BookOpen className="h-10 w-10 text-[#FD5C05]/20 mx-auto mb-2" />
-                      <p className="text-xs text-[#5A554E]">No bookmarked events found.</p>
+                      <Heart className="h-10 w-10 text-[#FD5C05]/20 mx-auto mb-2" />
+                      <p className="text-xs text-[#5A554E]">No saved events found.</p>
                     </div>
                   )}
                 </div>
@@ -961,6 +981,26 @@ export default function StudentProfilePage() {
         )}
 
       </div>
+
+      {/* Undo Toast Banner */}
+      <AnimatePresence>
+        {toast && (
+          <motion.div
+            initial={{ opacity: 0, y: 50, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 50, scale: 0.95 }}
+            className="fixed bottom-6 left-1/2 -translate-x-1/2 z-100 flex items-center justify-between gap-6 px-5 py-3.5 rounded-2xl bg-[#2A2621] text-white shadow-2xl text-xs font-semibold w-80 font-sans"
+          >
+            <span>{toast.message}</span>
+            <button
+              onClick={handleUndo}
+              className="text-[#FD5C05] font-black uppercase tracking-wider hover:underline cursor-pointer border-none bg-transparent"
+            >
+              Undo
+            </button>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

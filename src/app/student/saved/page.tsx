@@ -1,13 +1,13 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useEvents } from '@/lib/context/EventContext';
 import { useUser } from '@/lib/context/UserContext';
 import { useRouter } from 'next/navigation';
 import EventCard from '@/components/student/EventCard';
 import Chip from '@/components/ui/Chip';
 import EmptyState from '@/components/ui/EmptyState';
-import { Bookmark, CalendarCheck } from 'lucide-react';
+import { Heart, CalendarCheck } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 type Tab = 'saved' | 'rsvp';
@@ -18,6 +18,29 @@ export default function SavedEventsPage() {
   const router = useRouter();
 
   const [activeTab, setActiveTab] = useState<Tab>('saved');
+  const [toast, setToast] = useState<{ message: string; undoId: string } | null>(null);
+
+  const handleUnlike = (eventId: string) => {
+    saveToggle(eventId);
+    setToast({
+      message: 'Removed from Saved',
+      undoId: eventId
+    });
+  };
+
+  const handleUndo = () => {
+    if (toast?.undoId) {
+      saveToggle(toast.undoId);
+      setToast(null);
+    }
+  };
+
+  useEffect(() => {
+    if (toast) {
+      const timer = setTimeout(() => setToast(null), 4000);
+      return () => clearTimeout(timer);
+    }
+  }, [toast]);
 
   if (!currentUser) return null;
 
@@ -27,7 +50,7 @@ export default function SavedEventsPage() {
   const displayEvents = activeTab === 'saved' ? savedEvents : rsvpEvents;
 
   return (
-    <div className="p-6 md:p-10 space-y-8 max-w-7xl mx-auto">
+    <div className="p-6 md:p-10 space-y-8 max-w-7xl mx-auto relative min-h-[70vh]">
       {/* Header */}
       <div className="space-y-6">
         <div>
@@ -69,7 +92,11 @@ export default function SavedEventsPage() {
                   isSaved={event.savedBy?.includes(currentUser.name)}
                   onSave={(e) => {
                     e.stopPropagation();
-                    saveToggle(event.id);
+                    if (activeTab === 'saved') {
+                      handleUnlike(event.id);
+                    } else {
+                      saveToggle(event.id);
+                    }
                   }}
                 />
               </motion.div>
@@ -78,11 +105,31 @@ export default function SavedEventsPage() {
         </div>
       ) : (
         <EmptyState
-          icon={activeTab === 'saved' ? <Bookmark className="h-8 w-8 text-[#B8BBC8]" /> : <CalendarCheck className="h-8 w-8 text-[#B8BBC8]" />}
+          icon={activeTab === 'saved' ? <Heart className="h-8 w-8 text-[#B8BBC8]" /> : <CalendarCheck className="h-8 w-8 text-[#B8BBC8]" />}
           title={activeTab === 'saved' ? "No saved events" : "No RSVPs yet"}
           description={activeTab === 'saved' ? "Tap the heart icon on any event to save it for later." : "When you RSVP to an event, it will appear here."}
         />
       )}
+
+      {/* Undo Toast Banner */}
+      <AnimatePresence>
+        {toast && (
+          <motion.div
+            initial={{ opacity: 0, y: 50, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 50, scale: 0.95 }}
+            className="fixed bottom-6 left-1/2 -translate-x-1/2 z-100 flex items-center justify-between gap-6 px-5 py-3.5 rounded-2xl bg-[#2A2621] text-white shadow-2xl text-xs font-semibold w-80 font-sans"
+          >
+            <span>{toast.message}</span>
+            <button
+              onClick={handleUndo}
+              className="text-[#FD5C05] font-black uppercase tracking-wider hover:underline cursor-pointer border-none bg-transparent"
+            >
+              Undo
+            </button>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
