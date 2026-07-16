@@ -42,11 +42,22 @@ export default function StudentCalendarPage() {
     { id: 'mock-10', title: 'Classic Film Screening Night', date: '2026-10-29', time: '8:00 PM', location: 'Campus Theatre', coverImage: '/pexels-cottonbro-5989925.jpg', attendees: [], description: 'Join us for a cozy screening of classic cinema works. Free popcorn included.' }
   ];
 
-  const allEvents = [...events, ...MOCK_CALENDAR_EVENTS];
+  // Filter events (real and mock) to only those the user is going to
+  const userGoingEvents = React.useMemo(() => {
+    if (!currentUser) return [];
+    const combined = [...events, ...MOCK_CALENDAR_EVENTS];
+    return combined.filter(e => 
+      e.attendees?.some(name => 
+        name === currentUser.name || 
+        currentUser.name.startsWith(name) || 
+        name.toLowerCase().includes(currentUser.name.split(' ')[0].toLowerCase())
+      )
+    );
+  }, [events, currentUser]);
 
   const [selectedDate, setSelectedDate] = useState<Date>(
-    MOCK_CALENDAR_EVENTS[0]
-      ? new Date(MOCK_CALENDAR_EVENTS[0].date + 'T00:00:00')
+    userGoingEvents[0]
+      ? new Date(userGoingEvents[0].date + 'T00:00:00')
       : new Date()
   );
 
@@ -90,7 +101,7 @@ export default function StudentCalendarPage() {
     const m = String(date.getMonth() + 1).padStart(2, '0');
     const d = String(date.getDate()).padStart(2, '0');
     const dateString = `${y}-${m}-${d}`;
-    return allEvents.filter(e => e.date === dateString);
+    return userGoingEvents.filter(e => e.date === dateString);
   };
 
   const handleMonthNav = (direction: 'prev' | 'next') => {
@@ -145,6 +156,42 @@ export default function StudentCalendarPage() {
     document.body.removeChild(link);
   };
 
+  const handleExportAllGoing = () => {
+    if (userGoingEvents.length === 0) return;
+    
+    const icsHeader = [
+      'BEGIN:VCALENDAR',
+      'VERSION:2.0',
+      'PRODID:-//Evida//Calendar//EN'
+    ];
+    
+    const icsEvents = userGoingEvents.map(evt => {
+      const cleanTitle = evt.title.replace(/[^\w\s-]/gi, '');
+      const cleanDescription = evt.description ? evt.description.replace(/[^\w\s-]/gi, '') : '';
+      const cleanLocation = evt.location ? evt.location.replace(/[^\w\s-]/gi, '') : 'Campus';
+      return [
+        'BEGIN:VEVENT',
+        `SUMMARY:${cleanTitle}`,
+        `DESCRIPTION:${cleanDescription}`,
+        `LOCATION:${cleanLocation}`,
+        `DTSTART:${evt.date.replace(/-/g, '')}T090000`,
+        `DTEND:${evt.date.replace(/-/g, '')}T100000`,
+        'END:VEVENT'
+      ].join('\r\n');
+    });
+    
+    const icsContent = [...icsHeader, ...icsEvents, 'END:VCALENDAR'].join('\r\n');
+    
+    const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', `Evida_My_Calendar.ics`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   return (
     <div className="max-w-7xl mx-auto px-4 py-6 md:py-10 pb-28 md:pb-12 space-y-6">
       {/* ── Header ── */}
@@ -154,9 +201,19 @@ export default function StudentCalendarPage() {
             Campus Calendar
           </h1>
           <p className="text-sm text-[#5A554E] font-semibold mt-2.5 leading-relaxed">
-            Click on any day to inspect campus activities. Keep track of orientation, games, tailgates, and career fairs.
+            View the events you are attending. Export all of them to your calendar at once.
           </p>
         </div>
+        {userGoingEvents.length > 0 && (
+          <Button 
+            variant="primary"
+            onClick={handleExportAllGoing}
+            className="self-start md:self-center bg-[#2A2621] text-white hover:bg-[#FD5C05] hover:text-[#2A2621] px-5 py-2.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all flex items-center gap-2 shadow-sm shrink-0 cursor-pointer border-none"
+          >
+            <Calendar className="h-4 w-4" />
+            Export My Calendar (.ics)
+          </Button>
+        )}
       </div>
 
       {/* Main Section */}
@@ -199,48 +256,29 @@ export default function StudentCalendarPage() {
           <div className="grid grid-cols-7 gap-1.5 sm:gap-3">
             {calendarDays.map((cell, idx) => {
               const dayEvents = cell.isCurrentMonth ? getEventsForDate(cell.date) : [];
-              const isGoing = currentUser ? dayEvents.some(e => e.attendees?.includes(currentUser.name)) : false;
+              const hasEvents = dayEvents.length > 0;
 
               return (
                 <div 
                   key={idx}
                   onClick={() => handleDayClick(cell.date)}
                   className={`
-                    relative aspect-square border rounded-xl sm:rounded-2xl p-1 sm:p-2.5 cursor-pointer flex flex-col justify-between transition-all duration-300 overflow-hidden
+                    relative aspect-square border rounded-xl sm:rounded-2xl p-1.5 sm:p-2 cursor-pointer flex flex-col justify-between transition-all duration-300 overflow-hidden
                     ${cell.isCurrentMonth 
-                      ? 'bg-white border-black/[0.04] hover:bg-black/[0.01] hover:border-black/15 shadow-sm'
+                      ? hasEvents
+                        ? 'bg-[#FD5C05]/10 border-[#FD5C05]/30 hover:bg-[#FD5C05]/15'
+                        : 'bg-white border-black/[0.04] hover:bg-black/[0.01] hover:border-black/15 shadow-sm'
                       : 'bg-black/[0.01] border-transparent text-[#5A554E] opacity-40'
                     }
                   `}
                 >
-                  {/* Grid background */}
-                  {cell.isCurrentMonth && dayEvents.length > 0 && (
-                    <div className="absolute inset-0 grid grid-cols-2 grid-rows-2 gap-0.5 rounded-xl sm:rounded-2xl overflow-hidden z-0 bg-[#D8D2BC]/10">
-                      {dayEvents.slice(0, 4).map((e, index) => {
-                        const bgClass = e.coverImage.includes('from-') ? e.coverImage : '';
-                        const bgStyle = !bgClass ? { backgroundImage: `url(${e.coverImage})`, backgroundSize: 'cover', backgroundPosition: 'center' } : {};
-                        return (
-                          <div 
-                            key={index} 
-                            className={`w-full h-full opacity-80 mix-blend-multiply bg-[#FD5C05]/10 ${bgClass}`} 
-                            style={bgStyle} 
-                          />
-                        );
-                      })}
-                    </div>
-                  )}
-
-                  <span className={`relative z-10 text-[10px] font-black px-1.5 py-0.5 rounded-md leading-none w-fit ${
-                    cell.isCurrentMonth && dayEvents.length > 0 
-                      ? 'text-white bg-black/50 backdrop-blur-[2px]' 
-                      : 'text-[#2A2621]'
-                  }`}>
+                  <span className="relative z-10 text-[10px] font-black px-1.5 py-0.5 rounded-md leading-none w-fit text-[#2A2621]">
                     {cell.day}
                   </span>
 
-                  {cell.isCurrentMonth && isGoing && (
-                    <div className="absolute top-1.5 right-1.5 z-20 bg-white border border-[#FD5C05]/20 shadow-md h-6 w-6 rounded-full flex items-center justify-center animate-bounce">
-                      <MapPin className="h-3.5 w-3.5 text-[#FD5C05] fill-[#FD5C05]" />
+                  {cell.isCurrentMonth && hasEvents && (
+                    <div className="flex flex-col items-center pb-1">
+                      <span className="h-1.5 w-1.5 rounded-full bg-[#FD5C05] shadow-[0_0_8px_rgba(253,92,5,0.5)] animate-pulse" />
                     </div>
                   )}
                 </div>

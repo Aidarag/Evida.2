@@ -1,5 +1,5 @@
 import React from 'react';
-import { DesktopNav, DesktopSidebar, MobileBottomNav } from '@/components/Navbar';
+import { DesktopNav, DesktopSidebar, MobileBottomNav, ProfileSwitcher } from '@/components/Navbar';
 import EvidaLogo from '@/components/ui/EvidaLogo';
 
 export default function StudentLayout({
@@ -10,10 +10,11 @@ export default function StudentLayout({
   return (
     <div className="min-h-screen bg-[#D8D2BC] text-gray-900 flex flex-col md:flex-row font-sans">
       {/* Mobile Top Nav (visible only on small screens) */}
-      <div className="md:hidden sticky top-0 z-40 w-full py-2.5 px-4 border-b border-black/[0.04] bg-[#D8D2BC]/95 backdrop-blur-xl flex items-center justify-center">
+      <div className="md:hidden sticky top-0 z-40 w-full py-2.5 px-4 border-b border-black/[0.04] bg-[#D8D2BC]/95 backdrop-blur-xl flex items-center justify-between">
         <span className="text-lg font-bold tracking-tight text-[#2A2621] flex items-center gap-2">
           <EvidaLogo size={30} showText={true} />
         </span>
+        <ProfileSwitcher />
       </div>
 
       <DesktopSidebar variant="student" />

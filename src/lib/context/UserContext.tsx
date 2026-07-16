@@ -3,12 +3,18 @@
 import React, { createContext, useContext, useState, useEffect, useCallback, ReactNode } from 'react';
 import { User } from '@/lib/types';
 
+export type ActiveProfile = 
+  | { type: 'student' } 
+  | { type: 'organization'; orgId: string; name: string };
+
 interface UserContextType {
   currentUser: User | null;
   setCurrentUser: (user: User) => void;
   logout: () => void;
   simulatedUsers: User[];
   isLoading: boolean;
+  activeProfile: ActiveProfile;
+  setActiveProfile: (profile: ActiveProfile) => void;
 }
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
@@ -67,6 +73,7 @@ const DEFAULT_USERS: User[] = [
 export function UserProvider({ children }: { children: ReactNode }) {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [activeProfile, setActiveProfileState] = useState<ActiveProfile>({ type: 'student' });
 
   useEffect(() => {
     // Check localStorage for persisted user
@@ -93,6 +100,15 @@ export function UserProvider({ children }: { children: ReactNode }) {
         localStorage.setItem('evida-user', JSON.stringify(DEFAULT_USERS[0]));
       }
     }
+
+    // Check localStorage for active profile
+    const storedProfile = typeof window !== 'undefined' ? localStorage.getItem('evida-active-profile') : null;
+    if (storedProfile) {
+      try {
+        setActiveProfileState(JSON.parse(storedProfile));
+      } catch {}
+    }
+
     setIsLoading(false);
   }, []);
 
@@ -103,10 +119,19 @@ export function UserProvider({ children }: { children: ReactNode }) {
     }
   }, []);
 
+  const setActiveProfile = useCallback((profile: ActiveProfile) => {
+    setActiveProfileState(profile);
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('evida-active-profile', JSON.stringify(profile));
+    }
+  }, []);
+
   const handleLogout = useCallback(() => {
     setCurrentUser(null);
+    setActiveProfileState({ type: 'student' });
     if (typeof window !== 'undefined') {
       localStorage.removeItem('evida-user');
+      localStorage.removeItem('evida-active-profile');
       sessionStorage.setItem('evida_force_redirect_splash', 'true');
       window.location.href = '/';
     }
@@ -120,6 +145,8 @@ export function UserProvider({ children }: { children: ReactNode }) {
         logout: handleLogout,
         simulatedUsers: DEFAULT_USERS,
         isLoading,
+        activeProfile,
+        setActiveProfile,
       }}
     >
       {children}

@@ -16,7 +16,7 @@ type EventSubtype = 'quick' | 'standard' | null;
 
 export default function CreateListingPage() {
   const router = useRouter();
-  const { currentUser } = useUser();
+  const { currentUser, activeProfile } = useUser();
   const { events, organizations, createEvent } = useEvents();
 
   const [step, setStep] = useState(1);
@@ -48,10 +48,20 @@ export default function CreateListingPage() {
 
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  // Initialize creator identity based on active profile switcher selection
+  React.useEffect(() => {
+    if (activeProfile.type === 'student') {
+      setCreatorEntity('student');
+    } else if (activeProfile.type === 'organization') {
+      setCreatorEntity('organization');
+      setEventForm(prev => ({ ...prev, selectedOrgId: activeProfile.orgId }));
+    }
+  }, [activeProfile]);
+
   if (!currentUser) return null;
 
   // Filter organizations the user is member of
-  const myOrgs = organizations.filter(org => currentUser.organizations.includes(org.id));
+  const myOrgs = organizations.filter(org => currentUser.organizations?.includes(org.id));
   const isAdmin = currentUser.role === 'admin';
 
   const handleNext = () => setStep(s => s + 1);
@@ -60,11 +70,13 @@ export default function CreateListingPage() {
     if (step === 4) {
       if (createType === 'promotion') {
         setStep(1);
-      } else if (creatorEntity === 'student') {
+      } else if (activeProfile.type === 'student') {
         setStep(3); // Go back to subtype selection
       } else {
-        setStep(2); // Go back to organizer selection
+        setStep(1); // Go back to step 1 for org events
       }
+    } else if (step === 3) {
+      setStep(1);
     } else {
       setStep(s => s - 1);
     }
@@ -130,7 +142,7 @@ export default function CreateListingPage() {
           title: promoForm.title,
           description: promoForm.description,
           category: promoForm.category,
-          organizer: promoForm.organizerName || currentUser.name,
+          organizer: activeProfile.type === 'organization' ? activeProfile.name : (promoForm.organizerName || currentUser.name),
           contactInfo: promoForm.contactInfo,
         }),
       });
@@ -175,7 +187,16 @@ export default function CreateListingPage() {
 
             <div className="grid md:grid-cols-2 gap-6">
               <Card 
-                onClick={() => { setCreateType('event'); handleNext(); }}
+                onClick={() => { 
+                  setCreateType('event'); 
+                  if (activeProfile.type === 'organization') {
+                    setStep(4);
+                  } else if (isAdmin) {
+                    setStep(2);
+                  } else {
+                    setStep(3);
+                  }
+                }}
                 className="p-8 flex flex-col items-center text-center gap-5 hover:border-[#FD5C05]/50 cursor-pointer group relative overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 rounded-[28px] bg-white border border-black/[0.04]"
               >
                 {/* Custom Badge Indicator */}
@@ -455,8 +476,12 @@ export default function CreateListingPage() {
                   {/* Organization Selector (Visible only for Organization events) */}
                   {creatorEntity === 'organization' && (
                     <div className="space-y-1.5">
-                      <label className="block text-[10px] font-bold text-[#5A554E] uppercase tracking-widest">Select Club / Organization</label>
-                      {myOrgs.length > 0 ? (
+                      <label className="block text-[10px] font-bold text-[#5A554E] uppercase tracking-widest">Publishing as Organization</label>
+                      {activeProfile.type === 'organization' ? (
+                        <div className="w-full rounded-xl bg-white border-2 border-black/[0.08] px-4 py-3 text-xs text-[#2A2621] font-bold">
+                          {activeProfile.name} (Active Profile)
+                        </div>
+                      ) : myOrgs.length > 0 ? (
                         <select 
                           className="w-full rounded-xl bg-white border-2 border-black/[0.08] px-4 py-3 text-xs text-[#2A2621] focus:outline-none focus:border-[#FD5C05] font-medium cursor-pointer"
                           value={eventForm.selectedOrgId}
@@ -660,13 +685,22 @@ export default function CreateListingPage() {
                         </select>
                       </div>
 
-                      <Input 
-                        label="Organizer Name / Brand Name" 
-                        placeholder="e.g. Alex Morgan Photography"
-                        value={promoForm.organizerName}
-                        onChange={e => setPromoForm({...promoForm, organizerName: e.target.value})}
-                        required
-                      />
+                      {activeProfile.type === 'organization' ? (
+                        <div className="space-y-1.5 flex flex-col justify-end">
+                          <label className="block text-[10px] font-bold text-[#5A554E] uppercase tracking-widest">Organizer Name / Brand Name</label>
+                          <div className="w-full rounded-xl bg-white border-2 border-black/[0.08] px-4 py-3 text-xs text-[#2A2621] font-bold h-[42px] flex items-center">
+                            {activeProfile.name}
+                          </div>
+                        </div>
+                      ) : (
+                        <Input 
+                          label="Organizer Name / Brand Name" 
+                          placeholder="e.g. Alex Morgan Photography"
+                          value={promoForm.organizerName}
+                          onChange={e => setPromoForm({...promoForm, organizerName: e.target.value})}
+                          required
+                        />
+                      )}
                     </div>
 
                     <Input 

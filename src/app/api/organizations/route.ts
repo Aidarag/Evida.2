@@ -96,6 +96,20 @@ export async function POST(request: Request) {
     };
 
     db.organizations.push(newOrg);
+
+    // Link new organization to the creator's user record in db
+    if (member) {
+      const userIdx = db.users.findIndex(u => u.name === member || u.username === member);
+      if (userIdx > -1) {
+        if (!db.users[userIdx].organizations) {
+          db.users[userIdx].organizations = [];
+        }
+        if (!db.users[userIdx].organizations.includes(newOrg.id)) {
+          db.users[userIdx].organizations.push(newOrg.id);
+        }
+      }
+    }
+
     writeDB(db);
 
     return NextResponse.json(newOrg, { status: 201 });

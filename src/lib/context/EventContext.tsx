@@ -16,7 +16,7 @@ interface EventContextType {
   createEvent: (payload: any) => Promise<boolean>;
   reviewEvent: (id: string, status: 'approved' | 'rejected', feedback?: string) => Promise<void>;
   toggleVerifyOrg: (id: string) => Promise<void>;
-  createOrg: (orgData: any) => Promise<void>;
+  createOrg: (orgData: any) => Promise<any>;
   markNotificationRead: (id: string) => Promise<void>;
   clearNotification: (id: string) => Promise<void>;
   resetDatabase: () => Promise<void>;
@@ -25,7 +25,7 @@ interface EventContextType {
 const EventContext = createContext<EventContextType | undefined>(undefined);
 
 export function EventProvider({ children }: { children: ReactNode }) {
-  const { currentUser } = useUser();
+  const { currentUser, setCurrentUser } = useUser();
   const [events, setEvents] = useState<Event[]>([]);
   const [organizations, setOrganizations] = useState<Organization[]>([]);
   const [notifications, setNotifications] = useState<Notification[]>([]);
@@ -132,18 +132,35 @@ export function EventProvider({ children }: { children: ReactNode }) {
   }, [fetchData]);
 
   const createOrg = useCallback(async (orgData: any) => {
-    if (!currentUser) return;
+    if (!currentUser) return null;
     try {
       const res = await fetch('/api/organizations', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ ...orgData, member: currentUser.name }),
       });
-      if (res.ok) await fetchData();
+      if (res.ok) {
+        const newOrg = await res.json();
+        
+        // Update currentUser's local organizations list in context
+        const updatedUser = {
+          ...currentUser,
+          organizations: [...(currentUser.organizations || []), newOrg.id]
+        };
+        setCurrentUser(updatedUser);
+        if (typeof window !== 'undefined') {
+          localStorage.setItem('evida-user', JSON.stringify(updatedUser));
+        }
+
+        await fetchData();
+        return newOrg;
+      }
+      return null;
     } catch (e) {
       console.error(e);
+      return null;
     }
-  }, [currentUser, fetchData]);
+  }, [currentUser, setCurrentUser, fetchData]);
 
   const markNotificationRead = useCallback(async (id: string) => {
     if (!currentUser) return;

@@ -3,8 +3,10 @@
 import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Home, Compass, Plus, Bookmark, User, Settings, BarChart3, Shield, Star, ClipboardList, Building2, Menu, X, Calendar } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { Home, Compass, Plus, Bookmark, User, Settings, BarChart3, Shield, Star, ClipboardList, Building2, Menu, X, Calendar, ChevronDown, ArrowRight } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { useUser } from '@/lib/context/UserContext';
+import { useEvents } from '@/lib/context/EventContext';
 
 import EvidaLogo from '@/components/ui/EvidaLogo';
 
@@ -101,9 +103,7 @@ export function DesktopNav({ variant = 'student' }: { variant?: 'student' | 'sch
                 <Link href="/student/create" className="px-5 py-2 rounded-full bg-[#FD5C05] text-[#2A2621] text-[11px] font-bold uppercase tracking-wider hover:bg-[#CC3D00] transition-colors shadow-[0_4px_12px_rgba(189,251,4,0.15)]">
                   Create
                 </Link>
-                <Link href="/student/profile" className="h-9 w-9 rounded-full bg-[#FD5C05]/20 border border-[#FD5C05]/30 flex items-center justify-center text-[#2A2621] text-xs font-bold cursor-pointer">
-                  MC
-                </Link>
+                <ProfileSwitcher />
               </>
             )}
             {/* School Logged In */}
@@ -281,5 +281,304 @@ export function DesktopSidebar({ variant = 'student' }: { variant?: 'student' | 
         </div>
       </div>
     </aside>
+  );
+}
+
+function getTailwindBgColor(color: string) {
+  const mapping: Record<string, string> = {
+    indigo: '#6366f1',
+    sky: '#0ea5e9',
+    emerald: '#10b981',
+    violet: '#8b5cf6',
+    amber: '#f59e0b',
+    rose: '#f43f5e',
+    teal: '#14b8a6'
+  };
+  return mapping[color] || '#FD5C05';
+}
+
+export function ProfileSwitcher() {
+  const { currentUser, activeProfile, setActiveProfile } = useUser();
+  const { organizations, createOrg } = useEvents();
+  const [dropdownOpen, setDropdownOpen] = React.useState(false);
+  const [createModalOpen, setCreateModalOpen] = React.useState(false);
+
+  // Form states for creating org
+  const [orgName, setOrgName] = React.useState('');
+  const [orgDesc, setOrgDesc] = React.useState('');
+  const [orgColor, setOrgColor] = React.useState('indigo');
+  const [isSubmitting, setIsSubmitting] = React.useState(false);
+
+  const dropdownRef = React.useRef<HTMLDivElement>(null);
+
+  React.useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setDropdownOpen(false);
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  if (!currentUser) return null;
+
+  // Filter organizations the user is member of/officer of
+  const myOrgs = organizations.filter(org => currentUser.organizations?.includes(org.id));
+
+  const handleSwitchToStudent = () => {
+    setActiveProfile({ type: 'student' });
+    setDropdownOpen(false);
+  };
+
+  const handleSwitchToOrg = (orgId: string, name: string) => {
+    setActiveProfile({ type: 'organization', orgId, name });
+    setDropdownOpen(false);
+  };
+
+  const handleCreateOrg = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!orgName.trim() || !orgDesc.trim()) return;
+    setIsSubmitting(true);
+    try {
+      const newOrg = await createOrg({
+        name: orgName.trim(),
+        description: orgDesc.trim(),
+        logoColor: orgColor
+      });
+      if (newOrg) {
+        // Automatically switch active profile to the new organization!
+        setActiveProfile({
+          type: 'organization',
+          orgId: newOrg.id,
+          name: newOrg.name
+        });
+        setCreateModalOpen(false);
+        setOrgName('');
+        setOrgDesc('');
+        setOrgColor('indigo');
+      }
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  return (
+    <div className="relative inline-block text-left" ref={dropdownRef}>
+      {/* Trigger Button */}
+      <button
+        onClick={() => setDropdownOpen(!dropdownOpen)}
+        className="flex items-center gap-2 p-1 px-3 rounded-full bg-[#EAE4CF]/40 border border-[#2A2621]/10 hover:bg-[#EAE4CF]/60 hover:border-[#FD5C05]/30 transition-all cursor-pointer shadow-sm text-left"
+      >
+        {activeProfile.type === 'student' ? (
+          <>
+            <div className="h-7 w-7 rounded-full bg-[#FD5C05]/20 border border-[#FD5C05]/30 flex items-center justify-center text-[#2A2621] text-xs font-black select-none shrink-0">
+              {currentUser.avatar || currentUser.name.substring(0, 2).toUpperCase()}
+            </div>
+            <div className="hidden sm:block min-w-0 pr-1 select-none">
+              <p className="text-[10px] font-bold text-[#2A2621] leading-tight truncate">{currentUser.name}</p>
+              <p className="text-[8px] text-[#5A554E] font-medium leading-none uppercase tracking-wider">Student Profile</p>
+            </div>
+          </>
+        ) : (
+          <>
+            <div
+              className="h-7 w-7 rounded-full flex items-center justify-center text-white text-[10px] font-black select-none shrink-0 shadow-sm"
+              style={{
+                backgroundColor:
+                  activeProfile.orgId &&
+                  organizations.find(o => o.id === activeProfile.orgId)?.logoColor
+                    ? getTailwindBgColor(organizations.find(o => o.id === activeProfile.orgId)?.logoColor || 'indigo')
+                    : '#FD5C05'
+              }}
+            >
+              {activeProfile.name.substring(0, 2).toUpperCase()}
+            </div>
+            <div className="hidden sm:block min-w-0 pr-1 select-none">
+              <p className="text-[10px] font-bold text-[#2A2621] leading-tight truncate">{activeProfile.name}</p>
+              <p className="text-[8px] text-[#FD5C05] font-black leading-none uppercase tracking-widest flex items-center gap-0.5">
+                Active Org Profile
+              </p>
+            </div>
+          </>
+        )}
+        <ChevronDown className="h-3.5 w-3.5 text-[#5A554E]" />
+      </button>
+
+      {/* Switcher Dropdown */}
+      <AnimatePresence>
+        {dropdownOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: 8, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 8, scale: 0.95 }}
+            transition={{ duration: 0.15 }}
+            className="absolute right-0 mt-2.5 w-60 rounded-2xl bg-white border border-black/[0.06] shadow-lg z-50 overflow-hidden divide-y divide-black/[0.04] text-left"
+          >
+            {/* Header info */}
+            <div className="p-3 bg-[#EAE4CF]/20">
+              <p className="text-[9px] font-extrabold uppercase tracking-wider text-[#5A554E]">Current Identity</p>
+              <p className="text-xs font-black text-[#2A2621] mt-0.5 truncate">
+                {activeProfile.type === 'student' ? currentUser.name : activeProfile.name}
+              </p>
+            </div>
+
+            {/* List options */}
+            <div className="p-1.5 space-y-1">
+              <button
+                onClick={handleSwitchToStudent}
+                className={`w-full text-left flex items-center gap-2.5 px-3 py-2 rounded-xl transition-all cursor-pointer text-xs ${
+                  activeProfile.type === 'student'
+                    ? 'bg-[#FD5C05]/10 text-[#FD5C05] font-extrabold'
+                    : 'text-[#2A2621] hover:bg-[#EAE4CF]/20 font-semibold'
+                }`}
+              >
+                <div className="h-6 w-6 rounded-full bg-[#FD5C05]/20 flex items-center justify-center text-[#2A2621] text-[10px] font-bold">
+                  {currentUser.avatar || currentUser.name.substring(0, 2).toUpperCase()}
+                </div>
+                <div className="min-w-0 flex-1">
+                  <p className="truncate leading-tight">{currentUser.name}</p>
+                  <p className="text-[8px] text-[#5A554E] leading-none uppercase">Student</p>
+                </div>
+                {activeProfile.type === 'student' && <span className="text-xs">✓</span>}
+              </button>
+
+              {myOrgs.map(org => {
+                const isActive = activeProfile.type === 'organization' && activeProfile.orgId === org.id;
+                return (
+                  <button
+                    key={org.id}
+                    onClick={() => handleSwitchToOrg(org.id, org.name)}
+                    className={`w-full text-left flex items-center gap-2.5 px-3 py-2 rounded-xl transition-all cursor-pointer text-xs ${
+                      isActive
+                        ? 'bg-[#FD5C05]/10 text-[#FD5C05] font-extrabold'
+                        : 'text-[#2A2621] hover:bg-[#EAE4CF]/20 font-semibold'
+                    }`}
+                  >
+                    <div
+                      className="h-6 w-6 rounded-full flex items-center justify-center text-white text-[9px] font-black shrink-0"
+                      style={{ backgroundColor: getTailwindBgColor(org.logoColor) }}
+                    >
+                      {org.name.substring(0, 2).toUpperCase()}
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <p className="truncate leading-tight">{org.name}</p>
+                      <p className="text-[8px] text-[#5A554E] leading-none uppercase">Organization</p>
+                    </div>
+                    {isActive && <span className="text-xs">✓</span>}
+                  </button>
+                );
+              })}
+            </div>
+
+            {/* Action options */}
+            <div className="p-1.5 space-y-1">
+              <button
+                onClick={() => {
+                  setDropdownOpen(false);
+                  setCreateModalOpen(true);
+                }}
+                className="w-full text-left flex items-center gap-2 px-3 py-2 rounded-xl hover:bg-[#EAE4CF]/20 text-[#2A2621] font-bold text-xs cursor-pointer transition-all"
+              >
+                <Plus className="h-4 w-4 text-[#FD5C05] stroke-[3]" />
+                <span className="truncate">Create Organization</span>
+              </button>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Register Organization Modal Overlay */}
+      {createModalOpen && (
+        <div className="fixed inset-0 z-100 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in text-left">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="bg-[#D8D2BC] border border-[#2A2621]/10 w-full max-w-md rounded-3xl p-6 shadow-xl space-y-5"
+          >
+            <div className="space-y-1">
+              <h3 className="text-lg font-black text-[#2A2621] uppercase tracking-tight" style={{ fontFamily: 'var(--font-display)' }}>
+                Create Org Profile
+              </h3>
+              <p className="text-xs text-[#5A554E] font-medium leading-relaxed">
+                Establish a new organization identity to manage events, announcements, and officers.
+              </p>
+            </div>
+
+            <form onSubmit={handleCreateOrg} className="space-y-4">
+              <div className="space-y-1.5">
+                <label className="block text-[10px] font-bold text-[#5A554E] uppercase tracking-widest">
+                  Organization Name
+                </label>
+                <input
+                  type="text"
+                  required
+                  placeholder="e.g. Blue Bears Coding Club"
+                  value={orgName}
+                  onChange={e => setOrgName(e.target.value)}
+                  className="w-full bg-white border border-black/[0.06] rounded-xl px-3.5 py-2.5 text-xs text-[#2A2621] focus:outline-none focus:border-[#FD5C05]"
+                />
+              </div>
+
+              <div className="space-y-1.5">
+                <label className="block text-[10px] font-bold text-[#5A554E] uppercase tracking-widest">
+                  Description
+                </label>
+                <textarea
+                  required
+                  rows={3}
+                  placeholder="Describe your organization's mission, goals, and target audience..."
+                  value={orgDesc}
+                  onChange={e => setOrgDesc(e.target.value)}
+                  className="w-full bg-white border border-black/[0.06] rounded-xl px-3.5 py-2.5 text-xs text-[#2A2621] focus:outline-none focus:border-[#FD5C05] resize-none"
+                />
+              </div>
+
+              {/* Color selection */}
+              <div className="space-y-1.5">
+                <label className="block text-[10px] font-bold text-[#5A554E] uppercase tracking-widest">
+                  Branding Color Accent
+                </label>
+                <div className="flex gap-2.5">
+                  {['indigo', 'sky', 'emerald', 'violet', 'amber', 'rose', 'teal'].map(color => (
+                    <button
+                      key={color}
+                      type="button"
+                      onClick={() => setOrgColor(color)}
+                      className={`h-6 w-6 rounded-full cursor-pointer transition-all border-2 ${
+                        orgColor === color 
+                          ? 'border-[#2A2621] scale-110 shadow-sm' 
+                          : 'border-transparent hover:scale-105'
+                      }`}
+                      style={{ backgroundColor: getTailwindBgColor(color) }}
+                      title={color}
+                    />
+                  ))}
+                </div>
+              </div>
+
+              <div className="pt-3 border-t border-black/[0.04] flex gap-3.5 justify-end">
+                <button
+                  type="button"
+                  onClick={() => setCreateModalOpen(false)}
+                  className="px-4 py-2 text-xs font-bold uppercase tracking-wider text-[#5A554E] hover:text-[#2A2621]"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="bg-[#2A2621] text-white hover:bg-[#FD5C05] hover:text-[#2A2621] px-5 py-2.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all disabled:opacity-55"
+                >
+                  {isSubmitting ? 'Creating...' : 'Create Profile'}
+                </button>
+              </div>
+            </form>
+          </motion.div>
+        </div>
+      )}
+    </div>
   );
 }
