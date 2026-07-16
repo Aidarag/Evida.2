@@ -22,7 +22,9 @@ import {
   Music,
   Utensils,
   BookOpen,
-  ArrowRight
+  ArrowRight,
+  Shield,
+  CheckCircle2
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Event, Organization, Promotion } from '@/lib/types';
@@ -132,11 +134,14 @@ export default function ExplorePage() {
   }, [promotions]);
 
   // Render a standard section header
-  const renderSectionHeader = (title: string, sectionKey: string) => (
+  const renderSectionHeader = (title: string, sectionKey: string, icon: React.ReactNode) => (
     <div className="flex items-center justify-between">
-      <h2 className="text-lg font-black uppercase tracking-tight text-[#2A2621]" style={{ fontFamily: 'var(--font-display)' }}>
-        {title}
-      </h2>
+      <div className="flex items-center gap-2">
+        {icon}
+        <h2 className="text-lg font-black uppercase tracking-tight text-[#2A2621]" style={{ fontFamily: 'var(--font-display)' }}>
+          {title}
+        </h2>
+      </div>
       <Link
         href={`/student/explore/category?section=${encodeURIComponent(sectionKey)}`}
         className="flex items-center gap-1 text-[11px] font-black uppercase tracking-wider text-[#5A554E] hover:text-[#FD5C05] transition-colors"
@@ -197,7 +202,7 @@ export default function ExplorePage() {
           >
             {/* 1. Trending Events */}
             <div className="space-y-3.5">
-              {renderSectionHeader('🔥 Trending Events', 'Trending Events')}
+              {renderSectionHeader('Trending Events', 'Trending Events', <TrendingUp className="h-5 w-5 text-[#FD5C05]" />)}
               {trendingEvents.length > 0 ? (
                 <div className="flex gap-4 overflow-x-auto pb-4 pt-1 scrollbar-none select-none scroll-smooth">
                   {trendingEvents.map(evt => (
@@ -243,7 +248,7 @@ export default function ExplorePage() {
 
             {/* 2. Official Events */}
             <div className="space-y-3.5">
-              {renderSectionHeader('🏫 Official Events', 'Official Events')}
+              {renderSectionHeader('Official Events', 'Official Events', <Building className="h-5 w-5 text-[#FD5C05]" />)}
               {officialEvents.length > 0 ? (
                 <div className="flex gap-4 overflow-x-auto pb-4 pt-1 scrollbar-none select-none scroll-smooth">
                   {officialEvents.map(evt => (
@@ -287,7 +292,7 @@ export default function ExplorePage() {
 
             {/* 3. Student Events */}
             <div className="space-y-3.5">
-              {renderSectionHeader('👥 Student-led Activities', 'Student Events')}
+              {renderSectionHeader('Student-led Activities', 'Student Events', <Users className="h-5 w-5 text-[#FD5C05]" />)}
               {studentEvents.length > 0 ? (
                 <div className="flex gap-4 overflow-x-auto pb-4 pt-1 scrollbar-none select-none scroll-smooth">
                   {studentEvents.map(evt => (
@@ -331,7 +336,7 @@ export default function ExplorePage() {
 
             {/* 4. Campus Organizations */}
             <div className="space-y-3.5">
-              {renderSectionHeader('🛡️ Campus Organizations', 'Organizations')}
+              {renderSectionHeader('Campus Organizations', 'Organizations', <Shield className="h-5 w-5 text-[#FD5C05]" />)}
               {organizations.length > 0 ? (
                 <div className="flex gap-4 overflow-x-auto pb-4 pt-1 scrollbar-none select-none scroll-smooth">
                   {organizations.map(org => (
@@ -352,7 +357,7 @@ export default function ExplorePage() {
                             <h3 className="font-extrabold text-xs uppercase tracking-tight text-[#2A2621] group-hover:text-[#FD5C05] transition-colors truncate">
                               {org.name}
                             </h3>
-                            {org.verified && <span className="text-[10px]" title="Verified">🛡️</span>}
+                            {org.verified && <span title="Verified Organization"><CheckCircle2 className="h-3.5 w-3.5 text-blue-500 fill-blue-500/10 shrink-0" /></span>}
                           </div>
                           <p className="text-[10px] text-[#5A554E] line-clamp-2 leading-normal font-semibold mt-0.5">
                             {org.description}
@@ -373,7 +378,7 @@ export default function ExplorePage() {
 
             {/* 5. Career & Networking */}
             <div className="space-y-3.5">
-              {renderSectionHeader('💼 Career & Networking', 'Career & Networking')}
+              {renderSectionHeader('Career & Networking', 'Career & Networking', <Briefcase className="h-5 w-5 text-[#FD5C05]" />)}
               <div className="flex gap-4 overflow-x-auto pb-4 pt-1 scrollbar-none select-none scroll-smooth">
                 {careerEvents.events.map(evt => (
                   <Link
@@ -438,7 +443,7 @@ export default function ExplorePage() {
 
             {/* 6. Sports & Athletics */}
             <div className="space-y-3.5">
-              {renderSectionHeader('🏆 Sports & Athletics', 'Sports')}
+              {renderSectionHeader('Sports & Athletics', 'Sports', <Trophy className="h-5 w-5 text-[#FD5C05]" />)}
               <div className="flex gap-4 overflow-x-auto pb-4 pt-1 scrollbar-none select-none scroll-smooth">
                 {sportsEvents.events.map(evt => (
                   <Link
@@ -502,7 +507,7 @@ export default function ExplorePage() {
 
             {/* 7. Music & Entertainment */}
             <div className="space-y-3.5">
-              {renderSectionHeader('🎵 Music & Entertainment', 'Music & Entertainment')}
+              {renderSectionHeader('Music & Entertainment', 'Music & Entertainment', <Music className="h-5 w-5 text-[#FD5C05]" />)}
               <div className="flex gap-4 overflow-x-auto pb-4 pt-1 scrollbar-none select-none scroll-smooth">
                 {entertainmentEvents.events.map(evt => (
                   <Link
@@ -566,7 +571,7 @@ export default function ExplorePage() {
 
             {/* 8. Food & Deals */}
             <div className="space-y-3.5">
-              {renderSectionHeader('🍕 Food & Campus Deals', 'Food & Deals')}
+              {renderSectionHeader('Food & Campus Deals', 'Food & Deals', <Utensils className="h-5 w-5 text-[#FD5C05]" />)}
               {foodDeals.length > 0 ? (
                 <div className="flex gap-4 overflow-x-auto pb-4 pt-1 scrollbar-none select-none scroll-smooth">
                   {foodDeals.map(promo => (
@@ -599,7 +604,7 @@ export default function ExplorePage() {
 
             {/* 9. Academic & Workshops */}
             <div className="space-y-3.5">
-              {renderSectionHeader('📖 Academic & Workshops', 'Academic & Workshops')}
+              {renderSectionHeader('Academic & Workshops', 'Academic & Workshops', <BookOpen className="h-5 w-5 text-[#FD5C05]" />)}
               <div className="flex gap-4 overflow-x-auto pb-4 pt-1 scrollbar-none select-none scroll-smooth">
                 {academicsWorkshops.events.map(evt => (
                   <Link
@@ -663,7 +668,7 @@ export default function ExplorePage() {
 
             {/* 10. Student Businesses & Services */}
             <div className="space-y-3.5">
-              {renderSectionHeader('🔥 Student Businesses & Services', 'Student Businesses & Services')}
+              {renderSectionHeader('Student Businesses & Services', 'Student Businesses & Services', <Sparkles className="h-5 w-5 text-[#FD5C05]" />)}
               {studentBusinesses.length > 0 ? (
                 <div className="flex gap-4 overflow-x-auto pb-4 pt-1 scrollbar-none select-none scroll-smooth">
                   {studentBusinesses.map(promo => (
@@ -754,7 +759,7 @@ export default function ExplorePage() {
                           <div className="p-5 flex-1 flex flex-col justify-between space-y-4">
                             <div className="space-y-1.5">
                               <div className="flex items-center gap-1 text-[#FD5C05] text-[9px] font-black uppercase tracking-widest">
-                                {evt.ownershipType === 'school' ? '🏫 Official Event' : '👥 Student Event'}
+                                {evt.ownershipType === 'school' ? 'Official Event' : 'Student Event'}
                               </div>
                               <h3 className="font-extrabold text-sm text-[#2A2621] uppercase tracking-wide leading-tight line-clamp-2 group-hover:text-[#FD5C05] transition-colors">
                                 {evt.title}
@@ -803,7 +808,7 @@ export default function ExplorePage() {
                                 <p className="font-black text-[#2A2621] text-sm uppercase tracking-tight group-hover:text-[#FD5C05] transition-colors truncate">
                                   {org.name}
                                 </p>
-                                {org.verified && <span className="text-[10px]" title="Verified Organization">🛡️</span>}
+                                {org.verified && <span title="Verified Organization"><CheckCircle2 className="h-3.5 w-3.5 text-blue-500 fill-blue-500/10 shrink-0" /></span>}
                               </div>
                               <p className="text-xs text-[#5A554E] line-clamp-1 font-semibold mt-0.5">{org.description}</p>
                               <p className="text-[9px] text-[#5A554E] font-bold uppercase tracking-wider mt-1">{org.members.length} members</p>
