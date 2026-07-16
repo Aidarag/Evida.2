@@ -56,7 +56,8 @@
       ],
       "interested": [],
       "savedBy": [
-        "Sarah Jenkins"
+        "Sarah Jenkins",
+        "Michael Chen"
       ],
       "organizer": "Career Development Center",
       "organizationId": "org-cdc",
@@ -271,7 +272,8 @@
       ],
       "interested": [],
       "savedBy": [
-        "Sarah Jenkins"
+        "Sarah Jenkins",
+        "Michael Chen"
       ],
       "organizer": "Student Affairs",
       "featured": false,
@@ -1074,11 +1076,7 @@
       "email": "michael.chen@university.edu",
       "password": "demo123",
       "role": "student",
-      "organizations": [
-        "org-isa",
-        "org-cab",
-        "org-athletics"
-      ],
+      "organizations": [],
       "major": "Computer Science",
       "gradYear": "2028",
       "graduationYear": "2028",

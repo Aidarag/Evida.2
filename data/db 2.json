@@ -1072,11 +1072,7 @@
       "username": "michael_c",
       "name": "Michael Chen",
       "role": "student",
-      "organizations": [
-        "org-isa",
-        "org-cab",
-        "org-athletics"
-      ],
+      "organizations": [],
       "major": "Computer Science",
       "gradYear": "2028",
       "school": "School of Engineering",

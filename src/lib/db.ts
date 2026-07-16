@@ -100,7 +100,7 @@ const initialUsers: User[] = [
     email: 'michael.chen@university.edu',
     password: 'demo123',
     role: 'student',
-    organizations: ['org-isa', 'org-cab', 'org-athletics'],
+    organizations: [],
     major: 'Computer Science',
     gradYear: '2028',
     graduationYear: '2028',

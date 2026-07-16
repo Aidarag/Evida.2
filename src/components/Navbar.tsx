@@ -500,19 +500,21 @@ export function ProfileSwitcher() {
             </div>
 
             {/* Action options */}
-            <div className="p-1.5 space-y-1">
-              <button
-                onClick={() => {
-                  setDropdownOpen(false);
-                  setOnboardingStep(1);
-                  setCreateModalOpen(true);
-                }}
-                className="w-full text-left flex items-center gap-2 px-3 py-2 rounded-xl hover:bg-[#EAE4CF]/20 text-[#2A2621] font-bold text-xs cursor-pointer transition-all"
-              >
-                <Plus className="h-4 w-4 text-[#FD5C05] stroke-[3]" />
-                <span className="truncate">Create Organization</span>
-              </button>
-            </div>
+            {myOrgs.length === 0 && (
+              <div className="p-1.5 space-y-1">
+                <button
+                  onClick={() => {
+                    setDropdownOpen(false);
+                    setOnboardingStep(1);
+                    setCreateModalOpen(true);
+                  }}
+                  className="w-full text-left flex items-center gap-2 px-3 py-2 rounded-xl hover:bg-[#EAE4CF]/20 text-[#2A2621] font-bold text-xs cursor-pointer transition-all"
+                >
+                  <Plus className="h-4 w-4 text-[#FD5C05] stroke-[3]" />
+                  <span className="truncate">Create Organization</span>
+                </button>
+              </div>
+            )}
           </motion.div>
         )}
       </AnimatePresence>
