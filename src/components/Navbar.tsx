@@ -167,6 +167,7 @@ export function MobileBottomNav({ variant = 'student' }: { variant?: 'student' |
   const studentTabs = [
     { href: '/student/dashboard', icon: Home, label: 'Home' },
     { href: '/student/explore', icon: Compass, label: 'Explore' },
+    { href: '/student/create', icon: Plus, label: 'Create', isSpecial: true },
     { href: '/student/calendar', icon: Calendar, label: 'Calendar' },
     { href: '/student/profile', icon: User, label: 'Profile' },
   ];
@@ -192,6 +193,21 @@ export function MobileBottomNav({ variant = 'student' }: { variant?: 'student' |
         {tabs.map((tab: any) => {
           const isActive = pathname === tab.href || pathname.startsWith(tab.href + '/');
           const Icon = tab.icon;
+
+          if (tab.isSpecial) {
+            return (
+              <Link
+                key={tab.href}
+                href={tab.href}
+                className="relative -top-4 flex flex-col items-center justify-center cursor-pointer group shrink-0 font-sans"
+              >
+                <div className="h-11 w-11 rounded-full bg-[#FD5C05] hover:bg-[#CC3D00] text-white flex items-center justify-center shadow-lg transition-transform hover:scale-105 active:scale-95 duration-200">
+                  <Icon className="h-5 w-5 stroke-[3]" />
+                </div>
+                <span className="text-[9px] font-black uppercase tracking-wider text-[#5A554E] group-hover:text-[#2A2621] mt-1.5">{tab.label}</span>
+              </Link>
+            );
+          }
 
           return (
             <Link
