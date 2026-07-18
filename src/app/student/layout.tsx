@@ -1,5 +1,7 @@
-import React from 'react';
-import { DesktopNav, DesktopSidebar, MobileBottomNav, ProfileSwitcher, NotificationBell } from '@/components/Navbar';
+'use client';
+
+import React, { useState } from 'react';
+import { DesktopNav, DesktopSidebar, TabletDrawerSidebar, MobileBottomNav, ProfileSwitcher, NotificationBell } from '@/components/Navbar';
 import EvidaLogo from '@/components/ui/EvidaLogo';
 import Link from 'next/link';
 import { Settings } from 'lucide-react';
@@ -9,8 +11,11 @@ export default function StudentLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const [sidebarState, setSidebarState] = useState<'expanded' | 'collapsed' | 'hidden'>('expanded');
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+
   return (
-    <div className="min-h-screen bg-[#D8D2BC] text-gray-900 flex flex-col md:flex-row font-sans">
+    <div className="min-h-screen bg-[#D8D2BC] text-gray-900 flex flex-col lg:flex-row font-sans">
       {/* Mobile Top Nav (visible only on small screens) */}
       <div className="md:hidden sticky top-0 z-40 w-full py-2.5 px-4 border-b border-black/[0.04] bg-[#D8D2BC]/95 backdrop-blur-xl flex items-center justify-between">
         <span className="text-lg font-bold tracking-tight text-[#2A2621] flex items-center gap-2">
@@ -29,10 +34,27 @@ export default function StudentLayout({
         </div>
       </div>
 
-      <DesktopSidebar variant="student" />
+      {/* Laptop collapsible sidebar */}
+      <DesktopSidebar 
+        variant="student" 
+        state={sidebarState} 
+        onChangeState={setSidebarState} 
+      />
+
+      {/* Tablet drawer sidebar */}
+      <TabletDrawerSidebar 
+        variant="student" 
+        isOpen={isDrawerOpen} 
+        onClose={() => setIsDrawerOpen(false)} 
+      />
       
       <div className="flex-1 flex flex-col min-w-0">
-        <DesktopNav variant="student" />
+        <DesktopNav 
+          variant="student" 
+          isSidebarHidden={sidebarState === 'hidden'} 
+          onShowSidebar={() => setSidebarState('expanded')} 
+          onOpenDrawer={() => setIsDrawerOpen(true)} 
+        />
         
         <main className="flex-1 pb-32 md:pb-8 relative">
           {children}

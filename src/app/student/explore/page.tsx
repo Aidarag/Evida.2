@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useMemo } from 'react';
 import { useEvents } from '@/lib/context/EventContext';
+import { useUser } from '@/lib/context/UserContext';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { 
@@ -24,17 +25,32 @@ import {
   BookOpen,
   ArrowRight,
   Shield,
-  CheckCircle2
+  CheckCircle2,
+  Bookmark
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Event, Organization, Promotion } from '@/lib/types';
 
 export default function ExplorePage() {
-  const { events, organizations } = useEvents();
+  const { events, organizations, saveToggle } = useEvents();
+  const { currentUser } = useUser();
   const router = useRouter();
 
   // Search state
   const [searchQuery, setSearchQuery] = useState('');
+  const [isSearchActive, setIsSearchActive] = useState(false);
+  const searchInputRef = React.useRef<HTMLInputElement>(null);
+
+  const trendingSearches = useMemo(() => [
+    'homecoming',
+    'hackathon',
+    'career fair',
+    'football',
+    'tutoring',
+    'photography',
+    'food sales',
+    'greek life'
+  ], []);
   
   // Search result tab state: 'all' | 'events' | 'orgs' | 'promos'
   const [searchTab, setSearchTab] = useState<'all' | 'events' | 'orgs' | 'promos'>('all');
@@ -134,114 +150,219 @@ export default function ExplorePage() {
   }, [promotions]);
 
   // Render a standard section header
-  const renderSectionHeader = (title: string, sectionKey: string, icon: React.ReactNode) => (
-    <div className="flex items-center justify-between">
-      <div className="flex items-center gap-2.5">
-        <div className="[&>svg]:h-7 [&>svg]:w-7 shrink-0 flex items-center justify-center">
-          {icon}
-        </div>
-        <h2 className="font-black tracking-tight text-[#2A2621]" style={{ fontFamily: 'var(--font-display)' }}>
+  const renderSectionHeader = (title: string, sectionKey: string, icon: React.ReactNode, isOrange: boolean = false) => (
+    <div className="flex items-center justify-between mb-2.5">
+      <div className="flex items-center gap-2">
+        <span 
+          className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded text-[10px] font-black uppercase tracking-wider shadow-sm border ${
+            isOrange 
+              ? 'bg-[#FD5C05] text-[#FAFAF9] border-[#FD5C05]' 
+              : 'bg-[#2A2621] text-[#FAFAF9] border-[#2A2621]'
+          }`}
+        >
+          <div className="[&>svg]:h-3 [&>svg]:w-3 shrink-0">
+            {icon}
+          </div>
           {title}
-        </h2>
+        </span>
       </div>
       <Link
         href={`/student/explore/category?section=${encodeURIComponent(sectionKey)}`}
-        className="flex items-center gap-1 text-[11px] font-black uppercase tracking-wider text-[#5A554E] hover:text-[#FD5C05] transition-colors"
+        className="flex items-center gap-0.5 text-[9px] font-black uppercase tracking-wider text-[#5A554E]/75 hover:text-[#FD5C05] transition-colors"
       >
-        View All <ChevronRight className="h-3 w-3 stroke-[3]" />
+        View More <ChevronRight className="h-2.5 w-2.5 stroke-[2.5]" />
       </Link>
     </div>
   );
 
-  return (
-    <div className="max-w-7xl mx-auto px-4 py-8 pb-28 md:pb-12 space-y-8 text-[#2A2621] text-left">
-      
-      {/* ── Title Area ── */}
-      <div className="border-b border-black/[0.04] pb-4 flex items-center justify-between">
-        <div>
-          <h1 className="font-black tracking-tight flex items-center gap-2.5 text-[#2A2621]" style={{ fontFamily: 'var(--font-display)' }}>
-            <Compass className="h-10 w-10 text-[#FD5C05] shrink-0" />
-            Discovery Hub
-          </h1>
-          <p className="text-xs font-semibold text-[#5A554E] uppercase tracking-wider mt-1">
-            Browse and naturally discover everything happening on campus.
+  const renderEventCard = (evt: Event, isGridItem: boolean = false) => {
+    const isSaved = currentUser ? evt.savedBy?.includes(currentUser.name) : false;
+    return (
+      <Link
+        key={evt.id}
+        href={`/events/${evt.id}`}
+        className={`${isGridItem ? 'w-full' : 'w-52 sm:w-60 shrink-0'} bg-white border border-black/[0.04] rounded-3xl overflow-hidden shadow-sm hover:border-[#FD5C05]/30 hover:scale-[1.01] transition-all flex flex-col relative group cursor-pointer`}
+      >
+        <div className="h-28 w-full bg-[#FD5C05]/10 shrink-0 relative">
+          {evt.coverImage.includes('from-') ? (
+            <div className={`w-full h-full bg-gradient-to-br ${evt.coverImage}`} />
+          ) : (
+            <img src={evt.coverImage} className="w-full h-full object-cover" alt="" />
+          )}
+          
+          {/* Cost/Category Badges inside cover */}
+          <span className="absolute top-2 left-2 text-[7px] font-black uppercase tracking-wider bg-black/60 backdrop-blur-[2px] text-white px-1.5 py-0.5 rounded">
+            {evt.category}
+          </span>
+
+          {currentUser && (
+            <button 
+              type="button"
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                saveToggle(evt.id);
+              }}
+              className="absolute top-1.5 right-1.5 z-20 cursor-pointer focus:outline-none p-1 group"
+              title={isSaved ? "Unsave Event" : "Save Event"}
+            >
+              <Bookmark 
+                className={`h-4.5 w-4.5 transition-all duration-150 ease-in-out ${
+                  isSaved 
+                    ? 'fill-[#FD5C05] text-[#FD5C05]' 
+                    : 'text-white hover:text-[#FD5C05]/90 drop-shadow-[0_1px_2px_rgba(0,0,0,0.5)]'
+                }`} 
+              />
+            </button>
+          )}
+        </div>
+      <div className="p-3 flex-1 flex flex-col justify-between space-y-2">
+        <div className="space-y-0.5">
+          <span className="text-[#FD5C05] text-[7px] font-black uppercase tracking-widest block">
+            {evt.ownershipType === 'school' ? 'Official Event' : 'Student Event'}
+          </span>
+          <h3 className="font-extrabold text-[11px] uppercase tracking-wide text-[#2A2621] group-hover:text-[#FD5C05] transition-colors leading-tight line-clamp-1">
+            {evt.title}
+          </h3>
+          <p className="text-[10px] text-[#5A554E] leading-relaxed line-clamp-2 font-medium">
+            {evt.description}
+          </p>
+        </div>
+        <div className="pt-1.5 border-t border-black/[0.04] flex items-center justify-between text-[8px] text-[#5A554E] font-semibold">
+          <span className="flex items-center gap-0.5 truncate max-w-[50%]"><Users className="h-2.5 w-2.5" /> {evt.organizer}</span>
+          <span className="flex items-center gap-0.5 shrink-0"><Calendar className="h-2.5 w-2.5" /> {evt.date}</span>
+        </div>
+      </div>
+    </Link>
+  );
+};
+
+  // Helper to render organization cards
+  const renderOrganizationCard = (org: Organization, isGridItem: boolean = false) => (
+    <div
+      key={org.id}
+      onClick={() => router.push(`/student/organizations/${org.id}`)}
+      className={`${isGridItem ? 'w-full' : 'w-52 sm:w-60 shrink-0'} bg-white border border-black/[0.04] rounded-3xl p-3 shadow-sm hover:border-[#FD5C05]/30 hover:scale-[1.01] transition-all cursor-pointer group flex flex-col justify-between h-32`}
+    >
+      <div className="flex items-start gap-2">
+        <div
+          className="h-9 w-9 rounded-xl flex items-center justify-center font-black text-white text-xs shrink-0 transition-transform group-hover:scale-105"
+          style={{ backgroundColor: org.logoColor || '#2A2621' }}
+        >
+          {org.name.substring(0, 2).toUpperCase()}
+        </div>
+        <div className="min-w-0">
+          <div className="flex items-center gap-1 truncate">
+            <h3 className="font-extrabold text-[11px] uppercase tracking-tight text-[#2A2621] group-hover:text-[#FD5C05] transition-colors truncate">
+              {org.name}
+            </h3>
+            {org.verified && <span title="Verified Organization"><CheckCircle2 className="h-3 w-3 text-blue-500 fill-blue-500/10 shrink-0" /></span>}
+          </div>
+          <p className="text-[9px] text-[#5A554E] line-clamp-2 leading-normal font-semibold mt-0.5">
+            {org.description}
           </p>
         </div>
       </div>
+      <div className="pt-1.5 border-t border-black/[0.04] flex items-center justify-between text-[8px] text-[#5A554E] font-bold uppercase tracking-wider">
+        <span>{org.members?.length || 0} members</span>
+        <span className="text-[#FD5C05] group-hover:translate-x-0.5 transition-transform flex items-center gap-0.5">View Profile <ArrowRight className="h-2 w-2" /></span>
+      </div>
+    </div>
+  );
 
+  // Helper to render promotion cards
+  const renderPromotionCard = (promo: Promotion, forceCategoryText?: string, isGridItem: boolean = false) => (
+    <div
+      key={promo.id}
+      className={`${isGridItem ? 'w-full' : 'w-52 sm:w-60 shrink-0'} bg-white border border-black/[0.04] rounded-3xl p-3 shadow-sm hover:border-[#FD5C05]/30 hover:scale-[1.01] transition-all flex flex-col justify-between h-32 relative group`}
+    >
+      <span className="absolute top-3 right-3 text-[7px] font-black uppercase tracking-wider bg-black/60 backdrop-blur-[2px] text-white px-1.5 py-0.5 rounded">
+        {forceCategoryText || promo.category}
+      </span>
+      <div className="space-y-0.5">
+        <span className="text-[#FD5C05] text-[7px] font-black uppercase tracking-widest block">Opportunity</span>
+        <h3 className="font-extrabold text-[11px] uppercase tracking-wide text-[#2A2621] leading-tight line-clamp-1 w-[80%]">
+          {promo.title}
+        </h3>
+        <p className="text-[10px] text-[#5A554E] leading-normal line-clamp-2 font-semibold">
+          {promo.description}
+        </p>
+      </div>
+      <div className="pt-1.5 border-t border-black/[0.04] flex items-center justify-between text-[8px] text-[#5A554E] font-semibold">
+        <span className="truncate max-w-[50%]">By {promo.organizer}</span>
+        <span className="bg-[#EAE4CF]/40 text-[#2A2621] px-1.5 py-0.5 rounded text-[7px] font-bold">{promo.contactInfo}</span>
+      </div>
+    </div>
+  );
+
+  return (
+    <div className="max-w-7xl mx-auto px-4 py-6 pb-28 md:pb-12 space-y-6 text-[#2A2621] text-left">
+      
       {/* ── Prominent Search Bar ── */}
-      <div className="relative w-full shadow-sm rounded-2xl overflow-hidden bg-white border border-black/[0.06] focus-within:border-[#FD5C05] transition-all">
-        <span className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-          <Search className="h-5 w-5 text-[#5A554E]" />
-        </span>
-        <input
-          type="text"
-          placeholder="Search events, organizations, promotions, tutoring, student businesses..."
-          value={searchQuery}
-          onChange={e => setSearchQuery(e.target.value)}
-          className="w-full bg-transparent py-4.5 pl-12 pr-4 text-xs sm:text-sm text-[#2A2621] placeholder-[#5A554E]/60 focus:outline-none"
-        />
-        {searchQuery && (
-          <button 
-            onClick={() => setSearchQuery('')}
-            className="absolute inset-y-0 right-0 pr-4 flex items-center text-[#5A554E] hover:text-[#FD5C05] text-xs font-bold uppercase tracking-wider"
+      <div className="flex items-center gap-3">
+        <div className="flex-1 relative shadow-sm rounded-2xl overflow-hidden bg-white border border-black/[0.06] focus-within:border-[#FD5C05] transition-all">
+          <span className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+            <Search className="h-4.5 w-4.5 text-[#5A554E]" />
+          </span>
+          <input
+            ref={searchInputRef}
+            type="text"
+            placeholder="Search events, organizations, promotions, services..."
+            value={searchQuery}
+            onFocus={() => setIsSearchActive(true)}
+            onChange={e => setIsSearchActive(true) || setSearchQuery(e.target.value)}
+            className="w-full bg-transparent py-3.5 pl-11 pr-10 text-xs sm:text-sm text-[#2A2621] placeholder-[#5A554E]/60 focus:outline-none"
+          />
+          {searchQuery && (
+            <button 
+              onClick={() => {
+                setSearchQuery('');
+                searchInputRef.current?.focus();
+              }}
+              className="absolute inset-y-0 right-0 pr-4 flex items-center text-[#5A554E] hover:text-[#FD5C05] text-[10px] font-bold uppercase tracking-wider cursor-pointer"
+            >
+              Clear
+            </button>
+          )}
+        </div>
+        {isSearchActive && (
+          <button
+            onClick={() => {
+              setSearchQuery('');
+              setIsSearchActive(false);
+              searchInputRef.current?.blur();
+            }}
+            className="text-xs font-black uppercase tracking-wider text-[#5A554E] hover:text-[#FD5C05] transition-colors cursor-pointer shrink-0"
           >
-            Clear
+            Cancel
           </button>
         )}
       </div>
 
       {/* ── Dynamic Layout Transition ── */}
       <AnimatePresence mode="wait">
-        {!hasSearchResults ? (
+        {!isSearchActive ? (
           <motion.div
-            key="discovery-hub"
+            key="discovery-feed"
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.2 }}
-            className="space-y-10"
+            className="space-y-8"
           >
+            {/* Simple page title */}
+            <div className="pt-1">
+              <h1 className="text-xs font-black uppercase tracking-widest text-[#5A554E] pl-1">
+                Explore Events
+              </h1>
+            </div>
+
             {/* 1. Trending Events */}
-            <div className="space-y-3.5">
-              {renderSectionHeader('Trending Events', 'Trending Events', <TrendingUp className="h-5 w-5 text-[#FD5C05]" />)}
+            <div className="space-y-2">
+              {renderSectionHeader('Trending Events', 'Trending Events', <TrendingUp className="h-5 w-5" />, true)}
               {trendingEvents.length > 0 ? (
-                <div className="flex gap-4 overflow-x-auto pb-4 pt-1 scrollbar-none select-none scroll-smooth">
-                  {trendingEvents.map(evt => (
-                    <Link
-                      key={evt.id}
-                      href={`/events/${evt.id}`}
-                      className="w-72 sm:w-80 shrink-0 bg-white border border-black/[0.04] rounded-3xl overflow-hidden shadow-sm hover:border-[#FD5C05]/30 hover:scale-[1.01] transition-all flex flex-col relative group"
-                    >
-                      <div className="h-40 w-full bg-[#FD5C05]/10 shrink-0 relative">
-                        {evt.coverImage.includes('from-') ? (
-                          <div className={`w-full h-full bg-gradient-to-br ${evt.coverImage}`} />
-                        ) : (
-                          <img src={evt.coverImage} className="w-full h-full object-cover" alt="" />
-                        )}
-                        <span className="absolute top-3 right-3 text-[8px] font-black uppercase tracking-wider bg-black/60 backdrop-blur-[2px] text-white px-2 py-0.5 rounded">
-                          {evt.category}
-                        </span>
-                      </div>
-                      <div className="p-4 flex-1 flex flex-col justify-between space-y-3">
-                        <div className="space-y-1">
-                          <span className="text-[#FD5C05] text-[8px] font-black uppercase tracking-widest block">
-                            {evt.ownershipType === 'school' ? 'Official Event' : 'Student Event'}
-                          </span>
-                          <h3 className="font-extrabold text-xs uppercase tracking-wide text-[#2A2621] group-hover:text-[#FD5C05] transition-colors leading-tight line-clamp-1">
-                            {evt.title}
-                          </h3>
-                          <p className="text-[11px] text-[#5A554E] leading-relaxed line-clamp-2 font-medium">
-                            {evt.description}
-                          </p>
-                        </div>
-                        <div className="pt-2 border-t border-black/[0.04] flex items-center justify-between text-[9px] text-[#5A554E] font-semibold">
-                          <span className="flex items-center gap-1 truncate max-w-[50%]"><Users className="h-3 w-3" /> {evt.organizer}</span>
-                          <span className="flex items-center gap-1 shrink-0"><Calendar className="h-3 w-3" /> {evt.date}</span>
-                        </div>
-                      </div>
-                    </Link>
-                  ))}
+                <div className="flex gap-4 overflow-x-auto pb-3 pt-1 scrollbar-none select-none scroll-smooth">
+                  {trendingEvents.map(evt => renderEventCard(evt))}
                 </div>
               ) : (
                 <p className="text-xs text-[#5A554E] italic pl-2">No trending events available right now.</p>
@@ -249,43 +370,11 @@ export default function ExplorePage() {
             </div>
 
             {/* 2. Official Events */}
-            <div className="space-y-3.5">
-              {renderSectionHeader('Official Events', 'Official Events', <Building className="h-5 w-5 text-[#FD5C05]" />)}
+            <div className="space-y-2">
+              {renderSectionHeader('Official Events', 'Official Events', <Building className="h-5 w-5" />, false)}
               {officialEvents.length > 0 ? (
-                <div className="flex gap-4 overflow-x-auto pb-4 pt-1 scrollbar-none select-none scroll-smooth">
-                  {officialEvents.map(evt => (
-                    <Link
-                      key={evt.id}
-                      href={`/events/${evt.id}`}
-                      className="w-72 sm:w-80 shrink-0 bg-white border border-black/[0.04] rounded-3xl overflow-hidden shadow-sm hover:border-[#FD5C05]/30 hover:scale-[1.01] transition-all flex flex-col relative group"
-                    >
-                      <div className="h-40 w-full bg-[#FD5C05]/10 shrink-0 relative">
-                        {evt.coverImage.includes('from-') ? (
-                          <div className={`w-full h-full bg-gradient-to-br ${evt.coverImage}`} />
-                        ) : (
-                          <img src={evt.coverImage} className="w-full h-full object-cover" alt="" />
-                        )}
-                        <span className="absolute top-3 right-3 text-[8px] font-black uppercase tracking-wider bg-black/60 backdrop-blur-[2px] text-white px-2 py-0.5 rounded">
-                          {evt.category}
-                        </span>
-                      </div>
-                      <div className="p-4 flex-1 flex flex-col justify-between space-y-3">
-                        <div className="space-y-1">
-                          <span className="text-[#FD5C05] text-[8px] font-black uppercase tracking-widest block">Official Event</span>
-                          <h3 className="font-extrabold text-xs uppercase tracking-wide text-[#2A2621] group-hover:text-[#FD5C05] transition-colors leading-tight line-clamp-1">
-                            {evt.title}
-                          </h3>
-                          <p className="text-[11px] text-[#5A554E] leading-relaxed line-clamp-2 font-medium">
-                            {evt.description}
-                          </p>
-                        </div>
-                        <div className="pt-2 border-t border-black/[0.04] flex items-center justify-between text-[9px] text-[#5A554E] font-semibold">
-                          <span className="flex items-center gap-1 truncate max-w-[50%]"><Users className="h-3 w-3" /> {evt.organizer}</span>
-                          <span className="flex items-center gap-1 shrink-0"><Calendar className="h-3 w-3" /> {evt.date}</span>
-                        </div>
-                      </div>
-                    </Link>
-                  ))}
+                <div className="flex gap-4 overflow-x-auto pb-3 pt-1 scrollbar-none select-none scroll-smooth">
+                  {officialEvents.map(evt => renderEventCard(evt))}
                 </div>
               ) : (
                 <p className="text-xs text-[#5A554E] italic pl-2">No official school events scheduled.</p>
@@ -293,43 +382,11 @@ export default function ExplorePage() {
             </div>
 
             {/* 3. Student Events */}
-            <div className="space-y-3.5">
-              {renderSectionHeader('Student-led Activities', 'Student Events', <Users className="h-5 w-5 text-[#FD5C05]" />)}
+            <div className="space-y-2">
+              {renderSectionHeader('Student-led Activities', 'Student Events', <Users className="h-5 w-5" />, false)}
               {studentEvents.length > 0 ? (
-                <div className="flex gap-4 overflow-x-auto pb-4 pt-1 scrollbar-none select-none scroll-smooth">
-                  {studentEvents.map(evt => (
-                    <Link
-                      key={evt.id}
-                      href={`/events/${evt.id}`}
-                      className="w-72 sm:w-80 shrink-0 bg-white border border-black/[0.04] rounded-3xl overflow-hidden shadow-sm hover:border-[#FD5C05]/30 hover:scale-[1.01] transition-all flex flex-col relative group"
-                    >
-                      <div className="h-40 w-full bg-[#FD5C05]/10 shrink-0 relative">
-                        {evt.coverImage.includes('from-') ? (
-                          <div className={`w-full h-full bg-gradient-to-br ${evt.coverImage}`} />
-                        ) : (
-                          <img src={evt.coverImage} className="w-full h-full object-cover" alt="" />
-                        )}
-                        <span className="absolute top-3 right-3 text-[8px] font-black uppercase tracking-wider bg-black/60 backdrop-blur-[2px] text-white px-2 py-0.5 rounded">
-                          {evt.category}
-                        </span>
-                      </div>
-                      <div className="p-4 flex-1 flex flex-col justify-between space-y-3">
-                        <div className="space-y-1">
-                          <span className="text-[#FD5C05] text-[8px] font-black uppercase tracking-widest block">Student Event</span>
-                          <h3 className="font-extrabold text-xs uppercase tracking-wide text-[#2A2621] group-hover:text-[#FD5C05] transition-colors leading-tight line-clamp-1">
-                            {evt.title}
-                          </h3>
-                          <p className="text-[11px] text-[#5A554E] leading-relaxed line-clamp-2 font-medium">
-                            {evt.description}
-                          </p>
-                        </div>
-                        <div className="pt-2 border-t border-black/[0.04] flex items-center justify-between text-[9px] text-[#5A554E] font-semibold">
-                          <span className="flex items-center gap-1 truncate max-w-[50%]"><Users className="h-3 w-3" /> {evt.organizer}</span>
-                          <span className="flex items-center gap-1 shrink-0"><Calendar className="h-3 w-3" /> {evt.date}</span>
-                        </div>
-                      </div>
-                    </Link>
-                  ))}
+                <div className="flex gap-4 overflow-x-auto pb-3 pt-1 scrollbar-none select-none scroll-smooth">
+                  {studentEvents.map(evt => renderEventCard(evt))}
                 </div>
               ) : (
                 <p className="text-xs text-[#5A554E] italic pl-2">No student events scheduled right now.</p>
@@ -337,41 +394,11 @@ export default function ExplorePage() {
             </div>
 
             {/* 4. Campus Organizations */}
-            <div className="space-y-3.5">
-              {renderSectionHeader('Campus Organizations', 'Organizations', <Shield className="h-5 w-5 text-[#FD5C05]" />)}
+            <div className="space-y-2">
+              {renderSectionHeader('Campus Organizations', 'Organizations', <Shield className="h-5 w-5" />, false)}
               {organizations.length > 0 ? (
-                <div className="flex gap-4 overflow-x-auto pb-4 pt-1 scrollbar-none select-none scroll-smooth">
-                  {organizations.map(org => (
-                    <div
-                      key={org.id}
-                      onClick={() => router.push(`/student/organizations/${org.id}`)}
-                      className="w-72 shrink-0 bg-white border border-black/[0.04] rounded-3xl p-4 shadow-sm hover:border-[#FD5C05]/30 hover:scale-[1.01] transition-all cursor-pointer group flex flex-col justify-between h-40"
-                    >
-                      <div className="flex items-start gap-3">
-                        <div
-                          className="h-11 w-11 rounded-xl flex items-center justify-center font-black text-white text-sm shrink-0 transition-transform group-hover:scale-105"
-                          style={{ backgroundColor: org.logoColor || '#2A2621' }}
-                        >
-                          {org.name.substring(0, 2).toUpperCase()}
-                        </div>
-                        <div className="min-w-0">
-                          <div className="flex items-center gap-1 truncate">
-                            <h3 className="font-extrabold text-xs uppercase tracking-tight text-[#2A2621] group-hover:text-[#FD5C05] transition-colors truncate">
-                              {org.name}
-                            </h3>
-                            {org.verified && <span title="Verified Organization"><CheckCircle2 className="h-3.5 w-3.5 text-blue-500 fill-blue-500/10 shrink-0" /></span>}
-                          </div>
-                          <p className="text-[10px] text-[#5A554E] line-clamp-2 leading-normal font-semibold mt-0.5">
-                            {org.description}
-                          </p>
-                        </div>
-                      </div>
-                      <div className="pt-2 border-t border-black/[0.04] flex items-center justify-between text-[9px] text-[#5A554E] font-bold uppercase tracking-wider">
-                        <span>{org.members?.length || 0} members</span>
-                        <span className="text-[#FD5C05] group-hover:translate-x-0.5 transition-transform flex items-center gap-0.5">View Profile <ArrowRight className="h-2.5 w-2.5" /></span>
-                      </div>
-                    </div>
-                  ))}
+                <div className="flex gap-4 overflow-x-auto pb-3 pt-1 scrollbar-none select-none scroll-smooth">
+                  {organizations.map(org => renderOrganizationCard(org))}
                 </div>
               ) : (
                 <p className="text-xs text-[#5A554E] italic pl-2">No organizations found.</p>
@@ -379,64 +406,11 @@ export default function ExplorePage() {
             </div>
 
             {/* 5. Career & Networking */}
-            <div className="space-y-3.5">
-              {renderSectionHeader('Career & Networking', 'Career & Networking', <Briefcase className="h-5 w-5 text-[#FD5C05]" />)}
-              <div className="flex gap-4 overflow-x-auto pb-4 pt-1 scrollbar-none select-none scroll-smooth">
-                {careerEvents.events.map(evt => (
-                  <Link
-                    key={evt.id}
-                    href={`/events/${evt.id}`}
-                    className="w-72 sm:w-80 shrink-0 bg-white border border-black/[0.04] rounded-3xl overflow-hidden shadow-sm hover:border-[#FD5C05]/30 hover:scale-[1.01] transition-all flex flex-col relative group"
-                  >
-                    <div className="h-40 w-full bg-[#FD5C05]/10 shrink-0 relative">
-                      {evt.coverImage.includes('from-') ? (
-                        <div className={`w-full h-full bg-gradient-to-br ${evt.coverImage}`} />
-                      ) : (
-                        <img src={evt.coverImage} className="w-full h-full object-cover" alt="" />
-                      )}
-                      <span className="absolute top-3 right-3 text-[8px] font-black uppercase tracking-wider bg-[#FD5C05]/20 text-[#FD5C05] border border-[#FD5C05]/20 px-2 py-0.5 rounded">
-                        Event
-                      </span>
-                    </div>
-                    <div className="p-4 flex-1 flex flex-col justify-between space-y-3">
-                      <div className="space-y-1">
-                        <h3 className="font-extrabold text-xs uppercase tracking-wide text-[#2A2621] group-hover:text-[#FD5C05] transition-colors leading-tight line-clamp-1">
-                          {evt.title}
-                        </h3>
-                        <p className="text-[11px] text-[#5A554E] leading-relaxed line-clamp-2 font-medium">
-                          {evt.description}
-                        </p>
-                      </div>
-                      <div className="pt-2 border-t border-black/[0.04] flex items-center justify-between text-[9px] text-[#5A554E] font-semibold">
-                        <span className="flex items-center gap-1 truncate max-w-[50%]"><Users className="h-3 w-3" /> {evt.organizer}</span>
-                        <span className="flex items-center gap-1 shrink-0"><Calendar className="h-3 w-3" /> {evt.date}</span>
-                      </div>
-                    </div>
-                  </Link>
-                ))}
-                {careerEvents.promos.map(promo => (
-                  <div
-                    key={promo.id}
-                    className="w-72 shrink-0 bg-white border border-black/[0.04] rounded-3xl p-4 shadow-sm hover:border-[#FD5C05]/30 hover:scale-[1.01] transition-all flex flex-col justify-between h-40 relative group"
-                  >
-                    <span className="absolute top-4 right-4 text-[8px] font-black uppercase tracking-wider bg-black/60 backdrop-blur-[2px] text-white px-2 py-0.5 rounded">
-                      Job
-                    </span>
-                    <div className="space-y-1">
-                      <span className="text-[#FD5C05] text-[8px] font-black uppercase tracking-widest block">Opportunity</span>
-                      <h3 className="font-extrabold text-xs uppercase tracking-wide text-[#2A2621] leading-tight line-clamp-1">
-                        {promo.title}
-                      </h3>
-                      <p className="text-[11px] text-[#5A554E] leading-normal line-clamp-2 font-semibold">
-                        {promo.description}
-                      </p>
-                    </div>
-                    <div className="pt-2 border-t border-black/[0.04] flex items-center justify-between text-[9px] text-[#5A554E] font-semibold">
-                      <span className="truncate max-w-[50%]">By {promo.organizer}</span>
-                      <span className="bg-[#EAE4CF]/40 text-[#2A2621] px-2 py-0.5 rounded text-[8px] font-bold">{promo.contactInfo}</span>
-                    </div>
-                  </div>
-                ))}
+            <div className="space-y-2">
+              {renderSectionHeader('Career & Networking', 'Career & Networking', <Briefcase className="h-5 w-5" />, false)}
+              <div className="flex gap-4 overflow-x-auto pb-3 pt-1 scrollbar-none select-none scroll-smooth">
+                {careerEvents.events.map(evt => renderEventCard(evt))}
+                {careerEvents.promos.map(promo => renderPromotionCard(promo, 'Job'))}
                 {careerEvents.events.length === 0 && careerEvents.promos.length === 0 && (
                   <p className="text-xs text-[#5A554E] italic pl-2">No career opportunities listed.</p>
                 )}
@@ -444,63 +418,11 @@ export default function ExplorePage() {
             </div>
 
             {/* 6. Sports & Athletics */}
-            <div className="space-y-3.5">
-              {renderSectionHeader('Sports & Athletics', 'Sports', <Trophy className="h-5 w-5 text-[#FD5C05]" />)}
-              <div className="flex gap-4 overflow-x-auto pb-4 pt-1 scrollbar-none select-none scroll-smooth">
-                {sportsEvents.events.map(evt => (
-                  <Link
-                    key={evt.id}
-                    href={`/events/${evt.id}`}
-                    className="w-72 sm:w-80 shrink-0 bg-white border border-black/[0.04] rounded-3xl overflow-hidden shadow-sm hover:border-[#FD5C05]/30 hover:scale-[1.01] transition-all flex flex-col relative group"
-                  >
-                    <div className="h-40 w-full bg-[#FD5C05]/10 shrink-0 relative">
-                      {evt.coverImage.includes('from-') ? (
-                        <div className={`w-full h-full bg-gradient-to-br ${evt.coverImage}`} />
-                      ) : (
-                        <img src={evt.coverImage} className="w-full h-full object-cover" alt="" />
-                      )}
-                      <span className="absolute top-3 right-3 text-[8px] font-black uppercase tracking-wider bg-black/60 backdrop-blur-[2px] text-white px-2 py-0.5 rounded">
-                        Event
-                      </span>
-                    </div>
-                    <div className="p-4 flex-1 flex flex-col justify-between space-y-3">
-                      <div className="space-y-1">
-                        <h3 className="font-extrabold text-xs uppercase tracking-wide text-[#2A2621] group-hover:text-[#FD5C05] transition-colors leading-tight line-clamp-1">
-                          {evt.title}
-                        </h3>
-                        <p className="text-[11px] text-[#5A554E] leading-relaxed line-clamp-2 font-medium">
-                          {evt.description}
-                        </p>
-                      </div>
-                      <div className="pt-2 border-t border-black/[0.04] flex items-center justify-between text-[9px] text-[#5A554E] font-semibold">
-                        <span className="flex items-center gap-1 truncate max-w-[50%]"><Users className="h-3 w-3" /> {evt.organizer}</span>
-                        <span className="flex items-center gap-1 shrink-0"><Calendar className="h-3 w-3" /> {evt.date}</span>
-                      </div>
-                    </div>
-                  </Link>
-                ))}
-                {sportsEvents.promos.map(promo => (
-                  <div
-                    key={promo.id}
-                    className="w-72 shrink-0 bg-white border border-black/[0.04] rounded-3xl p-4 shadow-sm hover:border-[#FD5C05]/30 hover:scale-[1.01] transition-all flex flex-col justify-between h-40 relative group"
-                  >
-                    <span className="absolute top-4 right-4 text-[8px] font-black uppercase tracking-wider bg-black/60 backdrop-blur-[2px] text-white px-2 py-0.5 rounded">
-                      Sports
-                    </span>
-                    <div className="space-y-1">
-                      <h3 className="font-extrabold text-xs uppercase tracking-wide text-[#2A2621] leading-tight line-clamp-1">
-                        {promo.title}
-                      </h3>
-                      <p className="text-[11px] text-[#5A554E] leading-normal line-clamp-2 font-semibold">
-                        {promo.description}
-                      </p>
-                    </div>
-                    <div className="pt-2 border-t border-black/[0.04] flex items-center justify-between text-[9px] text-[#5A554E] font-semibold">
-                      <span className="truncate max-w-[50%]">By {promo.organizer}</span>
-                      <span className="bg-[#EAE4CF]/40 text-[#2A2621] px-2 py-0.5 rounded text-[8px] font-bold">{promo.contactInfo}</span>
-                    </div>
-                  </div>
-                ))}
+            <div className="space-y-2">
+              {renderSectionHeader('Sports & Athletics', 'Sports', <Trophy className="h-5 w-5" />, false)}
+              <div className="flex gap-4 overflow-x-auto pb-3 pt-1 scrollbar-none select-none scroll-smooth">
+                {sportsEvents.events.map(evt => renderEventCard(evt))}
+                {sportsEvents.promos.map(promo => renderPromotionCard(promo))}
                 {sportsEvents.events.length === 0 && sportsEvents.promos.length === 0 && (
                   <p className="text-xs text-[#5A554E] italic pl-2">No sports listings scheduled.</p>
                 )}
@@ -508,63 +430,11 @@ export default function ExplorePage() {
             </div>
 
             {/* 7. Music & Entertainment */}
-            <div className="space-y-3.5">
-              {renderSectionHeader('Music & Entertainment', 'Music & Entertainment', <Music className="h-5 w-5 text-[#FD5C05]" />)}
-              <div className="flex gap-4 overflow-x-auto pb-4 pt-1 scrollbar-none select-none scroll-smooth">
-                {entertainmentEvents.events.map(evt => (
-                  <Link
-                    key={evt.id}
-                    href={`/events/${evt.id}`}
-                    className="w-72 sm:w-80 shrink-0 bg-white border border-black/[0.04] rounded-3xl overflow-hidden shadow-sm hover:border-[#FD5C05]/30 hover:scale-[1.01] transition-all flex flex-col relative group"
-                  >
-                    <div className="h-40 w-full bg-[#FD5C05]/10 shrink-0 relative">
-                      {evt.coverImage.includes('from-') ? (
-                        <div className={`w-full h-full bg-gradient-to-br ${evt.coverImage}`} />
-                      ) : (
-                        <img src={evt.coverImage} className="w-full h-full object-cover" alt="" />
-                      )}
-                      <span className="absolute top-3 right-3 text-[8px] font-black uppercase tracking-wider bg-black/60 backdrop-blur-[2px] text-white px-2 py-0.5 rounded">
-                        Event
-                      </span>
-                    </div>
-                    <div className="p-4 flex-1 flex flex-col justify-between space-y-3">
-                      <div className="space-y-1">
-                        <h3 className="font-extrabold text-xs uppercase tracking-wide text-[#2A2621] group-hover:text-[#FD5C05] transition-colors leading-tight line-clamp-1">
-                          {evt.title}
-                        </h3>
-                        <p className="text-[11px] text-[#5A554E] leading-relaxed line-clamp-2 font-medium">
-                          {evt.description}
-                        </p>
-                      </div>
-                      <div className="pt-2 border-t border-black/[0.04] flex items-center justify-between text-[9px] text-[#5A554E] font-semibold">
-                        <span className="flex items-center gap-1 truncate max-w-[50%]"><Users className="h-3 w-3" /> {evt.organizer}</span>
-                        <span className="flex items-center gap-1 shrink-0"><Calendar className="h-3 w-3" /> {evt.date}</span>
-                      </div>
-                    </div>
-                  </Link>
-                ))}
-                {entertainmentEvents.promos.map(promo => (
-                  <div
-                    key={promo.id}
-                    className="w-72 shrink-0 bg-white border border-black/[0.04] rounded-3xl p-4 shadow-sm hover:border-[#FD5C05]/30 hover:scale-[1.01] transition-all flex flex-col justify-between h-40 relative group"
-                  >
-                    <span className="absolute top-4 right-4 text-[8px] font-black uppercase tracking-wider bg-black/60 backdrop-blur-[2px] text-white px-2 py-0.5 rounded">
-                      Promo
-                    </span>
-                    <div className="space-y-1">
-                      <h3 className="font-extrabold text-xs uppercase tracking-wide text-[#2A2621] leading-tight line-clamp-1">
-                        {promo.title}
-                      </h3>
-                      <p className="text-[11px] text-[#5A554E] leading-normal line-clamp-2 font-semibold">
-                        {promo.description}
-                      </p>
-                    </div>
-                    <div className="pt-2 border-t border-black/[0.04] flex items-center justify-between text-[9px] text-[#5A554E] font-semibold">
-                      <span className="truncate max-w-[50%]">By {promo.organizer}</span>
-                      <span className="bg-[#EAE4CF]/40 text-[#2A2621] px-2 py-0.5 rounded text-[8px] font-bold">{promo.contactInfo}</span>
-                    </div>
-                  </div>
-                ))}
+            <div className="space-y-2">
+              {renderSectionHeader('Music & Entertainment', 'Music & Entertainment', <Music className="h-5 w-5" />, false)}
+              <div className="flex gap-4 overflow-x-auto pb-3 pt-1 scrollbar-none select-none scroll-smooth">
+                {entertainmentEvents.events.map(evt => renderEventCard(evt))}
+                {entertainmentEvents.promos.map(promo => renderPromotionCard(promo))}
                 {entertainmentEvents.events.length === 0 && entertainmentEvents.promos.length === 0 && (
                   <p className="text-xs text-[#5A554E] italic pl-2">No entertainment events listed.</p>
                 )}
@@ -572,32 +442,11 @@ export default function ExplorePage() {
             </div>
 
             {/* 8. Food & Deals */}
-            <div className="space-y-3.5">
-              {renderSectionHeader('Food & Campus Deals', 'Food & Deals', <Utensils className="h-5 w-5 text-[#FD5C05]" />)}
+            <div className="space-y-2">
+              {renderSectionHeader('Food & Campus Deals', 'Food & Deals', <Utensils className="h-5 w-5" />, true)}
               {foodDeals.length > 0 ? (
-                <div className="flex gap-4 overflow-x-auto pb-4 pt-1 scrollbar-none select-none scroll-smooth">
-                  {foodDeals.map(promo => (
-                    <div
-                      key={promo.id}
-                      className="w-72 shrink-0 bg-white border border-black/[0.04] rounded-3xl p-4 shadow-sm hover:border-[#FD5C05]/30 hover:scale-[1.01] transition-all flex flex-col justify-between h-40 relative group"
-                    >
-                      <span className="absolute top-4 right-4 text-[8px] font-black uppercase tracking-wider bg-[#FD5C05]/10 text-[#FD5C05] px-2.5 py-0.5 rounded">
-                        {promo.category}
-                      </span>
-                      <div className="space-y-1">
-                        <h3 className="font-extrabold text-xs uppercase tracking-wide text-[#2A2621] leading-tight line-clamp-1">
-                          {promo.title}
-                        </h3>
-                        <p className="text-[11px] text-[#5A554E] leading-normal line-clamp-2 font-semibold">
-                          {promo.description}
-                        </p>
-                      </div>
-                      <div className="pt-2 border-t border-black/[0.04] flex items-center justify-between text-[9px] text-[#5A554E] font-semibold">
-                        <span className="truncate max-w-[50%]">By {promo.organizer}</span>
-                        <span className="bg-[#EAE4CF]/40 text-[#2A2621] px-2 py-0.5 rounded text-[8px] font-bold">{promo.contactInfo}</span>
-                      </div>
-                    </div>
-                  ))}
+                <div className="flex gap-4 overflow-x-auto pb-3 pt-1 scrollbar-none select-none scroll-smooth">
+                  {foodDeals.map(promo => renderPromotionCard(promo))}
                 </div>
               ) : (
                 <p className="text-xs text-[#5A554E] italic pl-2">No active food sales or campus deals found.</p>
@@ -605,63 +454,11 @@ export default function ExplorePage() {
             </div>
 
             {/* 9. Academic & Workshops */}
-            <div className="space-y-3.5">
-              {renderSectionHeader('Academic & Workshops', 'Academic & Workshops', <BookOpen className="h-5 w-5 text-[#FD5C05]" />)}
-              <div className="flex gap-4 overflow-x-auto pb-4 pt-1 scrollbar-none select-none scroll-smooth">
-                {academicsWorkshops.events.map(evt => (
-                  <Link
-                    key={evt.id}
-                    href={`/events/${evt.id}`}
-                    className="w-72 sm:w-80 shrink-0 bg-white border border-black/[0.04] rounded-3xl overflow-hidden shadow-sm hover:border-[#FD5C05]/30 hover:scale-[1.01] transition-all flex flex-col relative group"
-                  >
-                    <div className="h-40 w-full bg-[#FD5C05]/10 shrink-0 relative">
-                      {evt.coverImage.includes('from-') ? (
-                        <div className={`w-full h-full bg-gradient-to-br ${evt.coverImage}`} />
-                      ) : (
-                        <img src={evt.coverImage} className="w-full h-full object-cover" alt="" />
-                      )}
-                      <span className="absolute top-3 right-3 text-[8px] font-black uppercase tracking-wider bg-black/60 backdrop-blur-[2px] text-white px-2 py-0.5 rounded">
-                        Event
-                      </span>
-                    </div>
-                    <div className="p-4 flex-1 flex flex-col justify-between space-y-3">
-                      <div className="space-y-1">
-                        <h3 className="font-extrabold text-xs uppercase tracking-wide text-[#2A2621] group-hover:text-[#FD5C05] transition-colors leading-tight line-clamp-1">
-                          {evt.title}
-                        </h3>
-                        <p className="text-[11px] text-[#5A554E] leading-relaxed line-clamp-2 font-medium">
-                          {evt.description}
-                        </p>
-                      </div>
-                      <div className="pt-2 border-t border-black/[0.04] flex items-center justify-between text-[9px] text-[#5A554E] font-semibold">
-                        <span className="flex items-center gap-1 truncate max-w-[50%]"><Users className="h-3 w-3" /> {evt.organizer}</span>
-                        <span className="flex items-center gap-1 shrink-0"><Calendar className="h-3 w-3" /> {evt.date}</span>
-                      </div>
-                    </div>
-                  </Link>
-                ))}
-                {academicsWorkshops.promos.map(promo => (
-                  <div
-                    key={promo.id}
-                    className="w-72 shrink-0 bg-white border border-black/[0.04] rounded-3xl p-4 shadow-sm hover:border-[#FD5C05]/30 hover:scale-[1.01] transition-all flex flex-col justify-between h-40 relative group"
-                  >
-                    <span className="absolute top-4 right-4 text-[8px] font-black uppercase tracking-wider bg-[#FD5C05]/10 text-[#FD5C05] px-2.5 py-0.5 rounded">
-                      {promo.category}
-                    </span>
-                    <div className="space-y-1">
-                      <h3 className="font-extrabold text-xs uppercase tracking-wide text-[#2A2621] leading-tight line-clamp-1">
-                        {promo.title}
-                      </h3>
-                      <p className="text-[11px] text-[#5A554E] leading-normal line-clamp-2 font-semibold">
-                        {promo.description}
-                      </p>
-                    </div>
-                    <div className="pt-2 border-t border-black/[0.04] flex items-center justify-between text-[9px] text-[#5A554E] font-semibold">
-                      <span className="truncate max-w-[50%]">By {promo.organizer}</span>
-                      <span className="bg-[#EAE4CF]/40 text-[#2A2621] px-2 py-0.5 rounded text-[8px] font-bold">{promo.contactInfo}</span>
-                    </div>
-                  </div>
-                ))}
+            <div className="space-y-2">
+              {renderSectionHeader('Academic & Workshops', 'Academic & Workshops', <BookOpen className="h-5 w-5" />, false)}
+              <div className="flex gap-4 overflow-x-auto pb-3 pt-1 scrollbar-none select-none scroll-smooth">
+                {academicsWorkshops.events.map(evt => renderEventCard(evt))}
+                {academicsWorkshops.promos.map(promo => renderPromotionCard(promo))}
                 {academicsWorkshops.events.length === 0 && academicsWorkshops.promos.length === 0 && (
                   <p className="text-xs text-[#5A554E] italic pl-2">No workshops scheduled.</p>
                 )}
@@ -669,37 +466,47 @@ export default function ExplorePage() {
             </div>
 
             {/* 10. Student Businesses & Services */}
-            <div className="space-y-3.5">
-              {renderSectionHeader('Student Businesses & Services', 'Student Businesses & Services', <Sparkles className="h-5 w-5 text-[#FD5C05]" />)}
+            <div className="space-y-2">
+              {renderSectionHeader('Student Businesses & Services', 'Student Businesses & Services', <Sparkles className="h-5 w-5" />, true)}
               {studentBusinesses.length > 0 ? (
-                <div className="flex gap-4 overflow-x-auto pb-4 pt-1 scrollbar-none select-none scroll-smooth">
-                  {studentBusinesses.map(promo => (
-                    <div
-                      key={promo.id}
-                      className="w-72 shrink-0 bg-white border border-black/[0.04] rounded-3xl p-4 shadow-sm hover:border-[#FD5C05]/30 hover:scale-[1.01] transition-all flex flex-col justify-between h-40 relative group"
-                    >
-                      <span className="absolute top-4 right-4 text-[8px] font-black uppercase tracking-wider bg-[#FD5C05]/10 text-[#FD5C05] px-2.5 py-0.5 rounded">
-                        {promo.category}
-                      </span>
-                      <div className="space-y-1">
-                        <span className="text-[#FD5C05] text-[8px] font-black uppercase tracking-widest block">Entrepreneur</span>
-                        <h3 className="font-extrabold text-xs uppercase tracking-wide text-[#2A2621] leading-tight line-clamp-1">
-                          {promo.title}
-                        </h3>
-                        <p className="text-[11px] text-[#5A554E] leading-normal line-clamp-2 font-semibold">
-                          {promo.description}
-                        </p>
-                      </div>
-                      <div className="pt-2 border-t border-black/[0.04] flex items-center justify-between text-[9px] text-[#5A554E] font-semibold">
-                        <span className="truncate max-w-[50%]">By {promo.organizer}</span>
-                        <span className="bg-[#EAE4CF]/40 text-[#2A2621] px-2 py-0.5 rounded text-[8px] font-bold">{promo.contactInfo}</span>
-                      </div>
-                    </div>
-                  ))}
+                <div className="flex gap-4 overflow-x-auto pb-3 pt-1 scrollbar-none select-none scroll-smooth">
+                  {studentBusinesses.map(promo => renderPromotionCard(promo, 'Entrepreneur'))}
                 </div>
               ) : (
                 <p className="text-xs text-[#5A554E] italic pl-2">No student businesses listed yet.</p>
               )}
+            </div>
+          </motion.div>
+        ) : !searchQuery.trim() ? (
+          /* ── Dedicated Trending Searches View ── */
+          <motion.div
+            key="trending-searches"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.2 }}
+            className="space-y-4 pt-1 text-left"
+          >
+            <h3 className="text-[10px] font-black uppercase text-[#5A554E] tracking-widest pl-1">
+              Trending Searches
+            </h3>
+            <div className="flex flex-col bg-white border border-black/[0.04] rounded-2xl overflow-hidden shadow-sm">
+              {trendingSearches.map((term, index) => (
+                <button
+                  key={term}
+                  onClick={() => {
+                    setSearchQuery(term);
+                  }}
+                  className={`flex items-center gap-2.5 px-4 py-3.5 text-left transition-colors cursor-pointer group hover:bg-[#FD5C05]/5 ${
+                    index !== trendingSearches.length - 1 ? 'border-b border-black/[0.03]' : ''
+                  }`}
+                >
+                  <TrendingUp className="h-3.5 w-3.5 text-[#FD5C05]" />
+                  <span className="text-xs font-bold uppercase tracking-wider text-[#2A2621] group-hover:text-[#FD5C05] transition-colors">
+                    {term}
+                  </span>
+                </button>
+              ))}
             </div>
           </motion.div>
         ) : (
@@ -723,7 +530,7 @@ export default function ExplorePage() {
                 <button
                   key={segment.id}
                   onClick={() => setSearchTab(segment.id)}
-                  className={`flex-1 py-2 rounded-xl text-[10px] sm:text-xs font-black uppercase tracking-wider transition-all cursor-pointer ${
+                  className={`flex-1 py-2 rounded-xl text-[9px] font-black uppercase tracking-wider transition-all cursor-pointer ${
                     searchTab === segment.id
                       ? 'bg-[#2A2621] text-white shadow-sm'
                       : 'text-[#5A554E] hover:text-[#2A2621]'
@@ -740,43 +547,9 @@ export default function ExplorePage() {
               {(searchTab === 'all' || searchTab === 'events') && (
                 searchResults.events.length > 0 ? (
                   <div className="space-y-3">
-                    <h3 className="text-sm font-black uppercase text-[#2A2621] tracking-wider pl-1">Events</h3>
-                    <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                      {searchResults.events.map(evt => (
-                        <Link
-                          key={evt.id}
-                          href={`/events/${evt.id}`}
-                          className="bg-white border border-black/[0.04] rounded-3xl overflow-hidden shadow-sm hover:border-[#FD5C05]/30 hover:scale-[1.01] transition-all flex flex-col h-full relative group"
-                        >
-                          <div className="h-44 w-full bg-[#FD5C05]/10 shrink-0 relative">
-                            {evt.coverImage.includes('from-') ? (
-                              <div className={`w-full h-full bg-gradient-to-br ${evt.coverImage}`} />
-                            ) : (
-                              <img src={evt.coverImage} className="w-full h-full object-cover" alt="" />
-                            )}
-                            <span className="absolute top-3 right-3 text-[8px] font-black uppercase tracking-wider bg-black/60 backdrop-blur-[2px] text-white px-2 py-0.5 rounded">
-                              {evt.category}
-                            </span>
-                          </div>
-                          <div className="p-5 flex-1 flex flex-col justify-between space-y-4">
-                            <div className="space-y-1.5">
-                              <div className="flex items-center gap-1 text-[#FD5C05] text-[9px] font-black uppercase tracking-widest">
-                                {evt.ownershipType === 'school' ? 'Official Event' : 'Student Event'}
-                              </div>
-                              <h3 className="font-extrabold text-sm text-[#2A2621] uppercase tracking-wide leading-tight line-clamp-2 group-hover:text-[#FD5C05] transition-colors">
-                                {evt.title}
-                              </h3>
-                              <p className="text-xs text-[#5A554E] leading-relaxed line-clamp-3 font-medium">
-                                {evt.description}
-                              </p>
-                            </div>
-                            <div className="space-y-2 pt-3 border-t border-black/[0.04] text-[10px] text-[#5A554E] font-semibold">
-                              <p className="flex items-center gap-1.5"><Calendar className="h-3.5 w-3.5" /> {evt.date} • {evt.time}</p>
-                              <p className="flex items-center gap-1.5"><MapPin className="h-3.5 w-3.5 text-[#FD5C05]" /> {evt.location}</p>
-                            </div>
-                          </div>
-                        </Link>
-                      ))}
+                    <h3 className="text-xs font-black uppercase text-[#2A2621] tracking-wider pl-1">Events</h3>
+                    <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                      {searchResults.events.map(evt => renderEventCard(evt, true))}
                     </div>
                   </div>
                 ) : searchTab === 'events' && (
@@ -790,35 +563,9 @@ export default function ExplorePage() {
               {(searchTab === 'all' || searchTab === 'orgs') && (
                 searchResults.orgs.length > 0 ? (
                   <div className="space-y-3">
-                    <h3 className="text-sm font-black uppercase text-[#2A2621] tracking-wider pl-1">Organizations</h3>
+                    <h3 className="text-xs font-black uppercase text-[#2A2621] tracking-wider pl-1">Organizations</h3>
                     <div className="grid gap-4 sm:grid-cols-2">
-                      {searchResults.orgs.map(org => (
-                        <div
-                          key={org.id}
-                          onClick={() => router.push(`/student/organizations/${org.id}`)}
-                          className="bg-white rounded-3xl p-5 flex items-center justify-between border border-black/[0.04] shadow-sm hover:border-[#FD5C05]/30 hover:scale-[1.01] transition-all cursor-pointer group"
-                        >
-                          <div className="flex items-center gap-4 min-w-0">
-                            <div
-                              className="h-14 w-14 rounded-2xl flex items-center justify-center font-black text-white text-md shrink-0 shadow-sm transition-transform group-hover:scale-105"
-                              style={{ backgroundColor: org.logoColor || '#2A2621' }}
-                            >
-                              {org.name.substring(0, 2).toUpperCase()}
-                            </div>
-                            <div className="min-w-0 text-left">
-                              <div className="flex items-center gap-1.5">
-                                <p className="font-black text-[#2A2621] text-sm uppercase tracking-tight group-hover:text-[#FD5C05] transition-colors truncate">
-                                  {org.name}
-                                </p>
-                                {org.verified && <span title="Verified Organization"><CheckCircle2 className="h-3.5 w-3.5 text-blue-500 fill-blue-500/10 shrink-0" /></span>}
-                              </div>
-                              <p className="text-xs text-[#5A554E] line-clamp-1 font-semibold mt-0.5">{org.description}</p>
-                              <p className="text-[9px] text-[#5A554E] font-bold uppercase tracking-wider mt-1">{org.members.length} members</p>
-                            </div>
-                          </div>
-                          <span className="text-[9px] font-black uppercase text-[#5A554E] group-hover:text-[#2A2621] transition-colors pl-2 shrink-0">View →</span>
-                        </div>
-                      ))}
+                      {searchResults.orgs.map(org => renderOrganizationCard(org, true))}
                     </div>
                   </div>
                 ) : searchTab === 'orgs' && (
@@ -832,30 +579,9 @@ export default function ExplorePage() {
               {(searchTab === 'all' || searchTab === 'promos') && (
                 searchResults.promos.length > 0 ? (
                   <div className="space-y-3">
-                    <h3 className="text-sm font-black uppercase text-[#2A2621] tracking-wider pl-1">Promotions & Services</h3>
-                    <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                      {searchResults.promos.map(promo => (
-                        <div
-                          key={promo.id}
-                          className="bg-white border border-black/[0.04] rounded-3xl p-5 shadow-sm space-y-4 flex flex-col justify-between hover:border-[#FD5C05]/30 transition-all relative text-left"
-                        >
-                          <span className="absolute top-5 right-5 text-[8px] font-black uppercase tracking-wider bg-[#FD5C05]/10 text-[#FD5C05] px-2.5 py-0.5 rounded">
-                            {promo.category}
-                          </span>
-                          
-                          <div className="space-y-2">
-                            <h4 className="font-bold text-sm text-[#2A2621] uppercase tracking-wide truncate w-[80%]">{promo.title}</h4>
-                            <p className="text-xs text-[#5A554E] leading-relaxed font-semibold">{promo.description}</p>
-                          </div>
-
-                          <div className="pt-3 border-t border-black/[0.04] text-[9px] text-[#5A554E] font-semibold flex flex-col gap-1">
-                            <div className="flex justify-between items-center">
-                              <span>Owner: {promo.organizer}</span>
-                              <span className="bg-slate-100 px-2 py-0.5 rounded text-[#2A2621]">{promo.contactInfo}</span>
-                            </div>
-                          </div>
-                        </div>
-                      ))}
+                    <h3 className="text-xs font-black uppercase text-[#2A2621] tracking-wider pl-1">Promotions & Services</h3>
+                    <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                      {searchResults.promos.map(promo => renderPromotionCard(promo, undefined, true))}
                     </div>
                   </div>
                 ) : searchTab === 'promos' && (
@@ -873,7 +599,7 @@ export default function ExplorePage() {
                 <div className="bg-white rounded-3xl p-16 border border-black/[0.04] text-center max-w-lg mx-auto">
                   <Compass className="h-12 w-12 text-[#FD5C05]/20 mx-auto mb-3" />
                   <h3 className="font-bold text-sm text-[#2A2621] uppercase">No results found</h3>
-                  <p className="text-xs text-[#5A554E] mt-1">Try check spelling or searching for another keyword.</p>
+                  <p className="text-xs text-[#5A554E] mt-1">Try checking spelling or searching for another keyword.</p>
                 </div>
               )}
             </div>
@@ -884,3 +610,4 @@ export default function ExplorePage() {
     </div>
   );
 }
+

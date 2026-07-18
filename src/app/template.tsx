@@ -10,6 +10,12 @@ export default function Template({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
+      const urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.get('preview') === 'true') {
+        setShowSplash(false);
+        return;
+      }
+
       const initialSplashDone = sessionStorage.getItem('evida_initial_splash_done');
       const forceRedirectSplash = sessionStorage.getItem('evida_force_redirect_splash');
 

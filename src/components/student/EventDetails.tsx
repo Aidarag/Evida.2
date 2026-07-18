@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { X, Calendar, MapPin, Users, Heart, Star, CheckCircle, Info, Shield, HelpCircle, Share2 } from 'lucide-react';
+import { X, Calendar, MapPin, Users, Bookmark, Star, CheckCircle, Info, Shield, HelpCircle, Share2 } from 'lucide-react';
 import { Event, User } from '@/lib/types';
 import { useEvents } from '@/lib/context/EventContext';
 import VerifiedBadge from '@/components/ui/VerifiedBadge';
@@ -170,14 +170,14 @@ export default function EventDetails({
           <div className="flex items-center gap-3 pt-4 border-t border-[#D8D2BC]/30">
             <button
               onClick={() => onSaveToggle(event.id)}
-              className={`flex items-center justify-center gap-1.5 rounded-full px-5 py-3 text-xs font-bold transition-all hover:scale-[1.01] cursor-pointer ${
-                isSaved
-                  ? 'bg-rose-500/10 text-rose-600 border border-rose-500/25'
-                  : 'bg-white border border-black/10 text-[#2A2621] hover:bg-slate-50'
-              }`}
+              className="p-3 text-[#5A554E] hover:text-[#FD5C05] transition-all duration-150 cursor-pointer focus:outline-none shrink-0"
+              title={isSaved ? "Unsave Event" : "Save Event"}
             >
-              <Heart className={`h-4 w-4 ${isSaved ? 'fill-rose-600 text-rose-600' : ''}`} />
-              Bookmark
+              <Bookmark 
+                className={`h-6 w-6 transition-all duration-150 ease-in-out ${
+                  isSaved ? 'fill-[#FD5C05] text-[#FD5C05]' : 'text-[#5A554E]'
+                }`} 
+              />
             </button>
 
             <button

@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { MapPin, Calendar, Heart } from 'lucide-react';
+import { MapPin, Calendar, Bookmark } from 'lucide-react';
 import { Event, Promotion } from '@/lib/types';
 import { motion } from 'framer-motion';
 import { useEvents } from '@/lib/context/EventContext';
@@ -87,7 +87,7 @@ export default function EventCard({ event, onClick, onSave, isSaved = false }: E
         </div>
       </div>
 
-      {/* 2. Interactive Save (Heart) Button - Floating top right */}
+      {/* 2. Interactive Save (Bookmark) Button - Floating top right */}
       <button 
         type="button"
         onClick={(e) => {
@@ -98,11 +98,14 @@ export default function EventCard({ event, onClick, onSave, isSaved = false }: E
             setIsSavedLocal(!isSavedLocal);
           }
         }}
-        className="absolute top-4 right-4 z-20 h-8 w-8 rounded-full bg-white/85 backdrop-blur-md border border-black/[0.05] flex items-center justify-center text-[#5A554E] hover:text-[#EE3D5A] hover:scale-110 active:scale-95 transition-all shadow-sm cursor-pointer"
+        className="absolute top-4 right-4 z-20 cursor-pointer focus:outline-none p-1 group"
+        title={activeSaved ? "Unsave Event" : "Save Event"}
       >
-        <Heart 
-          className={`h-4 w-4 transition-colors ${
-            activeSaved ? 'fill-[#EE3D5A] text-[#EE3D5A]' : 'text-[#5A554E]'
+        <Bookmark 
+          className={`h-5 w-5 transition-all duration-150 ease-in-out ${
+            activeSaved 
+              ? 'fill-[#FD5C05] text-[#FD5C05]' 
+              : 'text-white hover:text-[#FD5C05]/90 drop-shadow-[0_1px_2px_rgba(0,0,0,0.5)]'
           }`} 
         />
       </button>

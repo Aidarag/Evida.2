@@ -8,7 +8,6 @@ import {
   Calendar,
   Bell,
   MapPin,
-  Heart,
   Clock,
   Compass,
   Trophy,
@@ -413,11 +412,31 @@ export default function StudentDashboardPage() {
                       </div>
 
                       {/* Right Badge: Cost */}
-                      <div className="absolute top-4 right-4 z-10">
+                      <div className="absolute top-4 right-12 z-10">
                         <span className="rounded-full bg-[#FD5C05] text-[#2A2621] px-2.5 py-1 text-[8px] font-extrabold uppercase shadow-sm">
                           {isPromo ? 'STUDENT SERVICE' : (event?.free ? 'FREE' : 'TICKETED')}
                         </span>
                       </div>
+
+                      {/* Bookmark Button */}
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          e.preventDefault();
+                          saveToggle(item.id);
+                        }}
+                        className="absolute top-3.5 right-3.5 z-20 cursor-pointer focus:outline-none p-1 group"
+                        title={isSaved ? "Unsave Event" : "Save Event"}
+                      >
+                        <Bookmark 
+                          className={`h-5 w-5 transition-all duration-150 ease-in-out ${
+                            isSaved 
+                              ? 'fill-[#FD5C05] text-[#FD5C05]' 
+                              : 'text-white hover:text-[#FD5C05]/90 drop-shadow-[0_1px_2px_rgba(0,0,0,0.5)]'
+                          }`} 
+                        />
+                      </button>
 
                       {/* Bottom Overlay: Title preview */}
                       <div className="absolute bottom-4 left-4 right-4 z-10">
@@ -524,18 +543,6 @@ export default function StudentDashboardPage() {
                             </Link>
                           )
                         )}
-
-                        {/* Save (Heart) button */}
-                        <button
-                          onClick={() => saveToggle(item.id)}
-                          className={`h-9 w-9 rounded-xl border flex items-center justify-center transition-all cursor-pointer ${isSaved
-                            ? 'bg-white border-[#EE3D5A]/25 text-[#EE3D5A] shadow-sm'
-                            : 'bg-white border-black/10 text-[#5A554E] hover:text-[#EE3D5A]'
-                            }`}
-                          title={isSaved ? "Saved" : "Save Item"}
-                        >
-                          <Heart className={`h-4.5 w-4.5 ${isSaved ? 'fill-[#EE3D5A] text-[#EE3D5A]' : ''}`} />
-                        </button>
                       </div>
                     </div>
                   </motion.div>

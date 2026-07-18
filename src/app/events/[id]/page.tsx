@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import { useEvents } from '@/lib/context/EventContext';
 import { useUser } from '@/lib/context/UserContext';
 import { useParams, useRouter } from 'next/navigation';
-import { Calendar, MapPin, Users, Heart, ArrowLeft, Share2, Compass, X } from 'lucide-react';
+import { Calendar, MapPin, Users, Heart, ArrowLeft, Share2, Compass, X, Bookmark } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Button from '@/components/ui/Button';
 import Badge from '@/components/ui/Badge';
@@ -90,9 +90,16 @@ export default function EventDetailsPage() {
             {currentUser && (
               <button 
                 onClick={() => saveToggle(event.id)}
-                className="h-10 w-10 rounded-full bg-black/40 backdrop-blur-md flex items-center justify-center hover:bg-[#FFFDE1]/20 transition-colors cursor-pointer"
+                className="cursor-pointer focus:outline-none p-2 group transition-all duration-150"
+                title={isSaved ? "Unsave Event" : "Save Event"}
               >
-                <Heart className={`h-5 w-5 ${isSaved ? 'fill-[#EE3D5A] text-[#EE3D5A]' : 'text-white'}`} />
+                <Bookmark 
+                  className={`h-6 w-6 transition-all duration-150 ease-in-out ${
+                    isSaved 
+                      ? 'fill-[#FD5C05] text-[#FD5C05]' 
+                      : 'text-white hover:text-[#FD5C05]/90 drop-shadow-[0_1px_2px_rgba(0,0,0,0.5)]'
+                  }`} 
+                />
               </button>
             )}
           </div>

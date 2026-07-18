@@ -3,7 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Home, Compass, Plus, Bookmark, User, Settings, BarChart3, Shield, Star, ClipboardList, Building2, Menu, X, Calendar, ChevronDown, ArrowRight, Bell, Check } from 'lucide-react';
+import { Home, Compass, Plus, User, Settings, BarChart3, Shield, Star, ClipboardList, Building2, Menu, X, Calendar, ChevronDown, ChevronLeft, ChevronRight, Bell } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useUser } from '@/lib/context/UserContext';
 import { useEvents } from '@/lib/context/EventContext';
@@ -13,8 +13,17 @@ import EvidaLogo from '@/components/ui/EvidaLogo';
 // ─────────────────────────────────────────────────
 // Desktop Top Bar (Light mode)
 // ─────────────────────────────────────────────────
-export function DesktopNav({ variant = 'student' }: { variant?: 'student' | 'school' | 'public' }) {
-  const pathname = usePathname();
+export function DesktopNav({ 
+  variant = 'student',
+  isSidebarHidden = false,
+  onShowSidebar,
+  onOpenDrawer
+}: { 
+  variant?: 'student' | 'school' | 'public';
+  isSidebarHidden?: boolean;
+  onShowSidebar?: () => void;
+  onOpenDrawer?: () => void;
+}) {
   const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
   const [scrolled, setScrolled] = React.useState(false);
 
@@ -47,7 +56,32 @@ export function DesktopNav({ variant = 'student' }: { variant?: 'student' | 'sch
       } ${variant !== 'public' ? 'hidden md:flex' : ''}`}>
         <div className="w-full px-5 md:px-8 flex items-center justify-between">
           {/* Left side: Logo & Links */}
-          <div className="flex items-center gap-10">
+          <div className="flex items-center gap-4 lg:gap-10">
+            {/* Sidebar toggle buttons */}
+            {variant !== 'public' && (
+              <div className="flex items-center gap-2">
+                {/* iPad drawer trigger: visible only on md:max-lg */}
+                <button
+                  onClick={onOpenDrawer}
+                  className="md:max-lg:flex hidden p-2 rounded-xl text-[#5A554E] hover:bg-black/5 hover:text-[#FD5C05] transition-all cursor-pointer border border-black/[0.04] bg-white/70"
+                  title="Open Menu"
+                >
+                  <Menu className="h-4.5 w-4.5" />
+                </button>
+
+                {/* Laptop sidebar trigger: visible on lg and up only when sidebar is hidden */}
+                {isSidebarHidden && (
+                  <button
+                    onClick={onShowSidebar}
+                    className="lg:flex hidden p-2 rounded-xl text-[#5A554E] hover:bg-black/5 hover:text-[#FD5C05] transition-all cursor-pointer border border-black/[0.04] bg-white/70"
+                    title="Expand Sidebar"
+                  >
+                    <Menu className="h-4.5 w-4.5" />
+                  </button>
+                )}
+              </div>
+            )}
+
             {/* Logo */}
             <Link href="/" className="flex items-center gap-2 group">
               <EvidaLogo size={28} lightMode={true} />
@@ -240,7 +274,15 @@ export function MobileBottomNav({ variant = 'student' }: { variant?: 'student' |
 // ─────────────────────────────────────────────────
 // Desktop Sidebar Navigation
 // ─────────────────────────────────────────────────
-export function DesktopSidebar({ variant = 'student' }: { variant?: 'student' | 'school' }) {
+export function DesktopSidebar({ 
+  variant = 'student',
+  state = 'expanded',
+  onChangeState
+}: { 
+  variant?: 'student' | 'school';
+  state?: 'expanded' | 'collapsed' | 'hidden';
+  onChangeState?: (state: 'expanded' | 'collapsed' | 'hidden') => void;
+}) {
   const pathname = usePathname();
 
   const studentLinks = [
@@ -263,48 +305,230 @@ export function DesktopSidebar({ variant = 'student' }: { variant?: 'student' | 
   const activeColorClass = 'bg-[#FD5C05] text-[#2A2621] border-[#FD5C05]/30 font-extrabold shadow-sm';
   const hoverColorClass = 'hover:text-[#2A2621] hover:bg-[#FD5C05]/10';
 
-  return (
-    <aside className="hidden md:flex w-64 bg-[#D8D2BC] border-r border-black/[0.04] flex-col justify-between p-6 sticky top-16 h-[calc(100vh-64px)] shrink-0">
-      <nav className="space-y-1">
-        {links.map((link) => {
-          const isActive = pathname === link.href;
-          const Icon = link.icon;
+  if (state === 'hidden') return null;
 
-          return (
-            <Link
-              key={link.href}
-              href={link.href}
-              className={`
-                flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium transition-all cursor-pointer border
-                ${isActive
-                  ? `${activeColorClass}`
-                  : `text-[#5A554E] ${hoverColorClass} border-transparent`
-                }
-              `}
-            >
-              <Icon className="h-5 w-5 shrink-0" />
-              {link.label}
-            </Link>
-          );
-        })}
-      </nav>
+  return (
+    <aside className={`
+      hidden lg:flex flex-col justify-between p-6 bg-[#D8D2BC] border-r border-black/[0.04] sticky top-16 h-[calc(100vh-64px)] shrink-0 transition-all duration-300
+      ${state === 'expanded' ? 'w-64' : 'w-20 px-3'}
+    `}>
+      <div className="space-y-4">
+        {/* Sidebar Controls */}
+        {onChangeState && (
+          <div className={`flex items-center pb-4 mb-4 border-b border-black/[0.04] ${
+            state === 'collapsed' ? 'flex-col gap-3 justify-center' : 'justify-between'
+          }`}>
+            {state === 'expanded' && (
+              <span className="text-xs font-black uppercase tracking-widest text-[#2A2621]">
+                Menu
+              </span>
+            )}
+            <div className="flex items-center gap-1.5">
+              {/* Collapse/Expand Toggle */}
+              <button
+                onClick={() => onChangeState(state === 'expanded' ? 'collapsed' : 'expanded')}
+                className="p-1.5 rounded-lg hover:bg-black/5 text-[#5A554E] hover:text-[#FD5C05] transition-all cursor-pointer"
+                title={state === 'expanded' ? 'Collapse Sidebar' : 'Expand Sidebar'}
+              >
+                {state === 'expanded' ? (
+                  <ChevronLeft className="h-4 w-4" />
+                ) : (
+                  <ChevronRight className="h-4 w-4" />
+                )}
+              </button>
+              
+              {/* Hide Sidebar Button */}
+              <button
+                onClick={() => onChangeState('hidden')}
+                className="p-1.5 rounded-lg hover:bg-black/5 text-[#5A554E] hover:text-[#FD5C05] transition-all cursor-pointer"
+                title="Hide Sidebar"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            </div>
+          </div>
+        )}
+
+        <nav className="space-y-1">
+          {links.map((link) => {
+            const isActive = pathname === link.href;
+            const Icon = link.icon;
+
+            return (
+              <Link
+                key={link.href}
+                href={link.href}
+                title={state === 'collapsed' ? link.label : undefined}
+                className={`
+                  flex items-center rounded-xl text-sm font-medium transition-all cursor-pointer border
+                  ${state === 'collapsed' ? 'justify-center p-2.5 w-10 h-10 mx-auto' : 'gap-3 px-4 py-2.5'}
+                  ${isActive
+                    ? `${activeColorClass}`
+                    : `text-[#5A554E] ${hoverColorClass} border-transparent`
+                  }
+                `}
+              >
+                <Icon className="h-5 w-5 shrink-0" />
+                {state !== 'collapsed' && <span>{link.label}</span>}
+              </Link>
+            );
+          })}
+        </nav>
+      </div>
 
       <div className="space-y-3">
         <div className="border-t border-black/[0.04] pt-4">
           {variant === 'student' ? (
-            <Link href="/school/dashboard" className="flex items-center gap-3 px-4 py-2.5 rounded-xl text-xs text-[#5A554E] hover:text-[#2A2621] transition-colors cursor-pointer">
-              <Shield className="h-4 w-4" />
-              School Dashboard
+            <Link 
+              href="/school/dashboard" 
+              title={state === 'collapsed' ? "School Dashboard" : undefined}
+              className={`flex items-center rounded-xl text-xs text-[#5A554E] hover:text-[#2A2621] transition-colors cursor-pointer ${
+                state === 'collapsed' ? 'justify-center p-2.5 w-10 h-10 mx-auto' : 'gap-3 px-4 py-2.5'
+              }`}
+            >
+              <Shield className="h-4 w-4 shrink-0" />
+              {state !== 'collapsed' && <span>School Dashboard</span>}
             </Link>
           ) : (
-            <Link href="/student/dashboard" className="flex items-center gap-3 px-4 py-2.5 rounded-xl text-xs text-[#5A554E] hover:text-[#2A2621] transition-colors cursor-pointer">
-              <Home className="h-4 w-4" />
-              Student Portal
+            <Link 
+              href="/student/dashboard" 
+              title={state === 'collapsed' ? "Student Portal" : undefined}
+              className={`flex items-center rounded-xl text-xs text-[#5A554E] hover:text-[#2A2621] transition-colors cursor-pointer ${
+                state === 'collapsed' ? 'justify-center p-2.5 w-10 h-10 mx-auto' : 'gap-3 px-4 py-2.5'
+              }`}
+            >
+              <Home className="h-4 w-4 shrink-0" />
+              {state !== 'collapsed' && <span>Student Portal</span>}
             </Link>
           )}
         </div>
       </div>
     </aside>
+  );
+}
+
+// ─────────────────────────────────────────────────
+// Tablet Drawer Sidebar (Slide-over Drawer for md:max-lg viewports)
+// ─────────────────────────────────────────────────
+export function TabletDrawerSidebar({ 
+  variant = 'student', 
+  isOpen, 
+  onClose 
+}: { 
+  variant?: 'student' | 'school'; 
+  isOpen: boolean; 
+  onClose: () => void; 
+}) {
+  const pathname = usePathname();
+  const studentLinks = [
+    { href: '/student/dashboard', icon: Home, label: 'Home' },
+    { href: '/student/explore', icon: Compass, label: 'Explore' },
+    { href: '/student/calendar', icon: Calendar, label: 'Calendar' },
+    { href: '/student/profile', icon: User, label: 'Profile' },
+    { href: '/student/create', icon: Plus, label: 'Create Event' },
+  ];
+
+  const schoolLinks = [
+    { href: '/school/dashboard', icon: Home, label: 'Overview' },
+    { href: '/school/review', icon: ClipboardList, label: 'Review Queue' },
+    { href: '/school/featured', icon: Star, label: 'Featured Events' },
+    { href: '/school/organizations', icon: Building2, label: 'Organizations' },
+    { href: '/school/analytics', icon: BarChart3, label: 'Analytics' },
+  ];
+
+  const links = variant === 'school' ? schoolLinks : studentLinks;
+  const activeColorClass = 'bg-[#FD5C05] text-[#2A2621] border-[#FD5C05]/30 font-extrabold shadow-sm';
+  const hoverColorClass = 'hover:text-[#2A2621] hover:bg-[#FD5C05]/10';
+
+  return (
+    <AnimatePresence>
+      {isOpen && (
+        <>
+          {/* Backdrop Overlay */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={onClose}
+            className="fixed inset-0 bg-black/40 backdrop-blur-xs z-50 lg:hidden"
+          />
+          {/* Slide-over Drawer */}
+          <motion.aside
+            initial={{ x: '-100%' }}
+            animate={{ x: 0 }}
+            exit={{ x: '-100%' }}
+            transition={{ type: 'spring', damping: 25, stiffness: 220 }}
+            className="fixed top-0 left-0 bottom-0 z-55 w-64 bg-[#D8D2BC] border-r border-black/[0.04] flex flex-col justify-between p-6 shadow-2xl lg:hidden text-left"
+          >
+            <div className="space-y-4">
+              {/* Drawer Header with Close Button */}
+              <div className="flex items-center justify-between pb-4 border-b border-black/[0.04]">
+                <span className="text-xs font-black uppercase tracking-widest text-[#2A2621]">
+                  Menu
+                </span>
+                <button
+                  onClick={onClose}
+                  className="p-1.5 rounded-lg hover:bg-black/5 text-[#5A554E] hover:text-[#FD5C05] transition-all cursor-pointer"
+                  title="Close Menu"
+                >
+                  <X className="h-4 w-4" />
+                </button>
+              </div>
+
+              {/* Links */}
+              <nav className="space-y-1">
+                {links.map((link) => {
+                  const isActive = pathname === link.href;
+                  const Icon = link.icon;
+
+                  return (
+                    <Link
+                      key={link.href}
+                      href={link.href}
+                      onClick={onClose}
+                      className={`
+                        flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium transition-all cursor-pointer border
+                        ${isActive
+                          ? `${activeColorClass}`
+                          : `text-[#5A554E] ${hoverColorClass} border-transparent`
+                        }
+                      `}
+                    >
+                      <Icon className="h-5 w-5 shrink-0" />
+                      {link.label}
+                    </Link>
+                  );
+                })}
+              </nav>
+            </div>
+
+            <div className="space-y-3">
+              <div className="border-t border-black/[0.04] pt-4">
+                {variant === 'student' ? (
+                  <Link 
+                    href="/school/dashboard" 
+                    onClick={onClose}
+                    className="flex items-center gap-3 px-4 py-2.5 rounded-xl text-xs text-[#5A554E] hover:text-[#2A2621] transition-colors cursor-pointer"
+                  >
+                    <Shield className="h-4 w-4" />
+                    School Dashboard
+                  </Link>
+                ) : (
+                  <Link 
+                    href="/student/dashboard" 
+                    onClick={onClose}
+                    className="flex items-center gap-3 px-4 py-2.5 rounded-xl text-xs text-[#5A554E] hover:text-[#2A2621] transition-colors cursor-pointer"
+                  >
+                    <Home className="h-4 w-4" />
+                    Student Portal
+                  </Link>
+                )}
+              </div>
+            </div>
+          </motion.aside>
+        </>
+      )}
+    </AnimatePresence>
   );
 }
 

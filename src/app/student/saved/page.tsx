@@ -7,7 +7,7 @@ import { useRouter } from 'next/navigation';
 import EventCard from '@/components/student/EventCard';
 import Chip from '@/components/ui/Chip';
 import EmptyState from '@/components/ui/EmptyState';
-import { Heart, CalendarCheck } from 'lucide-react';
+import { Bookmark, CalendarCheck } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 type Tab = 'saved' | 'rsvp';
@@ -55,7 +55,7 @@ export default function SavedEventsPage() {
       <div className="space-y-6">
         <div>
           <h1 className="text-3xl font-extrabold text-[#2A2621] tracking-tight">Your Events</h1>
-          <p className="text-sm text-[#5A554E] mt-1">Keep track of everything you're interested in.</p>
+          <p className="text-sm text-[#5A554E] mt-1">Keep track of everything you&apos;re interested in.</p>
         </div>
 
         {/* Tabs */}
@@ -105,9 +105,9 @@ export default function SavedEventsPage() {
         </div>
       ) : (
         <EmptyState
-          icon={activeTab === 'saved' ? <Heart className="h-8 w-8 text-[#B8BBC8]" /> : <CalendarCheck className="h-8 w-8 text-[#B8BBC8]" />}
+          icon={activeTab === 'saved' ? <Bookmark className="h-8 w-8 text-[#B8BBC8]" /> : <CalendarCheck className="h-8 w-8 text-[#B8BBC8]" />}
           title={activeTab === 'saved' ? "No saved events" : "No RSVPs yet"}
-          description={activeTab === 'saved' ? "Tap the heart icon on any event to save it for later." : "When you RSVP to an event, it will appear here."}
+          description={activeTab === 'saved' ? "Tap the bookmark icon on any event to save it for later." : "When you RSVP to an event, it will appear here."}
         />
       )}
 

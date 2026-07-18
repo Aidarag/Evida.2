@@ -30,7 +30,8 @@ import {
   Sparkles, 
   Mail,
   UserCheck,
-  Heart
+  Heart,
+  Bookmark
 } from 'lucide-react';
 import Button from '@/components/ui/Button';
 import VerifiedBadge from '@/components/ui/VerifiedBadge';
@@ -745,9 +746,30 @@ export default function StudentProfilePage() {
                               ) : (
                                 <img src={evt.coverImage} className="w-full h-full object-cover" alt="" />
                               )}
-                              <span className="absolute top-2 right-2 text-[8px] font-black uppercase tracking-wider bg-black/60 backdrop-blur-[2px] text-white px-2 py-0.5 rounded">
+                              <span className="absolute top-2 left-2 text-[8px] font-black uppercase tracking-wider bg-black/60 backdrop-blur-[2px] text-white px-2 py-0.5 rounded">
                                 {evt.category}
                               </span>
+
+                              {currentUser && (
+                                <button 
+                                  type="button"
+                                  onClick={(e) => {
+                                    e.preventDefault();
+                                    e.stopPropagation();
+                                    saveToggle(evt.id);
+                                  }}
+                                  className="absolute top-1.5 right-1.5 z-20 cursor-pointer focus:outline-none p-1 group"
+                                  title={evt.savedBy?.includes(currentUser.name) ? "Unsave Event" : "Save Event"}
+                                >
+                                  <Bookmark 
+                                    className={`h-4.5 w-4.5 transition-all duration-150 ease-in-out ${
+                                      evt.savedBy?.includes(currentUser.name) 
+                                        ? 'fill-[#FD5C05] text-[#FD5C05]' 
+                                        : 'text-white hover:text-[#FD5C05]/90 drop-shadow-[0_1px_2px_rgba(0,0,0,0.5)]'
+                                    }`} 
+                                  />
+                                </button>
+                              )}
                             </div>
                             <div className="p-4 flex-1 flex flex-col justify-between space-y-3">
                               <div>
@@ -802,7 +824,7 @@ export default function StudentProfilePage() {
                     </div>
                   ) : (
                     <div className="bg-white rounded-2xl p-8 border border-black/[0.04] text-center">
-                      <Heart className="h-10 w-10 text-[#FD5C05]/20 mx-auto mb-2" />
+                      <Bookmark className="h-10 w-10 text-[#FD5C05]/20 mx-auto mb-2" />
                       <p className="text-xs text-[#5A554E]">No saved events found.</p>
                     </div>
                   )}
