@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { 
   ArrowRight, 
   Calendar, 
@@ -26,7 +26,8 @@ import {
   Plus,
   Compass,
   Menu,
-  X
+  X,
+  MousePointer2
 } from 'lucide-react';
 import { Event } from '@/lib/types';
 import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
@@ -66,7 +67,46 @@ export default function LandingPage({
   };
   // Smartphone Showcase States
   const iframeRef = useRef<HTMLIFrameElement>(null);
-  const [activeStep, setActiveStep] = useState(0);
+  const [currentPath, setCurrentPath] = useState('/student/dashboard');
+  const [iframeScrollProgress, setIframeScrollProgress] = useState(0);
+  const [isIframeScrollBottom, setIsIframeScrollBottom] = useState(false);
+  const [interacted, setInteracted] = useState(false);
+
+  useEffect(() => {
+    const handleIframeMessage = (event: MessageEvent) => {
+      const { type, pathname, progress, isAtBottom } = event.data;
+      if (type === 'EVIDA_PREVIEW_ROUTE') {
+        setCurrentPath(pathname);
+      } else if (type === 'EVIDA_PREVIEW_SCROLL') {
+        setIframeScrollProgress(progress);
+        setIsIframeScrollBottom(isAtBottom);
+      }
+    };
+
+    window.addEventListener('message', handleIframeMessage);
+    return () => {
+      window.removeEventListener('message', handleIframeMessage);
+    };
+  }, []);
+
+  const activeStep = useMemo(() => {
+    if (currentPath === '/student/dashboard') {
+      if (iframeScrollProgress > 80) {
+        return 1; // Select Event
+      }
+      return 0; // Home Feed
+    } else if (currentPath.startsWith('/events/')) {
+      if (isIframeScrollBottom || iframeScrollProgress > 85) {
+        return 4; // Finish Tour
+      }
+      if (iframeScrollProgress > 30) {
+        return 3; // Read Info
+      }
+      return 2; // Event Details
+    }
+    return 0;
+  }, [currentPath, iframeScrollProgress, isIframeScrollBottom]);
+
   const sectionRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
     target: sectionRef,
@@ -83,9 +123,12 @@ export default function LandingPage({
   const cursorScale = useTransform(scrollYProgress, [0.42, 0.45, 0.46, 0.48], [1, 1, 0.8, 1]);
   const cursorY = useTransform(scrollYProgress, [0.42, 0.45], [80, 0]);
 
-  // Synchronize landing-page scroll progress with the preview iframe
+  // Synchronize landing-page scroll progress with the preview iframe and auto-dismiss hint
   useEffect(() => {
     return scrollYProgress.onChange((latest) => {
+      if (latest > 0.05) {
+        setInteracted(true);
+      }
       if (iframeRef.current?.contentWindow) {
         iframeRef.current.contentWindow.postMessage({
           type: 'EVIDA_PREVIEW_SCROLL_TO',
@@ -376,7 +419,34 @@ export default function LandingPage({
             </div>
 
             {/* Center: Smartphone Shell with 3D Perspective */}
-            <div style={{ perspective: 1000, transformStyle: 'preserve-3d' }}>
+            <div 
+              onClick={() => setInteracted(true)}
+              className="relative cursor-pointer"
+              style={{ perspective: 1000, transformStyle: 'preserve-3d' }}
+            >
+              {/* Subtle animated hint overlay */}
+              {!interacted && (
+                <div className="absolute inset-0 bg-black/45 backdrop-blur-[2px] rounded-[44px] z-50 flex flex-col items-center justify-center p-6 text-center transition-opacity duration-500 pointer-events-auto cursor-pointer">
+                  <motion.div 
+                    animate={{ 
+                      scale: [1, 1.15, 1],
+                      opacity: [0.7, 1, 0.7]
+                    }}
+                    transition={{
+                      duration: 1.5,
+                      repeat: Infinity,
+                      ease: "easeInOut"
+                    }}
+                    className="h-14 w-14 rounded-full bg-[#FD5C05]/20 border border-[#FD5C05] flex items-center justify-center mb-3 shadow-[0_0_15px_rgba(253,92,5,0.4)]"
+                  >
+                    <MousePointer2 className="h-6 w-6 text-[#FD5C05] rotate-90" />
+                  </motion.div>
+                  <p className="text-white text-[10px] font-black uppercase tracking-wider leading-relaxed px-4">
+                    Click inside the phone, then scroll to start the guided tour.
+                  </p>
+                </div>
+              )}
+
               <motion.div
                 style={{ 
                   scale: phoneScale, 
@@ -385,8 +455,8 @@ export default function LandingPage({
                 }}
                 className="relative max-w-[310px] w-full aspect-[9/19.5] rounded-[44px] border-[10px] border-neutral-950 shadow-2xl bg-[#D8D2BC] z-20 overflow-hidden select-none"
               >
-                {/* Pointer events are completely disabled to make it read-only */}
-                <div className="absolute inset-0 z-30 pointer-events-none" />
+                {/* Pointer events overlay dynamically blocking/allowing interaction */}
+                <div className={`absolute inset-0 z-30 ${interacted ? 'pointer-events-none' : 'pointer-events-auto'}`} />
 
                 {/* Gloss reflection overlay */}
                 <div className="absolute inset-0 bg-gradient-to-tr from-white/0 via-white/5 to-white/0 z-40 pointer-events-none" />
@@ -396,8 +466,10 @@ export default function LandingPage({
                   <div className="h-1.5 w-1.5 bg-neutral-900 rounded-full ml-auto mr-3 border border-neutral-800" />
                 </div>
 
-                {/* Internal Phone Status Bar */}
-                <div className="absolute top-1.5 inset-x-6 z-50 flex items-center justify-between text-[8px] text-white font-bold select-none px-2 pointer-events-none">
+                {/* Internal Phone Status Bar - Dynamic styling based on path */}
+                <div className={`absolute top-1.5 inset-x-6 z-50 flex items-center justify-between text-[8px] font-bold select-none px-2 pointer-events-none transition-colors duration-300 ${
+                  currentPath.startsWith('/events/') ? 'text-white' : 'text-neutral-800'
+                }`}>
                   <span>9:41</span>
                   <div className="flex items-center gap-1">
                     <Signal className="h-2 w-2" />
@@ -406,8 +478,10 @@ export default function LandingPage({
                   </div>
                 </div>
 
-                {/* Internal Phone Home Indicator */}
-                <div className="absolute bottom-1.5 left-1/2 -translate-x-1/2 w-24 h-1 bg-white/40 rounded-full z-50 pointer-events-none" />
+                {/* Internal Phone Home Indicator - Dynamic styling based on path */}
+                <div className={`absolute bottom-1.5 left-1/2 -translate-x-1/2 w-24 h-1 rounded-full z-50 pointer-events-none transition-colors duration-300 ${
+                  currentPath.startsWith('/events/') ? 'bg-white/40' : 'bg-black/20'
+                }`} />
 
                 {/* Virtual Tap Cursor Indicator */}
                 <motion.div
@@ -434,7 +508,7 @@ export default function LandingPage({
                 <iframe
                   ref={iframeRef}
                   src="/student/dashboard?preview=true"
-                  className="w-full h-full border-none select-none bg-[#D8D2BC] pointer-events-none"
+                  className="w-full h-full border-none select-none bg-[#D8D2BC]"
                   style={{
                     overflowX: 'hidden'
                   }}

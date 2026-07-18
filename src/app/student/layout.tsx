@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { DesktopNav, DesktopSidebar, TabletDrawerSidebar, MobileBottomNav, ProfileSwitcher, NotificationBell } from '@/components/Navbar';
 import EvidaLogo from '@/components/ui/EvidaLogo';
 import Link from 'next/link';
@@ -13,6 +13,24 @@ export default function StudentLayout({
 }) {
   const [sidebarState, setSidebarState] = useState<'expanded' | 'collapsed' | 'hidden'>('expanded');
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [isPreview, setIsPreview] = useState(false);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const urlParams = new URLSearchParams(window.location.search);
+      setIsPreview(urlParams.get('preview') === 'true');
+    }
+  }, []);
+
+  if (isPreview) {
+    return (
+      <div className="min-h-screen bg-[#D8D2BC] text-[#2A2621] flex flex-col font-sans w-full overflow-x-hidden">
+        <main className="flex-1 w-full max-w-full">
+          {children}
+        </main>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-[#D8D2BC] text-gray-900 flex flex-col lg:flex-row font-sans">

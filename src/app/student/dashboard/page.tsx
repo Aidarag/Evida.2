@@ -255,50 +255,43 @@ export default function StudentDashboardPage() {
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-6 md:py-10 pb-28 md:pb-12 space-y-6">
+    <div className="max-w-5xl mx-auto px-4 py-4 pb-28 md:pb-12 space-y-4">
 
-      {/* ── Header ── */}
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 border-b border-black/[0.04] pb-5">
+      {/* ── Header & Search ── */}
+      <div className="border-b border-black/[0.04] pb-4 space-y-3.5 text-left">
         <div>
-          <h1 className="font-black text-[#2A2621] tracking-tight" style={{ fontFamily: 'var(--font-display)' }}>
-            My Campus Life
+          <h1 className="font-black text-2xl md:text-3xl text-[#2A2621] tracking-tight" style={{ fontFamily: 'var(--font-display)' }}>
+            Yo {currentUser.name.split(' ')[0]}!
           </h1>
-          <p className="text-sm text-[#5A554E] font-semibold mt-2.5 leading-relaxed">
-            Yo {currentUser.name.split(' ')[0]}! Evida is your gateway to campus experiences, bridging official student organizations with student-led activities.
+          <p className="text-xs text-[#5A554E] font-semibold mt-1">
+            What's happening on campus today?
           </p>
         </div>
-        <Link 
-          href="/student/calendar" 
-          className="self-start md:self-center bg-[#2A2621] text-white hover:bg-[#FD5C05] hover:text-[#2A2621] px-5 py-2.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all flex items-center gap-2 shadow-sm shrink-0 cursor-pointer"
-        >
-          <Calendar className="h-4 w-4" />
-          Campus Calendar
-        </Link>
-      </div>
 
-      {/* ── Search Bar ── */}
-      <div className="relative max-w-5xl mx-auto">
-        <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-[#5A554E] pointer-events-none" />
-        <input
-          ref={searchInputRef}
-          type="text"
-          value={searchQuery}
-          onChange={e => setSearchQuery(e.target.value)}
-          placeholder="Search events, organizations, or services…"
-          className="w-full pl-10 pr-10 py-3 rounded-2xl bg-white border border-black/[0.06] text-sm text-[#2A2621] placeholder-[#5A554E]/60 focus:outline-none focus:border-[#FD5C05]/40 shadow-sm font-medium"
-        />
-        {searchQuery && (
-          <button
-            onClick={() => setSearchQuery('')}
-            className="absolute right-3 top-1/2 -translate-y-1/2 h-6 w-6 rounded-full bg-black/[0.06] flex items-center justify-center hover:bg-black/10 cursor-pointer"
-          >
-            <X className="h-3.5 w-3.5 text-[#5A554E]" />
-          </button>
-        )}
+        {/* Search Bar */}
+        <div className="relative max-w-xl">
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-[#5A554E] pointer-events-none" />
+          <input
+            ref={searchInputRef}
+            type="text"
+            value={searchQuery}
+            onChange={e => setSearchQuery(e.target.value)}
+            placeholder="Search events, organizations, or services…"
+            className="w-full pl-10 pr-10 py-2.5 rounded-xl bg-white border border-black/[0.06] text-xs text-[#2A2621] placeholder-[#5A554E]/60 focus:outline-none focus:border-[#FD5C05]/40 shadow-sm font-medium"
+          />
+          {searchQuery && (
+            <button
+              onClick={() => setSearchQuery('')}
+              className="absolute right-3 top-1/2 -translate-y-1/2 h-6 w-6 rounded-full bg-black/[0.06] flex items-center justify-center hover:bg-black/10 cursor-pointer"
+            >
+              <X className="h-3.5 w-3.5 text-[#5A554E]" />
+            </button>
+          )}
+        </div>
       </div>
 
       {/* ── Segmented Feed Toggle & Filter Controls ── */}
-      <div className="bg-white/40 border border-black/[0.03] rounded-3xl p-4 space-y-3.5 shadow-sm">
+      <div className="bg-white/40 border border-black/[0.03] rounded-2xl p-3 space-y-2.5 shadow-sm">
         <div className="relative w-full rounded-full border border-black/[0.05] bg-black/[0.03] p-1 flex shadow-inner">
           <button
             type="button"
@@ -306,7 +299,7 @@ export default function StudentDashboardPage() {
               setActiveFeed('official');
               setSelectedCategory('All');
             }}
-            className="relative flex-1 py-3 text-xs font-black uppercase tracking-wider transition-colors duration-300 cursor-pointer flex items-center justify-center"
+            className="relative flex-1 py-2 text-xs font-black uppercase tracking-wider transition-colors duration-300 cursor-pointer flex items-center justify-center"
           >
             {activeFeed === 'official' && (
               <motion.div
@@ -325,7 +318,7 @@ export default function StudentDashboardPage() {
               setActiveFeed('student');
               setSelectedCategory('All');
             }}
-            className="relative flex-1 py-3 text-xs font-black uppercase tracking-wider transition-colors duration-300 cursor-pointer flex items-center justify-center"
+            className="relative flex-1 py-2 text-xs font-black uppercase tracking-wider transition-colors duration-300 cursor-pointer flex items-center justify-center"
           >
             {activeFeed === 'student' && (
               <motion.div
@@ -412,7 +405,7 @@ export default function StudentDashboardPage() {
                   >
                     {/* Event/Promo Image Banner */}
                     <div
-                      className="relative h-44 w-full bg-[#2A2621] overflow-hidden cursor-pointer"
+                       className="relative h-36 w-full bg-[#2A2621] overflow-hidden cursor-pointer"
                       onClick={() => {
                         if (isPromo && promo) {
                           window.location.href = `mailto:${promo.contactInfo}?subject=Inquiry regarding: ${promo.title}`;
