@@ -1,3 +1,4 @@
+"use client";
 import React, { useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import CreateEventModal from '@/components/student/CreateEventModal';
@@ -32,11 +33,11 @@ export default function OrgDashboard() {
       case 'Members':
         return <MembersTab orgId={orgId as string} />;
       case 'Announcements':
-        return <AnnouncementsTab orgId={orgId as string} />;
+        return <AnnouncementsTab />;
       case 'Profile':
-        return <ProfileTab orgId={orgId as string} />;
+        return <ProfileTab />;
       case 'Settings':
-        return <SettingsTab orgId={orgId as string} />;
+        return <SettingsTab />;
       default:
         return null;
     }

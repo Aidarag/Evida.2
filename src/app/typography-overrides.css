@@ -1,0 +1,48 @@
+/* Typography overrides for the Evida app */
+
+/* Import Google Font Inter for a modern, clean look */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+/* Base font settings */
+html {
+  font-family: 'Inter', sans-serif;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Headings */
+h1, h2, h3, h4, h5, h6 {
+  margin: 0;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+h1 { font-size: 2.5rem; }
+h2 { font-size: 2rem; }
+h3 { font-size: 1.75rem; }
+h4 { font-size: 1.5rem; }
+h5 { font-size: 1.25rem; }
+h6 { font-size: 1rem; }
+
+/* Paragraphs */
+p {
+  margin: 0 0 1rem 0;
+  font-size: 1rem;
+  color: #333;
+}
+
+/* Links */
+a {
+  color: #0066ff;
+  text-decoration: underline;
+}
+
+a:hover {
+  color: #0044cc;
+}
+
+/* Utility classes for smooth transitions */
+.transition {
+  transition: all 0.2s ease-in-out;
+}

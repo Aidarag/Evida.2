@@ -429,7 +429,7 @@ export default function SchoolDashboard({
     ))}
   </div>
 </div>
-          </div>
+
         )}
 
         {subTab === 'orgs' && (
@@ -570,6 +570,8 @@ export default function SchoolDashboard({
 
       </div>
 
-    </div>
-  );
+
+
+
+);
 }

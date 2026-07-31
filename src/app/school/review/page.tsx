@@ -1,3 +1,4 @@
+"use client";
 import React, { useState } from 'react';
 import { useEvents } from '@/lib/context/EventContext';
 import { Event } from '@/lib/types';
