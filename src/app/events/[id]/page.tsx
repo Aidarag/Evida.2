@@ -249,7 +249,7 @@ export default function EventDetailsPage() {
                       }}
                     >
                       <span>I'm Going</span>
-                      {isPreview && <span className="inline-block animate-bounce text-xs ml-0.5">👉</span>}
+                      {isPreview && <span className="inline-block animate-bounce text-xs ml-1 text-[#FD5C05] font-black font-mono">{"(->)"}</span>}
                     </Button>
                   </div>
                 )
@@ -274,8 +274,8 @@ export default function EventDetailsPage() {
                 className="bg-[#111118] border border-white/[0.08] w-[240px] rounded-[24px] p-5 shadow-2xl relative text-center space-y-4 select-none"
               >
                 {/* Success Icon */}
-                <div className="mx-auto h-12 w-12 rounded-full bg-[#FD5C05]/10 flex items-center justify-center text-[#FD5C05] text-2xl">
-                  🎉
+                <div className="mx-auto h-12 w-12 rounded-full bg-[#FD5C05]/10 flex items-center justify-center text-[#FD5C05] font-black text-sm font-mono">
+                  (:-))
                 </div>
 
                 {/* Title & Body */}
@@ -318,7 +318,7 @@ export default function EventDetailsPage() {
                         >
                           <Calendar className="h-3 w-3" />
                           <span>Add to Calendar</span>
-                          {isPreview && <span className="inline-block animate-bounce text-xs ml-0.5">👉</span>}
+                          {isPreview && <span className="inline-block animate-bounce text-xs ml-1 text-[#FD5C05] font-black font-mono">{"(->)"}</span>}
                         </motion.span>
                       )}
                     </AnimatePresence>
@@ -356,14 +356,14 @@ export default function EventDetailsPage() {
                 </button>
 
                 {/* Big Success Icon / Graphics */}
-                <div className="mx-auto h-16 w-16 rounded-full bg-[#FD5C05]/15 flex items-center justify-center text-[#FD5C05] text-3xl">
-                  🎉
+                <div className="mx-auto h-16 w-16 rounded-full bg-[#FD5C05]/15 flex items-center justify-center text-[#FD5C05] font-black text-lg font-mono">
+                  (:-))
                 </div>
 
                 {/* Title & Body */}
                 <div className="space-y-2">
                   <h3 className="text-xl font-bold text-white tracking-tight">
-                    You&apos;re going! 🎉
+                    You&apos;re going! (:-))
                   </h3>
                   <p className="text-xs text-[#B8BBC8] leading-relaxed">
                     Your RSVP has been confirmed.

@@ -832,13 +832,13 @@ export function ProfileSwitcher() {
                   
                   <div className="space-y-3 pt-4 border-t border-white/5">
                     {[
-                      { emoji: '📅', text: 'Create official campus events' },
-                      { emoji: '📣', text: 'Share announcements and promotions' },
-                      { emoji: '👥', text: 'Recruit and manage members' },
-                      { emoji: '🌟', text: 'Build your campus presence' },
+                      { iconText: '(:-))', text: 'Create official campus events' },
+                      { iconText: '(^o^)', text: 'Share announcements and promotions' },
+                      { iconText: '(;-))', text: 'Recruit and manage members' },
+                      { iconText: '(✦_✦)', text: 'Build your campus presence' },
                     ].map((item, idx) => (
                       <div key={idx} className="flex items-center gap-3 text-xs">
-                        <span className="text-base">{item.emoji}</span>
+                        <span className="text-[#FD5C05] font-black text-xs font-mono">{item.iconText}</span>
                         <span className="font-semibold text-white/85">{item.text}</span>
                       </div>
                     ))}
@@ -920,7 +920,7 @@ export function ProfileSwitcher() {
                       </span>
                     </div>
                     <div className="border-t border-white/5 pt-2.5 space-y-1">
-                      <p className="font-bold text-[9px] text-white/95 leading-normal">Join Livingstone College's Blue Bears Tech Club for our weekly campus workshop! 🐻💻</p>
+                      <p className="font-bold text-[9px] text-white/95 leading-normal">Join Livingstone College's Blue Bears Tech Club for our weekly campus workshop! (:-))</p>
                       <p className="text-[9px] text-white/70 leading-normal">Building software, design systems, and campus events together.</p>
                       <div className="h-16 w-full rounded-xl bg-[#1c1c26] flex flex-col items-center justify-center text-[8px] font-extrabold text-white/40 uppercase tracking-widest relative overflow-hidden mt-1.5 border border-white/5">
                         <span className="relative z-15 text-white/90">Free Blue Bears Swag & Refreshments</span>

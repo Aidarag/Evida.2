@@ -660,7 +660,7 @@ export default function StudentDashboardPage() {
                               >
                                 <span>View Event</span>
                                 {isPreview && (onboardingStep === 1 || onboardingStep === 0) && event.id === 'evt-career-night' && (
-                                  <span className="inline-block animate-bounce text-xs ml-0.5">👉</span>
+                                  <span className="inline-block animate-bounce text-xs ml-1 text-[#FD5C05] font-black font-mono">{"(->)"}</span>
                                 )}
                               </Link>
                             </div>

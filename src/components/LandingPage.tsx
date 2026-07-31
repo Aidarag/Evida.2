@@ -75,26 +75,26 @@ export default function LandingPage({
 
   const TOUR_STEPS = [
     {
-      label: 'Explore Feed',
-      emoji: '🏠',
-      description: 'Your campus life starts here. Browse upcoming events from Livingstone College and your student community.',
-      hint: 'Scroll inside the phone to explore your feed.',
+      label: 'Explore Events',
+      emoticon: '(:-))',
+      description: 'Discover curated campus activities, department events, and student organization hosts.',
+      hint: 'Scroll down to find events.',
     },
     {
-      label: 'Select Event',
-      emoji: '🔍',
+      label: 'Select an Event',
+      emoticon: '(✦_✦)',
       description: 'Find premium opportunities and mixers. Select Career Fair Networking Night to read more.',
       hint: 'Tap View Event to continue.',
     },
     {
       label: 'Event Details',
-      emoji: '📋',
+      emoticon: '(^o^)',
       description: 'Review details, date, locations, and roster. RSVP in one simple tap.',
       hint: 'Tap I\'m Going to continue.',
     },
     {
       label: "You're Going!",
-      emoji: '🎉',
+      emoticon: '(;-))',
       description: 'Your spot is saved! Add to your native calendar directly and continue exploring.',
       hint: 'Tour complete — you\'re in!',
     },
@@ -527,7 +527,7 @@ export default function LandingPage({
                   transition={{ duration: 0.25, ease: 'easeOut' }}
                   className="bg-white/[0.04] border border-white/[0.07] rounded-2xl px-5 py-4 space-y-3"
                 >
-                  <span className="text-3xl block">{TOUR_STEPS[tourStep].emoji}</span>
+                  <span className="text-xl font-black font-mono text-[#FD5C05] block tracking-tighter">{TOUR_STEPS[tourStep].emoticon}</span>
                   <div>
                     <p className="text-[9px] font-black uppercase tracking-[0.15em] text-[#FD5C05] mb-1">
                       Step {tourStep + 1} of {TOUR_STEPS.length}
