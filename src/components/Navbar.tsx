@@ -674,7 +674,7 @@ export function ProfileSwitcher() {
               {currentUser.avatar || currentUser.name.substring(0, 2).toUpperCase()}
             </div>
             <div className="hidden sm:block min-w-0 pr-1 select-none">
-              <p className="text-[10px] font-bold text-[#2A2621] leading-tight truncate">{currentUser.name}</p>
+                            <p className="text-[10px] font-bold text-[#2A2621] leading-tight text-center" >{currentUser.name}</p>
               <p className="text-[8px] text-[#5A554E] font-medium leading-none uppercase tracking-wider">Student Profile</p>
             </div>
           </>
@@ -693,7 +693,7 @@ export function ProfileSwitcher() {
               {activeProfile.name.substring(0, 2).toUpperCase()}
             </div>
             <div className="hidden sm:block min-w-0 pr-1 select-none">
-              <p className="text-[10px] font-bold text-[#2A2621] leading-tight truncate">{activeProfile.name}</p>
+              <p className="text-[10px] font-bold text-[#2A2621] leading-tight text-center" >{activeProfile.name}</p>
               <p className="text-[8px] text-[#FD5C05] font-black leading-none uppercase tracking-widest flex items-center gap-0.5">
                 Active Org Profile
               </p>
