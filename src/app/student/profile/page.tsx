@@ -191,6 +191,13 @@ function StudentProfilePageContent() {
     if (currentUser && isOwner) {
       fetchMembershipRequests();
     }
+  }, [currentUser?.username, isOwner]);
+
+  // Keep profileUser in sync with currentUser when user updates their own profile details
+  useEffect(() => {
+    if (isOwner && currentUser) {
+      setProfileUser(currentUser);
+    }
   }, [currentUser, isOwner]);
 
   // Load viewed user profile
@@ -200,7 +207,16 @@ function StudentProfilePageContent() {
       if (isOwner) {
         if (currentUser) {
           setProfileUser(currentUser);
-          await syncProfile();
+          try {
+            const res = await fetch(`/api/users/profile?username=${currentUser.username}`);
+            if (res.ok) {
+              const data = await res.json();
+              setCurrentUser(data);
+              setProfileUser(data);
+            }
+          } catch (e) {
+            console.error('Failed to sync profile:', e);
+          }
         }
       } else if (usernameParam) {
         try {
@@ -222,7 +238,7 @@ function StudentProfilePageContent() {
     if (currentUser || usernameParam) {
       loadProfile();
     }
-  }, [currentUser, usernameParam, isOwner]);
+  }, [currentUser?.username, usernameParam, isOwner]);
 
   // Filter events and promotions by association safely
   const attendedEvents = profileUser ? events.filter(e => e.status === 'approved' && e.attendees.includes(profileUser.name)) : [];

@@ -32,11 +32,10 @@ import { Event, Promotion } from '@/lib/types';
 
 export default function StudentDashboardPage() {
   const { currentUser } = useUser();
-  const { events, organizations, notifications, saveToggle, rsvpToggle } = useEvents();
+  const { events, promotions, organizations, notifications, saveToggle, rsvpToggle } = useEvents();
   const router = useRouter();
 
   const [activeFeed, setActiveFeed] = useState<'official' | 'student'>('official');
-  const [promotions, setPromotions] = useState<Promotion[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [likedEvents, setLikedEvents] = useState<Set<string>>(new Set());
@@ -127,22 +126,7 @@ export default function StudentDashboardPage() {
     }
   }, [isPreview, scrollLocked]);
 
-  // Fetch promotions
-  useEffect(() => {
-    const fetchPromotions = async () => {
-      try {
-        const res = await fetch('/api/promotions');
-        if (res.ok) {
-          const data = await res.json();
-          // Only show approved promotions
-          setPromotions(data.filter((p: Promotion) => p.status === 'approved') || []);
-        }
-      } catch (e) {
-        console.error('Failed to fetch promotions', e);
-      }
-    };
-    fetchPromotions();
-  }, []);
+
 
   const FALLBACK_PHOTOS = [
     '/pexels-hanna-elesha-abraham-1587801282-27498756.jpg',
@@ -260,13 +244,38 @@ export default function StudentDashboardPage() {
     }
   })();
 
+  // ── Unified Search Matching ──
+  const normalizeWord = (w: string) => {
+    w = w.toLowerCase();
+    if (w.startsWith('photograph')) return 'photo';
+    if (w.startsWith('photo')) return 'photo';
+    if (w.startsWith('tutor')) return 'tutor';
+    if (w.startsWith('grad')) return 'grad';
+    if (w.startsWith('academic')) return 'academ';
+    if (w.startsWith('workshop')) return 'workshop';
+    return w;
+  };
+
+  const matchQuery = (textFields: (string | undefined)[], query: string) => {
+    if (!query) return true;
+    const queryTerms = query.toLowerCase().split(/\s+/).filter(Boolean).map(normalizeWord);
+    if (queryTerms.length === 0) return true;
+    
+    const normalizedText = textFields
+      .map(f => (f || '').toLowerCase().split(/\s+/).filter(Boolean).map(normalizeWord).join(' '))
+      .join(' ');
+
+    return queryTerms.every(term => normalizedText.includes(term));
+  };
+
   const filteredItems = feedItems.filter(item => {
-    // Basic search/filter match
-    const matchesSearch = 
-      item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      item.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      ('location' in item ? item.location : '').toLowerCase().includes(searchQuery.toLowerCase()) ||
-      (item.organizer || '').toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesSearch = matchQuery([
+      item.title,
+      item.description,
+      'location' in item ? item.location : '',
+      item.organizer,
+      item.category
+    ], searchQuery);
 
     return matchesSearch && matchesCategory(item);
   });
@@ -282,7 +291,7 @@ export default function StudentDashboardPage() {
   });
 
   const matchedOrgs = searchQuery.trim() !== ''
-    ? organizations.filter(org => org.name.toLowerCase().includes(searchQuery.toLowerCase()))
+    ? organizations.filter(org => matchQuery([org.name, org.description], searchQuery))
     : [];
 
   const officialCategories = [
@@ -471,7 +480,7 @@ export default function StudentDashboardPage() {
                 const promo = isPromo ? (item as any) : null;
 
                 const isLiked = !isPromo && event ? likedEvents.has(event.id) : false;
-                const isSaved = !isPromo && event && event.savedBy ? event.savedBy.includes(currentUser.name) : false;
+                const isSaved = item.savedBy ? item.savedBy.includes(currentUser.name) : false;
 
                 const day = item.date.split('-')[2] || '10';
                 const month = item.date.split('-')[1] || '10';

@@ -155,6 +155,30 @@ function CategoryDetailContent() {
     }
   }, [sectionMeta]);
 
+  // ── Unified Search Matching Helper ──
+  const normalizeWord = (w: string) => {
+    w = w.toLowerCase();
+    if (w.startsWith('photograph')) return 'photo';
+    if (w.startsWith('photo')) return 'photo';
+    if (w.startsWith('tutor')) return 'tutor';
+    if (w.startsWith('grad')) return 'grad';
+    if (w.startsWith('academic')) return 'academ';
+    if (w.startsWith('workshop')) return 'workshop';
+    return w;
+  };
+
+  const matchQuery = (textFields: (string | undefined)[], query: string) => {
+    if (!query) return true;
+    const queryTerms = query.toLowerCase().split(/\s+/).filter(Boolean).map(normalizeWord);
+    if (queryTerms.length === 0) return true;
+    
+    const normalizedText = textFields
+      .map(f => (f || '').toLowerCase().split(/\s+/).filter(Boolean).map(normalizeWord).join(' '))
+      .join(' ');
+
+    return queryTerms.every(term => normalizedText.includes(term));
+  };
+
   // 1. Gather Section Events
   const rawEvents = useMemo(() => {
     if (!sectionMeta.hasEvents) return [];
@@ -177,7 +201,11 @@ function CategoryDetailContent() {
           e.category?.toLowerCase() === 'greek'
         );
       case 'Academic & Workshops':
-        return approvedEvents.filter(e => e.category?.toLowerCase() === 'academic');
+        return approvedEvents.filter(e => 
+          e.category?.toLowerCase() === 'academic' || 
+          e.category?.toLowerCase() === 'workshops' || 
+          e.category?.toLowerCase() === 'academic & workshops'
+        );
       default:
         return approvedEvents;
     }
@@ -214,9 +242,7 @@ function CategoryDetailContent() {
   // Apply filters & search to events
   const filteredEvents = useMemo(() => {
     return rawEvents.filter(e => {
-      const matchesSearch = e.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                            e.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                            e.location.toLowerCase().includes(searchQuery.toLowerCase());
+      const matchesSearch = matchQuery([e.title, e.description, e.location, e.category], searchQuery);
       
       const matchesLocation = locationFilter === 'all' ? true : e.locationType === locationFilter;
       const matchesPrice = priceFilter === 'all' 
@@ -236,8 +262,7 @@ function CategoryDetailContent() {
   // Apply filters & search to organizations
   const filteredOrgs = useMemo(() => {
     return rawOrgs.filter(org => {
-      const matchesSearch = org.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                            org.description.toLowerCase().includes(searchQuery.toLowerCase());
+      const matchesSearch = matchQuery([org.name, org.description], searchQuery);
 
       const matchesVerify = verifyFilter === 'all'
         ? true
@@ -255,8 +280,7 @@ function CategoryDetailContent() {
   // Apply filters & search to promotions
   const filteredPromos = useMemo(() => {
     return rawPromos.filter(p => {
-      const matchesSearch = p.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                            p.description.toLowerCase().includes(searchQuery.toLowerCase());
+      const matchesSearch = matchQuery([p.title, p.description, p.category, p.organizer], searchQuery);
 
       const matchesCategory = promoCategoryFilter === 'all' ? true : p.category === promoCategoryFilter;
 

@@ -7,6 +7,7 @@ import { usePathname } from 'next/navigation';
 export default function Template({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const [showSplash, setShowSplash] = useState(false);
+  const [progress, setProgress] = useState(0);
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -22,22 +23,39 @@ export default function Template({ children }: { children: React.ReactNode }) {
       if (!initialSplashDone) {
         setShowSplash(true);
         sessionStorage.setItem('evida_initial_splash_done', 'true');
-        const timer = setTimeout(() => {
-          setShowSplash(false);
-        }, 1800);
-        return () => clearTimeout(timer);
       } else if (forceRedirectSplash === 'true') {
         setShowSplash(true);
         sessionStorage.removeItem('evida_force_redirect_splash');
-        const timer = setTimeout(() => {
-          setShowSplash(false);
-        }, 1800);
-        return () => clearTimeout(timer);
       } else {
         setShowSplash(false);
       }
     }
   }, [pathname]);
+
+  // Handle simulated progress animation for the preloader
+  useEffect(() => {
+    if (!showSplash) return;
+    setProgress(0);
+
+    const duration = 800; // Simulated load duration in ms
+    const intervalTime = 20;
+    const increment = 100 / (duration / intervalTime);
+
+    const timer = setInterval(() => {
+      setProgress(p => {
+        if (p >= 100) {
+          clearInterval(timer);
+          setTimeout(() => {
+            setShowSplash(false);
+          }, 150); // Small pause at 100% for visual weight
+          return 100;
+        }
+        return Math.min(100, p + increment);
+      });
+    }, intervalTime);
+
+    return () => clearInterval(timer);
+  }, [showSplash]);
 
   return (
     <div className="relative w-full min-h-screen flex flex-col bg-[#D8D2BC]">
@@ -53,61 +71,30 @@ export default function Template({ children }: { children: React.ReactNode }) {
             {/* Ambient Brand Glowing Blob */}
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-[#FD5C05]/4 rounded-full blur-[100px] pointer-events-none" />
 
-            <div className="flex flex-col items-center gap-4 z-10">
+            <div className="flex flex-col items-center gap-6 z-10">
               {/* Custom SVG Logo Assembly */}
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 220 48"
-                width={260}
-                height={64}
+                width={220}
+                height={54}
                 className="select-none"
               >
                 <g id="evida-logo-mark">
-                  {/* Left Ribbon: slides from the left and snaps into place */}
-                  <motion.path
+                  <path
                     d="M 6 42 L 6 22 L 24 6 L 24 15 L 15 24 L 15 42 Z"
                     fill="#FD5C05"
-                    initial={{ x: -40, opacity: 0 }}
-                    animate={{ x: 0, opacity: 0.95 }}
-                    transition={{ 
-                      type: 'spring', 
-                      stiffness: 140, 
-                      damping: 12, 
-                      delay: 0.1 
-                    }}
                   />
-                  
-                  {/* Right Ribbon: slides from the right and snaps into place */}
-                  <motion.path
+                  <path
                     d="M 42 42 L 42 22 L 24 6 L 24 15 L 33 24 L 33 42 Z"
                     fill="#FD5C05"
-                    initial={{ x: 40, opacity: 0 }}
-                    animate={{ x: 0, opacity: 0.95 }}
-                    transition={{ 
-                      type: 'spring', 
-                      stiffness: 140, 
-                      damping: 12, 
-                      delay: 0.3 
-                    }}
                   />
-                  
-                  {/* Center Diamond: scales and pops in after ribbons meet */}
-                  <motion.path
+                  <path
                     d="M 24 10 L 36 22 L 24 34 L 12 22 Z M 24 16 L 30 22 L 24 28 L 18 22 Z"
                     fill="#2A2621"
-                    initial={{ scale: 0, opacity: 0, originX: 0.5, originY: 0.5 }}
-                    animate={{ scale: 1, opacity: 0.95 }}
-                    transition={{ 
-                      type: 'spring', 
-                      stiffness: 180, 
-                      damping: 10, 
-                      delay: 0.5 
-                    }}
                   />
                 </g>
-                
-                {/* Evida Text: starts in Orange font, drops/bounces in from the top/y-axis */}
-                <motion.text
+                <text
                   x="56"
                   y="33"
                   fill="#FD5C05"
@@ -115,32 +102,23 @@ export default function Template({ children }: { children: React.ReactNode }) {
                   fontWeight="900"
                   fontSize="28"
                   letterSpacing="0.02em"
-                  initial={{ y: 80, opacity: 0 }}
-                  animate={{ y: 33, opacity: 1 }}
-                  transition={{ 
-                    type: 'spring', 
-                    stiffness: 280, 
-                    damping: 10, // low damping for organic bouncing effect
-                    delay: 0.65 
-                  }}
                 >
                   Evida
-                </motion.text>
+                </text>
               </svg>
 
-              {/* High-speed circular spinner at bottom to support loading feel */}
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 0.6 }}
-                transition={{ delay: 1.0 }}
-                className="mt-4"
-              >
-                <motion.div
-                  animate={{ rotate: 360 }}
-                  transition={{ repeat: Infinity, duration: 0.8, ease: "linear" }}
-                  className="w-4 h-4 border-2 border-[#FD5C05]/20 border-t-[#FD5C05] rounded-full"
-                />
-              </motion.div>
+              {/* Progress Loading Bar */}
+              <div className="flex flex-col items-center gap-3.5 mt-2">
+                <div className="w-48 h-[3px] bg-[#2A2621]/15 rounded-full overflow-hidden relative">
+                  <div 
+                    className="h-full bg-[#FD5C05] transition-all duration-75 ease-out rounded-full" 
+                    style={{ width: `${Math.round(progress)}%` }} 
+                  />
+                </div>
+                <span className="text-[10px] font-black uppercase tracking-widest text-[#5A554E] min-w-[32px] text-center font-sans">
+                  Loading {Math.round(progress)}%
+                </span>
+              </div>
             </div>
           </motion.div>
         ) : (

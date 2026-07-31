@@ -270,7 +270,8 @@
       ],
       "interested": [],
       "savedBy": [
-        "Sarah Jenkins"
+        "Sarah Jenkins",
+        "Michael Chen"
       ],
       "organizer": "Student Affairs",
       "featured": false,
@@ -810,7 +811,9 @@
       "locationType": "outdoor",
       "attendees": [],
       "interested": [],
-      "savedBy": [],
+      "savedBy": [
+        "Michael Chen"
+      ],
       "organizer": "Campus Activities Board",
       "organizationName": "Campus Activities Board",
       "coverImage": "/pexels-amine-1285347-9371719.jpg",

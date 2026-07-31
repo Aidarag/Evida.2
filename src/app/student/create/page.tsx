@@ -5,7 +5,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { useUser } from '@/lib/context/UserContext';
 import { useEvents } from '@/lib/context/EventContext';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Calendar, Tag, ArrowRight, ArrowLeft, Check, Users, User, Shield, Sparkles, Image as ImageIcon, Info } from 'lucide-react';
+import { Calendar, Tag, ArrowRight, ArrowLeft, Check, Users, User, Shield, Sparkles, Image as ImageIcon, Info, Megaphone } from 'lucide-react';
 import Button from '@/components/ui/Button';
 import Card from '@/components/ui/Card';
 import Input from '@/components/ui/Input';
@@ -104,7 +104,9 @@ function CreateListingPageContent() {
   const handleNext = () => setStep(s => s + 1);
   const handleBack = () => {
     // Determine previous step logic
-    if (step === 4) {
+    if (step === 1) {
+      router.push('/student/dashboard');
+    } else if (step === 4) {
       if (createType === 'promotion') {
         setStep(1);
       } else if (activeProfile.type === 'student') {
@@ -115,7 +117,7 @@ function CreateListingPageContent() {
     } else if (step === 3) {
       setStep(1);
     } else {
-      setStep(s => s - 1);
+      setStep(s => - 1);
     }
   };
 
@@ -219,16 +221,27 @@ function CreateListingPageContent() {
             exit={{ opacity: 0, y: -15 }}
             className="space-y-8"
           >
-            <div className="text-center space-y-2 max-w-xl mx-auto">
-              <h1 className="text-3xl font-extrabold text-[#2A2621] tracking-tight animate-fade-in" style={{ fontFamily: 'var(--font-display)' }}>
-                What would you like to create?
-              </h1>
-              <p className="text-xs font-semibold text-[#5A554E] leading-relaxed">
-                Events are activities people attend. Promotions help students discover your services, business, or initiative.
-              </p>
+            {/* Header back button & title */}
+            <div className="flex flex-col gap-4 text-left max-w-xl mx-auto">
+              <button 
+                onClick={handleBack}
+                className="flex items-center gap-2 w-fit px-4 py-2 bg-white/80 border border-black/[0.06] rounded-xl text-xs font-bold text-[#2A2621] hover:bg-[#FD5C05] hover:text-white hover:border-transparent transition-all cursor-pointer shadow-sm"
+              >
+                <ArrowLeft className="h-4 w-4" />
+                Back to Dashboard
+              </button>
+              <div className="space-y-2 text-center md:text-left">
+                <h1 className="text-2xl sm:text-3xl font-black text-[#2A2621] tracking-tight leading-tight uppercase font-sans">
+                  What would you like to create?
+                </h1>
+                <p className="text-xs font-semibold text-[#5A554E] leading-relaxed">
+                  Events are activities people attend. Promotions help students discover your services, business, or initiative.
+                </p>
+              </div>
             </div>
 
-            <div className="grid md:grid-cols-2 gap-6">
+            <div className="grid md:grid-cols-2 gap-6 max-w-3xl mx-auto w-full">
+              {/* Event card */}
               <Card 
                 onClick={() => { 
                   setCreateType('event'); 
@@ -240,11 +253,11 @@ function CreateListingPageContent() {
                     setStep(3);
                   }
                 }}
-                className="p-8 flex flex-col items-center text-center gap-5 hover:border-[#FD5C05]/50 cursor-pointer group relative overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 rounded-[28px] bg-white border border-black/[0.04]"
+                className="p-8 flex flex-col items-center text-center gap-5 hover:border-[#FD5C05] hover:scale-[1.02] active:scale-[0.99] cursor-pointer group relative overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 rounded-[28px] bg-white border border-black/[0.05]"
               >
-                {/* Custom Badge Indicator */}
-                <div className="absolute top-4 left-4 bg-[#2A2621] text-white text-[9px] font-extrabold uppercase tracking-wider px-3 py-1 rounded-full border border-white/10 shadow-sm flex items-center gap-1 select-none">
-                  <span>🗓️</span> People attend
+                {/* Custom Badge Indicator (No Emojis) */}
+                <div className="absolute top-4 left-4 bg-[#2A2621] text-white text-[9px] font-extrabold uppercase tracking-wider px-3 py-1 rounded-full border border-white/10 shadow-sm flex items-center gap-1.5 select-none">
+                  <Calendar className="h-3 w-3 text-[#FD5C05]" /> People attend
                 </div>
 
                 <div className="h-16 w-16 rounded-2xl bg-[#FD5C05]/10 text-[#FD5C05] flex items-center justify-center group-hover:scale-105 transition-transform mt-6">
@@ -255,33 +268,34 @@ function CreateListingPageContent() {
                   <p className="text-xs text-[#5A554E] leading-relaxed font-semibold">
                     Create an event students can attend.
                   </p>
-                  <ul className="text-xs text-left max-w-[160px] mx-auto space-y-2 text-[#5A554E] font-medium border-t border-black/[0.04] pt-4">
+                  <ul className="text-xs text-left max-w-[170px] mx-auto space-y-2 text-[#5A554E] font-semibold border-t border-black/[0.06] pt-4 w-full">
                     <li className="flex items-center gap-2">
-                      <span className="text-[#FD5C05] text-sm">•</span> Club meeting
+                      <span className="h-1.5 w-1.5 rounded-full bg-[#FD5C05]" /> Club meeting
                     </li>
                     <li className="flex items-center gap-2">
-                      <span className="text-[#FD5C05] text-sm">•</span> Workshop
+                      <span className="h-1.5 w-1.5 rounded-full bg-[#FD5C05]" /> Workshop / Panel
                     </li>
                     <li className="flex items-center gap-2">
-                      <span className="text-[#FD5C05] text-sm">•</span> Party
+                      <span className="h-1.5 w-1.5 rounded-full bg-[#FD5C05]" /> Social Gathering
                     </li>
                     <li className="flex items-center gap-2">
-                      <span className="text-[#FD5C05] text-sm">•</span> Sports game
+                      <span className="h-1.5 w-1.5 rounded-full bg-[#FD5C05]" /> Sports Game / Play
                     </li>
                     <li className="flex items-center gap-2">
-                      <span className="text-[#FD5C05] text-sm">•</span> Career fair
+                      <span className="h-1.5 w-1.5 rounded-full bg-[#FD5C05]" /> Career / Job Fair
                     </li>
                   </ul>
                 </div>
               </Card>
 
+              {/* Promote card */}
               <Card 
                 onClick={() => { setCreateType('promotion'); setStep(4); }} // Go straight to Promo Form
-                className="p-8 flex flex-col items-center text-center gap-5 hover:border-[#FD5C05]/50 cursor-pointer group relative overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 rounded-[28px] bg-white border border-black/[0.04]"
+                className="p-8 flex flex-col items-center text-center gap-5 hover:border-[#FD5C05] hover:scale-[1.02] active:scale-[0.99] cursor-pointer group relative overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 rounded-[28px] bg-white border border-black/[0.05]"
               >
-                {/* Custom Badge Indicator */}
-                <div className="absolute top-4 left-4 bg-[#2A2621] text-white text-[9px] font-extrabold uppercase tracking-wider px-3 py-1 rounded-full border border-white/10 shadow-sm flex items-center gap-1 select-none">
-                  <span>📢</span> People discover
+                {/* Custom Badge Indicator (No Emojis) */}
+                <div className="absolute top-4 left-4 bg-[#2A2621] text-white text-[9px] font-extrabold uppercase tracking-wider px-3 py-1 rounded-full border border-white/10 shadow-sm flex items-center gap-1.5 select-none">
+                  <Megaphone className="h-3 w-3 text-[#FD5C05]" /> People discover
                 </div>
 
                 <div className="h-16 w-16 rounded-2xl bg-[#FD5C05]/10 text-[#FD5C05] flex items-center justify-center group-hover:scale-105 transition-transform mt-6">
@@ -292,21 +306,21 @@ function CreateListingPageContent() {
                   <p className="text-xs text-[#5A554E] leading-relaxed font-semibold">
                     Share a service, business, or initiative with the campus community.
                   </p>
-                  <ul className="text-xs text-left max-w-[160px] mx-auto space-y-2 text-[#5A554E] font-medium border-t border-black/[0.04] pt-4">
+                  <ul className="text-xs text-left max-w-[170px] mx-auto space-y-2 text-[#5A554E] font-semibold border-t border-black/[0.06] pt-4 w-full">
                     <li className="flex items-center gap-2">
-                      <span className="text-[#FD5C05] text-sm">•</span> Tutoring
+                      <span className="h-1.5 w-1.5 rounded-full bg-[#FD5C05]" /> Tutoring Services
                     </li>
                     <li className="flex items-center gap-2">
-                      <span className="text-[#FD5C05] text-sm">•</span> Student business
+                      <span className="h-1.5 w-1.5 rounded-full bg-[#FD5C05]" /> Student Business
                     </li>
                     <li className="flex items-center gap-2">
-                      <span className="text-[#FD5C05] text-sm">•</span> Food sale
+                      <span className="h-1.5 w-1.5 rounded-full bg-[#FD5C05]" /> Food & Bake Sales
                     </li>
                     <li className="flex items-center gap-2">
-                      <span className="text-[#FD5C05] text-sm">•</span> Photography
+                      <span className="h-1.5 w-1.5 rounded-full bg-[#FD5C05]" /> Photography / Art
                     </li>
                     <li className="flex items-center gap-2">
-                      <span className="text-[#FD5C05] text-sm">•</span> Student initiative
+                      <span className="h-1.5 w-1.5 rounded-full bg-[#FD5C05]" /> Community Initiative
                     </li>
                   </ul>
                 </div>
@@ -495,16 +509,20 @@ function CreateListingPageContent() {
             className="w-full max-w-2xl mx-auto"
           >
             <div className="mb-6 flex items-center gap-4">
-              <button onClick={handleBack} className="h-10 w-10 rounded-full bg-[#FFFDE1]/[0.06] flex items-center justify-center text-[#5A554E] hover:text-white hover:bg-[#FFFDE1]/[0.1] transition-colors cursor-pointer">
+              <button 
+                onClick={handleBack} 
+                className="h-10 w-10 rounded-full bg-white/85 border border-black/[0.06] flex items-center justify-center text-[#2A2621] hover:bg-[#FD5C05] hover:text-white transition-all cursor-pointer shadow-sm shrink-0"
+                title="Go Back"
+              >
                 <ArrowLeft className="h-5 w-5" />
               </button>
               <div>
-                <span className="text-[10px] font-bold text-gray-500 uppercase tracking-widest block">
+                <span className="text-[10px] font-bold text-gray-500 uppercase tracking-widest block text-left">
                   {createType === 'promotion' 
                     ? 'Promotion Campaign' 
                     : `${creatorEntity === 'student' ? 'My Event' : 'Organization Event'} — ${eventSubtype === 'quick' ? 'No Facilities' : 'Using School Facilities'}`}
                 </span>
-                <h1 className="font-extrabold text-[#2A2621] tracking-wide" style={{ fontFamily: 'var(--font-display)' }}>
+                <h1 className="font-extrabold text-[#2A2621] tracking-wide text-left" style={{ fontFamily: 'var(--font-display)' }}>
                   {createType === 'promotion' ? 'Create Promotion' : 'Event Details'}
                 </h1>
               </div>
@@ -519,15 +537,15 @@ function CreateListingPageContent() {
                   
                   {/* Organization Selector (Visible only for Organization events) */}
                   {creatorEntity === 'organization' && (
-                    <div className="space-y-1.5">
-                      <label className="block text-[10px] font-bold text-[#5A554E] uppercase tracking-widest">Publishing as Organization</label>
+                    <div className="space-y-1.5 text-left">
+                      <label className="block text-xs font-bold uppercase tracking-wider text-[#5A554E]">Publishing as Organization</label>
                       {activeProfile.type === 'organization' ? (
-                        <div className="w-full rounded-xl bg-white border-2 border-black/[0.08] px-4 py-3 text-xs text-[#2A2621] font-bold">
+                        <div className="w-full rounded-xl bg-white border border-black/10 px-4 py-3 text-sm text-[#2A2621] font-bold shadow-sm">
                           {activeProfile.name} (Active Profile)
                         </div>
                       ) : myOrgs.length > 0 ? (
                         <select 
-                          className="w-full rounded-xl bg-white border-2 border-black/[0.08] px-4 py-3 text-xs text-[#2A2621] focus:outline-none focus:border-[#FD5C05] font-medium cursor-pointer"
+                          className="w-full rounded-xl bg-white border border-black/10 px-4 py-3 text-sm text-[#2A2621] transition-all duration-200 focus:outline-none focus:border-[#FD5C05] focus:ring-1 focus:ring-[#FD5C05]/20 font-semibold cursor-pointer shadow-sm"
                           value={eventForm.selectedOrgId}
                           onChange={e => setEventForm({...eventForm, selectedOrgId: e.target.value})}
                           required
@@ -569,10 +587,10 @@ function CreateListingPageContent() {
                       required
                     />
                     
-                    <div className="space-y-1.5">
-                      <label className="block text-[10px] font-bold text-[#5A554E] uppercase tracking-widest">Description</label>
+                    <div className="space-y-1.5 text-left">
+                      <label className="block text-xs font-bold uppercase tracking-wider text-[#5A554E]">Description</label>
                       <textarea 
-                        className="w-full rounded-xl bg-white border-2 border-black/[0.08] px-4 py-3 text-xs text-[#2A2621] placeholder-[#5A554E] focus:outline-none focus:border-[#FD5C05] min-h-[120px] resize-none font-medium leading-relaxed"
+                        className="w-full rounded-xl bg-white border border-black/10 px-4 py-3 text-sm text-[#2A2621] placeholder-[#5A554E]/60 transition-all duration-200 focus:outline-none focus:border-[#FD5C05] focus:ring-1 focus:ring-[#FD5C05]/20 min-h-[120px] resize-none font-semibold leading-relaxed shadow-sm"
                         placeholder="What should campus know about this event?"
                         value={eventForm.description}
                         onChange={e => setEventForm({...eventForm, description: e.target.value})}
@@ -580,7 +598,7 @@ function CreateListingPageContent() {
                       />
                     </div>
 
-                    <div className="grid grid-cols-2 gap-4">
+                    <div className="grid grid-cols-2 gap-4 text-left">
                       <Input 
                         label="Date" 
                         type="date"
@@ -597,7 +615,7 @@ function CreateListingPageContent() {
                       />
                     </div>
                     
-                    <div className={`grid ${eventSubtype === 'quick' ? 'grid-cols-1' : 'grid-cols-2'} gap-4`}>
+                    <div className={`grid ${eventSubtype === 'quick' ? 'grid-cols-1' : 'grid-cols-2'} gap-4 text-left`}>
                       <Input 
                         label="Location" 
                         placeholder="e.g. Science Library Room 304"
@@ -608,10 +626,10 @@ function CreateListingPageContent() {
 
                       {/* Hide Category/Capacity on Quick Student events (Simplified form) */}
                       {eventSubtype !== 'quick' && (
-                        <div className="space-y-1.5">
-                          <label className="block text-[10px] font-bold text-[#5A554E] uppercase tracking-widest">Category</label>
+                        <div className="space-y-1.5 text-left">
+                          <label className="block text-xs font-bold uppercase tracking-wider text-[#5A554E]">Category</label>
                           <select 
-                            className="w-full rounded-xl bg-white border-2 border-black/[0.08] px-4 py-3 text-xs text-[#2A2621] focus:outline-none focus:border-[#FD5C05] font-medium cursor-pointer"
+                            className="w-full rounded-xl bg-white border border-black/10 px-4 py-3 text-sm text-[#2A2621] transition-all duration-200 focus:outline-none focus:border-[#FD5C05] focus:ring-1 focus:ring-[#FD5C05]/20 font-semibold cursor-pointer shadow-sm"
                             value={eventForm.category}
                             onChange={e => setEventForm({...eventForm, category: e.target.value})}
                           >
@@ -629,7 +647,7 @@ function CreateListingPageContent() {
                     </div>
 
                     {eventSubtype !== 'quick' && (
-                      <div className="grid grid-cols-2 gap-4">
+                      <div className="grid grid-cols-2 gap-4 text-left">
                         <Input 
                           label="Max Capacity (Optional)" 
                           type="number"
@@ -641,7 +659,7 @@ function CreateListingPageContent() {
                         {/* School admin can set Featured status */}
                         {creatorEntity === 'school' && (
                           <div className="space-y-1.5 flex flex-col justify-center">
-                            <label className="block text-[10px] font-bold text-[#5A554E] uppercase tracking-widest mb-1.5">Featured Event</label>
+                            <label className="block text-xs font-bold uppercase tracking-wider text-[#5A554E] mb-1.5">Featured Event</label>
                             <label className="relative inline-flex items-center cursor-pointer">
                               <input 
                                 type="checkbox" 
@@ -657,43 +675,41 @@ function CreateListingPageContent() {
                       </div>
                     )}
 
-                    {/* Cover Image Upload */}
-                    {eventSubtype !== 'quick' && (
-                      <div className="space-y-1.5 pt-2">
-                        <label className="block text-[10px] font-bold text-[#5A554E] uppercase tracking-widest">Cover Image / Flyer</label>
-                        <input
-                          ref={fileInputRef}
-                          type="file"
-                          accept="image/png,image/jpeg,image/webp"
-                          className="sr-only"
-                          onChange={(e) => {
-                            const file = e.target.files?.[0];
-                            if (!file) return;
-                            const reader = new FileReader();
-                            reader.onload = (ev) => {
-                              setEventForm(prev => ({ ...prev, coverImageDataUrl: ev.target?.result as string }));
-                            };
-                            reader.readAsDataURL(file);
-                          }}
-                        />
-                        <div
-                          className="w-full rounded-2xl border-2 border-dashed border-black/[0.08] bg-black/[0.01] p-6 flex flex-col items-center justify-center gap-2 hover:bg-black/[0.03] transition-colors cursor-pointer"
-                          onClick={() => fileInputRef.current?.click()}
-                        >
-                          {eventForm.coverImageDataUrl ? (
-                            <img src={eventForm.coverImageDataUrl} className="h-28 w-full object-cover rounded-xl" alt="preview" />
-                          ) : (
-                            <>
-                              <ImageIcon className="h-6 w-6 text-[#5A554E]/60" />
-                              <div className="text-center">
-                                <p className="text-xs font-bold text-[#2A2621]">Click to upload flyer image</p>
-                                <p className="text-[10px] text-[#5A554E]">PNG or JPG up to 5MB (Default gradient applied otherwise)</p>
-                              </div>
-                            </>
-                          )}
-                        </div>
+                    {/* Cover Image Upload (Always Visible) */}
+                    <div className="space-y-1.5 pt-2 text-left">
+                      <label className="block text-xs font-bold uppercase tracking-wider text-[#5A554E]">Cover Image / Flyer</label>
+                      <input
+                        ref={fileInputRef}
+                        type="file"
+                        accept="image/png,image/jpeg,image/webp"
+                        className="sr-only"
+                        onChange={(e) => {
+                          const file = e.target.files?.[0];
+                          if (!file) return;
+                          const reader = new FileReader();
+                          reader.onload = (ev) => {
+                            setEventForm(prev => ({ ...prev, coverImageDataUrl: ev.target?.result as string }));
+                          };
+                          reader.readAsDataURL(file);
+                        }}
+                      />
+                      <div
+                        className="w-full rounded-2xl border-2 border-dashed border-black/10 bg-slate-50/50 p-6 flex flex-col items-center justify-center gap-2 hover:bg-[#FD5C05]/5 hover:border-[#FD5C05]/40 transition-all duration-300 cursor-pointer shadow-sm"
+                        onClick={() => fileInputRef.current?.click()}
+                      >
+                        {eventForm.coverImageDataUrl ? (
+                          <img src={eventForm.coverImageDataUrl} className="h-28 w-full object-cover rounded-xl animate-fade-in" alt="preview" />
+                        ) : (
+                          <>
+                            <ImageIcon className="h-6 w-6 text-[#5A554E]/60" />
+                            <div className="text-center">
+                              <p className="text-xs font-bold text-[#2A2621]">Click to upload flyer image</p>
+                              <p className="text-[10px] text-[#5A554E]">PNG or JPG up to 5MB (Default gradient applied otherwise)</p>
+                            </div>
+                          </>
+                        )}
                       </div>
-                    )}
+                    </div>
                   </div>
 
                   <div className="pt-6 border-t border-[#D8D2BC]/30 flex justify-end">

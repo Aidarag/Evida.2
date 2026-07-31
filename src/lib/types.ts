@@ -105,6 +105,7 @@ export interface Promotion {
   feedback?: string;
   image?: string;
   createdAt?: string;
+  savedBy?: string[];
 }
 
 export interface MembershipRequest {

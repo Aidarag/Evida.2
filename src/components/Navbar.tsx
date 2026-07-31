@@ -786,7 +786,7 @@ export function ProfileSwitcher() {
 
       {/* Register Organization Modal Overlay / Onboarding Step-by-Step */}
       {createModalOpen && (
-        <div className="fixed inset-0 z-100 flex items-center justify-center p-4 bg-black/75 backdrop-blur-md animate-fade-in text-left">
+        <div className="fixed inset-0 z-[100] flex items-center justify-center sm:p-4 p-0 bg-black/75 backdrop-blur-md animate-fade-in text-left">
           <AnimatePresence mode="wait">
             {onboardingStep === 1 && (
               <motion.div
@@ -795,7 +795,7 @@ export function ProfileSwitcher() {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -15 }}
                 onClick={() => setOnboardingStep(2)}
-                className="bg-[#08080C] border border-white/[0.08] w-full max-w-sm rounded-[32px] p-7 shadow-2xl relative text-white flex flex-col justify-between h-[490px] cursor-pointer select-none"
+                className="bg-[#08080C] border border-white/[0.08] w-full sm:max-w-sm rounded-none sm:rounded-[32px] p-7 shadow-2xl relative text-white flex flex-col justify-between h-full sm:h-[490px] cursor-pointer select-none overflow-y-auto"
               >
                 <div className="flex justify-end items-center">
                   <button
@@ -837,7 +837,7 @@ export function ProfileSwitcher() {
                   </div>
                 </div>
 
-                <div className="flex flex-col items-center gap-2">
+                <div className="flex flex-col items-center gap-2 pt-4">
                   <div className="flex gap-1.5 justify-center mb-1">
                     <span className="h-1.5 w-1.5 rounded-full bg-[#a855f7]" />
                     <span className="h-1.5 w-1.5 rounded-full bg-white/20" />
@@ -857,7 +857,7 @@ export function ProfileSwitcher() {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -15 }}
                 onClick={() => setOnboardingStep(3)}
-                className="bg-[#08080C] border border-white/[0.08] w-full max-w-sm rounded-[32px] p-7 shadow-2xl relative text-white flex flex-col justify-between h-[490px] cursor-pointer select-none"
+                className="bg-[#08080C] border border-white/[0.08] w-full sm:max-w-sm rounded-none sm:rounded-[32px] p-7 shadow-2xl relative text-white flex flex-col justify-between h-full sm:h-[490px] cursor-pointer select-none overflow-y-auto"
               >
                 <div className="flex justify-between items-center">
                   <button
@@ -922,7 +922,7 @@ export function ProfileSwitcher() {
                   </div>
                 </div>
 
-                <div className="flex flex-col items-center gap-2">
+                <div className="flex flex-col items-center gap-2 pt-4">
                   <div className="flex gap-1.5 justify-center mb-1">
                     <span className="h-1.5 w-1.5 rounded-full bg-white/20" />
                     <span className="h-1.5 w-1.5 rounded-full bg-[#a855f7]" />
@@ -941,7 +941,7 @@ export function ProfileSwitcher() {
                 initial={{ opacity: 0, y: 15 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -15 }}
-                className="bg-[#08080C] border border-white/[0.08] w-full max-w-sm rounded-[32px] p-7 shadow-2xl relative text-white flex flex-col justify-between h-[490px] select-none"
+                className="bg-[#08080C] border border-white/[0.08] w-full sm:max-w-sm rounded-none sm:rounded-[32px] p-7 shadow-2xl relative text-white flex flex-col justify-between h-full sm:h-[490px] select-none overflow-y-auto"
               >
                 <div className="flex justify-between items-center">
                   <button
@@ -990,7 +990,7 @@ export function ProfileSwitcher() {
                   </p>
                 </div>
 
-                <div className="flex flex-col items-center gap-3 w-full">
+                <div className="flex flex-col items-center gap-3 w-full pt-4">
                   <div className="flex gap-1.5 justify-center mb-1">
                     <span className="h-1.5 w-1.5 rounded-full bg-white/20" />
                     <span className="h-1.5 w-1.5 rounded-full bg-white/20" />
@@ -1012,7 +1012,7 @@ export function ProfileSwitcher() {
                 key="step4"
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
-                className="bg-[#D8D2BC] border border-[#2A2621]/10 w-full max-w-md rounded-3xl p-6 shadow-xl space-y-5"
+                className="bg-[#D8D2BC] border border-[#2A2621]/10 w-full sm:max-w-md rounded-none sm:rounded-3xl p-6 shadow-xl space-y-5 h-full sm:h-auto overflow-y-auto"
               >
                 <div className="flex justify-between items-center">
                   <button
@@ -1033,7 +1033,7 @@ export function ProfileSwitcher() {
                   </button>
                 </div>
 
-                <div className="space-y-1">
+                <div className="space-y-1 text-left">
                   <h3 className="text-lg font-black text-[#2A2621] uppercase tracking-tight" style={{ fontFamily: 'var(--font-display)' }}>
                     Create Org Profile
                   </h3>
@@ -1043,7 +1043,7 @@ export function ProfileSwitcher() {
                 </div>
 
                 <form onSubmit={handleCreateOrg} className="space-y-4">
-                  <div className="space-y-1.5">
+                  <div className="space-y-1.5 text-left">
                     <label className="block text-[10px] font-bold text-[#5A554E] uppercase tracking-widest">
                       Organization Name
                     </label>
@@ -1057,7 +1057,7 @@ export function ProfileSwitcher() {
                     />
                   </div>
 
-                  <div className="space-y-1.5">
+                  <div className="space-y-1.5 text-left">
                     <label className="block text-[10px] font-bold text-[#5A554E] uppercase tracking-widest">
                       Description
                     </label>
@@ -1072,11 +1072,11 @@ export function ProfileSwitcher() {
                   </div>
 
                   {/* Color selection */}
-                  <div className="space-y-1.5">
+                  <div className="space-y-1.5 text-left">
                     <label className="block text-[10px] font-bold text-[#5A554E] uppercase tracking-widest">
                       Branding Color Accent
                     </label>
-                    <div className="flex gap-2.5">
+                    <div className="flex gap-2.5 flex-wrap">
                       {['indigo', 'sky', 'emerald', 'violet', 'amber', 'rose', 'teal'].map(color => (
                         <button
                           key={color}

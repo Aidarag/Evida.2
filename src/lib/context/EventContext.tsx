@@ -1,7 +1,7 @@
 'use client';
 
 import React, { createContext, useContext, useState, useEffect, useCallback, ReactNode } from 'react';
-import { Event, Organization, Notification } from '@/lib/types';
+import { Event, Organization, Notification, Promotion } from '@/lib/types';
 import { useUser } from './UserContext';
 import { usePathname, useRouter } from 'next/navigation';
 
@@ -9,6 +9,7 @@ interface EventContextType {
   events: Event[];
   organizations: Organization[];
   notifications: Notification[];
+  promotions: Promotion[];
   isLoading: boolean;
   refetch: () => Promise<void>;
   // Mutations
@@ -32,6 +33,7 @@ export function EventProvider({ children }: { children: ReactNode }) {
   const [events, setEvents] = useState<Event[]>([]);
   const [organizations, setOrganizations] = useState<Organization[]>([]);
   const [notifications, setNotifications] = useState<Notification[]>([]);
+  const [promotions, setPromotions] = useState<Promotion[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const pathname = usePathname();
   const router = useRouter();
@@ -103,13 +105,19 @@ export function EventProvider({ children }: { children: ReactNode }) {
   }, [pathname, events, router]);
   const fetchData = useCallback(async () => {
     try {
-      const [eventsRes, orgsRes] = await Promise.all([
+      const [eventsRes, orgsRes, promosRes] = await Promise.all([
         fetch('/api/events'),
         fetch('/api/organizations'),
+        fetch('/api/promotions'),
       ]);
-      const [eventsData, orgsData] = await Promise.all([eventsRes.json(), orgsRes.json()]);
+      const [eventsData, orgsData, promosData] = await Promise.all([
+        eventsRes.json(),
+        orgsRes.json(),
+        promosRes.json(),
+      ]);
       setEvents(eventsData || []);
       setOrganizations(orgsData || []);
+      setPromotions(promosData || []);
 
       if (currentUser) {
         const notifRes = await fetch(`/api/notifications?username=${currentUser.username}`);
@@ -132,20 +140,39 @@ export function EventProvider({ children }: { children: ReactNode }) {
   const saveToggle = useCallback(async (eventId: string) => {
     if (!currentUser) return;
 
-    // 1. Optimistic Update
-    setEvents(prevEvents =>
-      prevEvents.map(evt => {
-        if (evt.id === eventId) {
-          const savedBy = evt.savedBy || [];
-          const idx = savedBy.indexOf(currentUser.name);
-          const newSavedBy = idx > -1
-            ? savedBy.filter(name => name !== currentUser.name)
-            : [...savedBy, currentUser.name];
-          return { ...evt, savedBy: newSavedBy };
-        }
-        return evt;
-      })
-    );
+    const isPromo = eventId.startsWith('promo-');
+
+    if (isPromo) {
+      // 1. Optimistic Update
+      setPromotions(prevPromos =>
+        prevPromos.map(promo => {
+          if (promo.id === eventId) {
+            const savedBy = promo.savedBy || [];
+            const idx = savedBy.indexOf(currentUser.name);
+            const newSavedBy = idx > -1
+              ? savedBy.filter(name => name !== currentUser.name)
+              : [...savedBy, currentUser.name];
+            return { ...promo, savedBy: newSavedBy };
+          }
+          return promo;
+        })
+      );
+    } else {
+      // 1. Optimistic Update
+      setEvents(prevEvents =>
+        prevEvents.map(evt => {
+          if (evt.id === eventId) {
+            const savedBy = evt.savedBy || [];
+            const idx = savedBy.indexOf(currentUser.name);
+            const newSavedBy = idx > -1
+              ? savedBy.filter(name => name !== currentUser.name)
+              : [...savedBy, currentUser.name];
+            return { ...evt, savedBy: newSavedBy };
+          }
+          return evt;
+        })
+      );
+    }
 
     try {
       const res = await fetch('/api/events/save', {
@@ -155,10 +182,16 @@ export function EventProvider({ children }: { children: ReactNode }) {
       });
       if (res.ok) {
         const data = await res.json();
-        // Sync with official backend response event state
-        setEvents(prevEvents =>
-          prevEvents.map(evt => (evt.id === eventId ? data.event : evt))
-        );
+        // Sync with official backend response event/promotion state
+        if (isPromo && data.promotion) {
+          setPromotions(prevPromos =>
+            prevPromos.map(p => (p.id === eventId ? data.promotion : p))
+          );
+        } else if (!isPromo && data.event) {
+          setEvents(prevEvents =>
+            prevEvents.map(evt => (evt.id === eventId ? data.event : evt))
+          );
+        }
       } else {
         // Rollback
         await fetchData();
@@ -355,6 +388,7 @@ export function EventProvider({ children }: { children: ReactNode }) {
         events,
         organizations,
         notifications,
+        promotions,
         isLoading,
         refetch: fetchData,
         saveToggle,

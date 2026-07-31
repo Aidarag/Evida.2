@@ -13,7 +13,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 type Tab = 'saved' | 'rsvp';
 
 export default function SavedEventsPage() {
-  const { events, saveToggle, rsvpToggle } = useEvents();
+  const { events, promotions, saveToggle, rsvpToggle } = useEvents();
   const { currentUser } = useUser();
   const router = useRouter();
 
@@ -52,7 +52,10 @@ export default function SavedEventsPage() {
 
   if (!currentUser) return null;
 
-  const savedEvents = events.filter(e => e.savedBy?.includes(currentUser.name));
+  const savedEvents = [
+    ...events.filter(e => e.savedBy?.includes(currentUser.name)),
+    ...promotions.filter(p => p.savedBy?.includes(currentUser.name))
+  ];
   const rsvpEvents = events.filter(e => e.attendees?.includes(currentUser.name));
 
   const displayEvents = activeTab === 'saved' ? savedEvents : rsvpEvents;
@@ -96,7 +99,14 @@ export default function SavedEventsPage() {
               >
                 <EventCard
                   event={event}
-                  onClick={() => router.push(`/events/${event.id}`)}
+                  onClick={() => {
+                    const isPromo = !('ownershipType' in event);
+                    if (isPromo) {
+                      window.location.href = `mailto:${event.contactInfo}?subject=Inquiry regarding: ${event.title}`;
+                    } else {
+                      router.push(`/events/${event.id}`);
+                    }
+                  }}
                   isSaved={event.savedBy?.includes(currentUser.name)}
                   onSave={(e) => {
                     e.stopPropagation();
