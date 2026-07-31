@@ -586,6 +586,7 @@ function getTailwindBgColor(color: string) {
 }
 
 export function ProfileSwitcher() {
+  const router = useRouter();
   const { currentUser, activeProfile, setActiveProfile } = useUser();
   const { organizations, createOrg } = useEvents();
   const [dropdownOpen, setDropdownOpen] = React.useState(false);

@@ -6,8 +6,10 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint",
-    "postinstall": "npm ci && npm ls react"
+    "lint": "eslint"
+  },
+  "engines": {
+    "node": ">=18.0.0"
   },
   "dependencies": {
     "framer-motion": "^12.42.0",

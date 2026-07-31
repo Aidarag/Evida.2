@@ -39,3 +39,9 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# nested repos
+/Evida-website
+/Evida.2
+/evida-website-standalone
+
