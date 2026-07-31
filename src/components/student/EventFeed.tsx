@@ -47,9 +47,9 @@ export default function EventFeed({
       const isOwner = e.organizer === currentUser.name;
       return matchesSearch && matchesOwnership && matchesComplexity && (e.status === 'approved' || isOwner);
     } else if (activeTab === 'my-rsvps') {
-      // My RSVPs shows events where the user is in attendees list
-      const isRsvp = e.attendees.includes(currentUser.name) || e.interested.includes(currentUser.name);
-      return matchesSearch && matchesOwnership && matchesComplexity && isRsvp && e.status === 'approved';
+      // Going shows events where the user is in attendees list
+      const isGoing = e.attendees.includes(currentUser.name);
+      return matchesSearch && matchesOwnership && matchesComplexity && isGoing && e.status === 'approved';
     }
     
     return false;
@@ -121,7 +121,7 @@ export default function EventFeed({
                 : 'border-transparent text-[#5A554E] hover:text-slate-200'
             }`}
           >
-            My RSVPs & Interested
+            Going
           </button>
           <button
             onClick={() => setActiveTab('promos')}

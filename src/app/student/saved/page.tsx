@@ -77,7 +77,7 @@ export default function SavedEventsPage() {
             onClick={() => setActiveTab('saved')} 
           />
           <Chip 
-            label={`Attending (${rsvpEvents.length})`} 
+            label={`Going (${rsvpEvents.length})`} 
             active={activeTab === 'rsvp'} 
             onClick={() => setActiveTab('rsvp')} 
           />

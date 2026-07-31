@@ -72,7 +72,7 @@ export default function SavedEvents({
           }`}
         >
           <CheckCircle className="h-3.5 w-3.5 text-emerald-600" />
-          My RSVPs ({rsvpEventsList.length})
+          Going ({rsvpEventsList.length})
         </button>
 
         <button
