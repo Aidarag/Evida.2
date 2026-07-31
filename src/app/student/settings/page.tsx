@@ -19,6 +19,8 @@ import {
 } from 'lucide-react';
 import Button from '@/components/ui/Button';
 
+import { useEvents } from '@/lib/context/EventContext';
+
 interface SettingsItem {
   id: string;
   label: string;
@@ -34,7 +36,8 @@ interface SettingsSection {
 }
 
 export default function StudentSettingsPage() {
-  const { currentUser, setCurrentUser, logout } = useUser();
+  const { currentUser, setCurrentUser, logout, setActiveProfile } = useUser();
+  const { createOrg } = useEvents();
   const router = useRouter();
 
   // Overlay modal state triggers
@@ -45,7 +48,38 @@ export default function StudentSettingsPage() {
     reminders: true
   });
 
+  const [newOrgName, setNewOrgName] = useState('');
+  const [newOrgDesc, setNewOrgDesc] = useState('');
+  const [newOrgCategory, setNewOrgCategory] = useState('Academic');
+  const [isSubmittingOrg, setIsSubmittingOrg] = useState(false);
+
   if (!currentUser) return null;
+
+  const handleCreateOrgSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newOrgName.trim() || !newOrgDesc.trim()) return;
+    setIsSubmittingOrg(true);
+    try {
+      const newOrg = (await createOrg({
+        name: newOrgName.trim(),
+        description: newOrgDesc.trim(),
+        logoColor: 'orange'
+      })) as any;
+      if (newOrg) {
+        setActiveProfile({
+          type: 'organization',
+          orgId: newOrg.id,
+          name: newOrg.name
+        });
+        setActiveModal(null);
+        router.push(`/org/${newOrg.id}/dashboard`);
+      }
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setIsSubmittingOrg(false);
+    }
+  };
 
   const handleLogout = () => {
     logout();
@@ -89,24 +123,25 @@ export default function StudentSettingsPage() {
     {
       title: 'Account',
       items: [
-        { id: 'profile', label: 'Edit Profile', value: 'MC', Icon: User, bgColor: '#FD5C05', onClick: () => router.push('/student/profile') },
-        { id: 'notifications', label: 'Notifications', value: 'On', Icon: Bell, bgColor: '#3b82f6', onClick: () => setActiveModal('notifications') },
-        { id: 'privacy', label: 'Privacy & Security', value: 'Private', Icon: Lock, bgColor: '#10b981', onClick: () => setActiveModal('privacy') },
-        { id: 'college', label: 'Linked College', value: currentUser.school || 'Livingstone College', Icon: Building, bgColor: '#8b5cf6', onClick: () => setActiveModal('college') },
+        { id: 'profile', label: 'Edit Profile', value: currentUser.avatar || 'MC', Icon: User, bgColor: '#FD5C05', onClick: () => router.push('/student/profile') },
+        { id: 'create-org', label: 'Create Organization', Icon: Building, bgColor: '#FD5C05', onClick: () => setActiveModal('create-org') },
+        { id: 'notifications', label: 'Notifications', value: 'On', Icon: Bell, bgColor: '#FD5C05', onClick: () => setActiveModal('notifications') },
+        { id: 'privacy', label: 'Privacy & Security', value: 'Private', Icon: Lock, bgColor: '#FD5C05', onClick: () => setActiveModal('privacy') },
+        { id: 'college', label: 'Linked College', value: currentUser.school || 'Livingstone College', Icon: Building, bgColor: '#FD5C05', onClick: () => setActiveModal('college') },
       ]
     },
     {
       title: 'Support & Feedback',
       items: [
-        { id: 'report', label: 'Report a Problem', Icon: AlertTriangle, bgColor: '#ef4444', onClick: () => setActiveModal('report') },
-        { id: 'feedback', label: 'Send Feedback', Icon: MessageSquare, bgColor: '#10b981', onClick: () => setActiveModal('feedback') },
+        { id: 'report', label: 'Report a Problem', Icon: AlertTriangle, bgColor: '#FD5C05', onClick: () => setActiveModal('report') },
+        { id: 'feedback', label: 'Send Feedback', Icon: MessageSquare, bgColor: '#FD5C05', onClick: () => setActiveModal('feedback') },
       ]
     },
     {
       title: 'Legal',
       items: [
-        { id: 'terms', label: 'Terms of Service', Icon: FileText, bgColor: '#6b7280', onClick: () => setActiveModal('terms') },
-        { id: 'policy', label: 'Privacy Policy', Icon: Lock, bgColor: '#374151', onClick: () => setActiveModal('policy') },
+        { id: 'terms', label: 'Terms of Service', Icon: FileText, bgColor: '#FD5C05', onClick: () => setActiveModal('terms') },
+        { id: 'policy', label: 'Privacy Policy', Icon: Lock, bgColor: '#FD5C05', onClick: () => setActiveModal('policy') },
       ]
     }
   ];
@@ -115,8 +150,8 @@ export default function StudentSettingsPage() {
     <div className="min-h-screen bg-transparent text-[#2A2621] font-sans pb-32">
       <div className="max-w-xl mx-auto px-4 py-6 space-y-6">
         
-        {/* ── Native Grouped Settings Header ── */}
-        <div className="flex items-center gap-4 text-left">
+        {/* ── Native Grouped Preferences Header ── */}
+        <div className="flex items-center gap-3 text-left">
           <button 
             onClick={() => router.push('/student/dashboard')}
             className="h-10 w-10 rounded-full bg-white border border-black/[0.06] flex items-center justify-center text-[#2A2621] hover:bg-[#FD5C05] hover:text-white transition-all cursor-pointer shadow-sm shrink-0"
@@ -124,12 +159,9 @@ export default function StudentSettingsPage() {
           >
             <ArrowLeft className="h-5 w-5" />
           </button>
-          <div>
-            <span className="text-[10px] font-bold text-[#5A554E] uppercase tracking-widest block">App Preferences</span>
-            <h1 className="text-xl font-extrabold text-[#2A2621] tracking-tight uppercase" style={{ fontFamily: 'var(--font-display)' }}>
-              Settings
-            </h1>
-          </div>
+          <h1 className="text-xl font-extrabold text-[#2A2621] tracking-tight uppercase" style={{ fontFamily: 'var(--font-display)' }}>
+            Preferences
+          </h1>
         </div>
 
         {/* ── Grouped Sections ── */}
@@ -232,6 +264,64 @@ export default function StudentSettingsPage() {
                     />
                   </div>
                 </div>
+              )}
+
+              {activeModal === 'create-org' && (
+                <form onSubmit={handleCreateOrgSubmit} className="space-y-4 text-xs">
+                  <div className="space-y-1 text-left">
+                    <p className="font-extrabold text-sm text-[#2A2621]">Create Student Organization</p>
+                    <p className="text-[10px] text-[#5A554E]">Register a verified organization profile at Livingstone College.</p>
+                  </div>
+                  <div className="space-y-1 text-left">
+                    <label className="block text-[10px] font-bold text-[#5A554E] uppercase tracking-widest">Organization Name</label>
+                    <input 
+                      type="text" 
+                      required
+                      placeholder="e.g. Blue Bears Tech Club" 
+                      value={newOrgName} 
+                      onChange={e => setNewOrgName(e.target.value)}
+                      className="w-full bg-slate-50 border border-black/10 rounded-xl px-3 py-2 text-xs text-[#2A2621] focus:outline-none focus:border-[#FD5C05]"
+                    />
+                  </div>
+                  <div className="space-y-1 text-left">
+                    <label className="block text-[10px] font-bold text-[#5A554E] uppercase tracking-widest">Category</label>
+                    <select 
+                      value={newOrgCategory} 
+                      onChange={e => setNewOrgCategory(e.target.value)}
+                      className="w-full bg-slate-50 border border-black/10 rounded-xl px-3 py-2 text-xs text-[#2A2621] focus:outline-none focus:border-[#FD5C05]"
+                    >
+                      <option value="Academic">Academic</option>
+                      <option value="Sports">Sports</option>
+                      <option value="Social">Social</option>
+                      <option value="Professional">Professional</option>
+                      <option value="Cultural">Cultural</option>
+                      <option value="Community Service">Community Service</option>
+                      <option value="Arts">Arts</option>
+                      <option value="Technology">Technology</option>
+                      <option value="Religious">Religious</option>
+                    </select>
+                  </div>
+                  <div className="space-y-1 text-left">
+                    <label className="block text-[10px] font-bold text-[#5A554E] uppercase tracking-widest">Description</label>
+                    <textarea 
+                      required
+                      rows={3}
+                      placeholder="Organization mission and campus activities..." 
+                      value={newOrgDesc} 
+                      onChange={e => setNewOrgDesc(e.target.value)}
+                      className="w-full bg-slate-50 border border-black/10 rounded-xl px-3 py-2 text-xs text-[#2A2621] focus:outline-none focus:border-[#FD5C05] resize-none"
+                    />
+                  </div>
+                  <Button
+                    variant="primary"
+                    size="sm"
+                    type="submit"
+                    disabled={isSubmittingOrg}
+                    className="w-full bg-[#FD5C05] text-white hover:bg-[#CC3D00] border-none font-black uppercase tracking-wider py-3 rounded-full shadow-md shadow-[#FD5C05]/20"
+                  >
+                    {isSubmittingOrg ? 'Creating...' : 'Register Organization'}
+                  </Button>
+                </form>
               )}
 
               {activeModal === 'college' && (

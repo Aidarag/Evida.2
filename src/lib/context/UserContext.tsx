@@ -29,7 +29,7 @@ const DEFAULT_USERS: User[] = [
     major: 'Computer Science',
     gradYear: '2028',
     graduationYear: '2028',
-    school: 'School of Engineering',
+    school: 'Livingstone College',
     avatar: 'MC',
   },
   {
@@ -41,7 +41,7 @@ const DEFAULT_USERS: User[] = [
     major: 'Mechanical Engineering',
     gradYear: '2027',
     graduationYear: '2027',
-    school: 'School of Engineering',
+    school: 'Livingstone College',
     avatar: 'SJ',
   },
   {

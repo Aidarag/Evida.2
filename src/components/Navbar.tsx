@@ -820,14 +820,14 @@ export function ProfileSwitcher() {
                 </div>
 
                 <div className="space-y-4 my-auto">
-                  <span className="text-[#a855f7] text-[10px] font-black uppercase tracking-widest block">
+                  <span className="text-[#FD5C05] text-[10px] font-black uppercase tracking-widest block">
                     Exclusive Feature
                   </span>
                   <h3 className="text-2xl font-black tracking-tight leading-tight uppercase font-sans">
                     Create Your Organization
                   </h3>
                   <p className="text-xs text-white/65 leading-relaxed font-semibold">
-                    Give your club, student organization, campus department, or student initiative an official home on Evida.
+                    Give your club, student organization, campus department, or initiative an official home at Livingstone College on Evida.
                   </p>
                   
                   <div className="space-y-3 pt-4 border-t border-white/5">
@@ -847,7 +847,7 @@ export function ProfileSwitcher() {
 
                 <div className="flex flex-col items-center gap-2 pt-4">
                   <div className="flex gap-1.5 justify-center mb-1">
-                    <span className="h-1.5 w-1.5 rounded-full bg-[#a855f7]" />
+                    <span className="h-1.5 w-1.5 rounded-full bg-[#FD5C05]" />
                     <span className="h-1.5 w-1.5 rounded-full bg-white/20" />
                     <span className="h-1.5 w-1.5 rounded-full bg-white/20" />
                   </div>
@@ -891,40 +891,40 @@ export function ProfileSwitcher() {
                 </div>
 
                 <div className="space-y-4 my-auto">
-                  <span className="text-[#a855f7] text-[10px] font-black uppercase tracking-widest block">
+                  <span className="text-[#FD5C05] text-[10px] font-black uppercase tracking-widest block">
                     Exclusive Feature
                   </span>
                   <h3 className="text-2xl font-black tracking-tight leading-tight uppercase font-sans">
                     Officially Recognized
                   </h3>
                   <p className="text-xs text-white/65 leading-relaxed font-semibold">
-                    Organizations approved by your school receive an Official Organization badge on Evida.
+                    Organizations approved by Livingstone College receive an Official Evida Verification Badge.
                   </p>
 
                   <div className="relative py-3.5 px-4 bg-[#111116] border border-white/5 rounded-2xl flex flex-col gap-2.5 text-[10px] font-sans text-left mt-2">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
-                        <div className="h-7 w-7 rounded-lg bg-[#a855f7] flex items-center justify-center text-[10px] font-black text-white shrink-0">
-                          6M
+                        <div className="h-7 w-7 rounded-lg bg-[#FD5C05] flex items-center justify-center text-[10px] font-black text-white shrink-0">
+                          BB
                         </div>
                         <div>
                           <div className="flex items-center gap-1">
-                            <span className="font-extrabold text-[10px] text-white">6th Man</span>
-                            <span className="h-3.5 w-3.5 bg-blue-500 text-white rounded-full flex items-center justify-center text-[7px] font-black shadow-sm" title="Verified Organization">✓</span>
+                            <span className="font-extrabold text-[10px] text-white">Blue Bears Tech</span>
+                            <span className="h-3.5 w-3.5 bg-[#FD5C05] text-white rounded-full flex items-center justify-center text-[7px] font-black shadow-sm" title="Verified Organization">✓</span>
                           </div>
-                          <span className="text-[7.5px] text-white/50 font-semibold uppercase tracking-wider block">@cardinal6thman</span>
+                          <span className="text-[7.5px] text-white/50 font-semibold uppercase tracking-wider block">@bluebearstech</span>
                         </div>
                       </div>
-                      <span className="text-[7.5px] text-white/40 font-bold uppercase tracking-wider bg-white/5 px-2 py-0.5 rounded border border-white/5 shrink-0">
-                        2wks
+                      <span className="text-[7.5px] text-[#FD5C05] font-bold uppercase tracking-wider bg-[#FD5C05]/10 px-2 py-0.5 rounded border border-[#FD5C05]/20 shrink-0">
+                        Official Group
                       </span>
                     </div>
                     <div className="border-t border-white/5 pt-2.5 space-y-1">
-                      <p className="font-bold text-[9px] text-white/95 leading-normal">duck hunting is permitted tonight between the hours of 8 and 10 😈</p>
-                      <p className="text-[9px] text-white/70 leading-normal">come watch the men's basketball team</p>
+                      <p className="font-bold text-[9px] text-white/95 leading-normal">Join Livingstone College's Blue Bears Tech Club for our weekly campus workshop! 🐻💻</p>
+                      <p className="text-[9px] text-white/70 leading-normal">Building software, design systems, and campus events together.</p>
                       <div className="h-16 w-full rounded-xl bg-[#1c1c26] flex flex-col items-center justify-center text-[8px] font-extrabold text-white/40 uppercase tracking-widest relative overflow-hidden mt-1.5 border border-white/5">
-                        <span className="relative z-15 text-white/90">Free Crewneck Sweaters</span>
-                        <span className="text-[6.5px] text-[#FD5C05] block mt-0.5 tracking-wider">Stanford vs Oregon</span>
+                        <span className="relative z-15 text-white/90">Free Blue Bears Swag & Refreshments</span>
+                        <span className="text-[6.5px] text-[#FD5C05] block mt-0.5 tracking-wider">Livingstone Student Center</span>
                       </div>
                     </div>
                   </div>
@@ -933,7 +933,7 @@ export function ProfileSwitcher() {
                 <div className="flex flex-col items-center gap-2 pt-4">
                   <div className="flex gap-1.5 justify-center mb-1">
                     <span className="h-1.5 w-1.5 rounded-full bg-white/20" />
-                    <span className="h-1.5 w-1.5 rounded-full bg-[#a855f7]" />
+                    <span className="h-1.5 w-1.5 rounded-full bg-[#FD5C05]" />
                     <span className="h-1.5 w-1.5 rounded-full bg-white/20" />
                   </div>
                   <span className="text-[10px] font-bold uppercase tracking-wider text-white/40 animate-pulse">
@@ -971,7 +971,7 @@ export function ProfileSwitcher() {
                 </div>
 
                 <div className="space-y-4 my-auto text-left">
-                  <span className="text-[#a855f7] text-[10px] font-black uppercase tracking-widest block">
+                  <span className="text-[#FD5C05] text-[10px] font-black uppercase tracking-widest block">
                     Easy as 1, 2... That's it!
                   </span>
                   <h3 className="text-2xl font-black tracking-tight leading-tight uppercase font-sans">
@@ -980,21 +980,21 @@ export function ProfileSwitcher() {
                   
                   <div className="space-y-3.5 pt-2 text-xs">
                     <div className="flex gap-2.5">
-                      <span className="font-black text-[#a855f7]">1.</span>
-                      <p className="font-semibold text-white/80 leading-relaxed">Your organization must belong to your campus.</p>
+                      <span className="font-black text-[#FD5C05]">1.</span>
+                      <p className="font-semibold text-white/80 leading-relaxed">Your organization must belong to Livingstone College.</p>
                     </div>
                     <div className="flex gap-2.5">
-                      <span className="font-black text-[#a855f7]">2.</span>
-                      <p className="font-semibold text-white/80 leading-relaxed">A school administrator will review your request.</p>
+                      <span className="font-black text-[#FD5C05]">2.</span>
+                      <p className="font-semibold text-white/80 leading-relaxed">A campus administrator will review your request in the queue.</p>
                     </div>
                     <div className="flex gap-2.5">
-                      <span className="font-black text-[#a855f7]">3.</span>
-                      <p className="font-semibold text-white/80 leading-relaxed">Once approved, your organization will receive an Official Organization badge.</p>
+                      <span className="font-black text-[#FD5C05]">3.</span>
+                      <p className="font-semibold text-white/80 leading-relaxed">Once approved, your organization will receive an Official Evida Verification Badge.</p>
                     </div>
                   </div>
 
                   <p className="text-[10px] text-white/45 italic leading-relaxed pt-2">
-                    Your school—not Evida—verifies organizations to ensure students can trust the information they see.
+                    Livingstone College verifies organizations on Evida to ensure students can trust official campus events.
                   </p>
                 </div>
 
@@ -1002,12 +1002,12 @@ export function ProfileSwitcher() {
                   <div className="flex gap-1.5 justify-center mb-1">
                     <span className="h-1.5 w-1.5 rounded-full bg-white/20" />
                     <span className="h-1.5 w-1.5 rounded-full bg-white/20" />
-                    <span className="h-1.5 w-1.5 rounded-full bg-[#a855f7]" />
+                    <span className="h-1.5 w-1.5 rounded-full bg-[#FD5C05]" />
                   </div>
 
                   <button
                     onClick={() => setOnboardingStep(4)}
-                    className="w-full py-3.5 rounded-full bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-700 hover:to-indigo-700 text-white text-xs font-black uppercase tracking-widest transition-all shadow-lg active:scale-95 duration-150 cursor-pointer border-none"
+                    className="w-full py-3.5 rounded-full bg-gradient-to-r from-[#FD5C05] to-[#FC7C0B] hover:opacity-95 text-white text-xs font-black uppercase tracking-widest transition-all shadow-lg shadow-[#FD5C05]/20 active:scale-95 duration-150 cursor-pointer border-none"
                   >
                     Create Organization
                   </button>
@@ -1118,7 +1118,7 @@ export function ProfileSwitcher() {
                     <button
                       type="submit"
                       disabled={isSubmitting}
-                      className="bg-[#2A2621] text-white hover:bg-[#FD5C05] hover:text-[#2A2621] px-5 py-2.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all disabled:opacity-55 cursor-pointer border-none"
+                      className="bg-[#FD5C05] text-white hover:bg-[#CC3D00] px-5 py-2.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all disabled:opacity-55 cursor-pointer border-none shadow-md shadow-[#FD5C05]/20"
                     >
                       {isSubmitting ? 'Creating...' : 'Create Profile'}
                     </button>

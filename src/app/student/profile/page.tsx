@@ -557,7 +557,7 @@ function StudentProfilePageContent() {
 
           {/* User Bio Plain Text */}
           <div className="w-full max-w-xl text-sm text-[#5A554E] leading-relaxed font-medium px-4">
-            {profileUser.bio || "Computer Science student at the School of Engineering. Passionate about building campus communities, design, and interactive software experiences."}
+            {profileUser.bio || "Computer Science student at Livingstone College. Passionate about building campus communities, design, and interactive software experiences."}
           </div>
 
           {/* Add College / Connected College Action */}

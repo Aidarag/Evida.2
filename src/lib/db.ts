@@ -71,7 +71,7 @@ const initialUsers: User[] = [
     major: 'Computer Science',
     gradYear: '2028',
     graduationYear: '2028',
-    school: 'School of Engineering',
+    school: 'Livingstone College',
     avatar: 'MC',
     consentGiven: true,
     consentDate: '2026-01-15T10:00:00Z'
@@ -86,7 +86,7 @@ const initialUsers: User[] = [
     major: 'Mechanical Engineering',
     gradYear: '2027',
     graduationYear: '2027',
-    school: 'School of Engineering',
+    school: 'Livingstone College',
     avatar: 'SJ',
     consentGiven: true,
     consentDate: '2026-01-10T10:00:00Z'
