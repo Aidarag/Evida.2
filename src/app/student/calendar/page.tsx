@@ -129,42 +129,6 @@ export default function StudentCalendarPage() {
     document.body.removeChild(link);
   };
 
-  const handleExportAllGoing = () => {
-    if (userGoingEvents.length === 0) return;
-    
-    const icsHeader = [
-      'BEGIN:VCALENDAR',
-      'VERSION:2.0',
-      'PRODID:-//Evida//Calendar//EN'
-    ];
-    
-    const icsEvents = userGoingEvents.map(evt => {
-      const cleanTitle = evt.title.replace(/[^\w\s-]/gi, '');
-      const cleanDescription = evt.description ? evt.description.replace(/[^\w\s-]/gi, '') : '';
-      const cleanLocation = evt.location ? evt.location.replace(/[^\w\s-]/gi, '') : 'Campus';
-      return [
-        'BEGIN:VEVENT',
-        `SUMMARY:${cleanTitle}`,
-        `DESCRIPTION:${cleanDescription}`,
-        `LOCATION:${cleanLocation}`,
-        `DTSTART:${evt.date.replace(/-/g, '')}T090000`,
-        `DTEND:${evt.date.replace(/-/g, '')}T100000`,
-        'END:VEVENT'
-      ].join('\r\n');
-    });
-    
-    const icsContent = [...icsHeader, ...icsEvents, 'END:VCALENDAR'].join('\r\n');
-    
-    const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8;' });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.setAttribute('download', `Evida_My_Calendar.ics`);
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  };
-
   return (
     <div className="max-w-7xl mx-auto px-4 py-6 md:py-10 pb-28 md:pb-12 space-y-6">
       {/* ── Header ── */}
@@ -174,19 +138,9 @@ export default function StudentCalendarPage() {
             Campus Calendar
           </h1>
           <p className="text-sm text-[#5A554E] font-semibold mt-2.5 leading-relaxed">
-            View the events you are attending. Export all of them to your calendar at once.
+            View the events you are attending.
           </p>
         </div>
-        {userGoingEvents.length > 0 && (
-          <Button 
-            variant="primary"
-            onClick={handleExportAllGoing}
-            className="self-start md:self-center bg-[#2A2621] text-white hover:bg-[#FD5C05] hover:text-[#2A2621] px-5 py-2.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all flex items-center gap-2 shadow-sm shrink-0 cursor-pointer border-none"
-          >
-            <Calendar className="h-4 w-4" />
-            Export My Calendar (.ics)
-          </Button>
-        )}
       </div>
 
       {/* Main Section */}

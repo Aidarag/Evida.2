@@ -166,8 +166,8 @@ export default function LandingPage({
       answer: "Evida is a premium, unified digital home for student life. It aggregates campus events, student organizations, promotions, and opportunities into a high-end, responsive feed."
     },
     {
-      question: "How do I join the waitlist?",
-      answer: "Click any 'Join Waitlist' button to reserve your spot. We are currently in private beta and will notify you as soon as access opens for your campus."
+      question: "How do I get started?",
+      answer: "Click any 'Get Started' button to register your account. We are currently in private beta and will notify you as soon as access opens for your campus."
     },
     {
       question: "Can universities use Evida for administration?",
@@ -288,7 +288,7 @@ export default function LandingPage({
                       }}
                       className="w-full rounded-full bg-gradient-to-r from-[#FB1C07] via-[#FD5C05] to-[#FC7C0B] hover:brightness-105 hover:-translate-y-0.5 text-white text-xs font-black py-3.5 transition-all duration-300 border border-white/10 cursor-pointer shadow-md shadow-[#FB1C07]/20 uppercase tracking-wider flex items-center justify-center gap-1.5"
                     >
-                      <span>Join Waitlist</span>
+                      <span>Get Started</span>
                       <ArrowRight className="h-4 w-4 text-white" />
                     </button>
                   </div>
@@ -338,7 +338,7 @@ export default function LandingPage({
                 onClick={onLogin}
                 className="w-full sm:w-auto flex-1 rounded-full bg-gradient-to-r from-[#FB1C07] via-[#FD5C05] to-[#FC7C0B] hover:brightness-110 hover:-translate-y-0.5 shadow-[0_4px_14px_rgba(251,28,7,0.25)] hover:shadow-[0_6px_20px_rgba(251,28,7,0.35)] px-6 py-3.5 text-xs font-black text-white transition-all duration-300 cursor-pointer uppercase tracking-wider flex items-center justify-center gap-1.5"
               >
-                <span>Join Waitlist</span>
+                <span>Get Started</span>
                 <ArrowRight className="h-4 w-4 text-white" />
               </button>
               <button
@@ -558,7 +558,7 @@ export default function LandingPage({
                     href="/signup"
                     className="block w-full text-center bg-[#FD5C05] hover:bg-[#e84e00] text-[#2A2621] font-black text-[10px] uppercase tracking-wider py-3 px-4 rounded-xl transition-all shadow-[0_0_20px_rgba(253,92,5,0.3)] hover:shadow-[0_0_30px_rgba(253,92,5,0.5)]"
                   >
-                    Join Waitlist →
+                    Get Started →
                   </Link>
                 </motion.div>
               )}
@@ -973,7 +973,7 @@ export default function LandingPage({
                 onClick={onLogin}
                 className="w-full rounded-full bg-gradient-to-r from-[#FB1C07] via-[#FD5C05] to-[#FC7C0B] hover:brightness-110 hover:-translate-y-0.5 py-3.5 sm:py-4 text-xs sm:text-sm font-black text-white shadow-lg shadow-[#FB1C07]/25 hover:shadow-[0_6px_20px_rgba(251,28,7,0.35)] transition-all duration-300 cursor-pointer uppercase tracking-wider flex items-center justify-center gap-2"
               >
-                <span>Join Waitlist</span>
+                <span>Get Started</span>
                 <ArrowRight className="h-4 w-4 text-white" />
               </button>
             </div>
@@ -1030,7 +1030,7 @@ export default function LandingPage({
                   <a href="#faq" className="hover:text-[#FD5C05] transition-colors">FAQ</a>
                 </li>
                 <li>
-                  <a href="#get-started" className="hover:text-[#FD5C05] transition-colors">Join Waitlist</a>
+                  <a href="#get-started" className="hover:text-[#FD5C05] transition-colors">Get Started</a>
                 </li>
               </ul>
             </div>

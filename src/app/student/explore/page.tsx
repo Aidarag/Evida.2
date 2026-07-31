@@ -32,7 +32,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Event, Organization, Promotion } from '@/lib/types';
 
 export default function ExplorePage() {
-  const { events, organizations, saveToggle } = useEvents();
+  const { events, promotions: allPromotions, organizations, saveToggle } = useEvents();
   const { currentUser } = useUser();
   const router = useRouter();
 
@@ -55,41 +55,47 @@ export default function ExplorePage() {
   // Search result tab state: 'all' | 'events' | 'orgs' | 'promos'
   const [searchTab, setSearchTab] = useState<'all' | 'events' | 'orgs' | 'promos'>('all');
 
-  // Promotions state
-  const [promotions, setPromotions] = useState<Promotion[]>([]);
-
-  useEffect(() => {
-    fetch('/api/promotions')
-      .then(res => res.json())
-      .then(data => setPromotions(data.filter((p: Promotion) => p.status === 'approved') || []))
-      .catch(() => {});
-  }, []);
+  const promotions = useMemo(() => allPromotions.filter((p: Promotion) => p.status === 'approved'), [allPromotions]);
 
   const approvedEvents = useMemo(() => events.filter(e => e.status === 'approved'), [events]);
 
   // ── Unified Search Matching ──
+  const normalizeWord = (w: string) => {
+    w = w.toLowerCase();
+    if (w.startsWith('photograph')) return 'photo';
+    if (w.startsWith('photo')) return 'photo';
+    if (w.startsWith('tutor')) return 'tutor';
+    if (w.startsWith('grad')) return 'grad';
+    if (w.startsWith('academic')) return 'academ';
+    if (w.startsWith('workshop')) return 'workshop';
+    return w;
+  };
+
+  const matchQuery = (textFields: (string | undefined)[], query: string) => {
+    if (!query) return true;
+    const queryTerms = query.toLowerCase().split(/\s+/).filter(Boolean).map(normalizeWord);
+    if (queryTerms.length === 0) return true;
+    
+    const normalizedText = textFields
+      .map(f => (f || '').toLowerCase().split(/\s+/).filter(Boolean).map(normalizeWord).join(' '))
+      .join(' ');
+
+    return queryTerms.every(term => normalizedText.includes(term));
+  };
+
   const searchResults = useMemo(() => {
     if (!searchQuery) return { events: [], orgs: [], promos: [] };
     
-    const query = searchQuery.toLowerCase();
-    
     const matchedEvents = approvedEvents.filter(e => 
-      e.title.toLowerCase().includes(query) ||
-      e.description.toLowerCase().includes(query) ||
-      e.location.toLowerCase().includes(query) ||
-      e.category.toLowerCase().includes(query)
+      matchQuery([e.title, e.description, e.location, e.category], searchQuery)
     );
 
     const matchedOrgs = organizations.filter(org => 
-      org.name.toLowerCase().includes(query) ||
-      org.description.toLowerCase().includes(query)
+      matchQuery([org.name, org.description], searchQuery)
     );
 
     const matchedPromos = promotions.filter(p => 
-      p.title.toLowerCase().includes(query) ||
-      p.description.toLowerCase().includes(query) ||
-      p.category.toLowerCase().includes(query) ||
-      p.organizer.toLowerCase().includes(query)
+      matchQuery([p.title, p.description, p.category, p.organizer], searchQuery)
     );
 
     return { events: matchedEvents, orgs: matchedOrgs, promos: matchedPromos };
@@ -140,8 +146,15 @@ export default function ExplorePage() {
   }, [promotions]);
 
   const academicsWorkshops = useMemo(() => {
-    const acadEvts = approvedEvents.filter(e => e.category?.toLowerCase() === 'academic');
-    const acadPromos = promotions.filter(p => (p.category as string) === 'tutoring' || p.category === 'academic');
+    const acadEvts = approvedEvents.filter(e => 
+      e.category?.toLowerCase() === 'academic' || 
+      e.category?.toLowerCase() === 'workshops' || 
+      e.category?.toLowerCase() === 'academic & workshops'
+    );
+    const acadPromos = promotions.filter(p => 
+      (p.category as string) === 'tutoring' || 
+      p.category === 'academic'
+    );
     return { events: acadEvts.slice(0, 4), promos: acadPromos.slice(0, 4) };
   }, [approvedEvents, promotions]);
 
@@ -270,30 +283,81 @@ export default function ExplorePage() {
     </div>
   );
 
+  const getPromoImage = (category: string) => {
+    const cat = category.toLowerCase();
+    if (cat.includes('academic') || cat.includes('tutor') || cat.includes('calculus')) {
+      return '/pexels-gu-ko-2150570603-31827067.jpg';
+    }
+    if (cat.includes('creative') || cat.includes('photo') || cat.includes('art')) {
+      return '/pexels-yaroslav-shuraev-8513385.jpg';
+    }
+    if (cat.includes('food') || cat.includes('deal') || cat.includes('coffee')) {
+      return '/pexels-cottonbro-5989925.jpg';
+    }
+    return '/pexels-rdne-7648057.jpg';
+  };
+
   // Helper to render promotion cards
-  const renderPromotionCard = (promo: Promotion, forceCategoryText?: string, isGridItem: boolean = false) => (
-    <div
-      key={promo.id}
-      className={`${isGridItem ? 'w-full' : 'w-52 sm:w-60 shrink-0'} bg-white border border-black/[0.04] rounded-3xl p-3 shadow-sm hover:border-[#FD5C05]/30 hover:scale-[1.01] transition-all flex flex-col justify-between h-32 relative group`}
-    >
-      <span className="absolute top-3 right-3 text-[7px] font-black uppercase tracking-wider bg-black/60 backdrop-blur-[2px] text-white px-1.5 py-0.5 rounded">
-        {forceCategoryText || promo.category}
-      </span>
-      <div className="space-y-0.5">
-        <span className="text-[#FD5C05] text-[7px] font-black uppercase tracking-widest block">Opportunity</span>
-        <h3 className="font-extrabold text-[11px] uppercase tracking-wide text-[#2A2621] leading-tight line-clamp-1 w-[80%]">
-          {promo.title}
-        </h3>
-        <p className="text-[10px] text-[#5A554E] leading-normal line-clamp-2 font-semibold">
-          {promo.description}
-        </p>
+  const renderPromotionCard = (promo: Promotion, forceCategoryText?: string, isGridItem: boolean = false) => {
+    const isSaved = currentUser ? promo.savedBy?.includes(currentUser.name) : false;
+    const coverImage = promo.image || getPromoImage(promo.category);
+
+    return (
+      <div
+        key={promo.id}
+        onClick={() => {
+          window.location.href = `mailto:${promo.contactInfo}?subject=Inquiry regarding: ${promo.title}`;
+        }}
+        className={`${isGridItem ? 'w-full' : 'w-52 sm:w-60 shrink-0'} bg-white border border-black/[0.04] rounded-3xl overflow-hidden shadow-sm hover:border-[#FD5C05]/30 hover:scale-[1.01] transition-all flex flex-col relative group cursor-pointer`}
+      >
+        <div className="h-28 w-full bg-[#FD5C05]/10 shrink-0 relative">
+          <img src={coverImage} className="w-full h-full object-cover" alt="" />
+          
+          <span className="absolute top-2 left-2 text-[7px] font-black uppercase tracking-wider bg-black/60 backdrop-blur-[2px] text-white px-1.5 py-0.5 rounded">
+            {forceCategoryText || promo.category}
+          </span>
+
+          {currentUser && (
+            <button 
+              type="button"
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                saveToggle(promo.id);
+              }}
+              className="absolute top-1.5 right-1.5 z-20 cursor-pointer focus:outline-none p-1 group"
+              title={isSaved ? "Unsave Promotion" : "Save Promotion"}
+            >
+              <Bookmark 
+                className={`h-4.5 w-4.5 transition-all duration-150 ease-in-out ${
+                  isSaved 
+                    ? 'fill-[#FD5C05] text-[#FD5C05]' 
+                    : 'text-white hover:text-[#FD5C05]/90 drop-shadow-[0_1px_2px_rgba(0,0,0,0.5)]'
+                }`} 
+              />
+            </button>
+          )}
+        </div>
+        <div className="p-3 flex-1 flex flex-col justify-between space-y-2">
+          <div className="space-y-0.5 text-left">
+            <span className="text-[#FD5C05] text-[7px] font-black uppercase tracking-widest block">
+              Student Promotion
+            </span>
+            <h3 className="font-extrabold text-[11px] uppercase tracking-wide text-[#2A2621] group-hover:text-[#FD5C05] transition-colors leading-tight line-clamp-1" style={{ fontFamily: 'var(--font-display)' }}>
+              {promo.title}
+            </h3>
+            <p className="text-[10px] text-[#5A554E] leading-relaxed line-clamp-2 font-medium">
+              {promo.description}
+            </p>
+          </div>
+          <div className="pt-1.5 border-t border-black/[0.04] flex items-center justify-between text-[8px] text-[#5A554E] font-semibold">
+            <span className="flex items-center gap-0.5 truncate max-w-[50%]"><Users className="h-2.5 w-2.5" /> {promo.organizer}</span>
+            <span className="flex items-center gap-0.5 shrink-0 bg-[#EAE4CF]/60 text-[#2A2621] px-1 py-0.5 rounded-[4px]">{promo.contactInfo}</span>
+          </div>
+        </div>
       </div>
-      <div className="pt-1.5 border-t border-black/[0.04] flex items-center justify-between text-[8px] text-[#5A554E] font-semibold">
-        <span className="truncate max-w-[50%]">By {promo.organizer}</span>
-        <span className="bg-[#EAE4CF]/40 text-[#2A2621] px-1.5 py-0.5 rounded text-[7px] font-bold">{promo.contactInfo}</span>
-      </div>
-    </div>
-  );
+    );
+  };
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-6 pb-28 md:pb-12 space-y-6 text-[#2A2621] text-left">
