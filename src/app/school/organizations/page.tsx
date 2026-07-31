@@ -7,14 +7,18 @@ import Card from '@/components/ui/Card';
 import Badge from '@/components/ui/Badge';
 import Button from '@/components/ui/Button';
 import Input from '@/components/ui/Input';
+import Modal from '@/components/ui/Modal';
 import EmptyState from '@/components/ui/EmptyState';
 import { Building2, Search, CheckCircle2, XCircle } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 export default function OrganizationsPage() {
-  const { organizations, toggleVerifyOrg } = useEvents();
+  const { organizations, toggleVerifyOrg, suspendOrg, requestInfoOrg } = useEvents();
   const { currentUser } = useUser();
   const [searchQuery, setSearchQuery] = useState('');
+  const [requestInfoModal, setRequestInfoModal] = useState(false);
+  const [selectedOrgId, setSelectedOrgId] = useState('');
+  const [note, setNote] = useState('');
 
   if (!currentUser || currentUser.role !== 'admin') return null;
 
@@ -22,6 +26,12 @@ export default function OrganizationsPage() {
     org.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
     org.description.toLowerCase().includes(searchQuery.toLowerCase())
   );
+
+  const handleRequestInfo = () => {
+    requestInfoOrg(selectedOrgId, note);
+    setRequestInfoModal(false);
+    setNote('');
+  };
 
   return (
     <div className="p-6 md:p-10 space-y-8 max-w-6xl mx-auto">
@@ -77,7 +87,9 @@ export default function OrganizationsPage() {
                 {org.description}
               </p>
 
-              <div className="pt-5 mt-5 border-t border-[#D8D2BC]/30 flex justify-end">
+              <div className="pt-5 mt-5 border-t border-[#D8D2BC]/30 flex justify-end gap-2">
+                <Button variant="ghost" size="sm" onClick={() => suspendOrg(org.id)}>Suspend</Button>
+                <Button variant="ghost" size="sm" onClick={() => { setSelectedOrgId(org.id); setRequestInfoModal(true); }}>Request Info</Button>
                 <Button
                   variant={org.verified ? "ghost" : "neon"}
                   size="sm"
@@ -95,6 +107,18 @@ export default function OrganizationsPage() {
           title="No organizations found"
         />
       )}
+
+      <Modal isOpen={requestInfoModal} onClose={() => setRequestInfoModal(false)} title="Request Information">
+        <div className="space-y-4">
+          <textarea
+            className="w-full p-3 border rounded-lg"
+            placeholder="Enter request details..."
+            value={note}
+            onChange={(e) => setNote(e.target.value)}
+          />
+          <Button onClick={handleRequestInfo}>Send Request</Button>
+        </div>
+      </Modal>
     </div>
   );
 }

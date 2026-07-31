@@ -20,6 +20,8 @@ interface EventContextType {
   deleteEvent: (id: string) => Promise<boolean>;
   reviewEvent: (id: string, status: 'approved' | 'rejected', feedback?: string) => Promise<void>;
   toggleVerifyOrg: (id: string) => Promise<void>;
+  suspendOrg: (id: string) => Promise<void>;
+  requestInfoOrg: (id: string, note: string) => Promise<void>;
   createOrg: (orgData: unknown) => Promise<unknown>;
   markNotificationRead: (id: string) => Promise<void>;
   clearNotification: (id: string) => Promise<void>;
@@ -305,6 +307,34 @@ export function EventProvider({ children }: { children: ReactNode }) {
     }
   }, [fetchData]);
 
+  // Suspend an organization (prevent it from being shown publicly)
+  const suspendOrg = useCallback(async (id: string) => {
+    try {
+      const res = await fetch(`/api/organizations/${id}/suspend`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'suspend' }),
+      });
+      if (res.ok) await fetchData();
+    } catch (e) {
+      console.error(e);
+    }
+  }, [fetchData]);
+
+  // Request more information from an organization (adds a note)
+  const requestInfoOrg = useCallback(async (id: string, note: string) => {
+    try {
+      const res = await fetch(`/api/organizations/${id}/request-info`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ note }),
+      });
+      if (res.ok) await fetchData();
+    } catch (e) {
+      console.error(e);
+    }
+  }, [fetchData]);
+
   const createOrg = useCallback(async (orgData: unknown) => {
     if (!currentUser) return null;
     try {
@@ -398,6 +428,8 @@ export function EventProvider({ children }: { children: ReactNode }) {
         deleteEvent,
         reviewEvent,
         toggleVerifyOrg,
+        suspendOrg,
+        requestInfoOrg,
         createOrg,
         markNotificationRead,
         clearNotification,

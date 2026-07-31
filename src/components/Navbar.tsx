@@ -230,7 +230,6 @@ export function MobileBottomNav({ variant = 'student' }: { variant?: 'student' |
     { href: '/school/review', icon: ClipboardList, label: 'Review' },
     { href: '/school/featured', icon: Star, label: 'Featured' },
     { href: '/school/organizations', icon: Building2, label: 'Orgs' },
-    { href: '/school/analytics', icon: BarChart3, label: 'Analytics' },
   ];
 
   const tabs = variant === 'school' ? schoolTabs : studentTabs;
@@ -340,7 +339,6 @@ export function DesktopSidebar({
     { href: '/school/review', icon: ClipboardList, label: 'Review Queue' },
     { href: '/school/featured', icon: Star, label: 'Featured Events' },
     { href: '/school/organizations', icon: Building2, label: 'Organizations' },
-    { href: '/school/analytics', icon: BarChart3, label: 'Analytics' },
   ];
 
   const links = variant === 'school' ? schoolLinks : studentLinks;
@@ -475,7 +473,6 @@ export function TabletDrawerSidebar({
     { href: '/school/review', icon: ClipboardList, label: 'Review Queue' },
     { href: '/school/featured', icon: Star, label: 'Featured Events' },
     { href: '/school/organizations', icon: Building2, label: 'Organizations' },
-    { href: '/school/analytics', icon: BarChart3, label: 'Analytics' },
   ];
 
   const links = variant === 'school' ? schoolLinks : studentLinks;

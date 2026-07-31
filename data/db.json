@@ -1026,6 +1026,16 @@
       "views": 120,
       "saves": 18,
       "rsvps": 60
+    },
+    {
+      "id": "org-1785461919046",
+      "name": "Blue bears coding",
+      "description": "Enjoy vibecoding",
+      "verified": false,
+      "members": [
+        "Michael Chen"
+      ],
+      "logoColor": "indigo"
     }
   ],
   "users": [
@@ -1035,7 +1045,9 @@
       "email": "michael.chen@university.edu",
       "password": "demo123",
       "role": "student",
-      "organizations": [],
+      "organizations": [
+        "org-1785461919046"
+      ],
       "major": "Computer Science",
       "gradYear": "2028",
       "graduationYear": "2028",

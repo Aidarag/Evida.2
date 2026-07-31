@@ -1,5 +1,3 @@
-'use client';
-
 import React, { useState } from 'react';
 import { useEvents } from '@/lib/context/EventContext';
 import { Event } from '@/lib/types';
@@ -9,11 +7,15 @@ import Button from '@/components/ui/Button';
 import Chip from '@/components/ui/Chip';
 import EmptyState from '@/components/ui/EmptyState';
 import { ClipboardList, Check, X, Calendar, MapPin, Users, AlertTriangle } from 'lucide-react';
+import Modal from '@/components/ui/Modal';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export default function ReviewQueuePage() {
-  const { events, reviewEvent } = useEvents();
+  const { events, organizations, reviewEvent, toggleVerifyOrg, suspendOrg, requestInfoOrg } = useEvents();
   const [activeQueue, setActiveQueue] = useState<'all' | 'quick' | 'standard' | 'complex'>('all');
+  const [orgRequestInfoModal, setOrgRequestInfoModal] = useState(false);
+  const [selectedOrgId, setSelectedOrgId] = useState('');
+  const [orgNote, setOrgNote] = useState('');
 
   const pendingEvents = events.filter(e => e.status === 'pending');
   
@@ -23,6 +25,12 @@ export default function ReviewQueuePage() {
 
   const handleReview = (id: string, status: 'approved' | 'rejected') => {
     reviewEvent(id, status, status === 'rejected' ? 'Does not meet campus guidelines.' : undefined);
+  };
+
+  const handleOrgRequestInfo = () => {
+    requestInfoOrg(selectedOrgId, orgNote);
+    setOrgRequestInfoModal(false);
+    setOrgNote('');
   };
 
   const getComplexityColor = (type: string) => {
@@ -120,8 +128,59 @@ export default function ReviewQueuePage() {
               description="There are no pending events requiring review at this time."
             />
           )}
-        </AnimatePresence>
-      </div>
-    </div>
+         </AnimatePresence>
+
+         {/* Pending Organizations */}
+         <div className="mt-12">
+           <h2 className="text-2xl font-bold text-[#2A2621] mb-4">Pending Organizations</h2>
+           {organizations.filter(org => !org.verified).length > 0 ? (
+             <div className="grid sm:grid-cols-2 gap-6">
+               {organizations.filter(org => !org.verified).map(org => (
+                 <Card key={org.id} className="p-6 flex flex-col h-full">
+                   <div className="flex items-start justify-between gap-4">
+                     <div className="flex items-center gap-4">
+                       <div className={`h-14 w-14 rounded-2xl bg-gradient-to-br flex items-center justify-center from-${org.logoColor}-500 to-${org.logoColor}-700 shrink-0`}
+                         >
+                         <span className="font-bold text-[#2A2621] text-xl">{org.name.charAt(0)}</span>
+                       </div>
+                       <div>
+                         <h3 className="text-lg font-bold text-[#2A2621] leading-snug">{org.name}</h3>
+                         <p className="text-sm text-[#5A554E] mt-1">{org.description}</p>
+                       </div>
+                     </div>
+                   </div>
+                   <div className="pt-5 mt-5 border-t border-[#D8D2BC]/30 flex justify-end gap-2">
+                     <Button variant="ghost" size="sm" onClick={() => suspendOrg(org.id)}>Suspend</Button>
+                     <Button variant="ghost" size="sm" onClick={() => { setSelectedOrgId(org.id); setOrgRequestInfoModal(true); }}>Request Info</Button>
+                     <Button variant={org.verified ? "ghost" : "neon"} size="sm" onClick={() => toggleVerifyOrg(org.id)}>
+                       {org.verified ? "Revoke Verification" : "Verify Organization"}
+                     </Button>
+                   </div>
+                 </Card>
+               ))}
+             </div>
+           ) : (
+             <EmptyState
+               icon={<Users className="h-8 w-8 text-[#5A554E]" />}
+               title="No pending organizations"
+               description="All organizations are verified."
+             />
+           )}
+         </div>
+
+         <Modal isOpen={orgRequestInfoModal} onClose={() => setOrgRequestInfoModal(false)} title="Request Information">
+           <div className="space-y-4">
+             <textarea
+               className="w-full p-3 border rounded-lg"
+               placeholder="Enter request details..."
+               value={orgNote}
+               onChange={(e) => setOrgNote(e.target.value)}
+             />
+             <Button onClick={handleOrgRequestInfo}>Send Request</Button>
+           </div>
+         </Modal>
+
+       </div>
+     </div>
   );
 }
