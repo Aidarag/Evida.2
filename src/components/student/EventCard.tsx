@@ -6,6 +6,7 @@ import { Event, Promotion } from '@/lib/types';
 import { motion } from 'framer-motion';
 import { useState } from 'react';
 import { useEvents } from '@/lib/context/EventContext';
+import { useUser } from '@/lib/context/UserContext';
 import VerifiedBadge from '@/components/ui/VerifiedBadge';
 
 interface EventCardProps {
@@ -17,9 +18,17 @@ interface EventCardProps {
   isAttending?: boolean;
 }
 
-export default function EventCard({ event, onClick, onSave, isSaved = false, onRsvp, isAttending = false }: EventCardProps) {
+export default function EventCard({ event, onClick, onSave, isSaved, onRsvp, isAttending = false }: EventCardProps) {
   const [saveLoading, setSaveLoading] = useState(false);
   const [rsvpLoading, setRsvpLoading] = useState(false);
+  const { saveToggle, organizations } = useEvents();
+  const { currentUser } = useUser();
+
+  // Compute effective saved state if not explicitly passed
+  const effectiveIsSaved = isSaved !== undefined 
+    ? isSaved 
+    : (currentUser ? (event.savedBy?.includes(currentUser.name) || (currentUser.username ? event.savedBy?.includes(currentUser.username) : false)) : false);
+
   // Check if it's a promotion
   const isPromo = !('ownershipType' in event);
 
@@ -59,7 +68,6 @@ export default function EventCard({ event, onClick, onSave, isSaved = false, onR
     return 'bg-[#FD5C05]/15 text-[#2A2621] border-[#FD5C05]/25';
   };
 
-  const { organizations } = useEvents();
   const isOrgVerified = !isPromo && (event as Event).organizationId
     ? organizations.find(o => o.id === (event as Event).organizationId)?.verified
     : false;
@@ -125,26 +133,28 @@ export default function EventCard({ event, onClick, onSave, isSaved = false, onR
       <button
         type="button"
         onClick={(e) => {
-            e.stopPropagation();
-            if (onSave) {
-              setSaveLoading(true);
-              onSave(e);
-              setTimeout(() => setSaveLoading(false), 300); // optimistic reset
-            }
-          }}
+          e.stopPropagation();
+          setSaveLoading(true);
+          if (onSave) {
+            onSave(e);
+          } else {
+            saveToggle(event.id);
+          }
+          setTimeout(() => setSaveLoading(false), 300);
+        }}
         className="absolute top-4 right-4 z-20 cursor-pointer focus:outline-none p-1 group"
         disabled={saveLoading}
-        title={isSaved ? 'Unsave Event' : 'Save Event'}
+        title={effectiveIsSaved ? 'Unsave Event' : 'Save Event'}
       >
         <Bookmark
-            className={`h-5 w-5 transition-all duration-150 ease-in-out ${
-              isSaved
-                ? 'fill-[#FD5C05] text-[#FD5C05]'
-                : 'text-white hover:text-[#FD5C05]/90 drop-shadow-[0_1px_2px_rgba(0,0,0,0.5)]'
-            }`} 
-            aria-pressed={isSaved}
-            aria-label={isSaved ? 'Unsave Event' : 'Save Event'}
-          />
+          className={`h-5 w-5 transition-all duration-150 ease-in-out ${
+            effectiveIsSaved
+              ? 'fill-[#FD5C05] text-[#FD5C05]'
+              : 'text-white hover:text-[#FD5C05]/90 drop-shadow-[0_1px_2px_rgba(0,0,0,0.5)]'
+          }`} 
+          aria-pressed={effectiveIsSaved}
+          aria-label={effectiveIsSaved ? 'Unsave Event' : 'Save Event'}
+        />
       </button>
 
       {/* 3. Content Body */}

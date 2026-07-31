@@ -53,10 +53,10 @@ export default function SavedEventsPage() {
   if (!currentUser) return null;
 
   const savedEvents = [
-    ...events.filter(e => e.savedBy?.includes(currentUser.name)),
-    ...promotions.filter(p => p.savedBy?.includes(currentUser.name))
+    ...events.filter(e => e.savedBy?.includes(currentUser.name) || (currentUser.username ? e.savedBy?.includes(currentUser.username) : false)),
+    ...promotions.filter(p => p.savedBy?.includes(currentUser.name) || (currentUser.username ? p.savedBy?.includes(currentUser.username) : false))
   ];
-  const rsvpEvents = events.filter(e => e.attendees?.includes(currentUser.name));
+  const rsvpEvents = events.filter(e => e.attendees?.includes(currentUser.name) || (currentUser.username ? e.attendees?.includes(currentUser.username) : false));
 
   const displayEvents = activeTab === 'saved' ? savedEvents : rsvpEvents;
 
@@ -107,7 +107,7 @@ export default function SavedEventsPage() {
                       router.push(`/events/${event.id}`);
                     }
                   }}
-                  isSaved={event.savedBy?.includes(currentUser.name)}
+                  isSaved={event.savedBy?.includes(currentUser.name) || (currentUser.username ? event.savedBy?.includes(currentUser.username) : false)}
                   onSave={(e) => {
                     e.stopPropagation();
                     if (activeTab === 'saved') {

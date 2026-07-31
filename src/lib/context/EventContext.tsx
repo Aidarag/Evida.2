@@ -150,9 +150,9 @@ export function EventProvider({ children }: { children: ReactNode }) {
         prevPromos.map(promo => {
           if (promo.id === eventId) {
             const savedBy = promo.savedBy || [];
-            const idx = savedBy.indexOf(currentUser.name);
-            const newSavedBy = idx > -1
-              ? savedBy.filter(name => name !== currentUser.name)
+            const isAlreadySaved = savedBy.includes(currentUser.name) || (currentUser.username && savedBy.includes(currentUser.username));
+            const newSavedBy = isAlreadySaved
+              ? savedBy.filter(n => n !== currentUser.name && n !== currentUser.username)
               : [...savedBy, currentUser.name];
             return { ...promo, savedBy: newSavedBy };
           }
@@ -165,9 +165,9 @@ export function EventProvider({ children }: { children: ReactNode }) {
         prevEvents.map(evt => {
           if (evt.id === eventId) {
             const savedBy = evt.savedBy || [];
-            const idx = savedBy.indexOf(currentUser.name);
-            const newSavedBy = idx > -1
-              ? savedBy.filter(name => name !== currentUser.name)
+            const isAlreadySaved = savedBy.includes(currentUser.name) || (currentUser.username && savedBy.includes(currentUser.username));
+            const newSavedBy = isAlreadySaved
+              ? savedBy.filter(n => n !== currentUser.name && n !== currentUser.username)
               : [...savedBy, currentUser.name];
             return { ...evt, savedBy: newSavedBy };
           }

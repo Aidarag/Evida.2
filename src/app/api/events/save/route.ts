@@ -11,6 +11,8 @@ export async function POST(request: Request) {
     }
 
     const db = readDB();
+    const userObj = db.users.find(u => u.name === name || u.username === name);
+    const userNames = userObj ? [userObj.name, userObj.username].filter(Boolean) : [name];
     const isPromo = eventId.startsWith('promo-');
 
     if (isPromo) {
@@ -24,17 +26,17 @@ export async function POST(request: Request) {
         promo.savedBy = [];
       }
 
-      const idx = promo.savedBy.indexOf(name);
-      if (idx > -1) {
-        promo.savedBy.splice(idx, 1); // Unsave
+      const isSaved = promo.savedBy.some(n => userNames.includes(n));
+      if (isSaved) {
+        promo.savedBy = promo.savedBy.filter(n => !userNames.includes(n));
       } else {
-        promo.savedBy.push(name); // Save
+        promo.savedBy.push(name);
       }
 
       db.promotions[promoIndex] = promo;
       writeDB(db);
 
-      return NextResponse.json({ saved: idx === -1, promotion: promo });
+      return NextResponse.json({ saved: !isSaved, promotion: promo });
     } else {
       const eventIndex = db.events.findIndex((e) => e.id === eventId);
       if (eventIndex === -1) {
@@ -46,17 +48,17 @@ export async function POST(request: Request) {
         event.savedBy = [];
       }
 
-      const idx = event.savedBy.indexOf(name);
-      if (idx > -1) {
-        event.savedBy.splice(idx, 1); // Unsave
+      const isSaved = event.savedBy.some(n => userNames.includes(n));
+      if (isSaved) {
+        event.savedBy = event.savedBy.filter(n => !userNames.includes(n));
       } else {
-        event.savedBy.push(name); // Save
+        event.savedBy.push(name);
       }
 
       db.events[eventIndex] = event;
       writeDB(db);
 
-      return NextResponse.json({ saved: idx === -1, event });
+      return NextResponse.json({ saved: !isSaved, event });
     }
   } catch (error) {
     return NextResponse.json({ error: 'Failed to save event' }, { status: 500 });
