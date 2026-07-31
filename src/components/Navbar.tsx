@@ -4,7 +4,7 @@ import React from 'react';
 import { createPortal } from 'react-dom';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Home, Compass, Plus, User, Settings, BarChart3, Shield, Star, ClipboardList, Building2, Menu, X, Calendar, ChevronDown, ChevronLeft, ChevronRight, Bell } from 'lucide-react';
+import { Home, Compass, Plus, User, Settings, BarChart3, Shield, Star, ClipboardList, Building2, Menu, X, Calendar, ChevronDown, ChevronLeft, ChevronRight, Bell, Bookmark } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useUser } from '@/lib/context/UserContext';
 import { useEvents } from '@/lib/context/EventContext';
@@ -330,6 +330,7 @@ export function DesktopSidebar({
   const studentLinks = [
     { href: '/student/dashboard', icon: Home, label: 'Home' },
     { href: '/student/explore', icon: Compass, label: 'Explore' },
+    { href: '/student/saved', icon: Bookmark, label: 'Saved Events' },
     { href: '/student/calendar', icon: Calendar, label: 'Calendar' },
     { href: '/student/profile', icon: User, label: 'Profile' },
     { href: '/student/create', icon: Plus, label: 'Create Event' },

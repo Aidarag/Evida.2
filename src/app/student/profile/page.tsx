@@ -941,7 +941,7 @@ function StudentProfilePageContent() {
                             <EventCard 
                               event={evt}
                               onClick={() => router.push(`/events/${evt.id}`)}
-                              isSaved={evt.savedBy?.includes(currentUser.name)}
+                              isSaved={currentUser ? (evt.savedBy?.includes(currentUser.name) || (currentUser.username ? evt.savedBy?.includes(currentUser.username) : false)) : false}
                               onSave={(e) => {
                                 e.stopPropagation();
                                 handleUnlike(evt.id);

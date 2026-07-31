@@ -1,9 +1,11 @@
 'use client';
 
-import React, { useState } from 'react';
+import React from 'react';
 import { Event } from '@/lib/types';
-import { Calendar, Heart, MapPin } from 'lucide-react';
+import { Calendar, Bookmark, MapPin } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { useEvents } from '@/lib/context/EventContext';
+import { useUser } from '@/lib/context/UserContext';
 
 interface FeaturedEventCardProps {
   event: Event;
@@ -11,7 +13,12 @@ interface FeaturedEventCardProps {
 }
 
 export default function FeaturedEventCard({ event, onClick }: FeaturedEventCardProps) {
-  const [isSaved, setIsSaved] = useState(false);
+  const { saveToggle } = useEvents();
+  const { currentUser } = useUser();
+
+  const isSaved = currentUser 
+    ? (event.savedBy?.includes(currentUser.name) || (currentUser.username ? event.savedBy?.includes(currentUser.username) : false)) 
+    : false;
 
   // Parse the date to match the uppercase invite format (e.g. SUN, OCT 11)
   const dateObj = new Date(event.date);
@@ -67,18 +74,19 @@ export default function FeaturedEventCard({ event, onClick }: FeaturedEventCardP
         </div>
       </div>
 
-      {/* 2. Interactive Save (Heart) Button - Floating top right */}
+      {/* 2. Interactive Save (Bookmark) Button - Floating top right */}
       <button 
         type="button"
         onClick={(e) => {
           e.stopPropagation();
-          setIsSaved(!isSaved);
+          saveToggle(event.id);
         }}
-        className="absolute top-4 right-4 z-20 h-8 w-8 rounded-full bg-white/85 backdrop-blur-md border border-black/[0.05] flex items-center justify-center text-[#5A554E] hover:text-rose-500 hover:scale-110 active:scale-95 transition-all shadow-sm cursor-pointer"
+        className="absolute top-4 right-4 z-20 h-8 w-8 rounded-full bg-white/85 backdrop-blur-md border border-black/[0.05] flex items-center justify-center text-[#5A554E] hover:text-[#FD5C05] hover:scale-110 active:scale-95 transition-all shadow-sm cursor-pointer"
+        title={isSaved ? "Unsave Event" : "Save Event"}
       >
-        <Heart 
+        <Bookmark 
           className={`h-4 w-4 transition-colors ${
-            isSaved ? 'fill-rose-500 text-rose-500' : 'text-[#5A554E]'
+            isSaved ? 'fill-[#FD5C05] text-[#FD5C05]' : 'text-[#5A554E]'
           }`} 
         />
       </button>

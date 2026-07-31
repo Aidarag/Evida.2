@@ -393,7 +393,7 @@ export default function StudentDashboard({
                 ) : (
                   <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
                     {exploreEvents.map((event) => {
-                      const isSaved = (event.savedBy ?? []).includes(currentUser.name);
+                      const isSaved = currentUser ? (event.savedBy?.includes(currentUser.name) || (currentUser.username ? event.savedBy?.includes(currentUser.username) : false)) : false;
                       return (
                         <div
                           key={event.id}
@@ -412,8 +412,9 @@ export default function StudentDashboard({
                                   onSaveToggle(event.id);
                               }}
                               className="absolute right-4 top-4 z-20 h-8 w-8 rounded-full bg-white/80 hover:bg-white border border-[#D8D2BC] flex items-center justify-center text-[#2A2621] transition-colors cursor-pointer shadow-sm"
+                              title={isSaved ? "Unsave Event" : "Save Event"}
                             >
-                              <Heart className={`h-4.5 w-4.5 ${isSaved ? 'fill-[#FD5C05] text-[#FD5C05]' : ''}`} />
+                              <Bookmark className={`h-4.5 w-4.5 ${isSaved ? 'fill-[#FD5C05] text-[#FD5C05]' : 'text-[#5A554E]'}`} />
                             </button>
 
                             {/* Host Badge */}

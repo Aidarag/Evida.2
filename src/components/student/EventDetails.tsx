@@ -29,8 +29,8 @@ export default function EventDetails({
 
   if (!isOpen || !event) return null;
 
-  const isRsvped = event.attendees.includes(currentUser.name);
-  const isSaved = event.savedBy?.includes(currentUser.name) || false;
+  const isRsvped = currentUser ? (event.attendees.includes(currentUser.name) || (currentUser.username ? event.attendees.includes(currentUser.username) : false)) : false;
+  const isSaved = currentUser ? (event.savedBy?.includes(currentUser.name) || (currentUser.username ? event.savedBy?.includes(currentUser.username) : false)) : false;
 
   const isOrgVerified = event.organizationId
     ? organizations.find((o) => o.id === event.organizationId)?.verified

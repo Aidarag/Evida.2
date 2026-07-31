@@ -15,6 +15,7 @@ export default function EventDetailsPage() {
   const { events, saveToggle, rsvpToggle } = useEvents();
   const { currentUser } = useUser();
   const [showConfirmation, setShowConfirmation] = useState(false);
+  const [saveToast, setSaveToast] = useState(false);
 
   const [isPreview, setIsPreview] = useState(false);
   const [addedToCalendar, setAddedToCalendar] = useState(false);
@@ -58,7 +59,9 @@ export default function EventDetailsPage() {
     );
   }
 
-  const isSaved = currentUser ? event.savedBy?.includes(currentUser.name) : false;
+  const isSaved = currentUser 
+    ? (event.savedBy?.includes(currentUser.name) || (currentUser.username ? event.savedBy?.includes(currentUser.username) : false)) 
+    : false;
   const isAttending = currentUser ? event.attendees?.includes(currentUser.name) : false;
   
   const bgClass = event.coverImage.includes('from-') ? event.coverImage : '';
@@ -121,7 +124,13 @@ export default function EventDetailsPage() {
             </button>
             {currentUser && (
               <button 
-                onClick={() => saveToggle(event.id)}
+                onClick={async () => {
+                  await saveToggle(event.id);
+                  if (!isSaved) {
+                    setSaveToast(true);
+                    setTimeout(() => setSaveToast(false), 4000);
+                  }
+                }}
                 className="cursor-pointer focus:outline-none p-2 group transition-all duration-150"
                 title={isSaved ? "Unsave Event" : "Save Event"}
               >
@@ -392,6 +401,26 @@ export default function EventDetailsPage() {
               </motion.div>
             )}
           </div>
+        )}
+      </AnimatePresence>
+
+      {/* Save Notification Toast */}
+      <AnimatePresence>
+        {saveToast && (
+          <motion.div
+            initial={{ opacity: 0, y: 50, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 50, scale: 0.95 }}
+            className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 flex items-center justify-between gap-4 px-5 py-3.5 rounded-2xl bg-[#2A2621] text-white shadow-2xl text-xs font-semibold w-80 font-sans border border-white/10"
+          >
+            <span>Saved to your events!</span>
+            <button
+              onClick={() => router.push('/student/saved')}
+              className="text-[#FD5C05] font-black uppercase tracking-wider hover:underline cursor-pointer border-none bg-transparent"
+            >
+              Go to Saved →
+            </button>
+          </motion.div>
         )}
       </AnimatePresence>
     </div>

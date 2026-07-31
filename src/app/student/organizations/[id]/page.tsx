@@ -352,7 +352,7 @@ export default function OrganizationProfilePage() {
                       key={event.id}
                       event={event}
                       onClick={() => router.push(`/events/${event.id}`)}
-                      isSaved={event.savedBy?.includes(currentUser?.name || '')}
+                      isSaved={currentUser ? (event.savedBy?.includes(currentUser.name) || (currentUser.username ? event.savedBy?.includes(currentUser.username) : false)) : false}
                       onSave={(e) => {
                         e.stopPropagation();
                         saveToggle(event.id);

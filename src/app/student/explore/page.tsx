@@ -189,7 +189,7 @@ export default function ExplorePage() {
   );
 
   const renderEventCard = (evt: Event, isGridItem: boolean = false) => {
-    const isSaved = currentUser ? evt.savedBy?.includes(currentUser.name) : false;
+    const isSaved = currentUser ? (evt.savedBy?.includes(currentUser.name) || (currentUser.username ? evt.savedBy?.includes(currentUser.username) : false)) : false;
     return (
       <Link
         key={evt.id}
@@ -229,26 +229,18 @@ export default function ExplorePage() {
             </button>
           )}
         </div>
-      <div className="p-3 flex-1 flex flex-col justify-between space-y-2">
-        <div className="space-y-0.5">
-          <span className="text-[#FD5C05] text-[7px] font-black uppercase tracking-widest block">
-            {evt.ownershipType === 'school' ? 'Official Event' : 'Student Event'}
-          </span>
+        <div className="p-3 flex flex-col justify-between flex-1">
           <h3 className="font-extrabold text-[11px] uppercase tracking-wide text-[#2A2621] group-hover:text-[#FD5C05] transition-colors leading-tight line-clamp-1">
             {evt.title}
           </h3>
-          <p className="text-[10px] text-[#5A554E] leading-relaxed line-clamp-2 font-medium">
-            {evt.description}
-          </p>
+          <div className="pt-1.5 border-t border-black/[0.04] flex items-center justify-between text-[8px] text-[#5A554E] font-semibold">
+            <span className="flex items-center gap-0.5 truncate max-w-[50%]"><Users className="h-2.5 w-2.5" /> {evt.organizer}</span>
+            <span className="flex items-center gap-0.5 shrink-0"><Calendar className="h-2.5 w-2.5" /> {evt.date}</span>
+          </div>
         </div>
-        <div className="pt-1.5 border-t border-black/[0.04] flex items-center justify-between text-[8px] text-[#5A554E] font-semibold">
-          <span className="flex items-center gap-0.5 truncate max-w-[50%]"><Users className="h-2.5 w-2.5" /> {evt.organizer}</span>
-          <span className="flex items-center gap-0.5 shrink-0"><Calendar className="h-2.5 w-2.5" /> {evt.date}</span>
-        </div>
-      </div>
-    </Link>
-  );
-};
+      </Link>
+    );
+  };
 
   // Helper to render organization cards
   const renderOrganizationCard = (org: Organization, isGridItem: boolean = false) => (
