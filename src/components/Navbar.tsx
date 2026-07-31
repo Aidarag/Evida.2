@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import { createPortal } from 'react-dom';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Home, Compass, Plus, User, Settings, BarChart3, Shield, Star, ClipboardList, Building2, Menu, X, Calendar, ChevronDown, ChevronLeft, ChevronRight, Bell } from 'lucide-react';
@@ -592,6 +593,11 @@ export function ProfileSwitcher() {
   const [dropdownOpen, setDropdownOpen] = React.useState(false);
   const [createModalOpen, setCreateModalOpen] = React.useState(false);
   const [onboardingStep, setOnboardingStep] = React.useState<number>(1);
+  const [mounted, setMounted] = React.useState(false);
+
+  React.useEffect(() => {
+    setMounted(true);
+  }, []);
 
   // Form states for creating org
   const [orgName, setOrgName] = React.useState('');
@@ -785,8 +791,8 @@ export function ProfileSwitcher() {
       </AnimatePresence>
 
       {/* Register Organization Modal Overlay / Onboarding Step-by-Step */}
-      {createModalOpen && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center sm:p-4 p-0 bg-black/75 backdrop-blur-md animate-fade-in text-left">
+      {createModalOpen && mounted && createPortal(
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center sm:p-4 p-0 bg-black/80 backdrop-blur-md animate-fade-in text-left">
           <AnimatePresence mode="wait">
             {onboardingStep === 1 && (
               <motion.div
@@ -1117,7 +1123,8 @@ export function ProfileSwitcher() {
               </motion.div>
             )}
           </AnimatePresence>
-        </div>
+        </div>,
+        document.body
       )}
     </div>
   );
