@@ -4,6 +4,7 @@ import React from 'react';
 import { MapPin, Calendar, Bookmark } from 'lucide-react';
 import { Event, Promotion } from '@/lib/types';
 import { motion } from 'framer-motion';
+import { useState } from 'react';
 import { useEvents } from '@/lib/context/EventContext';
 import VerifiedBadge from '@/components/ui/VerifiedBadge';
 
@@ -17,6 +18,8 @@ interface EventCardProps {
 }
 
 export default function EventCard({ event, onClick, onSave, isSaved = false, onRsvp, isAttending = false }: EventCardProps) {
+  const [saveLoading, setSaveLoading] = useState(false);
+  const [rsvpLoading, setRsvpLoading] = useState(false);
   // Check if it's a promotion
   const isPromo = !('ownershipType' in event);
 
@@ -122,19 +125,26 @@ export default function EventCard({ event, onClick, onSave, isSaved = false, onR
       <button
         type="button"
         onClick={(e) => {
-          e.stopPropagation();
-          if (onSave) onSave(e);
-        }}
+            e.stopPropagation();
+            if (onSave) {
+              setSaveLoading(true);
+              onSave(e);
+              setTimeout(() => setSaveLoading(false), 300); // optimistic reset
+            }
+          }}
         className="absolute top-4 right-4 z-20 cursor-pointer focus:outline-none p-1 group"
+        disabled={saveLoading}
         title={isSaved ? 'Unsave Event' : 'Save Event'}
       >
         <Bookmark
-          className={`h-5 w-5 transition-all duration-150 ease-in-out ${
-            isSaved
-              ? 'fill-[#FD5C05] text-[#FD5C05]'
-              : 'text-white hover:text-[#FD5C05]/90 drop-shadow-[0_1px_2px_rgba(0,0,0,0.5)]'
-          }`}
-        />
+            className={`h-5 w-5 transition-all duration-150 ease-in-out ${
+              isSaved
+                ? 'fill-[#FD5C05] text-[#FD5C05]'
+                : 'text-white hover:text-[#FD5C05]/90 drop-shadow-[0_1px_2px_rgba(0,0,0,0.5)]'
+            }`} 
+            aria-pressed={isSaved}
+            aria-label={isSaved ? 'Unsave Event' : 'Save Event'}
+          />
       </button>
 
       {/* 3. Content Body */}
@@ -197,16 +207,26 @@ export default function EventCard({ event, onClick, onSave, isSaved = false, onR
           {/* Action button — RSVP if onRsvp provided, else ICS download */}
           {onRsvp ? (
             <button
-              onClick={(e) => { e.stopPropagation(); onRsvp(e); }}
-              className={`inline-flex items-center gap-1.5 border font-bold text-[10px] uppercase tracking-wider py-1.5 px-3.5 rounded-full transition-all duration-300 shadow-sm cursor-pointer whitespace-nowrap ${
-                isAttending
-                  ? 'bg-[#FD5C05] text-[#2A2621] border-[#FD5C05]'
-                  : 'bg-white border-black/10 hover:border-transparent hover:bg-[#FD5C05] hover:text-[#2A2621] text-[#2A2621]'
-              }`}
-              style={{ fontFamily: 'var(--font-display)' }}
-            >
-              {isAttending ? 'Going ✓' : 'RSVP'}
-            </button>
+                onClick={(e) => {
+                  e.stopPropagation();
+                  if (onRsvp) {
+                    setRsvpLoading(true);
+                    onRsvp(e);
+                    setTimeout(() => setRsvpLoading(false), 300);
+                  }
+                }}
+                className={`inline-flex items-center gap-1.5 border font-bold text-[10px] uppercase tracking-wider py-1.5 px-3.5 rounded-full transition-all duration-300 shadow-sm cursor-pointer whitespace-nowrap ${
+                  isAttending
+                    ? 'bg-[#FD5C05] text-[#2A2621] border-[#FD5C05]'
+                    : 'bg-white border-black/10 hover:border-transparent hover:bg-[#FD5C05] hover:text-[#2A2621] text-[#2A2621]'
+                }`}
+                aria-pressed={isAttending}
+                aria-label={isAttending ? 'Cancel RSVP' : 'RSVP'}
+                disabled={rsvpLoading}
+                style={{ fontFamily: 'var(--font-display)' }}
+              >
+                {isAttending ? 'Going ✓' : rsvpLoading ? 'Processing…' : 'RSVP'}
+              </button>
           ) : (
             <button
               onClick={handleDownloadICS}

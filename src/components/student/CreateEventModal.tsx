@@ -31,6 +31,8 @@ export default function CreateEventModal({
   const [fundingRequested, setFundingRequested] = useState(false);
   const [transportationNeeded, setTransportationNeeded] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  const [isFree, setIsFree] = useState(true);
+  const [price, setPrice] = useState<number>(0);
 
   // Filter organizations the current user belongs to
   const userOrgs = organizations.filter((org) => 
@@ -116,6 +118,8 @@ export default function CreateEventModal({
         estimatedAttendance: Number(estimatedAttendance),
         fundingRequested,
         transportationNeeded,
+        free: isFree,
+        price: isFree ? 0 : price,
         organizer: currentUser.name
       };
 
@@ -331,6 +335,30 @@ export default function CreateEventModal({
                 />
                 Request School Transportation
               </label>
+              {/* Free Event Toggle */}
+              <div className="space-y-1.5 mt-2">
+                <label className="flex items-center gap-2 text-xs font-medium text-slate-300 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={isFree}
+                    onChange={(e) => setIsFree(e.target.checked)}
+                    className="h-4 w-4 rounded border-slate-700 bg-slate-900 text-indigo-600 focus:ring-indigo-500 cursor-pointer"
+                  />
+                  Free Event
+                </label>
+                {!isFree && (
+                  <div className="mt-2">
+                    <label className="text-xs font-bold text-[#5A554E] uppercase tracking-wide">Price (USD)</label>
+                    <input
+                      type="number"
+                      min={0}
+                      value={price}
+                      onChange={(e) => setPrice(Math.max(0, Number(e.target.value)))}
+                      className="w-full rounded-xl border border-white/10 bg-slate-900/50 py-2 px-3 text-xs text-white focus:border-indigo-500 focus:outline-none"
+                    />
+                  </div>
+                )}
+              </div>
             </div>
           </div>
 

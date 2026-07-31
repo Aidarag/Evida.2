@@ -601,6 +601,7 @@ export function ProfileSwitcher() {
   const [orgName, setOrgName] = React.useState('');
   const [orgDesc, setOrgDesc] = React.useState('');
   const [orgColor, setOrgColor] = React.useState('indigo');
+  const [orgCategory, setOrgCategory] = React.useState('');
   const [isSubmitting, setIsSubmitting] = React.useState(false);
 
   const dropdownRef = React.useRef<HTMLDivElement>(null);
@@ -653,6 +654,7 @@ export function ProfileSwitcher() {
         setOrgName('');
         setOrgDesc('');
         setOrgColor('indigo');
+        setOrgCategory('');
       }
     } catch (err) {
       console.error(err);
@@ -1064,6 +1066,29 @@ export function ProfileSwitcher() {
 
                   <div className="space-y-1.5 text-left">
                     <label className="block text-[10px] font-bold text-[#5A554E] uppercase tracking-widest">
+                      Organization Category
+                    </label>
+                    <select
+                      required
+                      value={orgCategory}
+                      onChange={e => setOrgCategory(e.target.value)}
+                      className="w-full bg-white border border-black/[0.06] rounded-xl px-3.5 py-2.5 text-xs text-[#2A2621] focus:outline-none focus:border-[#FD5C05]"
+                    >
+                      <option value="" disabled>Select category</option>
+                      <option value="Academic">Academic</option>
+                      <option value="Sports">Sports</option>
+                      <option value="Social">Social</option>
+                      <option value="Professional">Professional</option>
+                      <option value="Cultural">Cultural</option>
+                      <option value="Community Service">Community Service</option>
+                      <option value="Arts">Arts</option>
+                      <option value="Technology">Technology</option>
+                      <option value="Religious">Religious</option>
+                    </select>
+                  </div>
+
+                  <div className="space-y-1.5 text-left">
+                    <label className="block text-[10px] font-bold text-[#5A554E] uppercase tracking-widest">
                       Description
                     </label>
                     <textarea
@@ -1076,28 +1101,7 @@ export function ProfileSwitcher() {
                     />
                   </div>
 
-                  {/* Color selection */}
-                  <div className="space-y-1.5 text-left">
-                    <label className="block text-[10px] font-bold text-[#5A554E] uppercase tracking-widest">
-                      Branding Color Accent
-                    </label>
-                    <div className="flex gap-2.5 flex-wrap">
-                      {['indigo', 'sky', 'emerald', 'violet', 'amber', 'rose', 'teal'].map(color => (
-                        <button
-                          key={color}
-                          type="button"
-                          onClick={() => setOrgColor(color)}
-                          className={`h-6 w-6 rounded-full cursor-pointer transition-all border-2 ${
-                            orgColor === color 
-                              ? 'border-[#2A2621] scale-110 shadow-sm' 
-                              : 'border-transparent hover:scale-105'
-                          }`}
-                          style={{ backgroundColor: getTailwindBgColor(color) }}
-                          title={color}
-                        />
-                      ))}
-                    </div>
-                  </div>
+
 
                   <div className="pt-3 border-t border-black/[0.04] flex gap-3.5 justify-end">
                     <button

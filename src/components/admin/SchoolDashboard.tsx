@@ -409,7 +409,26 @@ export default function SchoolDashboard({
                 )
               )}
             </div>
-
+{/* Pending Organization Verifications */
+<div className="mt-8">
+  <h3 className="text-sm font-bold text-[#5A554E] mb-3">
+    Pending Organization Verifications ({organizations.filter(o => !o.verified).length})
+  </h3>
+  <div className="grid gap-4 md:grid-cols-2">
+    {organizations.filter(o => !o.verified).map((org) => (
+      <div key={org.id} className="rounded-xl border border-[#D8D2BC]/30 bg-white p-4 shadow-sm">
+        <h4 className="font-semibold text-[#2A2621]">{org.name}</h4>
+        <p className="text-xs text-[#5A554E] mt-1">{org.description}</p>
+        <button
+          onClick={() => onToggleVerifyOrg(org.id)}
+          className="mt-3 px-4 py-2 bg-[#FD5C05] text-white rounded-xl text-sm font-bold hover:bg-[#CC3D00]"
+        >
+          Verify Organization
+        </button>
+      </div>
+    ))}
+  </div>
+</div>
           </div>
         )}
 
