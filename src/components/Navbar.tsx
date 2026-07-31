@@ -8,7 +8,7 @@ import { Home, Compass, Plus, User, Settings, BarChart3, Shield, Star, Clipboard
 import { motion, AnimatePresence } from 'framer-motion';
 import { useUser } from '@/lib/context/UserContext';
 import { useEvents } from '@/lib/context/EventContext';
-
+import { useRouter } from 'next/navigation';
 import EvidaLogo from '@/components/ui/EvidaLogo';
 
 // ─────────────────────────────────────────────────
@@ -26,6 +26,7 @@ export function DesktopNav({
   onOpenDrawer?: () => void;
 }) {
   const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
+  const router = useRouter();
   const [scrolled, setScrolled] = React.useState(false);
 
   React.useEffect(() => {
@@ -646,6 +647,7 @@ export function ProfileSwitcher() {
           orgId: newOrg.id,
           name: newOrg.name
         });
+        router.push(`/org/${newOrg.id}/dashboard`);
         setCreateModalOpen(false);
         setOnboardingStep(1);
         setOrgName('');
