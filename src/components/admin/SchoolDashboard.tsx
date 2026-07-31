@@ -412,19 +412,29 @@ export default function SchoolDashboard({
 
             {/* Pending Organization Verifications */}
             <div className="mt-8">
-              <h3 className="text-sm font-bold text-[#5A554E] mb-3">
-                Pending Organization Verifications ({organizations.filter(o => !o.verified).length})
+              <h3 className="text-sm font-bold text-[#5A554E] mb-3 flex items-center gap-2">
+                <Shield className="h-4 w-4 text-[#FD5C05]" />
+                Pending Organization Verifications ({organizations.filter(o => o.verificationStatus === 'pending' || (!o.verified && o.verificationStatus !== 'unverified')).length})
               </h3>
               <div className="grid gap-4 md:grid-cols-2">
-                {organizations.filter(o => !o.verified).map((org) => (
-                  <div key={org.id} className="rounded-xl border border-[#D8D2BC]/30 bg-white p-4 shadow-sm">
-                    <h4 className="font-semibold text-[#2A2621]">{org.name}</h4>
-                    <p className="text-xs text-[#5A554E] mt-1">{org.description}</p>
+                {organizations.filter(o => o.verificationStatus === 'pending' || (!o.verified && o.verificationStatus !== 'unverified')).map((org) => (
+                  <div key={org.id} className="rounded-xl border border-[#D8D2BC]/30 bg-white p-4 shadow-sm flex flex-col justify-between">
+                    <div>
+                      <div className="flex justify-between items-start">
+                        <h4 className="font-bold text-[#2A2621] uppercase text-xs">{org.name}</h4>
+                        <span className="px-2 py-0.5 rounded-full text-[9px] font-black uppercase tracking-wider bg-amber-500/10 text-amber-600 border border-amber-500/20">
+                          Pending Review
+                        </span>
+                      </div>
+                      <p className="text-xs text-[#5A554E] mt-1.5 line-clamp-2">{org.description}</p>
+                      <p className="text-[10px] text-[#5A554E] mt-1 uppercase font-semibold">Category: {org.category || 'Student Group'}</p>
+                    </div>
                     <button
                       onClick={() => onToggleVerifyOrg(org.id)}
-                      className="mt-3 px-4 py-2 bg-[#FD5C05] text-white rounded-xl text-sm font-bold hover:bg-[#CC3D00]"
+                      className="mt-4 px-4 py-2 bg-[#FD5C05] text-[#2A2621] rounded-xl text-xs font-black uppercase tracking-wider hover:bg-[#CC3D00] shadow-sm cursor-pointer border-none transition-all flex items-center justify-center gap-1.5"
                     >
-                      Verify Organization
+                      <span>Grant Official Badge</span>
+                      <Shield className="h-3.5 w-3.5" />
                     </button>
                   </div>
                 ))}

@@ -39,8 +39,13 @@ export interface Organization {
   id: string;
   name: string;
   description: string;
+  aboutUs?: string;
+  category?: string;
   verified: boolean;
+  verificationStatus?: 'unverified' | 'pending' | 'verified';
+  rosterType?: 'members' | 'team';
   members: string[]; // student names
+  teamRoster?: { name: string; role: string; avatar?: string }[];
   logoColor: string;
   schoolId?: string;
   views?: number;

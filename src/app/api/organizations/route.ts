@@ -23,9 +23,37 @@ export async function POST(request: Request) {
       if (idx === -1) {
         return NextResponse.json({ error: 'Organization not found' }, { status: 404 });
       }
-      db.organizations[idx].verified = !db.organizations[idx].verified;
+      const isVerified = !db.organizations[idx].verified;
+      db.organizations[idx].verified = isVerified;
+      db.organizations[idx].verificationStatus = isVerified ? 'verified' : 'unverified';
       writeDB(db);
       return NextResponse.json(db.organizations[idx]);
+    }
+
+    if (action === 'request-verification') {
+      const idx = db.organizations.findIndex((o) => o.id === id);
+      if (idx === -1) {
+        return NextResponse.json({ error: 'Organization not found' }, { status: 404 });
+      }
+      db.organizations[idx].verificationStatus = 'pending';
+      writeDB(db);
+      return NextResponse.json(db.organizations[idx]);
+    }
+
+    if (action === 'update-profile') {
+      const idx = db.organizations.findIndex((o) => o.id === id);
+      if (idx === -1) {
+        return NextResponse.json({ error: 'Organization not found' }, { status: 404 });
+      }
+      const org = db.organizations[idx];
+      if (body.name) org.name = body.name;
+      if (body.description) org.description = body.description;
+      if (body.aboutUs) org.aboutUs = body.aboutUs;
+      if (body.category) org.category = body.category;
+      if (body.rosterType) org.rosterType = body.rosterType;
+      if (body.teamRoster) org.teamRoster = body.teamRoster;
+      writeDB(db);
+      return NextResponse.json(org);
     }
 
     if (action === 'join') {

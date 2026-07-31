@@ -256,8 +256,8 @@ export default function OrganizationProfilePage() {
                 {/* Highlights / About */}
                 <div className="bg-white rounded-[24px] border border-[#D8D2BC]/30 p-6 space-y-4 shadow-sm text-left">
                   <h3 className="text-xs font-extrabold tracking-widest text-[#2A2621] uppercase">About Us</h3>
-                  <p className="text-xs text-[#5A554E] leading-relaxed">
-                    {org.description || 'No description provided by this campus organization.'}
+                  <p className="text-xs text-[#5A554E] leading-relaxed whitespace-pre-wrap">
+                    {org.aboutUs || org.description || 'No description provided by this campus organization.'}
                   </p>
                   
                   <div className="pt-4 border-t border-black/[0.04] grid gap-3 sm:grid-cols-2 text-xs">
@@ -272,10 +272,12 @@ export default function OrganizationProfilePage() {
                   </div>
                 </div>
 
-                {/* Team Roster */}
+                {/* Team / Members Roster */}
                 <div className="bg-white rounded-[24px] border border-[#D8D2BC]/30 p-6 space-y-4 shadow-sm text-left">
                   <h3 className="text-xs font-extrabold tracking-widest text-[#5A554E] uppercase">
-                    // Team Roster ({org.members.length})
+                    {org.rosterType === 'team' || org.category === 'Sports' || org.category === 'Athletics'
+                      ? `Team Roster (${org.members.length})`
+                      : `Members Roster (${org.members.length})`}
                   </h3>
                   <div className="grid gap-3 sm:grid-cols-2">
                     {org.members.map((member, idx) => (
@@ -286,7 +288,11 @@ export default function OrganizationProfilePage() {
                         <div>
                           <p className="text-xs font-bold text-[#2A2621] uppercase">{member}</p>
                           <p className="text-[9px] text-[#5A554E] font-semibold tracking-wider">
-                            {idx === 0 ? 'President' : idx === 1 ? 'Vice President' : 'Team Member'}
+                            {org.memberRoles?.[member] || (
+                              org.rosterType === 'team' || org.category === 'Sports' || org.category === 'Athletics'
+                                ? (idx === 0 ? 'Captain' : idx === 1 ? 'Co-Captain' : 'Athlete')
+                                : (idx === 0 ? 'President' : idx === 1 ? 'Vice President' : 'Member')
+                            )}
                           </p>
                         </div>
                       </div>

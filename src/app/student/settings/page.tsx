@@ -15,9 +15,11 @@ import {
   MessageSquare, 
   FileText, 
   LogOut,
+  Shield,
   X
 } from 'lucide-react';
 import Button from '@/components/ui/Button';
+import VerifiedBadge from '@/components/ui/VerifiedBadge';
 
 import { useEvents } from '@/lib/context/EventContext';
 
@@ -37,7 +39,7 @@ interface SettingsSection {
 
 export default function StudentSettingsPage() {
   const { currentUser, setCurrentUser, logout, setActiveProfile } = useUser();
-  const { createOrg } = useEvents();
+  const { organizations, refetch, createOrg } = useEvents();
   const router = useRouter();
 
   // Overlay modal state triggers
@@ -52,30 +54,67 @@ export default function StudentSettingsPage() {
   const [newOrgDesc, setNewOrgDesc] = useState('');
   const [newOrgCategory, setNewOrgCategory] = useState('Academic');
   const [isSubmittingOrg, setIsSubmittingOrg] = useState(false);
+  const [requestingVerifyId, setRequestingVerifyId] = useState<string | null>(null);
 
   if (!currentUser) return null;
 
+  const userOrgs = organizations.filter(
+    (o) => currentUser.organizations?.includes(o.id) || o.members?.includes(currentUser.name)
+  );
+
+  const getOrgStatusSummary = () => {
+    if (userOrgs.length === 0) return 'No Orgs';
+    const hasVerified = userOrgs.some((o) => o.verified || o.verificationStatus === 'verified');
+    if (hasVerified) return 'Verified ✓';
+    const hasPending = userOrgs.some((o) => o.verificationStatus === 'pending');
+    if (hasPending) return 'Pending Review';
+    return 'Unverified';
+  };
+
+  const handleRequestVerification = async (orgId: string) => {
+    setRequestingVerifyId(orgId);
+    try {
+      const res = await fetch('/api/organizations', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'request-verification', id: orgId }),
+      });
+      if (res.ok) {
+        await refetch();
+      }
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setRequestingVerifyId(null);
+    }
+  };
+
   const handleCreateOrgSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!newOrgName.trim() || !newOrgDesc.trim()) return;
+    if (!newOrgName || !newOrgDesc) return;
     setIsSubmittingOrg(true);
     try {
-      const newOrg = (await createOrg({
-        name: newOrgName.trim(),
-        description: newOrgDesc.trim(),
-        logoColor: 'orange'
-      })) as any;
-      if (newOrg) {
+      const created = await createOrg({
+        name: newOrgName,
+        description: newOrgDesc,
+        category: newOrgCategory,
+        member: currentUser.name,
+      }) as any;
+      
+      setNewOrgName('');
+      setNewOrgDesc('');
+      setActiveModal(null);
+      
+      if (created && created.id) {
         setActiveProfile({
           type: 'organization',
-          orgId: newOrg.id,
-          name: newOrg.name
+          orgId: created.id,
+          name: created.name
         });
-        setActiveModal(null);
-        router.push(`/org/${newOrg.id}/dashboard`);
+        router.push(`/organization/${created.id}/dashboard`);
       }
     } catch (err) {
-      console.error(err);
+      console.error('Failed to create organization', err);
     } finally {
       setIsSubmittingOrg(false);
     }
@@ -87,12 +126,8 @@ export default function StudentSettingsPage() {
   };
 
   const updatePrivacy = async (key: 'going' | 'saved' | 'hosted' | 'organizations', value: 'public' | 'private') => {
-    if (!currentUser) return;
     const updatedPrivacy = {
-      going: currentUser.privacy?.going || 'public',
-      saved: currentUser.privacy?.saved || 'private',
-      hosted: currentUser.privacy?.hosted || 'public',
-      organizations: currentUser.privacy?.organizations || 'private',
+      ...(currentUser.privacy || {}),
       [key]: value
     };
 
@@ -101,10 +136,8 @@ export default function StudentSettingsPage() {
       privacy: updatedPrivacy
     };
 
-    // Update context immediately
     setCurrentUser(updatedUser);
 
-    // Save to backend database
     try {
       await fetch('/api/users/profile', {
         method: 'POST',
@@ -125,6 +158,7 @@ export default function StudentSettingsPage() {
       items: [
         { id: 'profile', label: 'Edit Profile', value: currentUser.avatar || 'MC', Icon: User, bgColor: '#FD5C05', onClick: () => router.push('/student/profile') },
         { id: 'create-org', label: 'Create Organization', Icon: Building, bgColor: '#FD5C05', onClick: () => setActiveModal('create-org') },
+        { id: 'org-verification', label: 'Organization Verification', value: getOrgStatusSummary(), Icon: Shield, bgColor: '#FD5C05', onClick: () => setActiveModal('org-verification') },
         { id: 'notifications', label: 'Notifications', value: 'On', Icon: Bell, bgColor: '#FD5C05', onClick: () => setActiveModal('notifications') },
         { id: 'privacy', label: 'Privacy & Security', value: 'Private', Icon: Lock, bgColor: '#FD5C05', onClick: () => setActiveModal('privacy') },
         { id: 'college', label: 'Linked College', value: currentUser.school || 'Livingstone College', Icon: Building, bgColor: '#FD5C05', onClick: () => setActiveModal('college') },
@@ -322,6 +356,65 @@ export default function StudentSettingsPage() {
                     {isSubmittingOrg ? 'Creating...' : 'Register Organization'}
                   </Button>
                 </form>
+              )}
+
+              {activeModal === 'org-verification' && (
+                <div className="space-y-4 text-xs">
+                  <div className="space-y-1 text-left">
+                    <p className="font-extrabold text-sm text-[#2A2621]">Official Verification Checkmark</p>
+                    <p className="text-[10px] text-[#5A554E] leading-relaxed">
+                      Organizations approved by Livingstone College receive an Official Evida Verification Badge (orange checkmark). Requests are sent to the campus admin queue.
+                    </p>
+                  </div>
+
+                  <div className="space-y-3 pt-2">
+                    {userOrgs.length === 0 ? (
+                      <div className="p-4 rounded-xl bg-slate-50 border border-black/10 text-center text-[#5A554E]">
+                        <p className="font-bold text-xs">No Organization Found</p>
+                        <p className="text-[10px] mt-1">Create or join an organization first to request official verification.</p>
+                      </div>
+                    ) : (
+                      userOrgs.map((org) => {
+                        const isVerified = org.verified || org.verificationStatus === 'verified';
+                        const isPending = org.verificationStatus === 'pending';
+
+                        return (
+                          <div key={org.id} className="p-3.5 rounded-2xl bg-slate-50 border border-black/[0.06] flex items-center justify-between gap-3">
+                            <div className="text-left">
+                              <div className="flex items-center gap-1">
+                                <span className="font-bold text-xs text-[#2A2621] uppercase">{org.name}</span>
+                                {isVerified && <VerifiedBadge className="h-3.5 w-3.5" />}
+                              </div>
+                              <span className="text-[9px] text-[#5A554E] font-semibold uppercase">{org.category || 'Student Group'}</span>
+                            </div>
+
+                            <div className="shrink-0">
+                              {isVerified ? (
+                                <span className="px-2.5 py-1 rounded-full text-[9px] font-black uppercase tracking-wider bg-[#FD5C05]/10 text-[#FD5C05] border border-[#FD5C05]/20 flex items-center gap-1">
+                                  <span>Verified</span>
+                                  <VerifiedBadge className="h-3 w-3" />
+                                </span>
+                              ) : isPending ? (
+                                <span className="px-2.5 py-1 rounded-full text-[9px] font-black uppercase tracking-wider bg-amber-500/10 text-amber-600 border border-amber-500/20">
+                                  Pending Review
+                                </span>
+                              ) : (
+                                <button
+                                  type="button"
+                                  onClick={() => handleRequestVerification(org.id)}
+                                  disabled={requestingVerifyId === org.id}
+                                  className="px-3 py-1.5 bg-[#FD5C05] hover:bg-[#CC3D00] text-white rounded-xl text-[10px] font-black uppercase tracking-wider transition-all cursor-pointer border-none shadow-sm"
+                                >
+                                  {requestingVerifyId === org.id ? 'Submitting...' : 'Request Checkmark'}
+                                </button>
+                              )}
+                            </div>
+                          </div>
+                        );
+                      })
+                    )}
+                  </div>
+                </div>
               )}
 
               {activeModal === 'college' && (

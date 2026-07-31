@@ -35,7 +35,7 @@ export default function OrgDashboard() {
       case 'Announcements':
         return <AnnouncementsTab />;
       case 'Profile':
-        return <ProfileTab />;
+        return <ProfileTab orgId={orgId as string} />;
       case 'Settings':
         return <SettingsTab />;
       default:
