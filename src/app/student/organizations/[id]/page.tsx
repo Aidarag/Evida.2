@@ -148,20 +148,16 @@ export default function OrganizationProfilePage() {
     <div className="min-h-screen bg-[#D8D2BC] text-[#2A2621] pb-16 font-sans">
       
       {/* ── Top Header Navigation ── */}
-      <div className="sticky top-0 z-30 h-16 w-full border-b border-[#D8D2BC]/30 bg-white/80 backdrop-blur-md px-6 flex items-center gap-4">
+      <div className="sticky top-0 z-30 h-14 w-full border-b border-[#D8D2BC]/30 bg-white/80 backdrop-blur-md px-6 flex items-center gap-3">
         <button 
           onClick={() => router.back()}
-          className="h-9 w-9 rounded-full bg-white border border-black/10 hover:bg-slate-50 flex items-center justify-center text-[#2A2621] shadow-sm transition-all"
+          className="h-8 w-8 rounded-full bg-white border border-black/10 hover:bg-slate-50 flex items-center justify-center text-[#2A2621] shadow-sm transition-all cursor-pointer"
         >
-          <ArrowLeft className="h-4.5 w-4.5" />
+          <ArrowLeft className="h-4 w-4" />
         </button>
-        <div className="truncate">
-          <span className="text-[9px] font-bold text-[#5A554E] uppercase tracking-widest block">CAMPUS DIRECTORY</span>
-          <h1 className="text-sm font-extrabold text-[#2A2621] uppercase tracking-tight truncate flex items-center">
-            {org.name}
-            {org.verified && <VerifiedBadge className="h-3.5 w-3.5" />}
-          </h1>
-        </div>
+        <span className="text-[10px] font-extrabold text-[#5A554E] uppercase tracking-widest">
+          Campus Directory
+        </span>
       </div>
 
       <div className="max-w-4xl mx-auto p-4 md:p-6 space-y-6">
