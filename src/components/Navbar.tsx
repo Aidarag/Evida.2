@@ -344,32 +344,30 @@ export function DesktopSidebar({
   ];
 
   const links = variant === 'school' ? schoolLinks : studentLinks;
-  const activeColorClass = 'bg-[#FD5C05] text-[#2A2621] border-[#FD5C05]/30 font-extrabold shadow-sm';
-  const hoverColorClass = 'hover:text-[#2A2621] hover:bg-[#FD5C05]/10';
 
   if (state === 'hidden') return null;
 
   return (
     <aside className={`
-      hidden lg:flex flex-col justify-between p-6 bg-[#D8D2BC] border-r border-black/[0.04] sticky top-16 h-[calc(100vh-64px)] shrink-0 transition-all duration-300
+      hidden lg:flex flex-col justify-between p-5 bg-[#EAE5D4]/85 backdrop-blur-xl border-r border-[#D8D2BC]/80 shadow-[2px_0_15px_rgba(0,0,0,0.03)] sticky top-16 h-[calc(100vh-64px)] shrink-0 transition-all duration-300 relative z-30
       ${state === 'expanded' ? 'w-64' : 'w-20 px-3'}
     `}>
       <div className="space-y-4">
         {/* Sidebar Controls */}
         {onChangeState && (
-          <div className={`flex items-center pb-4 mb-4 border-b border-black/[0.04] ${
+          <div className={`flex items-center pb-3.5 mb-2 border-b border-[#D8D2BC]/60 ${
             state === 'collapsed' ? 'flex-col gap-3 justify-center' : 'justify-between'
           }`}>
             {state === 'expanded' && (
-              <span className="text-xs font-black uppercase tracking-widest text-[#2A2621]">
-                Menu
+              <span className="text-[10px] font-black uppercase tracking-widest text-[#5A554E]">
+                Navigation Menu
               </span>
             )}
             <div className="flex items-center gap-1.5">
               {/* Collapse/Expand Toggle */}
               <button
                 onClick={() => onChangeState(state === 'expanded' ? 'collapsed' : 'expanded')}
-                className="p-1.5 rounded-lg hover:bg-black/5 text-[#5A554E] hover:text-[#FD5C05] transition-all cursor-pointer"
+                className="p-1.5 rounded-xl hover:bg-black/5 text-[#5A554E] hover:text-[#FD5C05] transition-all cursor-pointer"
                 title={state === 'expanded' ? 'Collapse Sidebar' : 'Expand Sidebar'}
               >
                 {state === 'expanded' ? (
@@ -382,7 +380,7 @@ export function DesktopSidebar({
               {/* Hide Sidebar Button */}
               <button
                 onClick={() => onChangeState('hidden')}
-                className="p-1.5 rounded-lg hover:bg-black/5 text-[#5A554E] hover:text-[#FD5C05] transition-all cursor-pointer"
+                className="p-1.5 rounded-xl hover:bg-black/5 text-[#5A554E] hover:text-[#FD5C05] transition-all cursor-pointer"
                 title="Hide Sidebar"
               >
                 <X className="h-4 w-4" />
@@ -391,9 +389,10 @@ export function DesktopSidebar({
           </div>
         )}
 
-        <nav className="space-y-1">
+        <nav className="space-y-1.5">
           {links.map((link) => {
             const isActive = pathname === link.href;
+            const isProfile = link.href === '/student/profile';
             const Icon = link.icon;
 
             return (
@@ -402,16 +401,29 @@ export function DesktopSidebar({
                 href={link.href}
                 title={state === 'collapsed' ? link.label : undefined}
                 className={`
-                  flex items-center rounded-xl text-sm font-medium transition-all cursor-pointer border
-                  ${state === 'collapsed' ? 'justify-center p-2.5 w-10 h-10 mx-auto' : 'gap-3 px-4 py-2.5'}
+                  relative flex items-center rounded-2xl text-xs font-bold transition-all duration-200 cursor-pointer border select-none group
+                  ${state === 'collapsed' ? 'justify-center p-2.5 w-10 h-10 mx-auto' : 'gap-3 px-3.5 py-2.5'}
                   ${isActive
-                    ? `${activeColorClass}`
-                    : `text-[#5A554E] ${hoverColorClass} border-transparent`
+                    ? isProfile
+                      ? 'bg-gradient-to-r from-[#FB1C07] via-[#FD5C05] to-[#FC7C0B] text-white font-black shadow-md shadow-[#FD5C05]/30 border-transparent ring-2 ring-[#FD5C05]/40 scale-[1.02]'
+                      : 'bg-[#2A2621] text-white font-black shadow-sm border-[#2A2621] ring-1 ring-black/10'
+                    : 'text-[#5A554E] hover:text-[#2A2621] hover:bg-[#FD5C05]/15 border-transparent hover:translate-x-1'
                   }
                 `}
               >
-                <Icon className="h-5 w-5 shrink-0" />
-                {state !== 'collapsed' && <span>{link.label}</span>}
+                {/* Active left indicator pill */}
+                {isActive && !isProfile && (
+                  <span className="absolute -left-1 top-1/2 -translate-y-1/2 w-1.5 h-6 bg-[#FD5C05] rounded-r-full shadow-[0_0_8px_rgba(253,92,5,0.8)]" />
+                )}
+                <Icon className={`h-4.5 w-4.5 shrink-0 transition-transform group-hover:scale-110 ${isActive && isProfile ? 'text-white' : ''}`} />
+                {state !== 'collapsed' && (
+                  <span className="truncate">{link.label}</span>
+                )}
+                {state !== 'collapsed' && isActive && isProfile && (
+                  <span className="ml-auto text-[8px] font-black uppercase tracking-wider bg-white text-[#FD5C05] px-1.5 py-0.5 rounded-full shadow-xs">
+                    ACTIVE
+                  </span>
+                )}
               </Link>
             );
           })}
