@@ -301,9 +301,8 @@ export default function LandingPage({
 
       {/* Hero Section - Wenspire Visual Style */}
       <section className="mx-auto max-w-7xl px-5 sm:px-6 md:px-8 pt-20 sm:pt-24 pb-8 sm:pb-12 w-full relative">
-        {/* Soft floating blurred gradient blobs for premium lighting */}
-        <div className="absolute top-1/4 left-1/4 -translate-x-1/2 -translate-y-1/2 w-[350px] md:w-[600px] h-[350px] md:h-[600px] rounded-full bg-gradient-to-br from-[#FB1C07] to-[#FC7C0B] opacity-[0.12] blur-[100px] md:blur-[140px] pointer-events-none z-0 animate-pulse" style={{ animationDuration: '8s' }} />
-        <div className="absolute bottom-10 right-1/4 translate-x-1/2 w-[300px] md:w-[500px] h-[300px] md:h-[500px] rounded-full bg-gradient-to-br from-[#FD4002] to-[#FC7C0B] opacity-[0.08] blur-[90px] md:blur-[130px] pointer-events-none z-0 animate-pulse" style={{ animationDuration: '12s' }} />
+        <div className="absolute top-1/4 left-1/4 -translate-x-1/2 -translate-y-1/2 w-[350px] md:w-[600px] h-[350px] md:h-[600px] rounded-full bg-gradient-to-br from-[#FB1C07] to-[#FC7C0B] opacity-[0.12] blur-[60px] md:blur-[80px] pointer-events-none z-0 animate-pulse" style={{ animationDuration: '8s', willChange: 'transform' }} />
+        <div className="absolute bottom-10 right-1/4 translate-x-1/2 w-[300px] md:w-[500px] h-[300px] md:h-[500px] rounded-full bg-gradient-to-br from-[#FD4002] to-[#FC7C0B] opacity-[0.08] blur-[50px] md:blur-[70px] pointer-events-none z-0 animate-pulse" style={{ animationDuration: '12s', willChange: 'transform' }} />
 
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -453,10 +452,10 @@ export default function LandingPage({
                   {/* Home Indicator */}
                   <div className={`absolute bottom-2 left-1/2 -translate-x-1/2 w-24 h-[3px] rounded-full z-50 pointer-events-none transition-colors duration-500 ${currentPath.startsWith('/events/') ? 'bg-white/30' : 'bg-[#2A2621]/20'}`} />
 
-                  {/* Live Iframe — the real Evida app */}
                   <iframe
                     ref={iframeRef}
                     src="/student/dashboard?preview=true"
+                    loading="lazy"
                     className="absolute inset-0 w-full h-full border-none bg-[#D8D2BC]"
                     style={{ borderRadius: '34px' }}
                     title="Evida App Demo"

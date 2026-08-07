@@ -116,6 +116,22 @@ function StudentProfilePageContent() {
     }
   }, [toast]);
 
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      const tab = params.get('tab');
+      if (tab === 'saved') {
+        setActiveTab('saved');
+      } else if (tab === 'going' || tab === 'rsvp') {
+        setActiveTab('going');
+      } else if (tab === 'hosted') {
+        setActiveTab('hosted');
+      } else if (tab === 'orgs') {
+        setActiveTab('orgs');
+      }
+    }
+  }, []);
+
   // Calendar Date State
   const [calendarDate, setCalendarDate] = useState<Date>(new Date(2026, 9, 1)); // October 2026
 
@@ -241,9 +257,18 @@ function StudentProfilePageContent() {
     }
   }, [currentUser?.username, usernameParam, isOwner]);
 
-  // Filter events and promotions by association safely
-  const attendedEvents = profileUser ? events.filter(e => e.status === 'approved' && e.attendees.includes(profileUser.name)) : [];
-  const savedEvents = profileUser ? events.filter(e => e.status === 'approved' && e.savedBy?.includes(profileUser.name)) : [];
+  const attendedEvents = profileUser 
+    ? events.filter(e => e.status === 'approved' && (
+        e.attendees.includes(profileUser.name) || 
+        (profileUser.username ? e.attendees.includes(profileUser.username) : false)
+      )) 
+    : [];
+  const savedEvents = profileUser 
+    ? events.filter(e => e.status === 'approved' && (
+        e.savedBy?.includes(profileUser.name) || 
+        (profileUser.username ? e.savedBy?.includes(profileUser.username) : false)
+      )) 
+    : [];
 
   // Hosted (created)
   const hostedEvents = profileUser ? events.filter(e => e.status === 'approved' && e.organizer === profileUser.name) : [];
@@ -596,6 +621,79 @@ function StudentProfilePageContent() {
             >
               <h3 className="text-xs font-black uppercase tracking-widest text-[#2A2621] text-left">Edit Profile Details</h3>
               <div className="grid gap-4 sm:grid-cols-2 text-xs">
+                {/* Avatar Picker Section */}
+                <div className="sm:col-span-2 space-y-2 text-left border-b border-black/[0.04] pb-4">
+                  <label className="font-extrabold text-[#5A554E] uppercase block mb-1">Profile Picture</label>
+                  <div className="flex flex-col sm:flex-row items-center gap-6">
+                    {/* Preview circle */}
+                    <div className="h-20 w-20 rounded-full bg-[#FD5C05] flex items-center justify-center shadow-md overflow-hidden border-2 border-black/[0.08] shrink-0 relative group">
+                      {editAvatar && (editAvatar.startsWith('data:') || editAvatar.startsWith('http') || editAvatar.startsWith('/')) ? (
+                        <img src={editAvatar} className="h-full w-full object-cover" alt="Preview" />
+                      ) : (
+                        <span className="text-3xl font-extrabold text-[#2A2621]">{editAvatar || '🎓'}</span>
+                      )}
+                    </div>
+                    
+                    {/* Inputs */}
+                    <div className="space-y-3 flex-1 w-full">
+                      {/* Presets List */}
+                      <div>
+                        <p className="text-[10px] font-bold text-[#5A554E] uppercase tracking-wider mb-1.5">Choose Preset Emoji</p>
+                        <div className="flex flex-wrap gap-1.5">
+                          {PRESET_AVATARS.map((emoji) => (
+                            <button
+                              key={emoji}
+                              type="button"
+                              onClick={() => setEditAvatar(emoji)}
+                              className={`h-8 w-8 rounded-xl bg-black/[0.03] hover:bg-black/[0.08] border flex items-center justify-center text-lg transition-all cursor-pointer ${editAvatar === emoji ? 'border-[#FD5C05] bg-[#FD5C05]/10 scale-105' : 'border-black/[0.06]'}`}
+                            >
+                              {emoji}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* URL / File Input */}
+                      <div className="flex gap-2 items-center">
+                        <div className="flex-1 space-y-1">
+                          <p className="text-[10px] font-bold text-[#5A554E] uppercase tracking-wider mb-1">Or Paste Image URL</p>
+                          <input
+                            type="text"
+                            placeholder="https://example.com/avatar.jpg"
+                            value={editAvatar.startsWith('data:') || editAvatar.includes('http') || editAvatar.startsWith('/') ? editAvatar : ''}
+                            onChange={(e) => setEditAvatar(e.target.value)}
+                            className="w-full bg-black/[0.03] border border-black/[0.06] rounded-xl px-3 py-1.5 text-xs text-[#2A2621] focus:outline-none focus:border-[#FD5C05]"
+                          />
+                        </div>
+                        
+                        <div className="space-y-1">
+                          <p className="text-[10px] font-bold text-[#5A554E] uppercase tracking-wider mb-1">Or Upload Image</p>
+                          <label className="flex items-center justify-center px-4 py-1.5 border border-black/[0.08] bg-black/[0.03] hover:bg-black/[0.08] rounded-xl cursor-pointer transition-all text-xs font-bold uppercase tracking-wider text-[#2A2621] h-[34px]">
+                            Upload
+                            <input
+                              type="file"
+                              accept="image/*"
+                              onChange={(e) => {
+                                const file = e.target.files?.[0];
+                                if (file) {
+                                  const reader = new FileReader();
+                                  reader.onloadend = () => {
+                                    if (typeof reader.result === 'string') {
+                                      setEditAvatar(reader.result);
+                                    }
+                                  };
+                                  reader.readAsDataURL(file);
+                                }
+                              }}
+                              className="hidden"
+                            />
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
                 <div className="space-y-1 text-left">
                   <label className="font-extrabold text-[#5A554E] uppercase">Full Name</label>
                   <input

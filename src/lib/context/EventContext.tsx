@@ -104,7 +104,7 @@ export function EventProvider({ children }: { children: ReactNode }) {
         window.removeEventListener('message', handleMessage);
       };
     }
-  }, [pathname, events, router]);
+  }, [pathname, router]);
   const fetchData = useCallback(async () => {
     try {
       const [eventsRes, orgsRes, promosRes] = await Promise.all([
@@ -143,6 +143,21 @@ export function EventProvider({ children }: { children: ReactNode }) {
     if (!currentUser) return;
 
     const isPromo = eventId.startsWith('promo-');
+    let isCurrentlySaved = false;
+
+    if (isPromo) {
+      const promo = promotions.find(p => p.id === eventId);
+      if (promo) {
+        const savedBy = promo.savedBy || [];
+        isCurrentlySaved = savedBy.includes(currentUser.name) || (currentUser.username ? savedBy.includes(currentUser.username) : false);
+      }
+    } else {
+      const evt = events.find(e => e.id === eventId);
+      if (evt) {
+        const savedBy = evt.savedBy || [];
+        isCurrentlySaved = savedBy.includes(currentUser.name) || (currentUser.username ? savedBy.includes(currentUser.username) : false);
+      }
+    }
 
     if (isPromo) {
       // 1. Optimistic Update
@@ -176,6 +191,10 @@ export function EventProvider({ children }: { children: ReactNode }) {
       );
     }
 
+    if (!isCurrentlySaved && pathname !== '/student/profile') {
+      router.push('/student/profile?tab=saved');
+    }
+
     try {
       const res = await fetch('/api/events/save', {
         method: 'POST',
@@ -203,21 +222,59 @@ export function EventProvider({ children }: { children: ReactNode }) {
       // Rollback
       await fetchData();
     }
-  }, [currentUser, fetchData]);
+  }, [currentUser, fetchData, promotions, events, pathname, router]);
 
   const rsvpToggle = useCallback(async (eventId: string, action: 'rsvp' | 'interested') => {
     if (!currentUser) return;
+    
+    let isCurrentlyAttending = false;
+    const evt = events.find(e => e.id === eventId);
+    if (evt) {
+      const attendees = evt.attendees || [];
+      isCurrentlyAttending = attendees.includes(currentUser.name) || (currentUser.username ? attendees.includes(currentUser.username) : false);
+    }
+
+    // 1. Optimistic Update
+    setEvents(prevEvents =>
+      prevEvents.map(evt => {
+        if (evt.id === eventId) {
+          const attendees = evt.attendees || [];
+          const isAlreadyAttending = attendees.includes(currentUser.name) || (currentUser.username && attendees.includes(currentUser.username));
+          const newAttendees = isAlreadyAttending
+            ? attendees.filter(n => n !== currentUser.name && n !== currentUser.username)
+            : [...attendees, currentUser.name];
+          
+          const interested = evt.interested || [];
+          let newInterested = interested;
+          if (action === 'rsvp') {
+            newInterested = interested.filter(n => n !== currentUser.name && n !== currentUser.username);
+          }
+          
+          return { ...evt, attendees: newAttendees, interested: newInterested };
+        }
+        return evt;
+      })
+    );
+
     try {
       const res = await fetch(`/api/events/${eventId}/rsvp`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name: currentUser.name, action }),
       });
-      if (res.ok) await fetchData();
+      if (res.ok) {
+        const updatedEvent = await res.json();
+        setEvents(prevEvents =>
+          prevEvents.map(evt => (evt.id === eventId ? updatedEvent : evt))
+        );
+      } else {
+        await fetchData(); // rollback
+      }
     } catch (e) {
       console.error(e);
+      await fetchData(); // rollback
     }
-  }, [currentUser, fetchData]);
+  }, [currentUser, fetchData, events, pathname, router]);
 
   const createEvent = useCallback(async (payload: unknown): Promise<boolean> => {
     try {
@@ -282,15 +339,27 @@ export function EventProvider({ children }: { children: ReactNode }) {
   }, [currentUser, fetchData]);
 
   const reviewEvent = useCallback(async (id: string, status: 'approved' | 'rejected', feedback?: string) => {
+    // 1. Optimistic Update
+    setEvents(prevEvents =>
+      prevEvents.map(evt => (evt.id === id ? { ...evt, status, feedback: feedback || '' } : evt))
+    );
     try {
       const res = await fetch(`/api/events/${id}/review`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ status, feedback }),
       });
-      if (res.ok) await fetchData();
+      if (res.ok) {
+        const updatedEvent = await res.json();
+        setEvents(prevEvents =>
+          prevEvents.map(evt => (evt.id === id ? updatedEvent : evt))
+        );
+      } else {
+        await fetchData(); // rollback
+      }
     } catch (e) {
       console.error(e);
+      await fetchData(); // rollback
     }
   }, [fetchData]);
 
@@ -368,6 +437,10 @@ export function EventProvider({ children }: { children: ReactNode }) {
 
   const markNotificationRead = useCallback(async (id: string) => {
     if (!currentUser) return;
+    // 1. Optimistic Update
+    setNotifications(prev =>
+      prev.map(n => (n.id === id ? { ...n, read: true } : n))
+    );
     try {
       const res = await fetch('/api/notifications', {
         method: 'POST',
@@ -377,14 +450,19 @@ export function EventProvider({ children }: { children: ReactNode }) {
       if (res.ok) {
         const list = await res.json();
         setNotifications(list);
+      } else {
+        await fetchData(); // rollback
       }
     } catch (e) {
       console.error(e);
+      await fetchData(); // rollback
     }
-  }, [currentUser]);
+  }, [currentUser, fetchData]);
 
   const clearNotification = useCallback(async (id: string) => {
     if (!currentUser) return;
+    // 1. Optimistic Update
+    setNotifications(prev => prev.filter(n => n.id !== id));
     try {
       const res = await fetch('/api/notifications', {
         method: 'POST',
@@ -394,11 +472,14 @@ export function EventProvider({ children }: { children: ReactNode }) {
       if (res.ok) {
         const list = await res.json();
         setNotifications(list);
+      } else {
+        await fetchData(); // rollback
       }
     } catch (e) {
       console.error(e);
+      await fetchData(); // rollback
     }
-  }, [currentUser]);
+  }, [currentUser, fetchData]);
 
   const resetDatabase = useCallback(async () => {
     setIsLoading(true);

@@ -14,7 +14,7 @@ import { downloadEventICS } from '@/lib/calendar';
 export default function EventDetailsPage() {
   const params = useParams();
   const router = useRouter();
-  const { events, saveToggle, rsvpToggle } = useEvents();
+  const { events, organizations, saveToggle, rsvpToggle } = useEvents();
   const { currentUser } = useUser();
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [saveToast, setSaveToast] = useState(false);
@@ -23,6 +23,7 @@ export default function EventDetailsPage() {
   const [addedToCalendar, setAddedToCalendar] = useState(false);
 
   const event = events.find(e => e.id === params.id);
+  const org = event && organizations ? organizations.find(o => o.id === event.organizationId) : undefined;
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -174,7 +175,14 @@ export default function EventDetailsPage() {
               ) : (
                 <p className="text-sm font-bold text-white">Hosted by {event.organizationName || event.organizer}</p>
               )}
-              <p className="text-xs text-[#B8BBC8]">{event.ownershipType === 'school' ? 'Official University Event' : 'Student Organization'}</p>
+              <p className="text-xs text-[#B8BBC8]">
+                {event.ownershipType === 'school' 
+                  ? 'Official University Event' 
+                  : event.ownershipType === 'organization' 
+                  ? 'Official School Organisation' 
+                  : 'unofficial school organisation'
+                }
+              </p>
             </div>
           </div>
         </div>
@@ -230,29 +238,17 @@ export default function EventDetailsPage() {
             <div className="pt-6 border-t border-white/[0.06] space-y-4">
               {currentUser ? (
                 isAttending ? (
-                  <div className="space-y-4 text-center p-5 bg-[#161622] border border-white/10 rounded-[24px] shadow-2xl relative animate-scale-in">
-                    <div className="text-lg font-black text-white flex items-center justify-center gap-1.5">
-                      🎉 You’re in!
-                    </div>
-                    <p className="text-xs text-[#B8BBC8] leading-relaxed">
-                      You have successfully RSVP&apos;d to this event. We have saved your spot!
-                    </p>
-                    <div className="flex gap-2">
-                      <Button
-                        variant="primary"
-                        size="sm"
-                        className="flex-1 bg-[#FD5C05] text-white hover:bg-[#CC3D00] border-none font-bold"
-                        onClick={handleAddToCalendar}
-                      >
-                        📅 Add to Calendar
-                      </Button>
-                      <button
-                        onClick={handleCancelRSVP}
-                        className="flex-1 py-2 px-3 border border-white/10 rounded-xl text-[10px] font-bold uppercase tracking-wider text-[#B8BBC8] hover:text-white hover:bg-white/5 transition-all cursor-pointer flex items-center justify-center gap-1"
-                      >
-                        <span>❌ Cancel RSVP</span>
-                      </button>
-                    </div>
+                  <div className="relative w-full">
+                    <Button 
+                      variant="primary" 
+                      size="lg" 
+                      fullWidth
+                      className="bg-red-600 hover:bg-red-700 text-white border-none font-bold flex items-center justify-center gap-1.5 cursor-pointer shadow-md"
+                      onClick={handleCancelRSVP}
+                    >
+                      <XCircle className="h-4 w-4 shrink-0 text-white" />
+                      <span>Cancel RSVP</span>
+                    </Button>
                   </div>
                 ) : (
                   <div className="relative w-full">
@@ -300,14 +296,14 @@ export default function EventDetailsPage() {
                 className="bg-[#111118] border border-white/[0.08] w-[240px] rounded-[24px] p-5 shadow-2xl relative text-center space-y-4 select-none"
               >
                 {/* Success Icon */}
-                <div className="mx-auto h-12 w-12 rounded-full bg-[#FD5C05]/10 flex items-center justify-center text-lg">
-                  🎉
+                <div className="mx-auto h-12 w-12 rounded-full bg-emerald-500/10 flex items-center justify-center text-emerald-500">
+                  <CheckCircle2 className="h-6 w-6" />
                 </div>
 
                 {/* Title & Body */}
                 <div className="space-y-1">
-                  <h3 className="text-sm font-black text-white uppercase tracking-wider">
-                    🎉 You’re in!
+                  <h3 className="text-sm font-black text-white uppercase tracking-wider flex items-center justify-center gap-1.5">
+                    <span>You’re in!</span>
                   </h3>
                   <p className="text-[10px] text-[#B8BBC8] leading-relaxed">
                     Establish crucial connections for summer internships!
@@ -381,14 +377,13 @@ export default function EventDetailsPage() {
                 </button>
 
                 {/* Big Success Icon / Graphics */}
-                <div className="mx-auto h-16 w-16 rounded-full bg-[#FD5C05]/15 flex items-center justify-center text-lg">
-                  🎉
+                <div className="mx-auto h-16 w-16 rounded-full bg-emerald-500/10 flex items-center justify-center text-emerald-500">
+                  <CheckCircle2 className="h-8 w-8" />
                 </div>
 
                 {/* Title & Body */}
                 <div className="space-y-2">
-                  <h3 className="text-xl font-bold text-white tracking-tight flex items-center gap-2">
-                    <Sparkles className="h-5 w-5 text-[#FD5C05] shrink-0" />
+                  <h3 className="text-xl font-bold text-white tracking-tight flex items-center justify-center gap-2">
                     <span>You’re in!</span>
                   </h3>
                   <p className="text-xs text-[#B8BBC8] leading-relaxed">
@@ -407,14 +402,6 @@ export default function EventDetailsPage() {
                   >
                     Add to Calendar
                   </Button>
-
-                  <button
-                    onClick={handleCancelRSVP}
-                    className="w-full text-center py-2.5 text-xs font-bold uppercase tracking-wider text-[#B8BBC8] hover:text-red-400 hover:underline transition-all cursor-pointer border-none bg-transparent flex items-center justify-center gap-1.5"
-                  >
-                    <XCircle className="h-4 w-4 shrink-0" />
-                    <span>Cancel RSVP</span>
-                  </button>
                 </div>
               </motion.div>
             )}
@@ -433,7 +420,7 @@ export default function EventDetailsPage() {
           >
             <span>Saved to your events!</span>
             <button
-              onClick={() => router.push('/student/saved')}
+              onClick={() => router.push('/student/profile?tab=saved')}
               className="text-[#FD5C05] font-black uppercase tracking-wider hover:underline cursor-pointer border-none bg-transparent"
             >
               Go to Saved →

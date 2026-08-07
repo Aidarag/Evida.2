@@ -19,22 +19,28 @@ interface EventCardProps {
   isAttending?: boolean;
 }
 
-export default function EventCard({ event, onClick, onSave, isSaved, onRsvp, isAttending = false }: EventCardProps) {
+// 1. Presentational Component wrapped with React.memo
+const EventCardInner = React.memo(function EventCardInner({
+  event,
+  onClick,
+  onSave,
+  isSaved,
+  onRsvp,
+  isAttending = false,
+  effectiveIsSaved,
+  effectiveIsAttending,
+  isOrgVerified,
+  saveToggle,
+  rsvpToggle,
+}: EventCardProps & {
+  effectiveIsSaved: boolean;
+  effectiveIsAttending: boolean;
+  isOrgVerified: boolean;
+  saveToggle: (id: string) => void;
+  rsvpToggle: (id: string, action: 'rsvp' | 'interested') => void;
+}) {
   const [saveLoading, setSaveLoading] = useState(false);
   const [rsvpLoading, setRsvpLoading] = useState(false);
-  const { saveToggle, rsvpToggle, events, organizations } = useEvents();
-  const { currentUser } = useUser();
-
-  // Compute effective states from up-to-date context
-  const dbEvent = events.find(e => e.id === event.id);
-
-  const effectiveIsSaved = dbEvent && currentUser
-    ? (dbEvent.savedBy?.includes(currentUser.name) || (currentUser.username ? dbEvent.savedBy?.includes(currentUser.username) : false))
-    : (isSaved !== undefined ? isSaved : false);
-
-  const effectiveIsAttending = dbEvent && currentUser
-    ? (dbEvent.attendees?.includes(currentUser.name) || (currentUser.username ? dbEvent.attendees?.includes(currentUser.username) : false))
-    : isAttending;
 
   // Check if it's a promotion
   const isPromo = !('ownershipType' in event);
@@ -74,10 +80,6 @@ export default function EventCard({ event, onClick, onSave, isSaved, onRsvp, isA
     }
     return 'bg-[#FD5C05]/15 text-[#2A2621] border-[#FD5C05]/25';
   };
-
-  const isOrgVerified = !isPromo && (event as Event).organizationId
-    ? organizations.find(o => o.id === (event as Event).organizationId)?.verified
-    : false;
 
   // ICS download helper
   const handleDownloadICS = (e: React.MouseEvent) => {
@@ -219,7 +221,11 @@ export default function EventCard({ event, onClick, onSave, isSaved, onRsvp, isA
                     onClick={async (e) => {
                       e.stopPropagation();
                       setRsvpLoading(true);
-                      await rsvpToggle(event.id, 'rsvp');
+                      if (onRsvp) {
+                        onRsvp(e);
+                      } else {
+                        await rsvpToggle(event.id, 'rsvp');
+                      }
                       setRsvpLoading(false);
                     }}
                     className="inline-flex items-center gap-1 bg-[#FD5C05] border border-[#FD5C05] text-[#2A2621] font-extrabold text-[9px] uppercase tracking-wider py-1.5 px-3.5 rounded-full transition-all duration-300 shadow-sm cursor-pointer whitespace-nowrap"
@@ -236,7 +242,11 @@ export default function EventCard({ event, onClick, onSave, isSaved, onRsvp, isA
                   onClick={async (e) => {
                     e.stopPropagation();
                     setRsvpLoading(true);
-                    await rsvpToggle(event.id, 'rsvp');
+                    if (onRsvp) {
+                      onRsvp(e);
+                    } else {
+                      await rsvpToggle(event.id, 'rsvp');
+                    }
                     setRsvpLoading(false);
                   }}
                   className="inline-flex items-center gap-1 bg-white border border-black/10 hover:border-transparent hover:bg-[#FD5C05] hover:text-[#2A2621] text-[#2A2621] font-bold text-[9px] uppercase tracking-wider py-1.5 px-4 rounded-full transition-all duration-300 shadow-sm cursor-pointer whitespace-nowrap"
@@ -262,5 +272,41 @@ export default function EventCard({ event, onClick, onSave, isSaved, onRsvp, isA
         </div>
       </div>
     </motion.div>
+  );
+});
+
+// 2. Outer wrapper subscribing to contexts
+export default function EventCard(props: EventCardProps) {
+  const { event, isSaved, isAttending } = props;
+  const { saveToggle, rsvpToggle, events, organizations } = useEvents();
+  const { currentUser } = useUser();
+
+  // Compute effective states from up-to-date context
+  const dbEvent = events.find(e => e.id === event.id);
+
+  const effectiveIsSaved = dbEvent && currentUser
+    ? (dbEvent.savedBy?.includes(currentUser.name) || (currentUser.username ? dbEvent.savedBy?.includes(currentUser.username) : false))
+    : (isSaved !== undefined ? isSaved : false);
+
+  const effectiveIsAttending = dbEvent && currentUser
+    ? (dbEvent.attendees?.includes(currentUser.name) || (currentUser.username ? dbEvent.attendees?.includes(currentUser.username) : false))
+    : (isAttending !== undefined ? isAttending : false);
+
+  // Check if it's a promotion
+  const isPromo = !('ownershipType' in event);
+
+  const isOrgVerified = !isPromo && (event as Event).organizationId
+    ? organizations.find(o => o.id === (event as Event).organizationId)?.verified || false
+    : false;
+
+  return (
+    <EventCardInner
+      {...props}
+      effectiveIsSaved={!!effectiveIsSaved}
+      effectiveIsAttending={!!effectiveIsAttending}
+      isOrgVerified={!!isOrgVerified}
+      saveToggle={saveToggle}
+      rsvpToggle={rsvpToggle}
+    />
   );
 }

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useMemo, useCallback } from 'react';
 import { useUser } from '@/lib/context/UserContext';
 import { useEvents } from '@/lib/context/EventContext';
 import { useRouter } from 'next/navigation';
@@ -158,17 +158,13 @@ export default function StudentDashboardPage() {
     return coverImage;
   };
 
-  if (!currentUser) return null;
-
   const approvedEvents = events.filter(e => e.status === 'approved');
   const unreadNotifs = notifications.filter(n => !n.read);
   
   // Base list of rsvp and saved events for stats cards
-  const rsvpEventsList = approvedEvents.filter(e => e.attendees.includes(currentUser.name) && (e.ownershipType === 'school' || e.ownershipType === 'organization'));
-  const savedEventsList = approvedEvents.filter(e => e.savedBy?.includes(currentUser.name) && (e.ownershipType === 'school' || e.ownershipType === 'organization'));
-
-  // Determine matchesCategory
-  const matchesCategory = (item: Event | Promotion) => {
+  const rsvpEventsList = approvedEvents.filter(e => currentUser ? e.attendees.includes(currentUser.name) && (e.ownershipType === 'school' || e.ownershipType === 'organization') : false);
+  const savedEventsList = approvedEvents.filter(e => currentUser ? e.savedBy?.includes(currentUser.name) && (e.ownershipType === 'school' || e.ownershipType === 'organization') : false);
+  const matchesCategory = useCallback((item: Event | Promotion) => {
     if (selectedCategory === 'All') return true;
     const cat = item.category?.toLowerCase() || '';
     const title = item.title.toLowerCase();
@@ -199,45 +195,30 @@ export default function StudentDashboardPage() {
       }
       return true;
     } else {
-      // Student Feed
-      if (sel === 'parties') {
-        return cat.includes('party') || cat.includes('social') || title.includes('party');
-      }
-      if (sel === 'room gatherings') {
-        return cat.includes('gather') || cat.includes('meet') || title.includes('room') || title.includes('gathering');
-      }
-      if (sel === 'bbqs') {
-        return cat.includes('food') || cat.includes('bbq') || title.includes('bbq') || title.includes('cookout');
-      }
-      if (sel === 'game nights') {
-        return cat.includes('game') || cat.includes('play') || title.includes('game') || title.includes('trivia');
-      }
-      if (sel === 'tutoring sessions') {
-        return cat.includes('tutor') || cat.includes('teach') || cat.includes('class') || title.includes('tutor');
-      }
-      if (sel === 'photography services') {
-        return cat.includes('photo') || cat.includes('camera') || title.includes('photo') || title.includes('shoot');
-      }
-      if (sel === 'food sales') {
-        return cat.includes('food') || cat.includes('bake') || cat.includes('sale') || title.includes('food') || title.includes('cookie');
+      // Student Feed (For You Page Categories)
+      if (sel === 'food') {
+        return cat.includes('food') || cat.includes('bake') || cat.includes('bbq') || title.includes('food') || title.includes('cookout') || title.includes('cookie') || title.includes('bake') || title.includes('dining');
       }
       if (sel === 'hair/braiding services') {
         return cat.includes('beauty') || cat.includes('hair') || title.includes('hair') || title.includes('braid') || title.includes('style');
       }
-      if (sel === 'clothing sales') {
-        return cat.includes('clothing') || cat.includes('sale') || cat.includes('market') || title.includes('cloth') || title.includes('shirt');
+      if (sel === 'sales') {
+        return cat.includes('sale') || cat.includes('market') || cat.includes('clothing') || title.includes('sale') || title.includes('cloth') || title.includes('shirt') || title.includes('shop');
       }
-      if (sel === 'personal meetups') {
-        return cat.includes('meet') || cat.includes('hang') || title.includes('meetup');
+      if (sel === 'tutoring') {
+        return cat.includes('tutor') || cat.includes('teach') || cat.includes('class') || cat.includes('academic') || title.includes('tutor') || title.includes('study');
       }
-      if (sel === 'small community events') {
-        return cat.includes('community') || cat.includes('initiative') || title.includes('community');
+      if (sel === 'community events') {
+        return cat.includes('community') || cat.includes('initiative') || cat.includes('volunteer') || title.includes('community') || title.includes('charity');
+      }
+      if (sel === 'parties') {
+        return cat.includes('party') || cat.includes('social') || title.includes('party') || title.includes('rave');
       }
       return true;
     }
-  };
+  }, [activeFeed, selectedCategory]);
 
-  const feedItems: (Event | Promotion)[] = (() => {
+  const feedItems = useMemo(() => {
     if (activeFeed === 'official') {
       return events.filter(e => 
         e.status === 'approved' && 
@@ -251,10 +232,10 @@ export default function StudentDashboardPage() {
       );
       return [...studentEvents, ...promotions];
     }
-  })();
+  }, [events, promotions, activeFeed]);
 
   // ── Unified Search Matching ──
-  const normalizeWord = (w: string) => {
+  const normalizeWord = useCallback((w: string) => {
     w = w.toLowerCase();
     if (w.startsWith('photograph')) return 'photo';
     if (w.startsWith('photo')) return 'photo';
@@ -263,9 +244,9 @@ export default function StudentDashboardPage() {
     if (w.startsWith('academic')) return 'academ';
     if (w.startsWith('workshop')) return 'workshop';
     return w;
-  };
+  }, []);
 
-  const matchQuery = (textFields: (string | undefined)[], query: string) => {
+  const matchQuery = useCallback((textFields: (string | undefined)[], query: string) => {
     if (!query) return true;
     const queryTerms = query.toLowerCase().split(/\s+/).filter(Boolean).map(normalizeWord);
     if (queryTerms.length === 0) return true;
@@ -275,33 +256,39 @@ export default function StudentDashboardPage() {
       .join(' ');
 
     return queryTerms.every(term => normalizedText.includes(term));
-  };
+  }, [normalizeWord]);
 
-  const filteredItems = feedItems.filter(item => {
-    const matchesSearch = matchQuery([
-      item.title,
-      item.description,
-      'location' in item ? item.location : '',
-      item.organizer,
-      item.category
-    ], searchQuery);
+  const filteredItems = useMemo(() => {
+    return feedItems.filter(item => {
+      const matchesSearch = matchQuery([
+        item.title,
+        item.description,
+        'location' in item ? item.location : '',
+        item.organizer,
+        item.category
+      ], searchQuery);
 
-    return matchesSearch && matchesCategory(item);
-  });
+      return matchesSearch && matchesCategory(item);
+    });
+  }, [feedItems, searchQuery, matchQuery, matchesCategory]);
 
-  const sortedFilteredItems = [...filteredItems].sort((a, b) => {
-    // 1. Featured pins at top
-    const aFeat = ('ownershipType' in a) && (a.featured || a.isFeatured) ? 1 : 0;
-    const bFeat = ('ownershipType' in b) && (b.featured || b.isFeatured) ? 1 : 0;
-    if (aFeat !== bFeat) return bFeat - aFeat;
+  const sortedFilteredItems = useMemo(() => {
+    return [...filteredItems].sort((a, b) => {
+      // 1. Featured pins at top
+      const aFeat = ('ownershipType' in a) && (a.featured || a.isFeatured) ? 1 : 0;
+      const bFeat = ('ownershipType' in b) && (b.featured || b.isFeatured) ? 1 : 0;
+      if (aFeat !== bFeat) return bFeat - aFeat;
 
-    // 2. Default sort by date
-    return new Date(a.date).getTime() - new Date(b.date).getTime();
-  });
+      // 2. Default sort by date
+      return new Date(a.date).getTime() - new Date(b.date).getTime();
+    });
+  }, [filteredItems]);
 
-  const matchedOrgs = searchQuery.trim() !== ''
-    ? organizations.filter(org => matchQuery([org.name, org.description], searchQuery))
-    : [];
+  const matchedOrgs = useMemo(() => {
+    return searchQuery.trim() !== ''
+      ? organizations.filter(org => matchQuery([org.name, org.description], searchQuery))
+      : [];
+  }, [organizations, searchQuery, matchQuery]);
 
   const officialCategories = [
     { name: 'All', icon: Compass },
@@ -316,17 +303,12 @@ export default function StudentDashboardPage() {
 
   const studentCategories = [
     { name: 'All', icon: Compass },
+    { name: 'Food', icon: Utensils },
+    { name: 'Hair/braiding services', icon: Sparkles },
+    { name: 'Sales', icon: Tag },
+    { name: 'Tutoring', icon: GraduationCap },
+    { name: 'Community events', icon: Users },
     { name: 'Parties', icon: Wine },
-    { name: 'Room Gatherings', icon: Home },
-    { name: 'BBQs', icon: Utensils },
-    { name: 'Game Nights', icon: Sparkles },
-    { name: 'Tutoring Sessions', icon: Briefcase },
-    { name: 'Photography Services', icon: Camera },
-    { name: 'Food Sales', icon: Utensils },
-    { name: 'Hair/Braiding Services', icon: Sparkles },
-    { name: 'Clothing Sales', icon: Tag },
-    { name: 'Personal Meetups', icon: Users },
-    { name: 'Small Community Events', icon: Trophy },
   ];
 
   const currentCategories = activeFeed === 'official' ? officialCategories : studentCategories;
@@ -355,6 +337,8 @@ export default function StudentDashboardPage() {
     const parts = name.split(' ');
     return parts.length > 1 ? (parts[0][0] + parts[1][0]).toUpperCase() : name.substring(0, 2).toUpperCase();
   };
+
+  if (!currentUser) return null;
 
   return (
     <div className="max-w-5xl mx-auto px-4 py-4 pb-28 md:pb-12 space-y-4">

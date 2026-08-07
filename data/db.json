@@ -52,11 +52,10 @@
       "attendees": [
         "Sarah Jenkins",
         "Alex Rivera",
-        "Dean Williams"
-      ],
-      "interested": [
+        "Dean Williams",
         "Michael Chen"
       ],
+      "interested": [],
       "savedBy": [
         "Sarah Jenkins"
       ],

@@ -31,10 +31,17 @@ export function DesktopNav({
 
   React.useEffect(() => {
     if (variant !== 'public') return;
+    let ticking = false;
     const handleScroll = () => {
-      setScrolled(window.scrollY > 30);
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          setScrolled(window.scrollY > 30);
+          ticking = false;
+        });
+        ticking = true;
+      }
     };
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, [variant]);
 
@@ -205,7 +212,7 @@ export function DesktopNav({
 // ─────────────────────────────────────────────────
 // Mobile Bottom Navigation
 // ─────────────────────────────────────────────────
-export function MobileBottomNav({ variant = 'student' }: { variant?: 'student' | 'school' }) {
+export const MobileBottomNav = React.memo(function MobileBottomNav({ variant = 'student' }: { variant?: 'student' | 'school' }) {
   const pathname = usePathname();
   const [isPreview, setIsPreview] = React.useState(false);
 
@@ -311,7 +318,7 @@ export function MobileBottomNav({ variant = 'student' }: { variant?: 'student' |
       </motion.nav>
     </div>
   );
-}
+});
 
 // ─────────────────────────────────────────────────
 // Desktop Sidebar Navigation
@@ -1166,9 +1173,7 @@ export function NotificationBell() {
   const handleMarkAllRead = async () => {
     try {
       const unreadList = notifications.filter(n => !n.read);
-      for (const notif of unreadList) {
-        await markNotificationRead(notif.id);
-      }
+      await Promise.all(unreadList.map(notif => markNotificationRead(notif.id)));
     } catch (err) {
       console.error(err);
     }

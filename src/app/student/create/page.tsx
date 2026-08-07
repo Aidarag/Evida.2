@@ -314,19 +314,19 @@ function CreateListingPageContent() {
                   </p>
                   <ul className="text-xs text-left max-w-[170px] mx-auto space-y-2 text-[#5A554E] font-semibold border-t border-black/[0.06] pt-4 w-full">
                     <li className="flex items-center gap-2">
+                      <span className="h-1.5 w-1.5 rounded-full bg-[#FD5C05]" /> Food & Bbqs
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <span className="h-1.5 w-1.5 rounded-full bg-[#FD5C05]" /> Hair & Braiding
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <span className="h-1.5 w-1.5 rounded-full bg-[#FD5C05]" /> Marketplace Sales
+                    </li>
+                    <li className="flex items-center gap-2">
                       <span className="h-1.5 w-1.5 rounded-full bg-[#FD5C05]" /> Tutoring Services
                     </li>
                     <li className="flex items-center gap-2">
-                      <span className="h-1.5 w-1.5 rounded-full bg-[#FD5C05]" /> Student Business
-                    </li>
-                    <li className="flex items-center gap-2">
-                      <span className="h-1.5 w-1.5 rounded-full bg-[#FD5C05]" /> Food & Bake Sales
-                    </li>
-                    <li className="flex items-center gap-2">
-                      <span className="h-1.5 w-1.5 rounded-full bg-[#FD5C05]" /> Photography / Art
-                    </li>
-                    <li className="flex items-center gap-2">
-                      <span className="h-1.5 w-1.5 rounded-full bg-[#FD5C05]" /> Community Initiative
+                      <span className="h-1.5 w-1.5 rounded-full bg-[#FD5C05]" /> Community Events
                     </li>
                   </ul>
                 </div>
@@ -817,15 +817,12 @@ function CreateListingPageContent() {
                           value={promoForm.category}
                           onChange={e => setPromoForm({...promoForm, category: e.target.value})}
                         >
-                          <option value="academic">Academic</option>
-                          <option value="jobs">Jobs</option>
-                          <option value="creative">Creative</option>
                           <option value="food">Food</option>
-                          <option value="beauty">Beauty</option>
-                          <option value="marketplace">Marketplace</option>
-                          <option value="housing">Housing</option>
-                          <option value="sports">Sports</option>
-                          <option value="projects">Projects</option>
+                          <option value="hair/braiding services">Hair/braiding services</option>
+                          <option value="sales">Sales</option>
+                          <option value="tutoring">Tutoring</option>
+                          <option value="community events">Community events</option>
+                          <option value="parties">Parties</option>
                           <option value="other">Other</option>
                         </select>
                       </div>

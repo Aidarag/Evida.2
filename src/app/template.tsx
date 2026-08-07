@@ -37,7 +37,7 @@ export default function Template({ children }: { children: React.ReactNode }) {
     if (!showSplash) return;
     setProgress(0);
 
-    const duration = 800; // Simulated load duration in ms
+    const duration = 400; // Simulated load duration in ms
     const intervalTime = 20;
     const increment = 100 / (duration / intervalTime);
 
