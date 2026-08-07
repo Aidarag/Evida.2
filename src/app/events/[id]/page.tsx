@@ -1,13 +1,15 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import Link from 'next/link';
 import { useEvents } from '@/lib/context/EventContext';
 import { useUser } from '@/lib/context/UserContext';
 import { useParams, useRouter } from 'next/navigation';
-import { Calendar, MapPin, Users, ArrowLeft, Share2, Compass, X, Bookmark } from 'lucide-react';
+import { Calendar, MapPin, Users, ArrowLeft, Share2, Compass, X, Bookmark, Sparkles, XCircle, CheckCircle2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Button from '@/components/ui/Button';
 import Badge from '@/components/ui/Badge';
+import { downloadEventICS } from '@/lib/calendar';
 
 export default function EventDetailsPage() {
   const params = useParams();
@@ -67,36 +69,39 @@ export default function EventDetailsPage() {
   const bgClass = event.coverImage.includes('from-') ? event.coverImage : '';
   const bgStyle = !bgClass ? { backgroundImage: `url(${event.coverImage})`, backgroundSize: 'cover' } : {};
 
+  const [sharing, setSharing] = useState(false);
+
+  const handleShareClick = async () => {
+    if (!event) return;
+    const shareData = {
+      title: event.title,
+      text: event.description || '',
+      url: typeof window !== 'undefined' ? `${window.location.origin}/events/${event.id}` : '',
+    };
+    
+    if (navigator.share && navigator.canShare && navigator.canShare(shareData)) {
+      try {
+        await navigator.share(shareData);
+      } catch (err) {
+        console.error('Error sharing:', err);
+      }
+    } else {
+      try {
+        await navigator.clipboard.writeText(shareData.url);
+        setSharing(true);
+        setTimeout(() => setSharing(false), 2000);
+      } catch (err) {
+        console.error('Failed to copy link:', err);
+      }
+    }
+  };
+
   const handleAddToCalendar = () => {
-    const cleanTitle = event.title.replace(/[^a-zA-Z0-9 ]/g, "");
-    const cleanDesc = event.description.replace(/[^a-zA-Z0-9 ]/g, "");
-    const cleanLoc = event.location.replace(/[^a-zA-Z0-9 ]/g, "");
-    const dateStr = event.date.replace(/-/g, '');
-    const startTime = `${dateStr}T190000`;
-    const endTime = `${dateStr}T210000`;
-    const icsContent = [
-      'BEGIN:VCALENDAR',
-      'VERSION:2.0',
-      'PRODID:-//Evida//Calendar//EN',
-      'BEGIN:VEVENT',
-      `UID:${event.id}@evida.app`,
-      `DTSTAMP:${startTime}`,
-      `DTSTART:${startTime}`,
-      `DTEND:${endTime}`,
-      `SUMMARY:${cleanTitle}`,
-      `DESCRIPTION:${cleanDesc}`,
-      `LOCATION:${cleanLoc}`,
-      'END:VEVENT',
-      'END:VCALENDAR'
-    ].join('\r\n');
-    const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8;' });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.setAttribute('download', `${cleanTitle.replace(/\s+/g, '_')}.ics`);
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+    try {
+      downloadEventICS(event);
+    } catch (error) {
+      console.error('Error adding event to calendar:', error);
+    }
   };
 
   const handleCancelRSVP = async () => {
@@ -119,7 +124,11 @@ export default function EventDetailsPage() {
           </button>
           
           <div className="flex gap-3">
-            <button className="h-10 w-10 rounded-full bg-black/40 backdrop-blur-md flex items-center justify-center hover:bg-[#FFFDE1]/20 transition-colors cursor-pointer">
+            <button 
+              onClick={handleShareClick}
+              className="h-10 w-10 rounded-full bg-black/40 backdrop-blur-md flex items-center justify-center hover:bg-[#FFFDE1]/20 transition-colors cursor-pointer"
+              title="Share Event"
+            >
               <Share2 className="h-4 w-4 text-white" />
             </button>
             {currentUser && (
@@ -156,7 +165,15 @@ export default function EventDetailsPage() {
               <Compass className="h-5 w-5 text-[#80B0EC]" />
             </div>
             <div>
-              <p className="text-sm font-bold text-white">Hosted by {event.organizationName || event.organizer}</p>
+              {event.organizationId ? (
+                <Link href={`/student/organizations/${event.organizationId}`}>
+                  <p className="text-sm font-bold text-white hover:text-[#FD5C05] hover:underline cursor-pointer transition-colors">
+                    Hosted by {event.organizationName || event.organizer}
+                  </p>
+                </Link>
+              ) : (
+                <p className="text-sm font-bold text-white">Hosted by {event.organizationName || event.organizer}</p>
+              )}
               <p className="text-xs text-[#B8BBC8]">{event.ownershipType === 'school' ? 'Official University Event' : 'Student Organization'}</p>
             </div>
           </div>
@@ -184,7 +201,7 @@ export default function EventDetailsPage() {
                   <Calendar className="h-5 w-5 text-[#80B0EC]" />
                 </div>
                 <div>
-                  <h3 className="font-bold text-white">{new Date(event.date).toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' })}</h3>
+                  <h3 className="font-bold text-white">📅 {new Date(event.date).toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' })}</h3>
                   <p className="text-sm text-[#B8BBC8]">{event.time} {event.endTime ? `- ${event.endTime}` : ''}</p>
                 </div>
               </div>
@@ -194,7 +211,7 @@ export default function EventDetailsPage() {
                   <MapPin className="h-5 w-5 text-[#eb5e28]" />
                 </div>
                 <div>
-                  <h3 className="font-bold text-white">{event.location}</h3>
+                  <h3 className="font-bold text-white">📍 {event.location}</h3>
                   <p className="text-sm text-[#B8BBC8] capitalize">{event.locationType}</p>
                 </div>
               </div>
@@ -204,7 +221,7 @@ export default function EventDetailsPage() {
                   <Users className="h-5 w-5 text-[#EE3D5A]" />
                 </div>
                 <div>
-                  <h3 className="font-bold text-white">{event.attendees.length} Attending</h3>
+                  <h3 className="font-bold text-white">👥 {event.attendees.length} Attending</h3>
                   <p className="text-sm text-[#B8BBC8]">Free Entry</p>
                 </div>
               </div>
@@ -215,7 +232,7 @@ export default function EventDetailsPage() {
                 isAttending ? (
                   <div className="space-y-4 text-center p-5 bg-[#161622] border border-white/10 rounded-[24px] shadow-2xl relative animate-scale-in">
                     <div className="text-lg font-black text-white flex items-center justify-center gap-1.5">
-                      :-) You&apos;re In!
+                      🎉 You’re in!
                     </div>
                     <p className="text-xs text-[#B8BBC8] leading-relaxed">
                       You have successfully RSVP&apos;d to this event. We have saved your spot!
@@ -227,13 +244,13 @@ export default function EventDetailsPage() {
                         className="flex-1 bg-[#FD5C05] text-white hover:bg-[#CC3D00] border-none font-bold"
                         onClick={handleAddToCalendar}
                       >
-                        Add to Calendar
+                        📅 Add to Calendar
                       </Button>
                       <button
                         onClick={handleCancelRSVP}
-                        className="flex-1 py-2 px-3 border border-white/10 rounded-xl text-[10px] font-bold uppercase tracking-wider text-[#B8BBC8] hover:text-white hover:bg-white/5 transition-all cursor-pointer"
+                        className="flex-1 py-2 px-3 border border-white/10 rounded-xl text-[10px] font-bold uppercase tracking-wider text-[#B8BBC8] hover:text-white hover:bg-white/5 transition-all cursor-pointer flex items-center justify-center gap-1"
                       >
-                        Cancel RSVP
+                        <span>❌ Cancel RSVP</span>
                       </button>
                     </div>
                   </div>
@@ -283,14 +300,14 @@ export default function EventDetailsPage() {
                 className="bg-[#111118] border border-white/[0.08] w-[240px] rounded-[24px] p-5 shadow-2xl relative text-center space-y-4 select-none"
               >
                 {/* Success Icon */}
-                <div className="mx-auto h-12 w-12 rounded-full bg-[#FD5C05]/10 flex items-center justify-center text-[#FD5C05] font-black text-sm font-mono">
-                  (:-))
+                <div className="mx-auto h-12 w-12 rounded-full bg-[#FD5C05]/10 flex items-center justify-center text-lg">
+                  🎉
                 </div>
 
                 {/* Title & Body */}
                 <div className="space-y-1">
                   <h3 className="text-sm font-black text-white uppercase tracking-wider">
-                    You&apos;re in!
+                    🎉 You’re in!
                   </h3>
                   <p className="text-[10px] text-[#B8BBC8] leading-relaxed">
                     Establish crucial connections for summer internships!
@@ -325,8 +342,7 @@ export default function EventDetailsPage() {
                           animate={{ scale: 1, opacity: 1 }}
                           className="flex items-center gap-1.5"
                         >
-                          <Calendar className="h-3 w-3" />
-                          <span>Add to Calendar</span>
+                          <span>📅 Add to Calendar</span>
                           {isPreview && <span className="inline-block animate-bounce text-xs ml-1 text-[#FD5C05] font-black font-mono">{"(->)"}</span>}
                         </motion.span>
                       )}
@@ -365,17 +381,18 @@ export default function EventDetailsPage() {
                 </button>
 
                 {/* Big Success Icon / Graphics */}
-                <div className="mx-auto h-16 w-16 rounded-full bg-[#FD5C05]/15 flex items-center justify-center text-[#FD5C05] font-black text-lg font-mono">
-                  (:-))
+                <div className="mx-auto h-16 w-16 rounded-full bg-[#FD5C05]/15 flex items-center justify-center text-lg">
+                  🎉
                 </div>
 
                 {/* Title & Body */}
                 <div className="space-y-2">
-                  <h3 className="text-xl font-bold text-white tracking-tight">
-                    You&apos;re going! (:-))
+                  <h3 className="text-xl font-bold text-white tracking-tight flex items-center gap-2">
+                    <Sparkles className="h-5 w-5 text-[#FD5C05] shrink-0" />
+                    <span>You’re in!</span>
                   </h3>
                   <p className="text-xs text-[#B8BBC8] leading-relaxed">
-                    Your RSVP has been confirmed.
+                    Your RSVP has been successfully confirmed. We have saved your spot!
                   </p>
                 </div>
 
@@ -385,17 +402,18 @@ export default function EventDetailsPage() {
                     variant="primary"
                     fullWidth
                     onClick={handleAddToCalendar}
-                    icon={<Calendar className="h-4 w-4" />}
-                    className="bg-[#FD5C05] text-white hover:bg-[#CC3D00] border-none font-bold uppercase tracking-wider text-xs py-3 rounded-xl cursor-pointer"
+                    icon={<Calendar className="h-4 w-4 shrink-0" />}
+                    className="bg-[#FD5C05] text-[#2A2621] hover:bg-[#CC3D00] border-none font-bold uppercase tracking-wider text-xs py-3 rounded-xl cursor-pointer flex items-center justify-center gap-1.5"
                   >
                     Add to Calendar
                   </Button>
 
                   <button
                     onClick={handleCancelRSVP}
-                    className="w-full text-center py-2.5 text-xs font-bold uppercase tracking-wider text-[#B8BBC8] hover:text-red-400 hover:underline transition-all cursor-pointer border-none bg-transparent"
+                    className="w-full text-center py-2.5 text-xs font-bold uppercase tracking-wider text-[#B8BBC8] hover:text-red-400 hover:underline transition-all cursor-pointer border-none bg-transparent flex items-center justify-center gap-1.5"
                   >
-                    Cancel RSVP
+                    <XCircle className="h-4 w-4 shrink-0" />
+                    <span>Cancel RSVP</span>
                   </button>
                 </div>
               </motion.div>
@@ -420,6 +438,21 @@ export default function EventDetailsPage() {
             >
               Go to Saved →
             </button>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Share Notification Toast */}
+      <AnimatePresence>
+        {sharing && (
+          <motion.div
+            initial={{ opacity: 0, y: 50, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 50, scale: 0.95 }}
+            className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 flex items-center justify-center gap-2 px-5 py-3.5 rounded-2xl bg-[#2A2621] text-white shadow-2xl text-xs font-semibold w-80 font-sans border border-white/10"
+          >
+            <CheckCircle2 className="h-4 w-4 text-emerald-500 shrink-0" />
+            <span>Link copied to clipboard!</span>
           </motion.div>
         )}
       </AnimatePresence>

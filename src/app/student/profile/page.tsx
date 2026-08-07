@@ -35,6 +35,7 @@ import {
 } from 'lucide-react';
 import Button from '@/components/ui/Button';
 import VerifiedBadge from '@/components/ui/VerifiedBadge';
+import EvidaLogo from '@/components/ui/EvidaLogo';
 
 const PROFILE_BANNERS = [
   '/pexels-hanna-elesha-abraham-1587801282-27498756.jpg',
@@ -564,8 +565,8 @@ function StudentProfilePageContent() {
           <div className="pt-2">
             {profileUser.school ? (
               <div className="flex items-center gap-2.5 bg-slate-50 border border-black/[0.04] rounded-2xl px-4 py-2 shadow-sm">
-                <span className="h-6 w-6 rounded-lg bg-[#FD5C05] text-white flex items-center justify-center text-[10px] font-black tracking-tighter select-none shadow-sm">
-                  {profileUser.school.substring(0, 2).toUpperCase()}
+                <span className="h-6 w-6 rounded-lg bg-[#08080C] border border-white/[0.08] flex items-center justify-center select-none shadow-sm shrink-0 p-1">
+                  <EvidaLogo size={14} showText={false} />
                 </span>
                 <span className="text-xs font-extrabold uppercase text-[#2A2621] tracking-wider">
                   {profileUser.school}

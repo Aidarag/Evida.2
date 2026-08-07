@@ -5,7 +5,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { useUser } from '@/lib/context/UserContext';
 import { useEvents } from '@/lib/context/EventContext';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Calendar, Tag, ArrowRight, ArrowLeft, Check, Users, User, Shield, Sparkles, Image as ImageIcon, Info, Megaphone } from 'lucide-react';
+import { Calendar, Tag, ArrowRight, ArrowLeft, Check, Users, User, Shield, Sparkles, Image as ImageIcon, Info, Megaphone, Ticket, CircleDollarSign } from 'lucide-react';
 import Button from '@/components/ui/Button';
 import Card from '@/components/ui/Card';
 import Input from '@/components/ui/Input';
@@ -42,6 +42,8 @@ function CreateListingPageContent() {
     departmentName: '',
     isFeatured: false,
     coverImageDataUrl: '',
+    free: true,
+    price: '',
   });
 
   const [promoForm, setPromoForm] = useState({
@@ -91,6 +93,8 @@ function CreateListingPageContent() {
       selectedOrgId: evt.organizationId || '',
       departmentName: evt.ownershipType === 'school' ? evt.organizer : '',
       isFeatured: evt.featured || false,
+      free: evt.free !== false,
+      price: evt.price ? String(evt.price) : '',
     }));
     setStep(4);
   }, [events, searchParams]);
@@ -149,6 +153,8 @@ function CreateListingPageContent() {
       isFeatured: isSchool ? eventForm.isFeatured : false,
       creatorUsername: currentUser!.username,
       organizerName: currentUser!.name,
+      free: eventForm.free,
+      price: !eventForm.free && eventForm.price ? parseFloat(eventForm.price) : undefined,
     };
 
     let success: boolean;
@@ -356,6 +362,8 @@ function CreateListingPageContent() {
                             departmentName: evt.ownershipType === 'school' ? evt.organizer : '',
                             isFeatured: evt.featured || false,
                             coverImageDataUrl: evt.coverImage || '',
+                            free: evt.free !== false,
+                            price: evt.price ? String(evt.price) : '',
                           });
                           // Move directly to the edit details step
                           setStep(4);
@@ -674,6 +682,59 @@ function CreateListingPageContent() {
                         )}
                       </div>
                     )}
+
+                    {/* Pricing section (Visible for all events, including quick events) */}
+                    <div className="space-y-3 pt-2 text-left">
+                      <label className="block text-xs font-bold uppercase tracking-wider text-[#5A554E]">Event Pricing</label>
+                      <div className="grid grid-cols-2 gap-4">
+                        <button
+                          type="button"
+                          onClick={() => setEventForm(prev => ({ ...prev, free: true, price: '' }))}
+                          className={`p-4 rounded-xl border flex flex-col items-center justify-center gap-1.5 transition-all cursor-pointer ${
+                            eventForm.free 
+                              ? 'bg-[#FD5C05]/10 border-[#FD5C05] text-[#2A2621] font-bold shadow-sm' 
+                              : 'bg-white border-black/10 text-[#5A554E] hover:border-black/25'
+                          }`}
+                        >
+                          <Ticket className="h-5 w-5 text-[#FD5C05]" />
+                          <span className="text-xs uppercase tracking-wider font-extrabold">Free Event</span>
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setEventForm(prev => ({ ...prev, free: false }))}
+                          className={`p-4 rounded-xl border flex flex-col items-center justify-center gap-1.5 transition-all cursor-pointer ${
+                            !eventForm.free 
+                              ? 'bg-[#FD5C05]/10 border-[#FD5C05] text-[#2A2621] font-bold shadow-sm' 
+                              : 'bg-white border-black/10 text-[#5A554E] hover:border-black/25'
+                          }`}
+                        >
+                          <CircleDollarSign className="h-5 w-5 text-[#FD5C05]" />
+                          <span className="text-xs uppercase tracking-wider font-extrabold">Paid Event</span>
+                        </button>
+                      </div>
+
+                      <AnimatePresence>
+                        {!eventForm.free && (
+                          <motion.div
+                            initial={{ opacity: 0, y: -10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: -10 }}
+                            className="pt-1"
+                          >
+                            <Input 
+                              label="Ticket Price ($)" 
+                              type="number"
+                              step="0.01"
+                              min="0"
+                              placeholder="e.g. 5.00"
+                              value={eventForm.price}
+                              onChange={e => setEventForm({...eventForm, price: e.target.value})}
+                              required={!eventForm.free}
+                            />
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </div>
 
                     {/* Cover Image Upload (Always Visible) */}
                     <div className="space-y-1.5 pt-2 text-left">

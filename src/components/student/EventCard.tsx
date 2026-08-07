@@ -1,13 +1,14 @@
 'use client';
 
 import React from 'react';
-import { MapPin, Calendar, Bookmark } from 'lucide-react';
+import { MapPin, Calendar, Bookmark, Check, CheckCircle, Mail } from 'lucide-react';
 import { Event, Promotion } from '@/lib/types';
 import { motion } from 'framer-motion';
 import { useState } from 'react';
 import { useEvents } from '@/lib/context/EventContext';
 import { useUser } from '@/lib/context/UserContext';
 import VerifiedBadge from '@/components/ui/VerifiedBadge';
+import { downloadEventICS } from '@/lib/calendar';
 
 interface EventCardProps {
   event: Event | Promotion;
@@ -21,13 +22,19 @@ interface EventCardProps {
 export default function EventCard({ event, onClick, onSave, isSaved, onRsvp, isAttending = false }: EventCardProps) {
   const [saveLoading, setSaveLoading] = useState(false);
   const [rsvpLoading, setRsvpLoading] = useState(false);
-  const { saveToggle, organizations } = useEvents();
+  const { saveToggle, rsvpToggle, events, organizations } = useEvents();
   const { currentUser } = useUser();
 
-  // Compute effective saved state if not explicitly passed
-  const effectiveIsSaved = isSaved !== undefined 
-    ? isSaved 
-    : (currentUser ? (event.savedBy?.includes(currentUser.name) || (currentUser.username ? event.savedBy?.includes(currentUser.username) : false)) : false);
+  // Compute effective states from up-to-date context
+  const dbEvent = events.find(e => e.id === event.id);
+
+  const effectiveIsSaved = dbEvent && currentUser
+    ? (dbEvent.savedBy?.includes(currentUser.name) || (currentUser.username ? dbEvent.savedBy?.includes(currentUser.username) : false))
+    : (isSaved !== undefined ? isSaved : false);
+
+  const effectiveIsAttending = dbEvent && currentUser
+    ? (dbEvent.attendees?.includes(currentUser.name) || (currentUser.username ? dbEvent.attendees?.includes(currentUser.username) : false))
+    : isAttending;
 
   // Check if it's a promotion
   const isPromo = !('ownershipType' in event);
@@ -76,33 +83,11 @@ export default function EventCard({ event, onClick, onSave, isSaved, onRsvp, isA
   const handleDownloadICS = (e: React.MouseEvent) => {
     e.stopPropagation();
     if (isPromo) { onClick(); return; }
-    const evt = event as Event;
-    const cleanTitle = evt.title.replace(/[^\w\s-]/gi, '');
-    const cleanDesc = (evt.description || '').replace(/[^\w\s-]/gi, '');
-    const cleanLoc = (evt.location || 'Campus').replace(/[^\w\s-]/gi, '');
-    const dateStr = (evt.date || '').replace(/-/g, '');
-    const icsContent = [
-      'BEGIN:VCALENDAR',
-      'VERSION:2.0',
-      'PRODID:-//Evida//Calendar//EN',
-      'BEGIN:VEVENT',
-      `UID:${evt.id}@evida.app`,
-      `SUMMARY:${cleanTitle}`,
-      `DESCRIPTION:${cleanDesc}`,
-      `LOCATION:${cleanLoc}`,
-      `DTSTART:${dateStr}T190000`,
-      `DTEND:${dateStr}T210000`,
-      'END:VEVENT',
-      'END:VCALENDAR',
-    ].join('\r\n');
-    const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8;' });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.setAttribute('download', `${cleanTitle.replace(/\s+/g, '_')}.ics`);
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+    try {
+      downloadEventICS(event as Event);
+    } catch (error) {
+      console.error('Error adding event to calendar:', error);
+    }
   };
 
   return (
@@ -214,38 +199,65 @@ export default function EventCard({ event, onClick, onSave, isSaved, onRsvp, isA
             </span>
           </div>
 
-          {/* Action button — RSVP if onRsvp provided, else ICS download */}
-          {onRsvp ? (
-            <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  if (onRsvp) {
+          {/* Action buttons - RSVP going and calendar download */}
+          {!isPromo ? (
+            <div className="flex gap-1.5">
+              {effectiveIsAttending ? (
+                <>
+                  <button
+                    type="button"
+                    onClick={handleDownloadICS}
+                    className="inline-flex items-center gap-1 bg-[#FD5C05]/10 border border-[#FD5C05]/20 text-[#FD5C05] hover:bg-[#FD5C05] hover:text-[#2A2621] font-bold text-[9px] uppercase tracking-wider py-1.5 px-3 rounded-full transition-all duration-300 shadow-sm cursor-pointer whitespace-nowrap"
+                    title="Add to Calendar"
+                    style={{ fontFamily: 'var(--font-display)' }}
+                  >
+                    <Calendar className="h-3.5 w-3.5 shrink-0" />
+                    <span>Add</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={async (e) => {
+                      e.stopPropagation();
+                      setRsvpLoading(true);
+                      await rsvpToggle(event.id, 'rsvp');
+                      setRsvpLoading(false);
+                    }}
+                    className="inline-flex items-center gap-1 bg-[#FD5C05] border border-[#FD5C05] text-[#2A2621] font-extrabold text-[9px] uppercase tracking-wider py-1.5 px-3.5 rounded-full transition-all duration-300 shadow-sm cursor-pointer whitespace-nowrap"
+                    title="Going"
+                    style={{ fontFamily: 'var(--font-display)' }}
+                  >
+                    <Check className="h-3 w-3 shrink-0" />
+                    <span>Going</span>
+                  </button>
+                </>
+              ) : (
+                <button
+                  type="button"
+                  onClick={async (e) => {
+                    e.stopPropagation();
                     setRsvpLoading(true);
-                    onRsvp(e);
-                    setTimeout(() => setRsvpLoading(false), 300);
-                  }
-                }}
-                className={`inline-flex items-center gap-1.5 border font-bold text-[10px] uppercase tracking-wider py-1.5 px-3.5 rounded-full transition-all duration-300 shadow-sm cursor-pointer whitespace-nowrap ${
-                  isAttending
-                    ? 'bg-[#FD5C05] text-[#2A2621] border-[#FD5C05]'
-                    : 'bg-white border-black/10 hover:border-transparent hover:bg-[#FD5C05] hover:text-[#2A2621] text-[#2A2621]'
-                }`}
-                aria-pressed={isAttending}
-                aria-label={isAttending ? 'Cancel RSVP' : 'RSVP'}
-                disabled={rsvpLoading}
-                style={{ fontFamily: 'var(--font-display)' }}
-              >
-                {isAttending ? 'Going ✓' : rsvpLoading ? 'Processing…' : 'RSVP'}
-              </button>
+                    await rsvpToggle(event.id, 'rsvp');
+                    setRsvpLoading(false);
+                  }}
+                  className="inline-flex items-center gap-1 bg-white border border-black/10 hover:border-transparent hover:bg-[#FD5C05] hover:text-[#2A2621] text-[#2A2621] font-bold text-[9px] uppercase tracking-wider py-1.5 px-4 rounded-full transition-all duration-300 shadow-sm cursor-pointer whitespace-nowrap"
+                  disabled={rsvpLoading}
+                  style={{ fontFamily: 'var(--font-display)' }}
+                >
+                  <CheckCircle className="h-3.5 w-3.5 shrink-0" />
+                  <span>{rsvpLoading ? '...' : 'RSVP'}</span>
+                </button>
+              )}
+            </div>
           ) : (
-            <button
-              onClick={handleDownloadICS}
-              className="inline-flex items-center gap-1.5 bg-white border border-black/10 hover:border-transparent hover:bg-[#FD5C05] hover:text-[#2A2621] text-[#2A2621] font-bold text-[10px] uppercase tracking-wider py-1.5 px-3.5 rounded-full transition-all duration-300 shadow-sm cursor-pointer whitespace-nowrap"
+            <a
+              href={`mailto:${(event as Promotion).contactInfo}?subject=Inquiry regarding: ${event.title}`}
+              onClick={(e) => e.stopPropagation()}
+              className="inline-flex items-center gap-1.5 bg-white border border-black/10 hover:border-transparent hover:bg-[#FD5C05] hover:text-[#2A2621] text-[#2A2621] font-bold text-[9px] uppercase tracking-wider py-1.5 px-3 rounded-full transition-all duration-300 shadow-sm cursor-pointer whitespace-nowrap"
               style={{ fontFamily: 'var(--font-display)' }}
             >
-              <Calendar className="h-3.5 w-3.5" />
-              Add to Calendar
-            </button>
+              <Mail className="h-3.5 w-3.5 shrink-0" />
+              <span>Email Organizer</span>
+            </a>
           )}
         </div>
       </div>

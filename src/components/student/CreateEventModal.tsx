@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { X, Calendar, MapPin, Users, HelpCircle, FileText, CheckSquare, Sparkles, Building } from 'lucide-react';
+import { X, Calendar, MapPin, Users, HelpCircle, FileText, CheckSquare, Sparkles, Building, Ticket, CircleDollarSign } from 'lucide-react';
 import { User, Organization } from '@/lib/types';
 
 interface CreateEventModalProps {
@@ -336,25 +336,45 @@ export default function CreateEventModal({
                 Request School Transportation
               </label>
               {/* Free Event Toggle */}
-              <div className="space-y-1.5 mt-2">
-                <label className="flex items-center gap-2 text-xs font-medium text-slate-300 cursor-pointer">
-                  <input
-                    type="checkbox"
-                    checked={isFree}
-                    onChange={(e) => setIsFree(e.target.checked)}
-                    className="h-4 w-4 rounded border-slate-700 bg-slate-900 text-indigo-600 focus:ring-indigo-500 cursor-pointer"
-                  />
-                  Free Event
-                </label>
+              <div className="space-y-2 mt-2">
+                <label className="block text-xs font-bold uppercase tracking-wider text-slate-300">Event Pricing</label>
+                <div className="grid grid-cols-2 gap-3">
+                  <button
+                    type="button"
+                    onClick={() => { setIsFree(true); setPrice(0); }}
+                    className={`p-3.5 rounded-xl border flex flex-col items-center justify-center gap-1.5 transition-all cursor-pointer ${
+                      isFree 
+                        ? 'bg-indigo-600/10 border-indigo-500 text-white font-bold shadow-sm' 
+                        : 'bg-slate-900/50 border-white/10 text-slate-400 hover:border-white/20'
+                    }`}
+                  >
+                    <Ticket className="h-5 w-5 text-indigo-400" />
+                    <span className="text-[10px] uppercase tracking-wider font-extrabold">Free Event</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setIsFree(false)}
+                    className={`p-3.5 rounded-xl border flex flex-col items-center justify-center gap-1.5 transition-all cursor-pointer ${
+                      !isFree 
+                        ? 'bg-indigo-600/10 border-indigo-500 text-white font-bold shadow-sm' 
+                        : 'bg-slate-900/50 border-white/10 text-slate-400 hover:border-white/20'
+                    }`}
+                  >
+                    <CircleDollarSign className="h-5 w-5 text-indigo-400" />
+                    <span className="text-[10px] uppercase tracking-wider font-extrabold">Paid Event</span>
+                  </button>
+                </div>
+
                 {!isFree && (
-                  <div className="mt-2">
-                    <label className="text-xs font-bold text-[#5A554E] uppercase tracking-wide">Price (USD)</label>
+                  <div className="mt-3 animate-scale-in">
+                    <label className="text-[10px] font-bold text-slate-300 uppercase tracking-wider">Price (USD)</label>
                     <input
                       type="number"
                       min={0}
-                      value={price}
+                      value={price || ''}
                       onChange={(e) => setPrice(Math.max(0, Number(e.target.value)))}
-                      className="w-full rounded-xl border border-white/10 bg-slate-900/50 py-2 px-3 text-xs text-white focus:border-indigo-500 focus:outline-none"
+                      className="w-full rounded-xl border border-white/10 bg-slate-900/50 py-2.5 px-3.5 text-xs text-white focus:border-indigo-500 focus:outline-none mt-1"
+                      required={!isFree}
                     />
                   </div>
                 )}

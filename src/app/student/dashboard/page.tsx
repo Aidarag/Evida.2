@@ -29,6 +29,15 @@ import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import VerifiedBadge from '@/components/ui/VerifiedBadge';
 import { Event, Promotion } from '@/lib/types';
+import EvidaLogo from '@/components/ui/EvidaLogo';
+
+const EvidaLogoIcon = ({ className = 'h-3 w-3' }: { className?: string }) => {
+  return (
+    <span className={`${className} flex items-center justify-center shrink-0`}>
+      <EvidaLogo size={12} showText={false} />
+    </span>
+  );
+};
 
 export default function StudentDashboardPage() {
   const { currentUser } = useUser();
@@ -296,7 +305,7 @@ export default function StudentDashboardPage() {
 
   const officialCategories = [
     { name: 'All', icon: Compass },
-    { name: 'Livingstone College', icon: GraduationCap },
+    { name: 'Livingstone College', icon: EvidaLogoIcon },
     { name: 'Clubs & Organizations', icon: Users },
     { name: 'Athletics', icon: Trophy },
     { name: 'Student Government', icon: Shield },

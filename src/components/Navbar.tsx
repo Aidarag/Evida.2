@@ -4,7 +4,7 @@ import React from 'react';
 import { createPortal } from 'react-dom';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Home, Compass, Plus, User, Settings, BarChart3, Shield, Star, ClipboardList, Building2, Menu, X, Calendar, ChevronDown, ChevronLeft, ChevronRight, Bell, Bookmark } from 'lucide-react';
+import { Home, Compass, Plus, User, Settings, BarChart3, Shield, Star, ClipboardList, Building2, Menu, X, Calendar, ChevronDown, ChevronLeft, ChevronRight, Bell, Bookmark, Megaphone, Users, Sparkles } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useUser } from '@/lib/context/UserContext';
 import { useEvents } from '@/lib/context/EventContext';
@@ -330,7 +330,6 @@ export function DesktopSidebar({
   const studentLinks = [
     { href: '/student/dashboard', icon: Home, label: 'Home' },
     { href: '/student/explore', icon: Compass, label: 'Explore' },
-    { href: '/student/saved', icon: Bookmark, label: 'Saved Events' },
     { href: '/student/calendar', icon: Calendar, label: 'Calendar' },
     { href: '/student/profile', icon: User, label: 'Profile' },
     { href: '/student/create', icon: Plus, label: 'Create Event' },
@@ -845,13 +844,13 @@ export function ProfileSwitcher() {
                   
                   <div className="space-y-3 pt-4 border-t border-white/5">
                     {[
-                      { iconText: '(:-))', text: 'Create official campus events' },
-                      { iconText: '(^o^)', text: 'Share announcements and promotions' },
-                      { iconText: '(;-))', text: 'Recruit and manage members' },
-                      { iconText: '(✦_✦)', text: 'Build your campus presence' },
+                      { Icon: Calendar, text: 'Create official campus events' },
+                      { Icon: Megaphone, text: 'Share announcements and promotions' },
+                      { Icon: Users, text: 'Recruit and manage members' },
+                      { Icon: Sparkles, text: 'Build your campus presence' },
                     ].map((item, idx) => (
                       <div key={idx} className="flex items-center gap-3 text-xs">
-                        <span className="text-[#FD5C05] font-black text-xs font-mono">{item.iconText}</span>
+                        <item.Icon className="h-4 w-4 text-[#FD5C05] shrink-0" />
                         <span className="font-semibold text-white/85">{item.text}</span>
                       </div>
                     ))}
@@ -933,7 +932,7 @@ export function ProfileSwitcher() {
                       </span>
                     </div>
                     <div className="border-t border-white/5 pt-2.5 space-y-1">
-                      <p className="font-bold text-[9px] text-white/95 leading-normal">Join Livingstone College's Blue Bears Tech Club for our weekly campus workshop! (:-))</p>
+                      <p className="font-bold text-[9px] text-white/95 leading-normal">Join Livingstone College's Blue Bears Tech Club for our weekly campus workshop! 🎉</p>
                       <p className="text-[9px] text-white/70 leading-normal">Building software, design systems, and campus events together.</p>
                       <div className="h-16 w-full rounded-xl bg-[#1c1c26] flex flex-col items-center justify-center text-[8px] font-extrabold text-white/40 uppercase tracking-widest relative overflow-hidden mt-1.5 border border-white/5">
                         <span className="relative z-15 text-white/90">Free Blue Bears Swag & Refreshments</span>

@@ -76,25 +76,25 @@ export default function LandingPage({
   const TOUR_STEPS = [
     {
       label: 'Explore Events',
-      emoticon: '(:-))',
+      emoticon: '🔍',
       description: 'Discover curated campus activities, department events, and student organization hosts.',
       hint: 'Scroll down to find events.',
     },
     {
       label: 'Select an Event',
-      emoticon: '(✦_✦)',
+      emoticon: '✨',
       description: 'Find premium opportunities and mixers. Select Career Fair Networking Night to read more.',
       hint: 'Tap View Event to continue.',
     },
     {
       label: 'Event Details',
-      emoticon: '(^o^)',
+      emoticon: 'ℹ️',
       description: 'Review details, date, locations, and roster. RSVP in one simple tap.',
       hint: 'Tap I\'m Going to continue.',
     },
     {
       label: "You're Going!",
-      emoticon: '(;-))',
+      emoticon: '🎉',
       description: 'Your spot is saved! Add to your native calendar directly and continue exploring.',
       hint: 'Tour complete — you\'re in!',
     },

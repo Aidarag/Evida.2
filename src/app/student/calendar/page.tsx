@@ -13,6 +13,7 @@ import {
 import { useEvents } from '@/lib/context/EventContext';
 import { useUser } from '@/lib/context/UserContext';
 import Button from '@/components/ui/Button';
+import { downloadEventICS } from '@/lib/calendar';
 
 export default function StudentCalendarPage() {
   const { events } = useEvents();
@@ -100,33 +101,11 @@ export default function StudentCalendarPage() {
   });
 
   const handleDownloadCalendar = (evt: typeof userGoingEvents[0]) => {
-    const cleanTitle = evt.title.replace(/[^\w\s-]/gi, '');
-    const cleanDescription = evt.description ? evt.description.replace(/[^\w\s-]/gi, '') : '';
-    const cleanLocation = evt.location ? evt.location.replace(/[^\w\s-]/gi, '') : 'Campus';
-    
-    // Create basic ICS content
-    const icsContent = [
-      'BEGIN:VCALENDAR',
-      'VERSION:2.0',
-      'PRODID:-//Evida//Calendar//EN',
-      'BEGIN:VEVENT',
-      `SUMMARY:${cleanTitle}`,
-      `DESCRIPTION:${cleanDescription}`,
-      `LOCATION:${cleanLocation}`,
-      `DTSTART:${evt.date.replace(/-/g, '')}T090000`,
-      `DTEND:${evt.date.replace(/-/g, '')}T100000`,
-      'END:VEVENT',
-      'END:VCALENDAR'
-    ].join('\r\n');
-
-    const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8;' });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.setAttribute('download', `${cleanTitle.replace(/\s+/g, '_')}.ics`);
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+    try {
+      downloadEventICS(evt);
+    } catch (error) {
+      console.error('Error adding event to calendar:', error);
+    }
   };
 
   return (

@@ -195,7 +195,7 @@ export default function ExplorePage() {
         key={evt.id}
         whileHover={{ y: -5, scale: 1.02 }}
         transition={{ type: "spring", stiffness: 400, damping: 25 }}
-        className={`${isGridItem ? 'w-full' : 'w-44 sm:w-52 shrink-0'} h-full flex flex-col`}
+        className={`${isGridItem ? 'w-full' : 'w-44 sm:w-52 shrink-0'} flex flex-col min-h-[180px] sm:min-h-[200px]`}
       >
         <Link
           href={`/events/${evt.id}`}
@@ -259,7 +259,7 @@ export default function ExplorePage() {
       key={org.id}
       whileHover={{ y: -5, scale: 1.02 }}
       transition={{ type: "spring", stiffness: 400, damping: 25 }}
-      className={`${isGridItem ? 'w-full' : 'w-44 sm:w-52 shrink-0'} h-full flex flex-col`}
+      className={`${isGridItem ? 'w-full' : 'w-44 sm:w-52 shrink-0'} flex flex-col min-h-[180px] sm:min-h-[200px]`}
     >
       <div
         onClick={() => router.push(`/student/organizations/${org.id}`)}
@@ -316,7 +316,7 @@ export default function ExplorePage() {
         key={promo.id}
         whileHover={{ y: -5, scale: 1.02 }}
         transition={{ type: "spring", stiffness: 400, damping: 25 }}
-        className={`${isGridItem ? 'w-full' : 'w-44 sm:w-52 shrink-0'} h-full flex flex-col`}
+        className={`${isGridItem ? 'w-full' : 'w-44 sm:w-52 shrink-0'} flex flex-col min-h-[180px] sm:min-h-[200px]`}
       >
         <div
           onClick={() => {

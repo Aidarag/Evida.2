@@ -35,6 +35,7 @@ export default function CreateEventWizard({
   // New HYPERACTIVE properties
   const [coverGradient, setCoverGradient] = useState('from-orange-500 via-red-500 to-violet-600');
   const [isFree, setIsFree] = useState(true);
+  const [price, setPrice] = useState<string>('');
   const [capacity, setCapacity] = useState<string>('');
   const [visibility, setVisibility] = useState<'public' | 'private'>('public');
   const [category, setCategory] = useState('Social');
@@ -138,6 +139,7 @@ export default function CreateEventWizard({
         transportationNeeded,
         coverImage: coverGradient,
         free: isFree,
+        price: !isFree && price ? Number(price) : undefined,
         capacity: capacity ? Number(capacity) : undefined,
         visibility,
         organizer: currentUser.name,
@@ -345,19 +347,38 @@ export default function CreateEventWizard({
               </div>
             </div>
 
-            {/* Ticket details: price & capacity */}
             <div className="grid gap-4 sm:grid-cols-3">
               <div className="space-y-1.5">
                 <label className="text-[10px] font-bold text-[#5A554E] uppercase tracking-wide">Admission Price</label>
                 <select
                   value={isFree ? 'free' : 'paid'}
-                  onChange={(e) => setIsFree(e.target.value === 'free')}
+                  onChange={(e) => {
+                    const free = e.target.value === 'free';
+                    setIsFree(free);
+                    if (free) setPrice('');
+                  }}
                   className="w-full rounded-2xl border border-black/[0.08] bg-white py-3 px-3.5 text-xs text-[#2A2621] focus:outline-none focus:border-[#FD5C05] focus:ring-1 focus:ring-[#FD5C05] transition-all font-medium"
                 >
                   <option value="free">Free Access</option>
                   <option value="paid">Paid Ticket</option>
                 </select>
               </div>
+
+              {!isFree && (
+                <div className="space-y-1.5 animate-scale-in">
+                  <label className="text-[10px] font-bold text-[#5A554E] uppercase tracking-wide">Ticket Price ($) *</label>
+                  <input
+                    type="number"
+                    step="0.01"
+                    min="0"
+                    required
+                    placeholder="e.g. 5.00"
+                    value={price}
+                    onChange={(e) => setPrice(e.target.value)}
+                    className="w-full rounded-2xl border border-black/[0.08] bg-white py-3 px-3.5 text-xs text-[#2A2621] placeholder-[#5A554E] focus:outline-none focus:border-[#FD5C05] focus:ring-1 focus:ring-[#FD5C05] transition-all font-medium"
+                  />
+                </div>
+              )}
 
               <div className="space-y-1.5">
                 <label className="text-[10px] font-bold text-[#5A554E] uppercase tracking-wide">Capacity (Optional)</label>
@@ -370,18 +391,36 @@ export default function CreateEventWizard({
                 />
               </div>
 
-              <div className="space-y-1.5">
-                <label className="text-[10px] font-bold text-[#5A554E] uppercase tracking-wide">Visibility</label>
-                <select
-                  value={visibility}
-                  onChange={(e) => setVisibility(e.target.value as any)}
-                  className="w-full rounded-2xl border border-black/[0.08] bg-white py-3 px-3.5 text-xs text-[#2A2621] focus:outline-none focus:border-[#FD5C05] focus:ring-1 focus:ring-[#FD5C05] transition-all font-medium"
-                >
-                  <option value="public">Public (All Campus)</option>
-                  <option value="private">Private (Invite-Only)</option>
-                </select>
-              </div>
+              {isFree && (
+                <div className="space-y-1.5">
+                  <label className="text-[10px] font-bold text-[#5A554E] uppercase tracking-wide">Visibility</label>
+                  <select
+                    value={visibility}
+                    onChange={(e) => setVisibility(e.target.value as any)}
+                    className="w-full rounded-2xl border border-black/[0.08] bg-white py-3 px-3.5 text-xs text-[#2A2621] focus:outline-none focus:border-[#FD5C05] focus:ring-1 focus:ring-[#FD5C05] transition-all font-medium"
+                  >
+                    <option value="public">Public (All Campus)</option>
+                    <option value="private">Private (Invite-Only)</option>
+                  </select>
+                </div>
+              )}
             </div>
+
+            {!isFree && (
+              <div className="grid gap-4 sm:grid-cols-1">
+                <div className="space-y-1.5">
+                  <label className="text-[10px] font-bold text-[#5A554E] uppercase tracking-wide">Visibility</label>
+                  <select
+                    value={visibility}
+                    onChange={(e) => setVisibility(e.target.value as any)}
+                    className="w-full rounded-2xl border border-black/[0.08] bg-white py-3 px-3.5 text-xs text-[#2A2621] focus:outline-none focus:border-[#FD5C05] focus:ring-1 focus:ring-[#FD5C05] transition-all font-medium"
+                  >
+                    <option value="public">Public (All Campus)</option>
+                    <option value="private">Private (Invite-Only)</option>
+                  </select>
+                </div>
+              </div>
+            )}
 
             {/* Smart parameters */}
             <div className="grid gap-4 sm:grid-cols-2 pt-2 border-t border-[#D8D2BC]/30">

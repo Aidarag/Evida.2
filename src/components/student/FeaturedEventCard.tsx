@@ -6,6 +6,7 @@ import { Calendar, Bookmark, MapPin } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useEvents } from '@/lib/context/EventContext';
 import { useUser } from '@/lib/context/UserContext';
+import { downloadEventICS } from '@/lib/calendar';
 
 interface FeaturedEventCardProps {
   event: Event;
@@ -146,7 +147,11 @@ export default function FeaturedEventCard({ event, onClick }: FeaturedEventCardP
           <button
             onClick={(e) => {
               e.stopPropagation();
-              onClick();
+              try {
+                downloadEventICS(event);
+              } catch (error) {
+                console.error('Error adding event to calendar:', error);
+              }
             }}
             className="inline-flex items-center gap-1.5 bg-white border border-black/10 hover:border-transparent hover:bg-[#FD5C05] hover:text-[#2A2621] text-[#2A2621] font-bold text-[10px] uppercase tracking-wider py-1.5 px-3.5 rounded-full transition-all duration-300 shadow-sm cursor-pointer whitespace-nowrap"
             style={{ fontFamily: 'var(--font-display)' }}

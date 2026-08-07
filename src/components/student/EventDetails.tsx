@@ -1,10 +1,12 @@
 'use client';
 
 import React, { useState } from 'react';
-import { X, Calendar, MapPin, Users, Bookmark, Star, CheckCircle, Info, Shield, HelpCircle, Share2 } from 'lucide-react';
+import Link from 'next/link';
+import { X, Calendar, MapPin, Users, Bookmark, Star, CheckCircle, Info, Shield, HelpCircle, Share2, XCircle } from 'lucide-react';
 import { Event, User } from '@/lib/types';
 import { useEvents } from '@/lib/context/EventContext';
 import VerifiedBadge from '@/components/ui/VerifiedBadge';
+import { downloadEventICS } from '@/lib/calendar';
 
 interface EventDetailsProps {
   event: Event | null;
@@ -36,17 +38,39 @@ export default function EventDetails({
     ? organizations.find((o) => o.id === event.organizationId)?.verified
     : false;
 
-  const handleShareClick = () => {
-    setSharing(true);
-    setTimeout(() => setSharing(false), 2000);
+  const handleShareClick = async () => {
+    const shareData = {
+      title: event.title,
+      text: event.description || '',
+      url: typeof window !== 'undefined' ? `${window.location.origin}/events/${event.id}` : '',
+    };
+    
+    if (navigator.share && navigator.canShare && navigator.canShare(shareData)) {
+      try {
+        await navigator.share(shareData);
+      } catch (err) {
+        console.error('Error sharing:', err);
+      }
+    } else {
+      try {
+        await navigator.clipboard.writeText(shareData.url);
+        setSharing(true);
+        setTimeout(() => setSharing(false), 2000);
+      } catch (err) {
+        console.error('Failed to copy link:', err);
+      }
+    }
   };
 
   const handleCalendarClick = () => {
     setAddingToCalendar(true);
-    setTimeout(() => {
+    try {
+      downloadEventICS(event);
+    } catch (error) {
+      console.error('Error adding event to calendar:', error);
+    } finally {
       setAddingToCalendar(false);
-      alert('Event added to school Google Calendar!');
-    }, 1000);
+    }
   };
 
   return (
@@ -83,10 +107,23 @@ export default function EventDetails({
               {event.title}
             </h2>
             {event.organizationName && (
-              <p className="text-xs font-bold text-[#5A554E] mt-1.5 uppercase bg-white/90 px-3 py-1 rounded-xl w-fit shadow-sm border border-[#D8D2BC]/40 flex items-center">
-                Hosted by {event.organizationName}
-                {isOrgVerified && <VerifiedBadge className="h-3.5 w-3.5 ml-1" />}
-              </p>
+              <div className="mt-1.5 w-fit">
+                {event.organizationId ? (
+                  <Link 
+                    href={`/student/organizations/${event.organizationId}`}
+                    onClick={onClose}
+                    className="text-xs font-bold text-[#5A554E] hover:text-[#FD5C05] transition-colors uppercase bg-white/90 px-3 py-1 rounded-xl shadow-sm border border-[#D8D2BC]/40 flex items-center gap-1 cursor-pointer"
+                  >
+                    <span>Hosted by <span className="underline decoration-dotted">{event.organizationName}</span></span>
+                    {isOrgVerified && <VerifiedBadge className="h-3.5 w-3.5 ml-1" />}
+                  </Link>
+                ) : (
+                  <p className="text-xs font-bold text-[#5A554E] uppercase bg-white/90 px-3 py-1 rounded-xl shadow-sm border border-[#D8D2BC]/40 flex items-center">
+                    Hosted by {event.organizationName}
+                    {isOrgVerified && <VerifiedBadge className="h-3.5 w-3.5 ml-1" />}
+                  </p>
+                )}
+              </div>
             )}
           </div>
         </div>
@@ -99,7 +136,7 @@ export default function EventDetails({
             <div className="flex items-start gap-3 rounded-2xl bg-[#D8D2BC]/25 p-4 border border-black/[0.04]">
               <Calendar className="h-4.5 w-4.5 text-[#2A2621] shrink-0" />
               <div>
-                <p className="font-bold text-[#5A554E] uppercase tracking-wider">Date & Time</p>
+                <p className="font-bold text-[#5A554E] uppercase tracking-wider">📅 Date & Time</p>
                 <p className="mt-1 font-bold text-[#2A2621] uppercase">{event.date}</p>
                 <p className="text-[10px] text-[#5A554E] mt-0.5">{event.time} {event.endTime ? `to ${event.endTime}` : ''}</p>
               </div>
@@ -108,7 +145,7 @@ export default function EventDetails({
             <div className="flex items-start gap-3 rounded-2xl bg-[#D8D2BC]/25 p-4 border border-black/[0.04]">
               <MapPin className="h-4.5 w-4.5 text-[#2A2621] shrink-0" />
               <div>
-                <p className="font-bold text-[#5A554E] uppercase tracking-wider">Location Venue</p>
+                <p className="font-bold text-[#5A554E] uppercase tracking-wider">📍 Location Venue</p>
                 <p className="mt-1 font-bold text-[#2A2621] uppercase">{event.location}</p>
                 <p className="text-[10px] text-[#5A554E] mt-0.5 capitalize">{event.locationType} Space</p>
               </div>
@@ -143,7 +180,7 @@ export default function EventDetails({
             <div className="flex items-center gap-3">
               <span className="flex items-center gap-1 text-[#5A554E] font-semibold">
                 <Users className="h-4 w-4 text-[#2A2621]" />
-                <strong className="text-[#2A2621]">{event.attendees.length}</strong> attending
+                <span>👥 <strong className="text-[#2A2621]">{event.attendees.length}</strong> attending</span>
               </span>
             </div>
 
@@ -151,9 +188,10 @@ export default function EventDetails({
               <button
                 onClick={handleCalendarClick}
                 disabled={addingToCalendar}
-                className="rounded-lg bg-[#D8D2BC]/50 hover:bg-black/[0.04] border border-[#D8D2BC]/40 text-[#2A2621] font-bold px-3 py-1.5 text-[10px] uppercase transition-all cursor-pointer shadow-sm"
+                className="rounded-lg bg-[#D8D2BC]/50 hover:bg-black/[0.04] border border-[#D8D2BC]/40 text-[#2A2621] font-bold px-3 py-1.5 text-[10px] uppercase transition-all cursor-pointer shadow-sm flex items-center gap-1"
               >
-                {addingToCalendar ? 'Syncing...' : 'Add to Calendar'}
+                <Calendar className="h-3 w-3 text-[#2A2621]" />
+                <span>{addingToCalendar ? 'Syncing...' : 'Add to Calendar'}</span>
               </button>
 
               <button
@@ -188,7 +226,11 @@ export default function EventDetails({
                   : 'bg-[#FD5C05] text-[#2A2621] shadow-[#FD5C05]/25 hover:bg-[#CC3D00]'
               }`}
             >
-              <CheckCircle className="h-4.5 w-4.5" />
+              {isRsvped ? (
+                <XCircle className="h-4.5 w-4.5" />
+              ) : (
+                <CheckCircle className="h-4.5 w-4.5" />
+              )}
               {isRsvped ? 'CANCEL RSVP' : 'GET TICKET / RSVP GOING'}
             </button>
           </div>
