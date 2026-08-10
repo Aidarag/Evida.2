@@ -57,7 +57,8 @@
       ],
       "interested": [],
       "savedBy": [
-        "Sarah Jenkins"
+        "Sarah Jenkins",
+        "Michael Chen"
       ],
       "organizer": "Career Development Center",
       "organizationId": "org-cdc",
@@ -262,8 +263,7 @@
       "location": "Campus Gardens",
       "locationType": "outdoor",
       "attendees": [
-        "Sarah Jenkins",
-        "Michael Chen"
+        "Sarah Jenkins"
       ],
       "interested": [],
       "savedBy": [

@@ -203,15 +203,23 @@ export function EventProvider({ children }: { children: ReactNode }) {
       });
       if (res.ok) {
         const data = await res.json();
-        // Sync with official backend response event/promotion state
-        if (isPromo && data.promotion) {
-          setPromotions(prevPromos =>
-            prevPromos.map(p => (p.id === eventId ? data.promotion : p))
-          );
-        } else if (!isPromo && data.event) {
-          setEvents(prevEvents =>
-            prevEvents.map(evt => (evt.id === eventId ? data.event : evt))
-          );
+        // Only sync from API response if it matches our intended action.
+        // If the user clicked unsave while a save API call was still in-flight,
+        // the save response would overwrite the unsave optimistic update.
+        // We guard against this by checking that the API's returned saved state
+        // matches what we intended (we were saving → expect saved:true, or
+        // we were unsaving → expect saved:false).
+        const expectedSaved = !isCurrentlySaved;
+        if (data.saved === expectedSaved) {
+          if (isPromo && data.promotion) {
+            setPromotions(prevPromos =>
+              prevPromos.map(p => (p.id === eventId ? data.promotion : p))
+            );
+          } else if (!isPromo && data.event) {
+            setEvents(prevEvents =>
+              prevEvents.map(evt => (evt.id === eventId ? data.event : evt))
+            );
+          }
         }
       } else {
         // Rollback

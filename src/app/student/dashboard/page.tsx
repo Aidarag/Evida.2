@@ -163,7 +163,7 @@ export default function StudentDashboardPage() {
   
   // Base list of rsvp and saved events for stats cards
   const rsvpEventsList = approvedEvents.filter(e => currentUser ? e.attendees.includes(currentUser.name) && (e.ownershipType === 'school' || e.ownershipType === 'organization') : false);
-  const savedEventsList = approvedEvents.filter(e => currentUser ? e.savedBy?.includes(currentUser.name) && (e.ownershipType === 'school' || e.ownershipType === 'organization') : false);
+  const savedEventsList = approvedEvents.filter(e => currentUser ? (e.savedBy?.includes(currentUser.name) || (currentUser.username ? e.savedBy?.includes(currentUser.username) : false)) && (e.ownershipType === 'school' || e.ownershipType === 'organization') : false);
   const matchesCategory = useCallback((item: Event | Promotion) => {
     if (selectedCategory === 'All') return true;
     const cat = item.category?.toLowerCase() || '';
@@ -473,7 +473,7 @@ export default function StudentDashboardPage() {
                 const promo = isPromo ? (item as any) : null;
 
                 const isLiked = !isPromo && event ? likedEvents.has(event.id) : false;
-                const isSaved = item.savedBy ? item.savedBy.includes(currentUser.name) : false;
+                const isSaved = currentUser ? (item.savedBy?.includes(currentUser.name) || (currentUser.username ? item.savedBy?.includes(currentUser.username) : false)) : false;
 
                 const day = item.date.split('-')[2] || '10';
                 const month = item.date.split('-')[1] || '10';
