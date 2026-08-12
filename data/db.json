@@ -57,7 +57,8 @@
       ],
       "interested": [],
       "savedBy": [
-        "Sarah Jenkins"
+        "Sarah Jenkins",
+        "Michael Chen"
       ],
       "organizer": "Career Development Center",
       "organizationId": "org-cdc",
@@ -86,7 +87,6 @@
       "location": "Student Union Terrace",
       "locationType": "outdoor",
       "attendees": [
-        "Michael Chen",
         "Sarah Jenkins"
       ],
       "interested": [
@@ -265,8 +265,7 @@
       ],
       "interested": [],
       "savedBy": [
-        "Sarah Jenkins",
-        "Michael Chen"
+        "Sarah Jenkins"
       ],
       "organizer": "Student Affairs",
       "featured": false,
@@ -804,9 +803,7 @@
       "time": "21:00",
       "location": "Student Plaza",
       "locationType": "outdoor",
-      "attendees": [
-        "Michael Chen"
-      ],
+      "attendees": [],
       "interested": [],
       "savedBy": [
         "Michael Chen"

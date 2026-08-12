@@ -212,8 +212,8 @@ export default function StudentSettingsPage() {
         </div>
 
         {/* ── User Profile Hero Card ── */}
-        <div className="bg-white border border-black/[0.06] rounded-2xl p-3.5 sm:p-4 shadow-xs flex items-center justify-between gap-3 relative overflow-hidden">
-          <div className="flex items-center gap-3 min-w-0">
+        <div className="bg-white border border-black/[0.06] rounded-2xl p-3.5 sm:p-4 shadow-xs flex items-center gap-2 relative overflow-hidden">
+          <div className="flex items-center gap-2.5 min-w-0 flex-1">
             <div className="h-10 w-10 sm:h-11 sm:w-11 rounded-xl bg-gradient-to-br from-[#FD5C05] to-[#CC3D00] text-white flex items-center justify-center font-black text-xs sm:text-sm shadow-xs shrink-0">
               {currentUser.avatar ? (
                 <span>{currentUser.avatar}</span>
@@ -221,10 +221,10 @@ export default function StudentSettingsPage() {
                 <span>{currentUser.name.substring(0, 2).toUpperCase()}</span>
               )}
             </div>
-            <div className="text-left min-w-0">
-              <div className="flex items-center gap-2">
-                <h2 className="font-bold text-xs text-[#2A2621] whitespace-nowrap truncate">{currentUser.name}</h2>
-                <span className="bg-[#FD5C05]/10 text-[#FD5C05] text-[7.5px] font-black uppercase tracking-wider px-2 py-0.5 rounded-full border border-[#FD5C05]/20 shrink-0">
+            <div className="text-left min-w-0 flex-1">
+              <div className="flex items-center gap-1.5 min-w-0">
+                <span className="font-bold text-xs text-[#2A2621] whitespace-nowrap truncate min-w-0 leading-tight">{currentUser.name}</span>
+                <span className="bg-[#FD5C05]/10 text-[#FD5C05] text-[7.5px] font-black uppercase tracking-wider px-2 py-0.5 rounded-full border border-[#FD5C05]/20 shrink-0 leading-tight">
                   Student
                 </span>
               </div>
@@ -234,7 +234,7 @@ export default function StudentSettingsPage() {
 
           <button
             onClick={() => router.push('/student/profile')}
-            className="px-3 py-1.5 bg-black/[0.04] hover:bg-[#FD5C05] hover:text-white text-[#2A2621] rounded-xl text-[10px] font-extrabold uppercase tracking-wider transition-all cursor-pointer border-none shrink-0"
+            className="px-2.5 py-1.5 bg-black/[0.04] hover:bg-[#FD5C05] hover:text-white text-[#2A2621] rounded-xl text-[9px] font-extrabold uppercase tracking-wider transition-all cursor-pointer border-none shrink-0 whitespace-nowrap"
           >
             Edit Profile
           </button>
