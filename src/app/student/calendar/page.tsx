@@ -178,13 +178,27 @@ export default function StudentCalendarPage() {
                     }
                   `}
                 >
-                  <span className="relative z-10 text-[10px] font-black px-1.5 py-0.5 rounded-md leading-none w-fit text-[#2A2621]">
-                    {cell.day}
-                  </span>
+                  <div className="flex items-start justify-between w-full">
+                    <span className="relative z-10 text-[10px] font-black px-1.5 py-0.5 rounded-md leading-none w-fit text-[#2A2621]">
+                      {cell.day}
+                    </span>
+                    {cell.isCurrentMonth && hasEvents && (
+                      <span className="text-[7.5px] font-black bg-[#FD5C05] text-white px-1.5 py-0.5 rounded-full shadow-xs whitespace-nowrap leading-none shrink-0 inline-block">
+                        {dayEvents.length} {dayEvents.length === 1 ? 'Event' : 'Events'}
+                      </span>
+                    )}
+                  </div>
 
                   {cell.isCurrentMonth && hasEvents && (
-                    <div className="flex flex-col items-center pb-1">
-                      <span className="h-1.5 w-1.5 rounded-full bg-[#FD5C05] shadow-[0_0_8px_rgba(253,92,5,0.5)] animate-pulse" />
+                    <div className="flex flex-col gap-0.5 mt-1 overflow-hidden">
+                      <div className="flex items-center gap-1">
+                        {dayEvents.slice(0, 3).map((_, eIdx) => (
+                          <span key={eIdx} className="h-1.5 w-1.5 rounded-full bg-[#FD5C05] shadow-[0_0_6px_rgba(253,92,5,0.6)]" />
+                        ))}
+                      </div>
+                      <span className="text-[8px] font-extrabold text-[#2A2621] truncate hidden sm:block">
+                        {dayEvents[0].title}
+                      </span>
                     </div>
                   )}
                 </div>
@@ -195,13 +209,20 @@ export default function StudentCalendarPage() {
 
         {/* Right Side: Day Details & Inspector */}
         <div className="lg:col-span-4 bg-white border border-black/[0.04] rounded-[24px] p-6 shadow-sm space-y-6">
-          <div className="border-b border-black/[0.04] pb-4">
-            <span className="text-[#FD5C05] text-[10px] font-bold uppercase tracking-widest flex items-center gap-1.5 mb-1">
-              <CalendarDays className="h-3.5 w-3.5" /> Events on
-            </span>
-            <h3 className="font-extrabold text-[#2A2621] text-lg uppercase tracking-tight" style={{ fontFamily: 'var(--font-display)' }}>
-              {selectedDateLabel}
-            </h3>
+          <div className="border-b border-black/[0.04] pb-4 flex items-center justify-between">
+            <div>
+              <span className="text-[#FD5C05] text-[10px] font-bold uppercase tracking-widest flex items-center gap-1.5 mb-1">
+                <CalendarDays className="h-3.5 w-3.5" /> Events on
+              </span>
+              <h3 className="font-extrabold text-[#2A2621] text-lg uppercase tracking-tight" style={{ fontFamily: 'var(--font-display)' }}>
+                {selectedDateLabel}
+              </h3>
+            </div>
+            {selectedDayEvents.length > 0 && (
+              <span className="text-[10px] font-black uppercase tracking-wider bg-[#FD5C05]/10 text-[#FD5C05] border border-[#FD5C05]/20 px-2.5 py-1 rounded-full">
+                {selectedDayEvents.length} {selectedDayEvents.length === 1 ? 'Event' : 'Events'}
+              </span>
+            )}
           </div>
 
           <div className="space-y-4">
@@ -231,15 +252,9 @@ export default function StudentCalendarPage() {
                     </div>
 
                     <div className="pt-2.5 border-t border-black/[0.04] flex items-center gap-2">
-                      <Button
-                        variant="primary"
-                        size="sm"
-                        className="flex-1 bg-[#2A2621] text-white hover:bg-[#FD5C05] hover:text-[#2A2621] border-none font-bold text-[9px] py-1.5 cursor-pointer"
-                        onClick={() => handleDownloadCalendar(evt)}
-                      >
-                        <Calendar className="h-3.5 w-3.5 mr-1 inline-block align-text-bottom" />
-                        Add to Calendar
-                      </Button>
+                      <span className="flex-1 py-1.5 px-2.5 bg-emerald-50 text-emerald-700 border border-emerald-200 rounded-xl text-[9px] font-black uppercase tracking-wider text-center flex items-center justify-center gap-1">
+                        <Calendar className="h-3 w-3" /> In Calendar ✓
+                      </span>
                       <Link
                         href={`/events/${evt.id}`}
                         className="flex-1 py-1.5 px-2.5 text-center bg-black/[0.03] hover:bg-black/[0.08] text-[#2A2621] rounded-xl text-[9px] font-black uppercase tracking-wider transition-all"

@@ -62,13 +62,15 @@ export default function EventDetails({
     }
   };
 
-  const handleCalendarClick = () => {
+  const handleCalendarClick = async () => {
     setAddingToCalendar(true);
     try {
-      downloadEventICS(event);
+      if (!isRsvped) {
+        await onRSVP(event.id, 'rsvp');
+      }
+      setTimeout(() => setAddingToCalendar(false), 1500);
     } catch (error) {
       console.error('Error adding event to calendar:', error);
-    } finally {
       setAddingToCalendar(false);
     }
   };
@@ -100,7 +102,7 @@ export default function EventDetails({
 
           {/* Title/Host overlay */}
           <div className="absolute inset-x-6 bottom-6 z-20 space-y-1">
-            <span className="rounded-full bg-[#FD5C05] text-[#2A2621] text-[9px] font-bold uppercase tracking-wider px-2.5 py-0.5 w-fit border border-[#FD5C05]/30 shadow-sm">
+            <span className="rounded-full bg-[#FD5C05] text-white font-black text-[9px] uppercase tracking-wider px-2.5 py-0.5 w-fit shadow-sm">
               {event.free ? 'FREE ACCESS' : 'TICKETED'}
             </span>
             <h2 className="text-xl sm:text-2xl font-extrabold text-[#2A2621] tracking-tight leading-none mt-2 line-clamp-3 bg-white/95 px-3 py-1.5 rounded-2xl w-fit shadow-sm border border-[#D8D2BC]/40">
@@ -115,12 +117,30 @@ export default function EventDetails({
                     className="text-xs font-bold text-[#5A554E] hover:text-[#FD5C05] transition-colors uppercase bg-white/90 px-3 py-1 rounded-xl shadow-sm border border-[#D8D2BC]/40 flex items-center gap-1 cursor-pointer"
                   >
                     <span>Hosted by <span className="underline decoration-dotted">{event.organizationName}</span></span>
-                    {isOrgVerified && <VerifiedBadge className="h-3.5 w-3.5 ml-1" />}
+                    {isOrgVerified ? (
+                      <span className="flex items-center gap-1 text-[10px] text-emerald-700 font-extrabold ml-1.5 bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-200">
+                        <VerifiedBadge className="h-3.5 w-3.5" />
+                        <span>Official School Organisation</span>
+                      </span>
+                    ) : (
+                      <span className="text-[10px] text-amber-700 font-extrabold ml-1.5 bg-amber-50 px-2 py-0.5 rounded-md border border-amber-200">
+                        Unofficial School Organisation
+                      </span>
+                    )}
                   </Link>
                 ) : (
-                  <p className="text-xs font-bold text-[#5A554E] uppercase bg-white/90 px-3 py-1 rounded-xl shadow-sm border border-[#D8D2BC]/40 flex items-center">
-                    Hosted by {event.organizationName}
-                    {isOrgVerified && <VerifiedBadge className="h-3.5 w-3.5 ml-1" />}
+                  <p className="text-xs font-bold text-[#5A554E] uppercase bg-white/90 px-3 py-1 rounded-xl shadow-sm border border-[#D8D2BC]/40 flex items-center gap-1">
+                    <span>Hosted by {event.organizationName}</span>
+                    {isOrgVerified ? (
+                      <span className="flex items-center gap-1 text-[10px] text-emerald-700 font-extrabold ml-1.5 bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-200">
+                        <VerifiedBadge className="h-3.5 w-3.5" />
+                        <span>Official School Organisation</span>
+                      </span>
+                    ) : (
+                      <span className="text-[10px] text-amber-700 font-extrabold ml-1.5 bg-amber-50 px-2 py-0.5 rounded-md border border-amber-200">
+                        Unofficial School Organisation
+                      </span>
+                    )}
                   </p>
                 )}
               </div>
@@ -136,7 +156,7 @@ export default function EventDetails({
             <div className="flex items-start gap-3 rounded-2xl bg-[#D8D2BC]/25 p-4 border border-black/[0.04]">
               <Calendar className="h-4.5 w-4.5 text-[#2A2621] shrink-0" />
               <div>
-                <p className="font-bold text-[#5A554E] uppercase tracking-wider">📅 Date & Time</p>
+                <p className="font-bold text-[#5A554E] uppercase tracking-wider">Date & Time</p>
                 <p className="mt-1 font-bold text-[#2A2621] uppercase">{event.date}</p>
                 <p className="text-[10px] text-[#5A554E] mt-0.5">{event.time} {event.endTime ? `to ${event.endTime}` : ''}</p>
               </div>
@@ -145,7 +165,7 @@ export default function EventDetails({
             <div className="flex items-start gap-3 rounded-2xl bg-[#D8D2BC]/25 p-4 border border-black/[0.04]">
               <MapPin className="h-4.5 w-4.5 text-[#2A2621] shrink-0" />
               <div>
-                <p className="font-bold text-[#5A554E] uppercase tracking-wider">📍 Location Venue</p>
+                <p className="font-bold text-[#5A554E] uppercase tracking-wider">Location Venue</p>
                 <p className="mt-1 font-bold text-[#2A2621] uppercase">{event.location}</p>
                 <p className="text-[10px] text-[#5A554E] mt-0.5 capitalize">{event.locationType} Space</p>
               </div>
@@ -180,7 +200,7 @@ export default function EventDetails({
             <div className="flex items-center gap-3">
               <span className="flex items-center gap-1 text-[#5A554E] font-semibold">
                 <Users className="h-4 w-4 text-[#2A2621]" />
-                <span>👥 <strong className="text-[#2A2621]">{event.attendees.length}</strong> attending</span>
+                <span><strong className="text-[#2A2621]">{event.attendees.length}</strong> attending</span>
               </span>
             </div>
 

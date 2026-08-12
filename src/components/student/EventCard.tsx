@@ -55,11 +55,11 @@ const EventCardInner = React.memo(function EventCardInner({
   const bgStyle = (!isGradient && coverImage) ? { backgroundImage: `url(${coverImage})`, backgroundSize: 'cover', backgroundPosition: 'center' } : {};
 
   // Parse the date
+  // Parse the date
   const dateObj = new Date(event.date + 'T00:00:00');
-  const weekday = dateObj.toLocaleDateString('en-US', { weekday: 'short' }).toUpperCase();
-  const month = dateObj.toLocaleDateString('en-US', { month: 'short' }).toUpperCase();
+  const month = dateObj.toLocaleDateString('en-US', { month: 'short' });
   const day = dateObj.getDate();
-  const formattedDate = `${weekday}, ${month} ${day}`;
+  const formattedDate = `${month} ${day}`;
 
   const timeStr = !isPromo && (event as Event).time ? (event as Event).time : '7:00 PM';
 
@@ -109,40 +109,47 @@ const EventCardInner = React.memo(function EventCardInner({
         />
 
         {/* Category Badge top left */}
-        <div className="absolute top-4 left-4 z-10 flex">
-          <span className={`px-3.5 py-1 text-[9px] font-bold tracking-wider uppercase rounded-full border shadow-sm backdrop-blur-sm ${getCategoryStyles(isPromo ? 'Promotion' : (event as Event).category)}`}>
+        <div className="absolute top-4 left-4 z-10 flex items-center gap-2">
+          <span className={`px-3 py-1 text-[9px] font-extrabold tracking-wider uppercase rounded-full border shadow-sm backdrop-blur-sm ${getCategoryStyles(isPromo ? 'Promotion' : (event as Event).category)}`}>
             {isPromo ? 'Promotion' : (event as Event).category}
           </span>
         </div>
-      </div>
 
-      {/* 2. Interactive Save (Bookmark) Button - Floating top right */}
-      <button
-        type="button"
-        onClick={(e) => {
-          e.stopPropagation();
-          setSaveLoading(true);
-          if (onSave) {
-            onSave(e);
-          } else {
-            saveToggle(event.id);
-          }
-          setTimeout(() => setSaveLoading(false), 300);
-        }}
-        className="absolute top-4 right-4 z-20 cursor-pointer focus:outline-none p-1 group"
-        disabled={saveLoading}
-        title={effectiveIsSaved ? 'Unsave Event' : 'Save Event'}
-      >
-        <Bookmark
-          className={`h-5 w-5 transition-all duration-150 ease-in-out ${
-            effectiveIsSaved
-              ? 'fill-[#FD5C05] text-[#FD5C05]'
-              : 'text-white hover:text-[#FD5C05]/90 drop-shadow-[0_1px_2px_rgba(0,0,0,0.5)]'
-          }`} 
-          aria-pressed={effectiveIsSaved}
-          aria-label={effectiveIsSaved ? 'Unsave Event' : 'Save Event'}
-        />
-      </button>
+        {/* Pricing Badge & Bookmark top right */}
+        <div className="absolute top-4 right-4 z-20 flex items-center gap-2">
+          {!isPromo && (
+            <span className="px-2.5 py-0.5 text-[8.5px] font-black uppercase tracking-wider bg-[#FD5C05] text-white rounded-full shadow-sm">
+              {(event as Event).free ? 'FREE' : `$${(event as Event).price || 'TICKETED'}`}
+            </span>
+          )}
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              setSaveLoading(true);
+              if (onSave) {
+                onSave(e);
+              } else {
+                saveToggle(event.id);
+              }
+              setTimeout(() => setSaveLoading(false), 300);
+            }}
+            className="cursor-pointer focus:outline-none p-1 group"
+            disabled={saveLoading}
+            title={effectiveIsSaved ? 'Unsave Event' : 'Save Event'}
+          >
+            <Bookmark
+              className={`h-5 w-5 transition-all duration-150 ease-in-out ${
+                effectiveIsSaved
+                  ? 'fill-[#FD5C05] text-[#FD5C05]'
+                  : 'text-white hover:text-[#FD5C05]/90 drop-shadow-[0_1px_2px_rgba(0,0,0,0.5)]'
+              }`} 
+              aria-pressed={effectiveIsSaved}
+              aria-label={effectiveIsSaved ? 'Unsave Event' : 'Save Event'}
+            />
+          </button>
+        </div>
+      </div>
 
       {/* 3. Content Body */}
       <div className="p-6 flex flex-col flex-1 justify-between gap-4 text-left">
@@ -161,7 +168,7 @@ const EventCardInner = React.memo(function EventCardInner({
           )}
 
           {/* Event Title */}
-          <h3 className="text-[#2A2621] font-bold text-lg line-clamp-2 leading-tight tracking-tight hover:text-[#2A2621]/80 transition-colors" style={{ fontFamily: 'var(--font-display)' }}>
+          <h3 className="text-[#2A2621] font-bold text-base sm:text-lg line-clamp-2 leading-snug tracking-tight hover:text-[#FD5C05] transition-colors block">
             {event.title}
           </h3>
 
@@ -249,7 +256,7 @@ const EventCardInner = React.memo(function EventCardInner({
                     }
                     setRsvpLoading(false);
                   }}
-                  className="inline-flex items-center gap-1 bg-white border border-black/10 hover:border-transparent hover:bg-[#FD5C05] hover:text-[#2A2621] text-[#2A2621] font-bold text-[9px] uppercase tracking-wider py-1.5 px-4 rounded-full transition-all duration-300 shadow-sm cursor-pointer whitespace-nowrap"
+                  className="inline-flex items-center gap-1 bg-white border border-black/10 hover:border-transparent hover:bg-[#FD5C05] hover:text-white text-[#2A2621] font-bold text-[9px] uppercase tracking-wider py-1.5 px-4 rounded-full transition-all duration-300 shadow-sm cursor-pointer whitespace-nowrap"
                   disabled={rsvpLoading}
                   style={{ fontFamily: 'var(--font-display)' }}
                 >

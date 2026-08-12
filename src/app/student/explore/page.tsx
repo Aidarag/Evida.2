@@ -111,6 +111,14 @@ export default function ExplorePage() {
       .slice(0, 6);
   }, [approvedEvents]);
 
+  const favoritedEvents = useMemo(() => {
+    if (!currentUser) return [];
+    return approvedEvents.filter(e =>
+      e.savedBy?.includes(currentUser.name) ||
+      (currentUser.username ? e.savedBy?.includes(currentUser.username) : false)
+    );
+  }, [approvedEvents, currentUser]);
+
   const officialEvents = useMemo(() => {
     return approvedEvents.filter(e => e.ownershipType === 'school').slice(0, 6);
   }, [approvedEvents]);
@@ -190,62 +198,83 @@ export default function ExplorePage() {
 
   const renderEventCard = (evt: Event, isGridItem: boolean = false) => {
     const isSaved = currentUser ? (evt.savedBy?.includes(currentUser.name) || (currentUser.username ? evt.savedBy?.includes(currentUser.username) : false)) : false;
+    
+    // Date formatting matching home page (Jul 26)
+    const dateObj = new Date(evt.date + 'T00:00:00');
+    const monthStr = dateObj.toLocaleDateString('en-US', { month: 'short' });
+    const dayNum = dateObj.getDate();
+    const formattedDate = `${monthStr} ${dayNum}`;
+
     return (
       <motion.div
         key={evt.id}
-        whileHover={{ y: -5, scale: 1.02 }}
+        whileHover={{ y: -4, scale: 1.01 }}
         transition={{ type: "spring", stiffness: 400, damping: 25 }}
-        className={`${isGridItem ? 'w-full' : 'w-44 sm:w-52 shrink-0'} flex flex-col min-h-[180px] sm:min-h-[200px]`}
+        className={`${isGridItem ? 'w-full' : 'w-56 sm:w-64 shrink-0'} flex flex-col min-h-[270px] h-full`}
       >
         <Link
           href={`/events/${evt.id}`}
           className="w-full h-full bg-white border border-black/[0.06] hover:border-[#FD5C05] rounded-2xl overflow-hidden shadow-xs hover:shadow-[0_10px_24px_rgba(253,92,5,0.12)] transition-all duration-300 flex flex-col justify-between group cursor-pointer"
         >
-          <div className="h-24 sm:h-28 w-full bg-[#FD5C05]/10 shrink-0 relative overflow-hidden">
+          <div className="aspect-[16/10] w-full bg-[#FD5C05]/10 shrink-0 relative overflow-hidden">
             {evt.coverImage.includes('from-') ? (
               <div className={`w-full h-full bg-gradient-to-br ${evt.coverImage} group-hover:scale-105 transition-transform duration-500`} />
             ) : (
               <img src={evt.coverImage} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt="" />
             )}
             
-            {/* Cost/Category Badges inside cover */}
-            <span className="absolute top-2 left-2 text-[7px] font-black uppercase tracking-wider bg-black/70 backdrop-blur-[2px] text-white px-1.5 py-0.5 rounded">
+            {/* Category Badge top left */}
+            <span className="absolute top-2.5 left-2.5 text-[8px] font-black uppercase tracking-wider bg-black/75 backdrop-blur-md text-white px-2.5 py-0.5 rounded-full border border-white/10">
               {evt.category}
             </span>
 
-            {currentUser && (
-              <button 
-                type="button"
-                onClick={(e) => {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  saveToggle(evt.id);
-                }}
-                className="absolute top-1.5 right-1.5 z-20 cursor-pointer focus:outline-none p-1 group/btn"
-                title={isSaved ? "Unsave Event" : "Save Event"}
-              >
-                <Bookmark 
-                  className={`h-4.5 w-4.5 transition-all duration-150 ease-in-out ${
-                    isSaved 
-                      ? 'fill-[#FD5C05] text-[#FD5C05]' 
-                      : 'text-white hover:text-[#FD5C05]/90 drop-shadow-[0_1px_2px_rgba(0,0,0,0.5)]'
-                  }`} 
-                />
-              </button>
-            )}
-          </div>
-          <div className="p-2.5 sm:p-3 flex flex-col justify-between flex-1 space-y-2">
-            <div className="space-y-1">
-              <span className="text-[7.5px] font-black uppercase tracking-wider text-[#FD5C05] block">
-                {evt.date} • {evt.time}
+            {/* Price Badge & Bookmark top right */}
+            <div className="absolute top-2.5 right-2.5 z-20 flex items-center gap-1.5">
+              <span className="text-[7.5px] font-black uppercase tracking-wider bg-[#FD5C05] text-white px-2.5 py-0.5 rounded-full shadow-sm">
+                {evt.free ? 'FREE' : `$${evt.price || 'TICKETED'}`}
               </span>
-              <h3 className="font-extrabold text-[11px] uppercase tracking-wide text-[#2A2621] group-hover:text-[#FD5C05] transition-colors leading-tight line-clamp-2" style={{ fontFamily: 'var(--font-display)' }}>
-                {evt.title}
-              </h3>
+              {currentUser && (
+                <button 
+                  type="button"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    saveToggle(evt.id);
+                  }}
+                  className="cursor-pointer focus:outline-none p-0.5 group/btn"
+                  title={isSaved ? "Unsave Event" : "Save Event"}
+                >
+                  <Bookmark 
+                    className={`h-4 w-4 transition-all duration-150 ease-in-out ${
+                      isSaved 
+                        ? 'fill-[#FD5C05] text-[#FD5C05]' 
+                        : 'text-white hover:text-[#FD5C05]/90 drop-shadow-[0_1px_2px_rgba(0,0,0,0.5)]'
+                    }`} 
+                  />
+                </button>
+              )}
             </div>
-            <div className="pt-1.5 border-t border-black/[0.04] flex items-center justify-between text-[8px] text-[#5A554E] font-semibold">
-              <span className="flex items-center gap-0.5 truncate max-w-[55%]"><Users className="h-2.5 w-2.5 shrink-0" /> <span className="truncate">{evt.organizer}</span></span>
-              <span className="flex items-center gap-0.5 shrink-0 font-extrabold text-[#2A2621]">{evt.free ? 'FREE' : 'TICKETED'}</span>
+          </div>
+          <div className="p-3.5 sm:p-4 flex flex-col justify-between flex-1 space-y-2">
+            <div className="space-y-1 text-left">
+              <span className="text-[9px] font-black uppercase tracking-wider text-[#FD5C05] block">
+                {formattedDate} • {evt.time || '7:00 PM'}
+              </span>
+              {/* Bulletproof title area: text-xs leading-snug fits 2 lines comfortably in min-h-[2.4rem] */}
+              <div className="min-h-[2.4rem] flex items-start overflow-hidden pt-0.5">
+                <h3 className="font-bold text-xs text-[#2A2621] group-hover:text-[#FD5C05] transition-colors leading-snug line-clamp-2 text-left">
+                  {evt.title}
+                </h3>
+              </div>
+            </div>
+            <div className="pt-2 border-t border-black/[0.04] flex items-center justify-between text-[9px] text-[#5A554E] font-semibold">
+              <span className="flex items-center gap-1.5 truncate max-w-[70%]">
+                <Users className="h-3.5 w-3.5 shrink-0 text-[#5A554E]" /> 
+                <span className="truncate">{evt.organizationName || evt.organizer}</span>
+              </span>
+              <span className="flex items-center gap-0.5 shrink-0 font-black text-white bg-[#FD5C05] px-2 py-0.5 rounded-full text-[8.5px] uppercase shadow-xs">
+                {evt.free ? 'FREE' : 'TICKETED'}
+              </span>
             </div>
           </div>
         </Link>
@@ -257,36 +286,44 @@ export default function ExplorePage() {
   const renderOrganizationCard = (org: Organization, isGridItem: boolean = false) => (
     <motion.div
       key={org.id}
-      whileHover={{ y: -5, scale: 1.02 }}
+      whileHover={{ y: -4, scale: 1.01 }}
       transition={{ type: "spring", stiffness: 400, damping: 25 }}
-      className={`${isGridItem ? 'w-full' : 'w-44 sm:w-52 shrink-0'} flex flex-col min-h-[180px] sm:min-h-[200px]`}
+      className={`${isGridItem ? 'w-full' : 'w-56 sm:w-64 shrink-0'} flex flex-col min-h-[210px] h-full`}
     >
       <div
         onClick={() => router.push(`/student/organizations/${org.id}`)}
-        className="w-full h-full bg-white border border-black/[0.06] hover:border-[#FD5C05] rounded-2xl p-3 shadow-xs hover:shadow-[0_10px_24px_rgba(253,92,5,0.12)] transition-all duration-300 cursor-pointer group flex flex-col justify-between"
+        className="w-full h-full bg-white border border-black/[0.06] hover:border-[#FD5C05] rounded-2xl p-4 shadow-xs hover:shadow-[0_10px_24px_rgba(253,92,5,0.12)] transition-all duration-300 cursor-pointer group flex flex-col justify-between space-y-2"
       >
-        <div className="flex items-start gap-2">
-          <div
-            className="h-8 w-8 rounded-xl flex items-center justify-center font-black text-white text-[10px] shrink-0 transition-transform group-hover:scale-105"
-            style={{ backgroundColor: org.logoColor || '#2A2621' }}
-          >
-            {org.name.substring(0, 2).toUpperCase()}
+        <div className="space-y-2 text-left">
+          <div className="flex items-center justify-between">
+            <div
+              className="h-10 w-10 rounded-xl flex items-center justify-center font-black text-white text-xs shrink-0 shadow-xs transition-transform group-hover:scale-105"
+              style={{ backgroundColor: org.logoColor || '#2A2621' }}
+            >
+              {org.name.substring(0, 2).toUpperCase()}
+            </div>
+            {org.verified && (
+              <span className="flex items-center gap-1 text-[9px] font-black uppercase tracking-wider text-[#FD5C05] bg-[#FD5C05]/10 px-2 py-0.5 rounded-full border border-[#FD5C05]/20">
+                <CheckCircle2 className="h-3 w-3 text-[#FD5C05]" /> Verified
+              </span>
+            )}
           </div>
-          <div className="min-w-0">
-            <div className="flex items-center gap-1 truncate">
-              <h3 className="font-extrabold text-[10.5px] uppercase tracking-tight text-[#2A2621] group-hover:text-[#FD5C05] transition-colors truncate">
+          <div>
+            <div className="min-h-[2.4rem] flex items-start overflow-hidden pt-0.5">
+              <h3 className="font-bold text-xs text-[#2A2621] group-hover:text-[#FD5C05] transition-colors leading-snug line-clamp-2 text-left">
                 {org.name}
               </h3>
-              {org.verified && <span title="Verified Organization"><CheckCircle2 className="h-3 w-3 text-[#FD5C05] fill-[#FD5C05]/10 shrink-0" /></span>}
             </div>
-            <p className="text-[8.5px] text-[#5A554E] line-clamp-2 leading-normal font-semibold mt-0.5">
+            <p className="text-[10.5px] text-[#5A554E] line-clamp-2 leading-relaxed font-medium mt-1 text-left">
               {org.description}
             </p>
           </div>
         </div>
-        <div className="pt-1.5 mt-2 border-t border-black/[0.04] flex items-center justify-between text-[8px] text-[#5A554E] font-bold uppercase tracking-wider">
+        <div className="pt-2 border-t border-black/[0.04] flex items-center justify-between text-[9px] text-[#5A554E] font-bold uppercase tracking-wider">
           <span>{org.members?.length || 0} members</span>
-          <span className="text-[#FD5C05] group-hover:translate-x-0.5 transition-transform flex items-center gap-0.5">View Profile <ArrowRight className="h-2 w-2" /></span>
+          <span className="text-[#FD5C05] group-hover:translate-x-0.5 transition-transform flex items-center gap-1 font-black">
+            View Profile <ArrowRight className="h-3 w-3" />
+          </span>
         </div>
       </div>
     </motion.div>
@@ -314,9 +351,9 @@ export default function ExplorePage() {
     return (
       <motion.div
         key={promo.id}
-        whileHover={{ y: -5, scale: 1.02 }}
+        whileHover={{ y: -4, scale: 1.01 }}
         transition={{ type: "spring", stiffness: 400, damping: 25 }}
-        className={`${isGridItem ? 'w-full' : 'w-44 sm:w-52 shrink-0'} flex flex-col min-h-[180px] sm:min-h-[200px]`}
+        className={`${isGridItem ? 'w-full' : 'w-56 sm:w-64 shrink-0'} flex flex-col min-h-[260px] h-full`}
       >
         <div
           onClick={() => {
@@ -324,10 +361,10 @@ export default function ExplorePage() {
           }}
           className="w-full h-full bg-white border border-black/[0.06] hover:border-[#FD5C05] rounded-2xl overflow-hidden shadow-xs hover:shadow-[0_10px_24px_rgba(253,92,5,0.12)] transition-all duration-300 flex flex-col justify-between group cursor-pointer"
         >
-          <div className="h-24 sm:h-28 w-full bg-[#FD5C05]/10 shrink-0 relative overflow-hidden">
+          <div className="aspect-[16/10] w-full bg-[#FD5C05]/10 shrink-0 relative overflow-hidden">
             <img src={coverImage} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt="" />
             
-            <span className="absolute top-2 left-2 text-[7px] font-black uppercase tracking-wider bg-black/70 backdrop-blur-[2px] text-white px-1.5 py-0.5 rounded">
+            <span className="absolute top-2.5 left-2.5 text-[8px] font-black uppercase tracking-wider bg-black/75 backdrop-blur-md text-white px-2.5 py-0.5 rounded-full border border-white/10">
               {forceCategoryText || promo.category}
             </span>
 
@@ -339,11 +376,11 @@ export default function ExplorePage() {
                   e.stopPropagation();
                   saveToggle(promo.id);
                 }}
-                className="absolute top-1.5 right-1.5 z-20 cursor-pointer focus:outline-none p-1 group/btn"
+                className="absolute top-2.5 right-2.5 z-20 cursor-pointer focus:outline-none p-0.5 group/btn"
                 title={isSaved ? "Unsave Promotion" : "Save Promotion"}
               >
                 <Bookmark 
-                  className={`h-4.5 w-4.5 transition-all duration-150 ease-in-out ${
+                  className={`h-4 w-4 transition-all duration-150 ease-in-out ${
                     isSaved 
                       ? 'fill-[#FD5C05] text-[#FD5C05]' 
                       : 'text-white hover:text-[#FD5C05]/90 drop-shadow-[0_1px_2px_rgba(0,0,0,0.5)]'
@@ -352,18 +389,25 @@ export default function ExplorePage() {
               </button>
             )}
           </div>
-          <div className="p-2.5 sm:p-3 flex-1 flex flex-col justify-between space-y-2">
-            <div className="space-y-0.5 text-left">
-              <span className="text-[#FD5C05] text-[7px] font-black uppercase tracking-widest block">
+          <div className="p-3.5 sm:p-4 flex flex-col justify-between flex-1 space-y-2">
+            <div className="space-y-1 text-left">
+              <span className="text-[#FD5C05] text-[9px] font-black uppercase tracking-wider block">
                 Student Promo
               </span>
-              <h3 className="font-extrabold text-[11px] uppercase tracking-wide text-[#2A2621] group-hover:text-[#FD5C05] transition-colors leading-tight line-clamp-2" style={{ fontFamily: 'var(--font-display)' }}>
-                {promo.title}
-              </h3>
+              <div className="min-h-[2.4rem] flex items-start overflow-hidden pt-0.5">
+                <h3 className="font-bold text-xs text-[#2A2621] group-hover:text-[#FD5C05] transition-colors leading-snug line-clamp-2 text-left">
+                  {promo.title}
+                </h3>
+              </div>
             </div>
-            <div className="pt-1.5 border-t border-black/[0.04] flex items-center justify-between text-[8px] text-[#5A554E] font-semibold">
-              <span className="flex items-center gap-0.5 truncate max-w-[55%]"><Users className="h-2.5 w-2.5 shrink-0" /> <span className="truncate">{promo.organizer}</span></span>
-              <span className="flex items-center gap-0.5 shrink-0 bg-[#EAE4CF]/60 text-[#2A2621] px-1 py-0.5 rounded-[4px]">{promo.contactInfo}</span>
+            <div className="pt-2 border-t border-black/[0.04] flex items-center justify-between text-[9px] text-[#5A554E] font-semibold">
+              <span className="flex items-center gap-1 truncate max-w-[55%]">
+                <Users className="h-3.5 w-3.5 shrink-0 text-[#5A554E]" /> 
+                <span className="truncate">{promo.organizer}</span>
+              </span>
+              <span className="flex items-center gap-0.5 shrink-0 bg-[#EAE4CF]/60 text-[#2A2621] px-2 py-0.5 rounded-full text-[8.5px] font-extrabold truncate max-w-[45%]">
+                {promo.contactInfo}
+              </span>
             </div>
           </div>
         </div>
@@ -435,6 +479,16 @@ export default function ExplorePage() {
                 Explore Campus Events
               </h1>
             </div>
+
+            {/* 0. Favorited Events */}
+            {favoritedEvents.length > 0 && (
+              <div className="space-y-1.5 bg-[#FD5C05]/5 border border-[#FD5C05]/20 p-4 rounded-[24px]">
+                {renderSectionHeader('Mes Favoris', 'Saved Events', <Bookmark className="h-4 w-4 fill-[#FD5C05] text-[#FD5C05]" />, true)}
+                <div className="flex gap-3 overflow-x-auto pb-2 pt-0.5 scrollbar-none select-none scroll-smooth">
+                  {favoritedEvents.map(evt => renderEventCard(evt))}
+                </div>
+              </div>
+            )}
 
             {/* 1. Trending Events */}
             <div className="space-y-1.5">

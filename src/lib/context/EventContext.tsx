@@ -191,10 +191,6 @@ export function EventProvider({ children }: { children: ReactNode }) {
       );
     }
 
-    if (!isCurrentlySaved && pathname !== '/student/profile') {
-      router.push('/student/profile?tab=saved');
-    }
-
     try {
       const res = await fetch('/api/events/save', {
         method: 'POST',

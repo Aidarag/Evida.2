@@ -21,7 +21,7 @@ export default function EventFeed({
   onOpenCreateEvent,
   onOpenCreatePromo,
 }: EventFeedProps) {
-  const [activeTab, setActiveTab] = useState<'events' | 'promos' | 'my-rsvps'>('events');
+  const [activeTab, setActiveTab] = useState<'events' | 'favorites' | 'promos' | 'my-rsvps'>('events');
   const [searchQuery, setSearchQuery] = useState('');
   const [ownershipFilter, setOwnershipFilter] = useState<'all' | 'student' | 'organization' | 'school' | 'promotion'>('all');
   const [complexityFilter, setComplexityFilter] = useState<'all' | 'quick' | 'standard' | 'complex'>('all');
@@ -46,6 +46,9 @@ export default function EventFeed({
       // General feed shows approved events, OR pending/rejected events only if the current user is the organizer
       const isOwner = e.organizer === currentUser.name;
       return matchesSearch && matchesOwnership && matchesComplexity && (e.status === 'approved' || isOwner);
+    } else if (activeTab === 'favorites') {
+      const isSaved = e.savedBy?.includes(currentUser.name) || (currentUser.username ? e.savedBy?.includes(currentUser.username) : false);
+      return matchesSearch && matchesOwnership && matchesComplexity && isSaved;
     } else if (activeTab === 'my-rsvps') {
       // Going shows events where the user is in attendees list
       const isGoing = e.attendees.includes(currentUser.name);
@@ -112,6 +115,16 @@ export default function EventFeed({
             }`}
           >
             All Events
+          </button>
+          <button
+            onClick={() => setActiveTab('favorites')}
+            className={`border-b-2 px-1 pb-4 text-sm font-bold transition-all ${
+              activeTab === 'favorites'
+                ? 'border-indigo-500 text-white'
+                : 'border-transparent text-[#5A554E] hover:text-slate-200'
+            }`}
+          >
+            Mes Favoris
           </button>
           <button
             onClick={() => setActiveTab('my-rsvps')}

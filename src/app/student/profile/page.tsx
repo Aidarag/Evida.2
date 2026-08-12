@@ -519,7 +519,7 @@ function StudentProfilePageContent() {
   }
 
   return (
-    <div className="min-h-screen bg-[#D8D2BC] text-[#2A2621] font-sans pb-32">
+    <div className="min-h-screen bg-transparent text-[#2A2621] font-sans pb-32">
       <div className="max-w-5xl mx-auto px-4 py-8 md:py-12 space-y-8">
 
         {/* ── User Profile Card Section (TikTok Center Inspired) ── */}
@@ -942,7 +942,7 @@ function StudentProfilePageContent() {
                   {/* List of Attended Events */}
                   <div className="space-y-4 text-left">
                     <h3 className="text-sm font-black uppercase tracking-wider text-[#2A2621]">
-                      {isOwner ? "All Attended Events" : `${profileUser.name}'s Attended Events`} ({attendedEvents.length})
+                      {isOwner ? "Attended Events" : `${profileUser.name}'s Attended Events`} ({attendedEvents.length})
                     </h3>
                     {attendedEvents.length > 0 ? (
                       <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3">

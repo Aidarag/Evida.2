@@ -16,19 +16,22 @@ import {
   FileText, 
   LogOut,
   Shield,
-  X
+  X,
+  Sparkles,
+  CheckCircle2
 } from 'lucide-react';
 import Button from '@/components/ui/Button';
 import VerifiedBadge from '@/components/ui/VerifiedBadge';
-
 import { useEvents } from '@/lib/context/EventContext';
 
 interface SettingsItem {
   id: string;
   label: string;
+  subtitle?: string;
   value?: string;
   Icon: React.ComponentType<any>;
-  bgColor: string;
+  iconBg: string;
+  iconColor: string;
   onClick: () => void;
 }
 
@@ -154,28 +157,33 @@ export default function StudentSettingsPage() {
 
   const sections: SettingsSection[] = [
     {
-      title: 'Account',
+      title: 'Account & Identity',
       items: [
-        { id: 'profile', label: 'Edit Profile', value: currentUser.avatar || 'MC', Icon: User, bgColor: '#FD5C05', onClick: () => router.push('/student/profile') },
-        { id: 'create-org', label: 'Create Organization', Icon: Building, bgColor: '#FD5C05', onClick: () => setActiveModal('create-org') },
-        { id: 'org-verification', label: 'Organization Verification', value: getOrgStatusSummary(), Icon: Shield, bgColor: '#FD5C05', onClick: () => setActiveModal('org-verification') },
-        { id: 'notifications', label: 'Notifications', value: 'On', Icon: Bell, bgColor: '#FD5C05', onClick: () => setActiveModal('notifications') },
-        { id: 'privacy', label: 'Privacy & Security', value: 'Private', Icon: Lock, bgColor: '#FD5C05', onClick: () => setActiveModal('privacy') },
-        { id: 'college', label: 'Linked College', value: currentUser.school || 'Livingstone College', Icon: Building, bgColor: '#FD5C05', onClick: () => setActiveModal('college') },
+        { id: 'profile', label: 'Edit Profile', subtitle: 'Avatar, bio & personal info', value: currentUser.avatar || 'MC', Icon: User, iconBg: 'bg-[#FD5C05]/10', iconColor: 'text-[#FD5C05]', onClick: () => router.push('/student/profile') },
+        { id: 'create-org', label: 'Create Organization', subtitle: 'Register a student group', Icon: Building, iconBg: 'bg-indigo-500/10', iconColor: 'text-indigo-600', onClick: () => setActiveModal('create-org') },
+        { id: 'org-verification', label: 'Organization Verification', subtitle: 'Checkmark status check', value: getOrgStatusSummary(), Icon: Shield, iconBg: 'bg-emerald-500/10', iconColor: 'text-emerald-600', onClick: () => setActiveModal('org-verification') },
+        { id: 'college', label: 'Linked Campus', subtitle: 'Verified student domain', value: currentUser.school || 'Livingstone College', Icon: Building, iconBg: 'bg-blue-500/10', iconColor: 'text-blue-600', onClick: () => setActiveModal('college') },
+      ]
+    },
+    {
+      title: 'Preferences & Security',
+      items: [
+        { id: 'notifications', label: 'Notifications', subtitle: 'Push alerts & event digests', value: 'On', Icon: Bell, iconBg: 'bg-amber-500/10', iconColor: 'text-amber-600', onClick: () => setActiveModal('notifications') },
+        { id: 'privacy', label: 'Privacy & Security', subtitle: 'Control public profile tabs', value: 'Private', Icon: Lock, iconBg: 'bg-violet-500/10', iconColor: 'text-violet-600', onClick: () => setActiveModal('privacy') },
       ]
     },
     {
       title: 'Support & Feedback',
       items: [
-        { id: 'report', label: 'Report a Problem', Icon: AlertTriangle, bgColor: '#FD5C05', onClick: () => setActiveModal('report') },
-        { id: 'feedback', label: 'Send Feedback', Icon: MessageSquare, bgColor: '#FD5C05', onClick: () => setActiveModal('feedback') },
+        { id: 'report', label: 'Report a Problem', subtitle: 'Troubleshoot issues or bugs', Icon: AlertTriangle, iconBg: 'bg-rose-500/10', iconColor: 'text-rose-600', onClick: () => setActiveModal('report') },
+        { id: 'feedback', label: 'Send Feedback', subtitle: 'Suggest features to Evida team', Icon: MessageSquare, iconBg: 'bg-sky-500/10', iconColor: 'text-sky-600', onClick: () => setActiveModal('feedback') },
       ]
     },
     {
       title: 'Legal',
       items: [
-        { id: 'terms', label: 'Terms of Service', Icon: FileText, bgColor: '#FD5C05', onClick: () => setActiveModal('terms') },
-        { id: 'policy', label: 'Privacy Policy', Icon: Lock, bgColor: '#FD5C05', onClick: () => setActiveModal('policy') },
+        { id: 'terms', label: 'Terms of Service', subtitle: 'User conduct & policies', Icon: FileText, iconBg: 'bg-teal-500/10', iconColor: 'text-teal-600', onClick: () => setActiveModal('terms') },
+        { id: 'policy', label: 'Privacy Policy', subtitle: 'Data usage standards', Icon: Lock, iconBg: 'bg-slate-500/10', iconColor: 'text-slate-600', onClick: () => setActiveModal('policy') },
       ]
     }
   ];
@@ -184,49 +192,89 @@ export default function StudentSettingsPage() {
     <div className="min-h-screen bg-transparent text-[#2A2621] font-sans pb-32">
       <div className="max-w-xl mx-auto px-4 py-6 space-y-6">
         
-        {/* ── Native Grouped Preferences Header ── */}
-        <div className="flex items-center gap-3 text-left">
-          <button 
-            onClick={() => router.push('/student/dashboard')}
-            className="h-10 w-10 rounded-full bg-white border border-black/[0.06] flex items-center justify-center text-[#2A2621] hover:bg-[#FD5C05] hover:text-white transition-all cursor-pointer shadow-sm shrink-0"
-            title="Back to Dashboard"
+        {/* ── Native Preferences Header ── */}
+        <div className="flex items-center justify-between text-left">
+          <div className="flex items-center gap-3">
+            <button 
+              onClick={() => router.push('/student/dashboard')}
+              className="h-10 w-10 rounded-full bg-white border border-black/[0.06] flex items-center justify-center text-[#2A2621] hover:bg-[#FD5C05] hover:text-white transition-all cursor-pointer shadow-sm shrink-0"
+              title="Back to Dashboard"
+            >
+              <ArrowLeft className="h-5 w-5" />
+            </button>
+            <div>
+              <h1 className="text-xl font-black text-[#2A2621] tracking-tight uppercase" style={{ fontFamily: 'var(--font-display)' }}>
+                Preferences
+              </h1>
+              <p className="text-[10px] text-[#5A554E] font-medium">Manage your account & app settings</p>
+            </div>
+          </div>
+        </div>
+
+        {/* ── User Profile Hero Card ── */}
+        <div className="bg-white border border-black/[0.06] rounded-2xl p-3.5 sm:p-4 shadow-xs flex items-center justify-between gap-3 relative overflow-hidden">
+          <div className="flex items-center gap-3 min-w-0">
+            <div className="h-10 w-10 sm:h-11 sm:w-11 rounded-xl bg-gradient-to-br from-[#FD5C05] to-[#CC3D00] text-white flex items-center justify-center font-black text-xs sm:text-sm shadow-xs shrink-0">
+              {currentUser.avatar ? (
+                <span>{currentUser.avatar}</span>
+              ) : (
+                <span>{currentUser.name.substring(0, 2).toUpperCase()}</span>
+              )}
+            </div>
+            <div className="text-left min-w-0">
+              <div className="flex items-center gap-2">
+                <h2 className="font-bold text-xs text-[#2A2621] whitespace-nowrap truncate">{currentUser.name}</h2>
+                <span className="bg-[#FD5C05]/10 text-[#FD5C05] text-[7.5px] font-black uppercase tracking-wider px-2 py-0.5 rounded-full border border-[#FD5C05]/20 shrink-0">
+                  Student
+                </span>
+              </div>
+              <p className="text-[10.5px] text-[#5A554E] font-medium truncate mt-0.5">{currentUser.username ? `@${currentUser.username}` : currentUser.school}</p>
+            </div>
+          </div>
+
+          <button
+            onClick={() => router.push('/student/profile')}
+            className="px-3 py-1.5 bg-black/[0.04] hover:bg-[#FD5C05] hover:text-white text-[#2A2621] rounded-xl text-[10px] font-extrabold uppercase tracking-wider transition-all cursor-pointer border-none shrink-0"
           >
-            <ArrowLeft className="h-5 w-5" />
+            Edit Profile
           </button>
-          <h1 className="text-xl font-extrabold text-[#2A2621] tracking-tight uppercase" style={{ fontFamily: 'var(--font-display)' }}>
-            Preferences
-          </h1>
         </div>
 
         {/* ── Grouped Sections ── */}
         <div className="space-y-6">
           {sections.map(sec => (
             <div key={sec.title} className="space-y-2 text-left">
-              <h3 className="text-[10px] font-black uppercase text-[#5A554E] tracking-widest pl-4">
+              <h3 className="text-[10px] font-black uppercase text-[#5A554E] tracking-widest pl-3">
                 {sec.title}
               </h3>
               
-              <div className="bg-white border-2 border-black/[0.04] rounded-[28px] overflow-hidden shadow-sm divide-y divide-black/[0.04]">
+              <div className="bg-white border border-black/[0.06] rounded-[28px] overflow-hidden shadow-xs divide-y divide-black/[0.04]">
                 {sec.items.map(item => (
                   <div
                     key={item.id}
                     onClick={item.onClick}
-                    className="flex items-center justify-between px-5 py-4 hover:bg-[#FD5C05]/5 active:bg-[#FD5C05]/10 cursor-pointer transition-all group"
+                    className="flex items-center justify-between px-5 py-3.5 hover:bg-[#FD5C05]/[0.03] active:bg-[#FD5C05]/[0.06] cursor-pointer transition-all group"
                   >
-                    <div className="flex items-center gap-3">
-                      <div 
-                        className="h-8 w-8 rounded-xl flex items-center justify-center text-white shrink-0 shadow-sm transition-transform group-hover:scale-105"
-                        style={{ backgroundColor: item.bgColor }}
-                      >
+                    <div className="flex items-center gap-3.5">
+                      <div className={`h-9 w-9 rounded-2xl ${item.iconBg} ${item.iconColor} flex items-center justify-center shrink-0 transition-transform group-hover:scale-105`}>
                         <item.Icon className="h-4.5 w-4.5" />
                       </div>
-                      <span className="text-xs font-bold text-[#2A2621] uppercase tracking-wide group-hover:text-[#FD5C05] transition-colors">
-                        {item.label}
-                      </span>
+                      <div className="text-left">
+                        <p className="text-xs font-extrabold text-[#2A2621] uppercase tracking-wide group-hover:text-[#FD5C05] transition-colors">
+                          {item.label}
+                        </p>
+                        {item.subtitle && (
+                          <p className="text-[9.5px] text-[#5A554E] font-medium">{item.subtitle}</p>
+                        )}
+                      </div>
                     </div>
 
-                    <div className="flex items-center gap-1.5 text-[#5A554E]/60 text-[10px] font-black uppercase tracking-wider">
-                      {item.value && <span className="truncate max-w-[120px]">{item.value}</span>}
+                    <div className="flex items-center gap-2 text-[#5A554E]/70 text-[10px] font-extrabold uppercase tracking-wider">
+                      {item.value && (
+                        <span className="truncate max-w-[120px] bg-black/[0.03] px-2 py-0.5 rounded-md border border-black/[0.03]">
+                          {item.value}
+                        </span>
+                      )}
                       <ChevronRight className="h-4 w-4 text-[#5A554E]/40 group-hover:translate-x-0.5 transition-transform" />
                     </div>
                   </div>
@@ -236,13 +284,13 @@ export default function StudentSettingsPage() {
           ))}
         </div>
 
-        {/* ── Independent Native Sign Out ── */}
+        {/* ── Sign Out ── */}
         <div className="pt-2">
           <button
             onClick={handleLogout}
-            className="w-full bg-white hover:bg-red-500 hover:text-white rounded-[24px] py-4 text-center text-xs font-black uppercase tracking-wider text-red-600 border-2 border-black/[0.04] hover:border-transparent transition-all cursor-pointer shadow-sm flex items-center justify-center gap-2"
+            className="w-full bg-red-50 hover:bg-red-600 hover:text-white rounded-[24px] py-4 text-center text-xs font-black uppercase tracking-wider text-red-600 border border-red-200 hover:border-transparent transition-all cursor-pointer shadow-xs flex items-center justify-center gap-2"
           >
-            <LogOut className="h-4 w-4" />
+            <LogOut className="h-4 w-4 shrink-0" />
             Sign Out
           </button>
         </div>
@@ -252,22 +300,22 @@ export default function StudentSettingsPage() {
       {/* ── Sub-Modals overlay for preferences / help configs ── */}
       <AnimatePresence>
         {activeModal && (
-          <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="fixed inset-0 bg-black/60 backdrop-blur-md z-50 flex items-center justify-center p-4">
             <motion.div
               initial={{ scale: 0.95, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.95, opacity: 0 }}
-              className="bg-white rounded-[32px] border-2 border-black/[0.04] shadow-2xl max-w-sm w-full p-8 text-left space-y-6 relative overflow-hidden"
+              className="bg-white rounded-[32px] border border-black/[0.06] shadow-2xl max-w-sm w-full p-6 text-left space-y-5 relative overflow-hidden"
             >
-              <div className="flex justify-between items-center border-b border-black/[0.04] pb-3">
+              <div className="flex justify-between items-center border-b border-black/[0.05] pb-3">
                 <h4 className="text-sm font-black uppercase tracking-wider text-[#2A2621]" style={{ fontFamily: 'var(--font-display)' }}>
                   {activeModal}
                 </h4>
                 <button 
                   onClick={() => setActiveModal(null)} 
-                  className="h-6 w-6 rounded-full bg-black/[0.04] hover:bg-black/[0.08] flex items-center justify-center text-[#5A554E] hover:text-[#2A2621] transition-colors cursor-pointer"
+                  className="h-7 w-7 rounded-full bg-black/[0.04] hover:bg-black/[0.08] flex items-center justify-center text-[#5A554E] hover:text-[#2A2621] transition-colors cursor-pointer"
                 >
-                  <X className="h-3.5 w-3.5" />
+                  <X className="h-4 w-4" />
                 </button>
               </div>
 
@@ -314,7 +362,7 @@ export default function StudentSettingsPage() {
                       placeholder="e.g. Blue Bears Tech Club" 
                       value={newOrgName} 
                       onChange={e => setNewOrgName(e.target.value)}
-                      className="w-full bg-slate-50 border border-black/10 rounded-xl px-3 py-2 text-xs text-[#2A2621] focus:outline-none focus:border-[#FD5C05]"
+                      className="w-full bg-slate-50 border border-black/10 rounded-xl px-3 py-2.5 text-xs text-[#2A2621] focus:outline-none focus:border-[#FD5C05]"
                     />
                   </div>
                   <div className="space-y-1 text-left">
@@ -322,7 +370,7 @@ export default function StudentSettingsPage() {
                     <select 
                       value={newOrgCategory} 
                       onChange={e => setNewOrgCategory(e.target.value)}
-                      className="w-full bg-slate-50 border border-black/10 rounded-xl px-3 py-2 text-xs text-[#2A2621] focus:outline-none focus:border-[#FD5C05]"
+                      className="w-full bg-slate-50 border border-black/10 rounded-xl px-3 py-2.5 text-xs text-[#2A2621] focus:outline-none focus:border-[#FD5C05]"
                     >
                       <option value="Academic">Academic</option>
                       <option value="Sports">Sports</option>
@@ -351,7 +399,7 @@ export default function StudentSettingsPage() {
                     size="sm"
                     type="submit"
                     disabled={isSubmittingOrg}
-                    className="w-full bg-[#FD5C05] text-white hover:bg-[#CC3D00] border-none font-black uppercase tracking-wider py-3 rounded-full shadow-md shadow-[#FD5C05]/20"
+                    className="w-full bg-[#FD5C05] text-white hover:bg-[#CC3D00] border-none font-extrabold uppercase tracking-wider py-3 rounded-full shadow-md shadow-[#FD5C05]/20 cursor-pointer"
                   >
                     {isSubmittingOrg ? 'Creating...' : 'Register Organization'}
                   </Button>
@@ -403,7 +451,7 @@ export default function StudentSettingsPage() {
                                   type="button"
                                   onClick={() => handleRequestVerification(org.id)}
                                   disabled={requestingVerifyId === org.id}
-                                  className="px-3 py-1.5 bg-[#FD5C05] hover:bg-[#CC3D00] text-white rounded-xl text-[10px] font-black uppercase tracking-wider transition-all cursor-pointer border-none shadow-sm"
+                                  className="px-3 py-1.5 bg-[#FD5C05] hover:bg-[#CC3D00] text-white rounded-xl text-[10px] font-extrabold uppercase tracking-wider transition-all cursor-pointer border-none shadow-sm"
                                 >
                                   {requestingVerifyId === org.id ? 'Submitting...' : 'Request Checkmark'}
                                 </button>
@@ -496,7 +544,7 @@ export default function StudentSettingsPage() {
               <Button
                 variant="primary"
                 size="sm"
-                className="w-full bg-[#2A2621] text-white hover:bg-[#FD5C05] hover:text-white border-none font-black uppercase tracking-wider py-3.5 rounded-full"
+                className="w-full bg-[#FD5C05] text-white hover:bg-[#CC3D00] border-none font-extrabold uppercase tracking-wider py-3.5 rounded-full shadow-md shadow-[#FD5C05]/20 cursor-pointer"
                 onClick={() => setActiveModal(null)}
               >
                 Done

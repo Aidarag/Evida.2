@@ -18,8 +18,10 @@ export default function CreatePromoModal({
   onSubmit,
 }: CreatePromoModalProps) {
   const [title, setTitle] = useState('');
-  const [category, setCategory] = useState<'academic' | 'jobs' | 'creative' | 'food' | 'beauty' | 'marketplace' | 'housing' | 'sports' | 'projects' | 'other'>('academic');
-  const [contactInfo, setContactInfo] = useState('');
+  const [category, setCategory] = useState<'academic' | 'jobs' | 'creative' | 'food' | 'beauty' | 'marketplace' | 'housing' | 'sports' | 'projects' | 'other'>('food');
+  const [preferredContactMethod, setPreferredContactMethod] = useState<'instagram' | 'email' | 'phone' | 'link'>('instagram');
+  const [contactValue, setContactValue] = useState('');
+  const [socialLink, setSocialLink] = useState('');
   const [description, setDescription] = useState('');
   const [submitting, setSubmitting] = useState(false);
 
@@ -27,7 +29,7 @@ export default function CreatePromoModal({
 
   const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!title || !description || !contactInfo) {
+    if (!title || !description || !contactValue) {
       alert('Please fill out all required fields.');
       return;
     }
@@ -38,7 +40,10 @@ export default function CreatePromoModal({
         title,
         description,
         category,
-        contactInfo,
+        contactInfo: contactValue,
+        preferredContactMethod,
+        contactValue,
+        socialLink: socialLink.trim() || undefined,
         organizer: currentUser.name
       };
 
@@ -46,8 +51,10 @@ export default function CreatePromoModal({
       onClose();
       // Reset fields
       setTitle('');
-      setCategory('academic');
-      setContactInfo('');
+      setCategory('food');
+      setPreferredContactMethod('instagram');
+      setContactValue('');
+      setSocialLink('');
       setDescription('');
     } catch (error) {
       console.error(error);
@@ -82,7 +89,7 @@ export default function CreatePromoModal({
               Post Campus Promotion
             </h2>
             <p className="mt-1 text-xs text-[#5A554E]">
-              Advertise your peer tutoring, photography business, food sales, or other student initiatives.
+              Advertise your peer tutoring, food/BBQ sales, hair/beauty services, or photography business.
             </p>
           </div>
 
@@ -95,7 +102,7 @@ export default function CreatePromoModal({
                 required
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
-                placeholder="e.g. Physics 2 Peer Tutoring"
+                placeholder="e.g. Campus BBQ & Food Sale"
                 className="w-full rounded-xl border border-white/10 bg-slate-900/50 py-2 px-3 text-xs text-white placeholder-slate-600 focus:border-indigo-500 focus:outline-none"
               />
             </div>
@@ -108,26 +115,58 @@ export default function CreatePromoModal({
                 onChange={(e) => setCategory(e.target.value as any)}
                 className="w-full rounded-xl border border-white/10 bg-slate-900/50 py-2 px-3 text-xs text-white focus:border-indigo-500 focus:outline-none"
               >
-                <option value="food">Food</option>
-                <option value="hair/braiding services">Hair/braiding services</option>
-                <option value="sales">Sales</option>
-                <option value="tutoring">Tutoring</option>
-                <option value="community events">Community events</option>
-                <option value="parties">Parties</option>
+                <option value="food">Food & BBQ Sales</option>
+                <option value="beauty">Hair & Beauty Services</option>
+                <option value="marketplace">Student Business / Marketplace</option>
+                <option value="academic">Peer Tutoring & Academic</option>
+                <option value="creative">Photography & Creative</option>
+                <option value="jobs">Jobs & Projects</option>
+                <option value="housing">Housing & Sublets</option>
+                <option value="sports">Sports & Fitness</option>
                 <option value="other">Other</option>
               </select>
             </div>
           </div>
 
-          {/* Contact Info */}
+          {/* Preferred Contact Method */}
+          <div className="grid gap-4 sm:grid-cols-2">
+            <div className="space-y-1.5">
+              <label className="text-xs font-bold text-[#5A554E] uppercase tracking-wide">Preferred Contact Method *</label>
+              <select
+                value={preferredContactMethod}
+                onChange={(e) => setPreferredContactMethod(e.target.value as any)}
+                className="w-full rounded-xl border border-white/10 bg-slate-900/50 py-2 px-3 text-xs text-white focus:border-indigo-500 focus:outline-none"
+              >
+                <option value="instagram">Instagram Handle</option>
+                <option value="email">Email Address</option>
+                <option value="phone">Phone / WhatsApp</option>
+                <option value="link">Website / Booking Link</option>
+              </select>
+            </div>
+
+            <div className="space-y-1.5">
+              <label className="text-xs font-bold text-[#5A554E] uppercase tracking-wide">
+                {preferredContactMethod === 'instagram' ? 'Instagram Handle *' : preferredContactMethod === 'email' ? 'Email Address *' : preferredContactMethod === 'phone' ? 'Phone Number *' : 'Website URL *'}
+              </label>
+              <input
+                type="text"
+                required
+                value={contactValue}
+                onChange={(e) => setContactValue(e.target.value)}
+                placeholder={preferredContactMethod === 'instagram' ? '@yourname' : preferredContactMethod === 'email' ? 'name@school.edu' : preferredContactMethod === 'phone' ? '(555) 000-0000' : 'https://yourshop.com'}
+                className="w-full rounded-xl border border-white/10 bg-slate-900/50 py-2 px-3 text-xs text-white placeholder-slate-600 focus:border-indigo-500 focus:outline-none"
+              />
+            </div>
+          </div>
+
+          {/* Optional Social Hyperlink */}
           <div className="space-y-1.5">
-            <label className="text-xs font-bold text-[#5A554E] uppercase tracking-wide">Contact Details *</label>
+            <label className="text-xs font-bold text-[#5A554E] uppercase tracking-wide">Social Media Link (Optional Hyperlink)</label>
             <input
               type="text"
-              required
-              value={contactInfo}
-              onChange={(e) => setContactInfo(e.target.value)}
-              placeholder="e.g. email@school.edu, phone number, or IG handle"
+              value={socialLink}
+              onChange={(e) => setSocialLink(e.target.value)}
+              placeholder="e.g. instagram.com/yourhandle or website link"
               className="w-full rounded-xl border border-white/10 bg-slate-900/50 py-2 px-3 text-xs text-white placeholder-slate-600 focus:border-indigo-500 focus:outline-none"
             />
           </div>
@@ -137,10 +176,10 @@ export default function CreatePromoModal({
             <label className="text-xs font-bold text-[#5A554E] uppercase tracking-wide">Description *</label>
             <textarea
               required
-              rows={4}
+              rows={3}
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              placeholder="Provide details about rates, availability, experience, or ordering details."
+              placeholder="Provide details about menu, rates, availability, experience, or ordering instructions."
               className="w-full rounded-xl border border-white/10 bg-slate-900/50 py-2 px-3 text-xs text-white placeholder-slate-600 focus:border-indigo-500 focus:outline-none resize-none"
             />
           </div>
