@@ -440,37 +440,9 @@ function StudentProfilePageContent() {
   };
 
   const handleDownloadCalendar = (evt: any) => {
-    const cleanTitle = evt.title.replace(/[^a-zA-Z0-9 ]/g, "");
-    const cleanDesc = (evt.description || 'Campus Event').replace(/[^a-zA-Z0-9 ]/g, "");
-    const cleanLoc = (evt.location || 'Campus').replace(/[^a-zA-Z0-9 ]/g, "");
-    const dateStr = (evt.date || '2026-10-03').replace(/-/g, '');
-    const startTime = `${dateStr}T190000`;
-    const endTime = `${dateStr}T210000`;
-
-    const icsContent = [
-      'BEGIN:VCALENDAR',
-      'VERSION:2.0',
-      'PRODID:-//Evida//Calendar//EN',
-      'BEGIN:VEVENT',
-      `UID:${evt.id || 'mock'}@evida.app`,
-      `DTSTAMP:${startTime}`,
-      `DTSTART:${startTime}`,
-      `DTEND:${endTime}`,
-      `SUMMARY:${cleanTitle}`,
-      `DESCRIPTION:${cleanDesc}`,
-      `LOCATION:${cleanLoc}`,
-      'END:VEVENT',
-      'END:VCALENDAR'
-    ].join('\r\n');
-
-    const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8;' });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.setAttribute('download', `${cleanTitle.replace(/\s+/g, '_')}.ics`);
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+    if (currentUser && !evt.attendees?.includes(currentUser.name)) {
+      rsvpToggle(evt.id, 'rsvp');
+    }
   };
 
   // Selected Day State

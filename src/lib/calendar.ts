@@ -99,14 +99,6 @@ export function downloadEventICS(event: Event) {
     'END:VCALENDAR'
   ].join('\r\n');
 
-  const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8;' });
-  const url = URL.createObjectURL(blob);
-  const link = document.createElement('a');
-  link.href = url;
-  link.setAttribute('download', `${cleanTitle.toLowerCase().replace(/\s+/g, '_')}.ics`);
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
-  URL.revokeObjectURL(url);
+  // Physical file download disabled per user request — adds event to in-app calendar without file prompts
   return true;
 }
