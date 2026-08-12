@@ -215,13 +215,20 @@ const EventCardInner = React.memo(function EventCardInner({
                 <>
                   <button
                     type="button"
-                    onClick={handleDownloadICS}
-                    className="inline-flex items-center gap-1 bg-[#FD5C05]/10 border border-[#FD5C05]/20 text-[#FD5C05] hover:bg-[#FD5C05] hover:text-[#2A2621] font-bold text-[9px] uppercase tracking-wider py-1.5 px-3 rounded-full transition-all duration-300 shadow-sm cursor-pointer whitespace-nowrap"
-                    title="Add to Calendar"
+                    onClick={async (e) => {
+                      e.stopPropagation();
+                      if (onRsvp) {
+                        onRsvp(e);
+                      } else {
+                        await rsvpToggle(event.id, 'rsvp');
+                      }
+                    }}
+                    className="inline-flex items-center gap-1 bg-emerald-50 border border-emerald-200 text-emerald-700 hover:bg-emerald-100 font-bold text-[9px] uppercase tracking-wider py-1.5 px-3 rounded-full transition-all duration-300 shadow-sm cursor-pointer whitespace-nowrap"
+                    title="Added to Calendar"
                     style={{ fontFamily: 'var(--font-display)' }}
                   >
-                    <Calendar className="h-3.5 w-3.5 shrink-0" />
-                    <span>Add</span>
+                    <Check className="h-3.5 w-3.5 shrink-0 text-emerald-600" />
+                    <span>Added</span>
                   </button>
                   <button
                     type="button"

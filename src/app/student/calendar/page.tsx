@@ -159,47 +159,114 @@ export default function StudentCalendarPage() {
           </div>
 
           {/* Calendar Days */}
-          <div className="grid grid-cols-7 gap-1.5 sm:gap-3">
+          <div className="grid grid-cols-7 gap-1.5 sm:gap-2">
             {calendarDays.map((cell, idx) => {
               const dayEvents = cell.isCurrentMonth ? getEventsForDate(cell.date) : [];
               const hasEvents = dayEvents.length > 0;
 
+              const today = new Date();
+              const isToday =
+                cell.date.getFullYear() === today.getFullYear() &&
+                cell.date.getMonth() === today.getMonth() &&
+                cell.date.getDate() === today.getDate();
+
+              const isSelected =
+                cell.date.getFullYear() === selectedDate.getFullYear() &&
+                cell.date.getMonth() === selectedDate.getMonth() &&
+                cell.date.getDate() === selectedDate.getDate();
+
+              // Color per category
+              const getCatColor = (cat?: string) => {
+                const c = (cat || '').toLowerCase();
+                if (c.includes('sport') || c.includes('athlet')) return '#22c55e'; // green
+                if (c.includes('music') || c.includes('art') || c.includes('greek')) return '#a855f7'; // purple
+                if (c.includes('career') || c.includes('workshop') || c.includes('academic')) return '#3b82f6'; // blue
+                if (c.includes('social') || c.includes('party')) return '#ec4899'; // pink
+                return '#FD5C05'; // orange default
+              };
+
+              const primaryColor = hasEvents ? getCatColor(dayEvents[0].category) : null;
+
               return (
-                <div 
+                <div
                   key={idx}
                   onClick={() => handleDayClick(cell.date)}
                   className={`
-                    relative aspect-square border rounded-xl sm:rounded-2xl p-1.5 sm:p-2 cursor-pointer flex flex-col justify-between transition-all duration-300 overflow-hidden
-                    ${cell.isCurrentMonth 
-                      ? hasEvents
-                        ? 'bg-[#FD5C05]/10 border-[#FD5C05]/30 hover:bg-[#FD5C05]/15'
-                        : 'bg-white border-black/[0.04] hover:bg-black/[0.01] hover:border-black/15 shadow-sm'
-                      : 'bg-black/[0.01] border-transparent text-[#5A554E] opacity-40'
+                    relative aspect-square rounded-xl sm:rounded-2xl p-1.5 sm:p-2 cursor-pointer flex flex-col justify-between transition-all duration-200 overflow-hidden select-none
+                    ${!cell.isCurrentMonth
+                      ? 'opacity-25 pointer-events-none'
+                      : isSelected
+                        ? 'ring-2 ring-[#2A2621] ring-offset-1 shadow-md'
+                        : hasEvents
+                          ? 'shadow-sm hover:scale-[1.04]'
+                          : 'hover:bg-black/[0.03] hover:border hover:border-black/10'
                     }
                   `}
+                  style={
+                    isSelected
+                      ? { background: '#2A2621' }
+                      : hasEvents
+                        ? { background: `${primaryColor}18`, border: `1px solid ${primaryColor}40` }
+                        : { background: '#fff', border: '1px solid rgba(0,0,0,0.04)' }
+                  }
                 >
+                  {/* Today ring */}
+                  {isToday && !isSelected && (
+                    <span className="absolute inset-0 rounded-xl sm:rounded-2xl ring-2 ring-[#FD5C05] ring-offset-1 pointer-events-none" />
+                  )}
+
+                  {/* Day number */}
                   <div className="flex items-start justify-between w-full">
-                    <span className="relative z-10 text-[10px] font-black px-1.5 py-0.5 rounded-md leading-none w-fit text-[#2A2621]">
+                    <span
+                      className={`text-[11px] sm:text-xs font-black leading-none px-1 rounded-md ${
+                        isSelected
+                          ? 'text-white'
+                          : hasEvents
+                            ? 'text-[#2A2621]'
+                            : isToday
+                              ? 'text-[#FD5C05]'
+                              : 'text-[#5A554E]'
+                      }`}
+                    >
                       {cell.day}
                     </span>
-                    {cell.isCurrentMonth && hasEvents && (
-                      <span className="text-[7.5px] font-black bg-[#FD5C05] text-white px-1.5 py-0.5 rounded-full shadow-xs whitespace-nowrap leading-none shrink-0 inline-block">
-                        {dayEvents.length} {dayEvents.length === 1 ? 'Event' : 'Events'}
+
+                    {/* Event count badge */}
+                    {hasEvents && dayEvents.length > 1 && (
+                      <span
+                        className="text-[7px] font-black px-1.5 py-0.5 rounded-full leading-none shadow-sm"
+                        style={{
+                          background: isSelected ? 'rgba(255,255,255,0.2)' : primaryColor,
+                          color: '#fff',
+                        }}
+                      >
+                        {dayEvents.length}
                       </span>
                     )}
                   </div>
 
-                  {cell.isCurrentMonth && hasEvents && (
-                    <div className="flex flex-col gap-0.5 mt-1 overflow-hidden">
-                      <div className="flex items-center gap-1">
-                        {dayEvents.slice(0, 3).map((_, eIdx) => (
-                          <span key={eIdx} className="h-1.5 w-1.5 rounded-full bg-[#FD5C05] shadow-[0_0_6px_rgba(253,92,5,0.6)]" />
-                        ))}
-                      </div>
-                      <span className="text-[8px] font-extrabold text-[#2A2621] truncate hidden sm:block">
-                        {dayEvents[0].title}
-                      </span>
+                  {/* Category color dots */}
+                  {hasEvents && (
+                    <div className="flex items-center gap-0.5 flex-wrap mt-auto">
+                      {dayEvents.slice(0, 4).map((ev, eIdx) => (
+                        <span
+                          key={eIdx}
+                          className="h-1.5 w-1.5 rounded-full flex-shrink-0 shadow-sm"
+                          style={{ background: getCatColor(ev.category) }}
+                          title={ev.category}
+                        />
+                      ))}
                     </div>
+                  )}
+
+                  {/* Event title (sm+) */}
+                  {hasEvents && !isSelected && (
+                    <span
+                      className="text-[7px] sm:text-[8px] font-bold truncate leading-tight hidden sm:block mt-0.5"
+                      style={{ color: primaryColor }}
+                    >
+                      {dayEvents[0].title}
+                    </span>
                   )}
                 </div>
               );
