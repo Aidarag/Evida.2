@@ -1036,16 +1036,30 @@ function StudentProfilePageContent() {
                             animate={{ opacity: 1, scale: 1 }}
                             exit={{ opacity: 0, scale: 0.95 }}
                             transition={{ duration: 0.2 }}
+                            className="space-y-2"
                           >
                             <EventCard 
                               event={evt}
                               onClick={() => router.push(`/events/${evt.id}`)}
-                              isSaved={currentUser ? (evt.savedBy?.includes(currentUser.name) || (currentUser.username ? evt.savedBy?.includes(currentUser.username) : false)) : false}
+                              isSaved={true}
                               onSave={(e) => {
                                 e.stopPropagation();
                                 handleUnlike(evt.id);
                               }}
                             />
+                            {isOwner && (
+                              <button
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  e.preventDefault();
+                                  handleUnlike(evt.id);
+                                }}
+                                className="w-full py-2 text-[9.5px] font-black uppercase tracking-wider text-rose-600 bg-rose-50 hover:bg-rose-100 rounded-xl border border-rose-200/70 transition-all cursor-pointer flex items-center justify-center gap-1.5 shadow-xs"
+                              >
+                                <X className="h-3.5 w-3.5 text-rose-600" />
+                                Remove from Saved
+                              </button>
+                            )}
                           </motion.div>
                         ))}
                       </AnimatePresence>

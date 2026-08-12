@@ -14,7 +14,7 @@ interface FeaturedEventCardProps {
 }
 
 export default function FeaturedEventCard({ event, onClick }: FeaturedEventCardProps) {
-  const { saveToggle } = useEvents();
+  const { saveToggle, rsvpToggle } = useEvents();
   const { currentUser } = useUser();
 
   const isSaved = currentUser 
@@ -145,15 +145,18 @@ export default function FeaturedEventCard({ event, onClick }: FeaturedEventCardP
 
           {/* Compact Add to Calendar Button */}
           <button
-            onClick={(e) => {
+            onClick={async (e) => {
               e.stopPropagation();
               try {
+                if (currentUser && !event.attendees?.includes(currentUser.name)) {
+                  await rsvpToggle(event.id, 'rsvp');
+                }
                 downloadEventICS(event);
               } catch (error) {
                 console.error('Error adding event to calendar:', error);
               }
             }}
-            className="inline-flex items-center gap-1.5 bg-white border border-black/10 hover:border-transparent hover:bg-[#FD5C05] hover:text-[#2A2621] text-[#2A2621] font-bold text-[10px] uppercase tracking-wider py-1.5 px-3.5 rounded-full transition-all duration-300 shadow-sm cursor-pointer whitespace-nowrap"
+            className="inline-flex items-center gap-1.5 bg-white border border-black/10 hover:border-transparent hover:bg-[#FD5C05] hover:text-white text-[#2A2621] font-bold text-[10px] uppercase tracking-wider py-1.5 px-3.5 rounded-full transition-all duration-300 shadow-sm cursor-pointer whitespace-nowrap"
             style={{ fontFamily: 'var(--font-display)' }}
           >
             <Calendar className="h-3.5 w-3.5" />

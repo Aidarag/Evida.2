@@ -480,16 +480,6 @@ export default function ExplorePage() {
               </h1>
             </div>
 
-            {/* 0. Favorited Events */}
-            {favoritedEvents.length > 0 && (
-              <div className="space-y-1.5 bg-[#FD5C05]/5 border border-[#FD5C05]/20 p-4 rounded-[24px]">
-                {renderSectionHeader('Mes Favoris', 'Saved Events', <Bookmark className="h-4 w-4 fill-[#FD5C05] text-[#FD5C05]" />, true)}
-                <div className="flex gap-3 overflow-x-auto pb-2 pt-0.5 scrollbar-none select-none scroll-smooth">
-                  {favoritedEvents.map(evt => renderEventCard(evt))}
-                </div>
-              </div>
-            )}
-
             {/* 1. Trending Events */}
             <div className="space-y-1.5">
               {renderSectionHeader('Trending Events', 'Trending Events', <TrendingUp className="h-4 w-4" />, true)}
