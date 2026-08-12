@@ -61,7 +61,7 @@ export function DesktopNav({
                 ? 'bg-white/90 backdrop-blur-xl border border-black/[0.05] shadow-[var(--shadow-premium-md)]' 
                 : 'bg-white/70 backdrop-blur-md border border-black/[0.03] shadow-[var(--shadow-premium-sm)]'
             }` 
-          : 'sticky top-0 z-40 h-16 border-b border-black/[0.04] bg-white/90 backdrop-blur-xl shadow-sm'
+          : 'sticky top-0 z-40 h-16 border-b border-black/[0.05] bg-[#FAF9F5]/90 backdrop-blur-xl shadow-xs'
       } ${variant !== 'public' ? 'hidden md:flex' : ''}`}>
         <div className="w-full px-5 md:px-8 flex items-center justify-between">
           {/* Left side: Logo & Links */}
@@ -119,22 +119,22 @@ export function DesktopNav({
                 <div className="hidden md:flex items-center gap-4">
                   <Link 
                     href="/signup" 
-                    className="px-6 py-2.5 font-bold uppercase tracking-widest text-[11px] rounded-full bg-[#FD5C05] text-[#2A2621] shadow-[0_4px_12px_rgba(189,251,4,0.15)] hover:bg-[#CC3D00] hover:scale-[1.02] active:scale-[0.98] transition-all duration-300"
+                    className="px-6 py-2.5 font-black uppercase tracking-widest text-[11px] rounded-full bg-[#FD5C05] text-white shadow-[0_4px_14px_rgba(253,92,5,0.35)] hover:bg-[#CC3D00] hover:scale-[1.02] active:scale-[0.98] transition-all duration-300"
                   >
                     Sign Up
                   </Link>
                   <Link
-  href="/login"
-  className="px-5 py-2 rounded-full border border-[#FD5C05] text-[#2A2621] text-[11px] font-bold uppercase tracking-widest hover:bg-[#FD5C05] hover:text-[#2A2621] transition-colors duration-300"
->
-  Sign In
-</Link>
+                    href="/login"
+                    className="px-5 py-2 rounded-full border border-[#FD5C05] text-[#2A2621] text-[11px] font-bold uppercase tracking-widest hover:bg-[#FD5C05] hover:text-white transition-colors duration-300"
+                  >
+                    Sign In
+                  </Link>
                 </div>
 
                 {/* Mobile Hamburger Button */}
                 <button 
                   onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                  className="lg:hidden p-2 focus:outline-none text-[#2A2621] hover:text-[#2A2621] transition-colors z-55 cursor-pointer"
+                  className="lg:hidden p-2 focus:outline-none text-[#2A2621] hover:text-[#FD5C05] transition-colors z-55 cursor-pointer"
                 >
                   {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
                 </button>
@@ -143,7 +143,7 @@ export function DesktopNav({
             {/* Student Logged In */}
             {variant === 'student' && (
               <div className="flex items-center gap-3">
-                <Link href="/student/create" className="px-5 py-2 rounded-full bg-[#FD5C05] text-[#2A2621] text-[11px] font-bold uppercase tracking-wider hover:bg-[#CC3D00] transition-colors shadow-[0_4px_12px_rgba(189,251,4,0.15)]">
+                <Link href="/student/create" className="px-5 py-2 rounded-full bg-[#FD5C05] text-white text-[11px] font-black uppercase tracking-wider hover:bg-[#CC3D00] transition-all shadow-[0_4px_14px_rgba(253,92,5,0.35)] hover:scale-[1.02] active:scale-[0.98]">
                   Create
                 </Link>
                 <NotificationBell />
@@ -243,7 +243,7 @@ export const MobileBottomNav = React.memo(function MobileBottomNav({ variant = '
   const tabs = variant === 'school' ? schoolTabs : studentTabs;
 
   return (
-    <div className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-xl border-t border-[#D8D2BC]/30 pb-3 pt-2 shadow-[0_-4px_20px_rgba(0,0,0,0.03)]">
+    <div className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-[#FAF9F5]/95 backdrop-blur-xl border-t border-black/[0.05] pb-3 pt-2 shadow-[0_-4px_20px_rgba(0,0,0,0.03)]">
       <motion.nav
         initial={{ y: 20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
@@ -355,7 +355,7 @@ export function DesktopSidebar({
 
   return (
     <aside className={`
-      hidden lg:flex flex-col justify-between p-5 bg-[#EAE5D4]/85 backdrop-blur-xl border-r border-[#D8D2BC]/80 shadow-[2px_0_15px_rgba(0,0,0,0.03)] sticky top-16 h-[calc(100vh-64px)] shrink-0 transition-all duration-300 relative z-30
+      hidden lg:flex flex-col justify-between p-5 bg-[#FAF9F5] border-r border-black/[0.05] shadow-xs sticky top-16 h-[calc(100vh-64px)] shrink-0 transition-all duration-300 relative z-30
       ${state === 'expanded' ? 'w-64' : 'w-20 px-3'}
     `}>
       <div className="space-y-4">

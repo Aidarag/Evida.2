@@ -107,6 +107,9 @@ export interface Promotion {
   date: string;
   organizer: string;
   contactInfo: string;
+  preferredContactMethod?: 'instagram' | 'email' | 'phone' | 'link';
+  contactValue?: string;
+  socialLink?: string;
   feedback?: string;
   image?: string;
   createdAt?: string;

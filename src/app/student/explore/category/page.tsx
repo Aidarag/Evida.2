@@ -458,49 +458,63 @@ function CategoryDetailContent() {
         {sectionMeta.hasEvents && (!sectionMeta.hasPromos || activeTab === 'events') && (
           filteredEvents.length > 0 ? (
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-              {filteredEvents.map(evt => (
-                <div
-                  key={evt.id}
-                  className="bg-white border border-black/[0.04] rounded-3xl overflow-hidden shadow-sm hover:border-[#FD5C05]/30 transition-all flex flex-col h-full relative group"
-                >
-                  <div className="h-44 w-full bg-[#FD5C05]/10 shrink-0 relative">
-                    {evt.coverImage.includes('from-') ? (
-                      <div className={`w-full h-full bg-gradient-to-br ${evt.coverImage}`} />
-                    ) : (
-                      <img src={evt.coverImage} className="w-full h-full object-cover" alt="" />
-                    )}
-                    <span className="absolute top-3 right-3 text-[8px] font-black uppercase tracking-wider bg-black/60 backdrop-blur-[2px] text-white px-2 py-0.5 rounded">
-                      {evt.category}
-                    </span>
-                  </div>
+              {filteredEvents.map(evt => {
+                const dateObj = new Date(evt.date + 'T00:00:00');
+                const monthStr = dateObj.toLocaleDateString('en-US', { month: 'short' });
+                const dayNum = dateObj.getDate();
+                const formattedDate = `${monthStr} ${dayNum}`;
 
-                  <div className="p-5 flex-1 flex flex-col justify-between space-y-4">
-                    <div className="space-y-1.5">
-                      <div className="flex items-center gap-1 text-[#FD5C05] text-[9px] font-black uppercase tracking-widest">
-                        {evt.ownershipType === 'school' ? '🏫 Official Event' : '👥 Student Event'}
+                return (
+                  <div
+                    key={evt.id}
+                    className="bg-white border border-black/[0.04] rounded-[24px] overflow-hidden shadow-sm hover:border-[#FD5C05] transition-all flex flex-col justify-between h-full relative group"
+                  >
+                    <div className="aspect-[16/10] w-full bg-[#FD5C05]/10 shrink-0 relative overflow-hidden">
+                      {evt.coverImage.includes('from-') ? (
+                        <div className={`w-full h-full bg-gradient-to-br ${evt.coverImage} group-hover:scale-105 transition-transform duration-500`} />
+                      ) : (
+                        <img src={evt.coverImage} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt="" />
+                      )}
+                      
+                      {/* Category Badge top left */}
+                      <span className="absolute top-3 left-3 text-[8px] font-black uppercase tracking-wider bg-black/75 backdrop-blur-md text-white px-2.5 py-0.5 rounded-full border border-white/10">
+                        {evt.category}
+                      </span>
+
+                      {/* Pricing Badge top right */}
+                      <span className="absolute top-3 right-3 text-[8px] font-black uppercase tracking-wider bg-[#FD5C05] text-white px-2.5 py-0.5 rounded-full shadow-sm">
+                        {evt.free ? 'FREE' : `$${evt.price || 'TICKETED'}`}
+                      </span>
+                    </div>
+
+                    <div className="p-5 flex-1 flex flex-col justify-between space-y-4 text-left">
+                      <div className="space-y-1.5">
+                        <div className="text-[#FD5C05] text-[9px] font-black uppercase tracking-widest">
+                          {formattedDate} • {evt.time || '7:00 PM'}
+                        </div>
+                        <h3 className="font-bold text-sm text-[#2A2621] tracking-tight leading-snug line-clamp-2 group-hover:text-[#FD5C05] transition-colors block">
+                          {evt.title}
+                        </h3>
+                        <p className="text-xs text-[#5A554E] leading-relaxed line-clamp-2 font-medium">
+                          {evt.description}
+                        </p>
                       </div>
-                      <h3 className="font-extrabold text-sm text-[#2A2621] uppercase tracking-wide leading-tight line-clamp-2 group-hover:text-[#FD5C05] transition-colors">
-                        {evt.title}
-                      </h3>
-                      <p className="text-xs text-[#5A554E] leading-relaxed line-clamp-3 font-medium">
-                        {evt.description}
-                      </p>
-                    </div>
 
-                    <div className="space-y-2 pt-3 border-t border-black/[0.04] text-[10px] text-[#5A554E] font-semibold">
-                      <p className="flex items-center gap-1.5"><Calendar className="h-3.5 w-3.5 text-[#5A554E]" /> {evt.date} • {evt.time}</p>
-                      <p className="flex items-center gap-1.5"><MapPin className="h-3.5 w-3.5 text-[#FD5C05]" /> {evt.location}</p>
-                    </div>
+                      <div className="space-y-2 pt-3 border-t border-black/[0.04] text-[10px] text-[#5A554E] font-semibold">
+                        <p className="flex items-center gap-1.5"><Users className="h-3.5 w-3.5 text-[#5A554E]" /> {evt.organizationName || evt.organizer}</p>
+                        <p className="flex items-center gap-1.5"><MapPin className="h-3.5 w-3.5 text-[#FD5C05]" /> {evt.location}</p>
+                      </div>
 
-                    <Link
-                      href={`/events/${evt.id}`}
-                      className="w-full text-center py-2.5 bg-[#2A2621] hover:bg-[#FD5C05] text-white hover:text-[#2A2621] rounded-xl text-xs font-black uppercase tracking-wider transition-all"
-                    >
-                      View Event
-                    </Link>
+                      <Link
+                        href={`/events/${evt.id}`}
+                        className="w-full text-center py-2.5 bg-[#2A2621] hover:bg-[#FD5C05] text-white hover:text-[#2A2621] rounded-xl text-xs font-black uppercase tracking-wider transition-all cursor-pointer block"
+                      >
+                        View Event
+                      </Link>
+                    </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           ) : (
             <div className="bg-white rounded-3xl p-12 border border-black/[0.04] text-center max-w-lg mx-auto">

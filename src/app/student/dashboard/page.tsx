@@ -394,7 +394,7 @@ export default function StudentDashboardPage() {
                 transition={{ type: 'spring', stiffness: 380, damping: 30 }}
               />
             )}
-            <span className={`relative z-10 transition-colors duration-300 ${activeFeed === 'official' ? 'text-[#2A2621]' : 'text-[#5A554E]'}`}>
+            <span className={`relative z-10 transition-colors duration-300 ${activeFeed === 'official' ? 'text-white font-black' : 'text-[#5A554E]'}`}>
               Livingstone College
             </span>
           </button>
@@ -413,7 +413,7 @@ export default function StudentDashboardPage() {
                 transition={{ type: 'spring', stiffness: 380, damping: 30 }}
               />
             )}
-            <span className={`relative z-10 transition-colors duration-300 ${activeFeed === 'student' ? 'text-[#2A2621]' : 'text-[#5A554E]'}`}>
+            <span className={`relative z-10 transition-colors duration-300 ${activeFeed === 'student' ? 'text-white font-black' : 'text-[#5A554E]'}`}>
               For You
             </span>
           </button>
@@ -427,12 +427,11 @@ export default function StudentDashboardPage() {
               <button
                 key={cat.name}
                 onClick={() => setSelectedCategory(cat.name)}
-                className={`flex items-center gap-1.5 shrink-0 px-3.5 py-1.5 rounded-full text-[9px] font-extrabold uppercase tracking-wider transition-all cursor-pointer ${isActive
-                  ? 'bg-[#FD5C05] text-[#2A2621] shadow-sm'
-                  : 'bg-white border border-black/[0.04] text-[#5A554E] hover:bg-white hover:text-[#2A2621]'
+                className={`flex items-center justify-center shrink-0 px-4 py-2 rounded-full text-[9.5px] font-black uppercase tracking-wider transition-all cursor-pointer ${isActive
+                  ? 'bg-[#FD5C05] text-white font-black shadow-sm'
+                  : 'bg-white border border-black/[0.06] text-[#5A554E] hover:bg-white hover:text-[#2A2621]'
                   }`}
               >
-                <cat.icon className="h-3 w-3" />
                 {cat.name}
               </button>
             );

@@ -15,17 +15,17 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 
 const variantStyles: Record<ButtonVariant, string> = {
   primary:
-    'bg-[#FD5C05] text-[#2A2621] font-bold shadow-[0_4px_14px_rgba(25, 25, 25, 0.1)] hover:bg-[#FD5C05]/90 border border-transparent',
+    'bg-[#FD5C05] text-white font-extrabold shadow-[0_4px_14px_rgba(253,92,5,0.35)] hover:bg-[#CC3D00] border border-transparent',
   secondary:
-    'bg-[#2A2621] text-white font-bold shadow-[0_4px_14px_rgba(25, 25, 25, 0.08)] hover:bg-[#2a2a2a] border border-transparent',
+    'bg-[#2A2621] text-white font-extrabold shadow-[0_4px_14px_rgba(42,38,33,0.15)] hover:bg-[#1a1816] border border-transparent',
   accent:
-    'bg-[#FD5C05] text-[#2A2621] font-bold shadow-[0_4px_14px_rgba(25, 25, 25, 0.1)] hover:bg-[#FD5C05]/90 border border-transparent',
+    'bg-[#FD5C05] text-white font-extrabold shadow-[0_4px_14px_rgba(253,92,5,0.35)] hover:bg-[#CC3D00] border border-transparent',
   neon:
-    'bg-[#FD5C05] text-[#2A2621] font-bold shadow-[0_4px_14px_rgba(25, 25, 25, 0.1)] hover:bg-[#FD5C05]/90 border border-transparent',
+    'bg-[#FD5C05] text-white font-extrabold shadow-[0_4px_14px_rgba(253,92,5,0.35)] hover:bg-[#CC3D00] border border-transparent',
   ghost:
-    'bg-transparent border border-[#2A2621]/20 hover:border-[#2A2621]/20 text-[#5A554E] hover:text-[#2A2621] hover:bg-[#2A2621]/[0.02] backdrop-blur-md',
+    'bg-transparent border border-[#2A2621]/20 text-[#2A2621] hover:text-[#FD5C05] hover:bg-[#2A2621]/[0.04] backdrop-blur-md font-extrabold',
   danger:
-    'bg-red-600 text-white font-bold hover:bg-red-700 border border-transparent',
+    'bg-red-600 text-white font-extrabold hover:bg-red-700 border border-transparent shadow-sm',
 };
 
 const sizeStyles: Record<ButtonSize, string> = {

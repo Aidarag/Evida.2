@@ -21,6 +21,7 @@ export default function EventDetailsPage() {
 
   const [isPreview, setIsPreview] = useState(false);
   const [addedToCalendar, setAddedToCalendar] = useState(false);
+  const [sharing, setSharing] = useState(false);
 
   const event = events.find(e => e.id === params.id);
   const org = event && organizations ? organizations.find(o => o.id === event.organizationId) : undefined;
@@ -69,8 +70,6 @@ export default function EventDetailsPage() {
   
   const bgClass = event.coverImage.includes('from-') ? event.coverImage : '';
   const bgStyle = !bgClass ? { backgroundImage: `url(${event.coverImage})`, backgroundSize: 'cover' } : {};
-
-  const [sharing, setSharing] = useState(false);
 
   const handleShareClick = async () => {
     if (!event) return;
@@ -209,7 +208,7 @@ export default function EventDetailsPage() {
                   <Calendar className="h-5 w-5 text-[#80B0EC]" />
                 </div>
                 <div>
-                  <h3 className="font-bold text-white">📅 {new Date(event.date).toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' })}</h3>
+                  <h3 className="font-bold text-white">{new Date(event.date).toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' })}</h3>
                   <p className="text-sm text-[#B8BBC8]">{event.time} {event.endTime ? `- ${event.endTime}` : ''}</p>
                 </div>
               </div>
@@ -219,7 +218,7 @@ export default function EventDetailsPage() {
                   <MapPin className="h-5 w-5 text-[#eb5e28]" />
                 </div>
                 <div>
-                  <h3 className="font-bold text-white">📍 {event.location}</h3>
+                  <h3 className="font-bold text-white">{event.location}</h3>
                   <p className="text-sm text-[#B8BBC8] capitalize">{event.locationType}</p>
                 </div>
               </div>
@@ -229,7 +228,7 @@ export default function EventDetailsPage() {
                   <Users className="h-5 w-5 text-[#EE3D5A]" />
                 </div>
                 <div>
-                  <h3 className="font-bold text-white">👥 {event.attendees.length} Attending</h3>
+                  <h3 className="font-bold text-white">{event.attendees.length} Attending</h3>
                   <p className="text-sm text-[#B8BBC8]">Free Entry</p>
                 </div>
               </div>
@@ -398,7 +397,7 @@ export default function EventDetailsPage() {
                     fullWidth
                     onClick={handleAddToCalendar}
                     icon={<Calendar className="h-4 w-4 shrink-0" />}
-                    className="bg-[#FD5C05] text-[#2A2621] hover:bg-[#CC3D00] border-none font-bold uppercase tracking-wider text-xs py-3 rounded-xl cursor-pointer flex items-center justify-center gap-1.5"
+                    className="bg-[#FD5C05] text-white hover:bg-[#CC3D00] border-none font-bold uppercase tracking-wider text-xs py-3 rounded-xl cursor-pointer flex items-center justify-center gap-1.5 shadow-md"
                   >
                     Add to Calendar
                   </Button>

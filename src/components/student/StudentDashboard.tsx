@@ -50,8 +50,8 @@ export default function StudentDashboard({
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
 
-  // Categories list
-  const categories = ['All', 'Social', 'Academic', 'Career', 'Sports', 'Culture', 'Greek Life', 'Club Events', 'Official School Events'];
+  // Categories list (Baskets)
+  const categories = ['All', 'Food & BBQ Sales', 'Student Businesses', 'Academic & Workshops', 'Career & Jobs', 'Sports & Fitness', 'Creative & Arts', 'Social & Greek Life', 'Official School Events'];
 
   // Filter events for the Explore feed
   const exploreEvents = events.filter((e) => {
@@ -62,9 +62,17 @@ export default function StudentDashboard({
       e.location.toLowerCase().includes(searchQuery.toLowerCase()) ||
       (e.organizationName || '').toLowerCase().includes(searchQuery.toLowerCase());
     
-    const matchesCategory = selectedCategory === 'All' || e.category === selectedCategory || 
+    const cat = (e.category || '').toLowerCase();
+    const matchesCategory = selectedCategory === 'All' || 
+      (selectedCategory === 'Food & BBQ Sales' && (cat.includes('food') || cat.includes('bbq'))) ||
+      (selectedCategory === 'Student Businesses' && (cat.includes('business') || cat.includes('market') || cat.includes('beauty'))) ||
+      (selectedCategory === 'Academic & Workshops' && (cat.includes('academic') || cat.includes('tutor') || cat.includes('workshop'))) ||
+      (selectedCategory === 'Career & Jobs' && (cat.includes('career') || cat.includes('job') || cat.includes('fair'))) ||
+      (selectedCategory === 'Sports & Fitness' && (cat.includes('sport') || cat.includes('athlet') || cat.includes('fitness'))) ||
+      (selectedCategory === 'Creative & Arts' && (cat.includes('creative') || cat.includes('art') || cat.includes('music') || cat.includes('photo'))) ||
+      (selectedCategory === 'Social & Greek Life' && (cat.includes('social') || cat.includes('greek') || cat.includes('party'))) ||
       (selectedCategory === 'Official School Events' && e.ownershipType === 'school') ||
-      (selectedCategory === 'Club Events' && e.ownershipType === 'organization');
+      e.category === selectedCategory;
 
     return matchesSearch && matchesCategory;
   });
@@ -419,7 +427,7 @@ export default function StudentDashboard({
 
                             {/* Host Badge */}
                             <div className="absolute left-4 bottom-4 z-20 flex flex-col gap-0.5">
-                              <span className="rounded-full bg-white/95 border border-[#D8D2BC]/40 px-2 py-0.5 text-[9px] font-extrabold text-[#2A2621] w-fit shadow-sm">
+                              <span className="rounded-full bg-[#FD5C05] px-2.5 py-0.5 text-[9px] font-black text-white uppercase shadow-sm">
                                 {event.free ? 'FREE' : 'TICKETED'}
                               </span>
                             </div>
