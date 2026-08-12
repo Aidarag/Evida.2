@@ -519,7 +519,7 @@ export default function StudentDashboardPage() {
 
                       {/* Right Badge: Cost */}
                       <div className="absolute top-4 right-12 z-10">
-                        <span className="rounded-full bg-[#FD5C05] text-[#2A2621] px-2.5 py-1 text-[8px] font-extrabold uppercase shadow-sm">
+                        <span className="rounded-full bg-[#FD5C05] text-white font-black px-2.5 py-1 text-[8px] uppercase shadow-sm">
                           {isPromo ? 'STUDENT SERVICE' : (event?.free ? 'FREE' : 'TICKETED')}
                         </span>
                       </div>
