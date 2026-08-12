@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { MapPin, Calendar, Bookmark, Check, CheckCircle, Mail } from 'lucide-react';
+import { MapPin, Calendar, Bookmark, Check, CheckCircle, Mail, X } from 'lucide-react';
 import { Event, Promotion } from '@/lib/types';
 import { motion } from 'framer-motion';
 import { useState } from 'react';
@@ -235,12 +235,14 @@ const EventCardInner = React.memo(function EventCardInner({
                       }
                       setRsvpLoading(false);
                     }}
-                    className="inline-flex items-center gap-1 bg-[#FD5C05] border border-[#FD5C05] text-[#2A2621] font-extrabold text-[9px] uppercase tracking-wider py-1.5 px-3.5 rounded-full transition-all duration-300 shadow-sm cursor-pointer whitespace-nowrap"
-                    title="Going"
+                    className="inline-flex items-center gap-1 bg-[#FD5C05] hover:bg-red-600 border border-[#FD5C05] hover:border-red-600 text-white font-extrabold text-[9px] uppercase tracking-wider py-1.5 px-3.5 rounded-full transition-all duration-300 shadow-sm cursor-pointer whitespace-nowrap group/going"
+                    title="Click to Cancel RSVP"
                     style={{ fontFamily: 'var(--font-display)' }}
                   >
-                    <Check className="h-3 w-3 shrink-0" />
-                    <span>Going</span>
+                    <Check className="h-3 w-3 shrink-0 group-hover/going:hidden text-white" />
+                    <X className="h-3 w-3 shrink-0 hidden group-hover/going:block text-white" />
+                    <span className="group-hover/going:hidden">Going</span>
+                    <span className="hidden group-hover/going:inline">Cancel</span>
                   </button>
                 </>
               ) : (

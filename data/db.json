@@ -127,7 +127,6 @@
         "Alex Rivera"
       ],
       "savedBy": [
-        "Michael Chen",
         "Sarah Jenkins"
       ],
       "organizer": "Black Student Union",
@@ -805,7 +804,9 @@
       "time": "21:00",
       "location": "Student Plaza",
       "locationType": "outdoor",
-      "attendees": [],
+      "attendees": [
+        "Michael Chen"
+      ],
       "interested": [],
       "savedBy": [
         "Michael Chen"
