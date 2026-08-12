@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { readDB, writeDB } from '@/lib/db';
+import { readDBAsync, writeDBAsync } from '@/lib/db-redis';
 
 export async function GET(request: Request) {
   try {
@@ -10,7 +10,7 @@ export async function GET(request: Request) {
       return NextResponse.json({ error: 'Missing username parameter' }, { status: 400 });
     }
 
-    const db = readDB();
+    const db = await readDBAsync();
     const list = db.notifications.filter((n) => n.username === username);
     return NextResponse.json(list);
   } catch (error) {
@@ -27,7 +27,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Missing username' }, { status: 400 });
     }
 
-    const db = readDB();
+    const db = await readDBAsync();
 
     if (action === 'mark-all-read') {
       db.notifications = db.notifications.map((n) => {
@@ -43,7 +43,7 @@ export async function POST(request: Request) {
       db.notifications = db.notifications.filter((n) => n.id !== id);
     }
 
-    writeDB(db);
+    await writeDBAsync(db);
     const list = db.notifications.filter((n) => n.username === username);
     return NextResponse.json(list);
   } catch (error) {

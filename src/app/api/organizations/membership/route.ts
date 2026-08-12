@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { readDB, writeDB } from '@/lib/db';
+import { readDBAsync, writeDBAsync } from '@/lib/db-redis';
 import { MembershipRequest } from '@/lib/types';
 
 export async function GET(request: Request) {
@@ -7,7 +7,7 @@ export async function GET(request: Request) {
     const { searchParams } = new URL(request.url);
     const username = searchParams.get('username');
 
-    const db = readDB();
+    const db = await readDBAsync();
     let requests = db.membershipRequests || [];
 
     if (username) {
@@ -25,18 +25,14 @@ export async function POST(request: Request) {
     const body = await request.json();
     const { action, id, orgId, orgName, username, studentName, status } = body;
 
-    const db = readDB();
-    if (!db.membershipRequests) {
-      db.membershipRequests = [];
-    }
+    const db = await readDBAsync();
+    if (!db.membershipRequests) db.membershipRequests = [];
 
-    // Action: Student applies to join
     if (action === 'apply') {
       if (!orgId || !orgName || !username || !studentName) {
         return NextResponse.json({ error: 'Missing required application fields' }, { status: 400 });
       }
 
-      // Avoid duplicate pending requests
       const exists = db.membershipRequests.some(
         (r) => r.orgId === orgId && r.username === username && r.status === 'pending'
       );
@@ -55,62 +51,46 @@ export async function POST(request: Request) {
       };
 
       db.membershipRequests.push(newRequest);
-      writeDB(db);
+      await writeDBAsync(db);
       return NextResponse.json(newRequest, { status: 201 });
     }
 
-    // Action: Student cancels their request
     if (action === 'cancel') {
       const idx = db.membershipRequests.findIndex((r) => r.id === id);
-      if (idx === -1) {
-        return NextResponse.json({ error: 'Request not found' }, { status: 404 });
-      }
+      if (idx === -1) return NextResponse.json({ error: 'Request not found' }, { status: 404 });
       const req = db.membershipRequests[idx];
-      if (req.username !== username) {
-        return NextResponse.json({ error: 'Unauthorized to cancel this request' }, { status: 403 });
-      }
-
+      if (req.username !== username) return NextResponse.json({ error: 'Unauthorized to cancel this request' }, { status: 403 });
       db.membershipRequests.splice(idx, 1);
-      writeDB(db);
+      await writeDBAsync(db);
       return NextResponse.json({ success: true });
     }
 
-    // Action: Advisor reviews the request (approve/reject)
     if (action === 'review') {
       if (!id || !status || (status !== 'approved' && status !== 'rejected')) {
         return NextResponse.json({ error: 'Invalid review payload' }, { status: 400 });
       }
 
       const idx = db.membershipRequests.findIndex((r) => r.id === id);
-      if (idx === -1) {
-        return NextResponse.json({ error: 'Request not found' }, { status: 404 });
-      }
+      if (idx === -1) return NextResponse.json({ error: 'Request not found' }, { status: 404 });
 
       const req = db.membershipRequests[idx];
       req.status = status;
 
-      // If approved, update organization and user links
       if (status === 'approved') {
-        // 1. Update Organization members list
         const orgIdx = db.organizations.findIndex((o) => o.id === req.orgId);
         if (orgIdx !== -1) {
           const org = db.organizations[orgIdx];
-          if (!org.members.includes(req.studentName)) {
-            org.members.push(req.studentName);
-          }
+          if (!org.members.includes(req.studentName)) org.members.push(req.studentName);
         }
 
-        // 2. Update User organizations list
         const userIdx = db.users.findIndex((u) => u.username === req.username);
         if (userIdx !== -1) {
           const user = db.users[userIdx];
-          if (!user.organizations.includes(req.orgId)) {
-            user.organizations.push(req.orgId);
-          }
+          if (!user.organizations.includes(req.orgId)) user.organizations.push(req.orgId);
         }
       }
 
-      writeDB(db);
+      await writeDBAsync(db);
       return NextResponse.json(req);
     }
 

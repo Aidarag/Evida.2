@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { readDB, writeDB } from '@/lib/db';
+import { readDBAsync, writeDBAsync } from '@/lib/db-redis';
 
 export async function POST(
   request: Request,
@@ -14,7 +14,7 @@ export async function POST(
       return NextResponse.json({ error: 'Invalid or missing status' }, { status: 400 });
     }
 
-    const db = readDB();
+    const db = await readDBAsync();
     const index = db.promotions.findIndex((p) => p.id === id);
 
     if (index === -1) {
@@ -24,7 +24,7 @@ export async function POST(
     db.promotions[index].status = status;
     db.promotions[index].feedback = feedback || '';
 
-    writeDB(db);
+    await writeDBAsync(db);
 
     return NextResponse.json(db.promotions[index]);
   } catch (error) {

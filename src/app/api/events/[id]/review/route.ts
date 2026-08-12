@@ -1,15 +1,14 @@
 import { NextResponse } from 'next/server';
-import { readDB, writeDB } from '@/lib/db';
+import { readDBAsync, writeDBAsync } from '@/lib/db-redis';
 import { Notification } from '@/lib/types';
 
-// Helper to map organizer name to username for dynamic notification delivery
 function getUsernameByOrganizerName(name: string): string {
   const mapping: Record<string, string> = {
     'Michael Chen': 'michael_c',
     'Sarah Jenkins': 'sarah_j',
     'Alex Rivera': 'alex_r'
   };
-  return mapping[name] || 'michael_c'; // fallback to michael_c
+  return mapping[name] || 'michael_c';
 }
 
 export async function POST(
@@ -25,7 +24,7 @@ export async function POST(
       return NextResponse.json({ error: 'Invalid or missing status' }, { status: 400 });
     }
 
-    const db = readDB();
+    const db = await readDBAsync();
     const eventIndex = db.events.findIndex((e) => e.id === id);
 
     if (eventIndex === -1) {
@@ -41,12 +40,11 @@ export async function POST(
 
     db.events[eventIndex] = event;
 
-    // Create review notification for the organizer
     const username = getUsernameByOrganizerName(event.organizer);
     const newNotif: Notification = {
       id: `notif-${Date.now()}`,
       title: status === 'approved' ? 'Event Approved' : 'Event Rejected',
-      message: status === 'approved' 
+      message: status === 'approved'
         ? `Your event "${event.title}" has been approved by Dean Dean.`
         : `Your event "${event.title}" was rejected: "${feedback || 'No comments left.'}"`,
       type: status === 'approved' ? 'approve' : 'reject',
@@ -56,7 +54,7 @@ export async function POST(
     };
     db.notifications.unshift(newNotif);
 
-    writeDB(db);
+    await writeDBAsync(db);
 
     return NextResponse.json(event);
   } catch (error) {
