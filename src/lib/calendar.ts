@@ -99,6 +99,14 @@ export function downloadEventICS(event: Event) {
     'END:VCALENDAR'
   ].join('\r\n');
 
-  // Physical .ics file download removed per user request (in-app calendar addition only)
+  const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.setAttribute('download', `${cleanTitle.toLowerCase().replace(/\s+/g, '_')}.ics`);
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  URL.revokeObjectURL(url);
   return true;
 }
