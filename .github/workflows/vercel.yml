@@ -16,9 +16,16 @@ jobs:
       - name: Deploy to Vercel
         env:
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
         run: |
-          if [[ ${{ github.ref }} == 'refs/heads/main' ]]; then
-            vercel --prod --token ${{ secrets.VERCEL_TOKEN }}
+          if [ -z "$VERCEL_TOKEN" ]; then
+            echo "::warning ::VERCEL_TOKEN secret is not set in GitHub repository secrets. If Vercel is connected via GitHub integration, automatic deployment will handle it."
+            exit 0
+          fi
+
+          if [ "${{ github.ref }}" = "refs/heads/main" ]; then
+            vercel --prod --token "$VERCEL_TOKEN" --yes
           else
-            vercel --token ${{ secrets.VERCEL_TOKEN }}
+            vercel --token "$VERCEL_TOKEN" --yes
           fi
