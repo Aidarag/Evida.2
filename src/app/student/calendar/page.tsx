@@ -206,7 +206,7 @@ export default function StudentCalendarPage() {
                     isSelected
                       ? { background: '#2A2621' }
                       : hasEvents
-                        ? { background: `${primaryColor}18`, border: `1px solid ${primaryColor}40` }
+                        ? { background: `${primaryColor ?? '#FD5C05'}18`, border: `1px solid ${primaryColor ?? '#FD5C05'}40` }
                         : { background: '#fff', border: '1px solid rgba(0,0,0,0.04)' }
                   }
                 >
@@ -236,7 +236,7 @@ export default function StudentCalendarPage() {
                       <span
                         className="text-[7px] font-black px-1.5 py-0.5 rounded-full leading-none shadow-sm"
                         style={{
-                          background: isSelected ? 'rgba(255,255,255,0.2)' : primaryColor,
+                          background: isSelected ? 'rgba(255,255,255,0.2)' : (primaryColor ?? '#FD5C05'),
                           color: '#fff',
                         }}
                       >
@@ -263,7 +263,7 @@ export default function StudentCalendarPage() {
                   {hasEvents && !isSelected && (
                     <span
                       className="text-[7px] sm:text-[8px] font-bold truncate leading-tight hidden sm:block mt-0.5"
-                      style={{ color: primaryColor }}
+                      style={{ color: primaryColor ?? '#FD5C05' }}
                     >
                       {dayEvents[0].title}
                     </span>
