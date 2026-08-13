@@ -8,7 +8,7 @@
  * Drop-in replacement for readDB/writeDB — just add `await`.
  */
 
-import { DBStructure } from './db';
+import { DBStructure, initialDBData } from './db';
 
 const REDIS_KEY = 'evida:db';
 
@@ -30,55 +30,63 @@ async function getRedis() {
   return redisClient;
 }
 
-// ─── Seed data (same initial data as db.ts) ─────────────────────────────────
-async function getSeedData(): Promise<DBStructure> {
-  const { readDB } = await import('./db');
-  return readDB();
+// ─── Seed data ──────────────────────────────────────────────────────────────
+function getSeedData(): DBStructure {
+  return initialDBData;
 }
 
 // ─── Public API ──────────────────────────────────────────────────────────────
 
 export async function readDBAsync(): Promise<DBStructure> {
   if (isRedisConfigured()) {
-    const redis = await getRedis();
-    if (!redis) throw new Error('Redis not available');
+    try {
+      const redis = await getRedis();
+      if (redis) {
+        let data = await redis.get<any>(REDIS_KEY);
 
-    let data = await redis.get<any>(REDIS_KEY);
-
-    if (data) {
-      if (typeof data === 'string') {
-        try {
-          data = JSON.parse(data);
-        } catch (err) {
-          console.error('Failed to parse Redis JSON string:', err);
+        if (data) {
+          if (typeof data === 'string') {
+            try {
+              data = JSON.parse(data);
+            } catch (err) {
+              console.error('Failed to parse Redis JSON string:', err);
+            }
+          }
+          const db = data as DBStructure;
+          if (!db.events) db.events = [];
+          if (!db.users) db.users = [];
+          if (!db.organizations) db.organizations = [];
+          if (!db.promotions) db.promotions = [];
+          if (!db.membershipRequests) db.membershipRequests = [];
+          return db;
         }
-      }
-      const db = data as DBStructure;
-      if (!db.events) db.events = [];
-      if (!db.users) db.users = [];
-      if (!db.organizations) db.organizations = [];
-      if (!db.promotions) db.promotions = [];
-      if (!db.membershipRequests) db.membershipRequests = [];
-      return db;
-    }
 
-    // First time: seed Redis from initial data
-    const seed = await getSeedData();
-    await redis.set(REDIS_KEY, seed);
-    return seed;
+        // First time: seed Redis from initial data
+        const seed = getSeedData();
+        await redis.set(REDIS_KEY, seed);
+        return seed;
+      }
+    } catch (err) {
+      console.error('Error in readDBAsync Redis operation:', err);
+    }
   }
 
-  // Development: use local filesystem
+  // Development / Fallback: use initialDBData or local filesystem
   const { readDB } = await import('./db');
   return readDB();
 }
 
 export async function writeDBAsync(data: DBStructure): Promise<void> {
   if (isRedisConfigured()) {
-    const redis = await getRedis();
-    if (!redis) throw new Error('Redis not available');
-    await redis.set(REDIS_KEY, data);
-    return;
+    try {
+      const redis = await getRedis();
+      if (redis) {
+        await redis.set(REDIS_KEY, data);
+        return;
+      }
+    } catch (err) {
+      console.error('Error in writeDBAsync Redis operation:', err);
+    }
   }
 
   // Development: use local filesystem
@@ -87,15 +95,21 @@ export async function writeDBAsync(data: DBStructure): Promise<void> {
 }
 
 export async function resetDBAsync(): Promise<DBStructure> {
-  const { resetDB } = await import('./db');
-  const freshData = resetDB();
+  const freshData = initialDBData;
 
   if (isRedisConfigured()) {
-    const redis = await getRedis();
-    if (redis) {
-      await redis.set(REDIS_KEY, freshData);
+    try {
+      const redis = await getRedis();
+      if (redis) {
+        await redis.set(REDIS_KEY, freshData);
+      }
+    } catch (err) {
+      console.error('Error resetting Redis DB:', err);
     }
   }
 
+  const { resetDB } = await import('./db');
+  resetDB();
   return freshData;
 }
+
