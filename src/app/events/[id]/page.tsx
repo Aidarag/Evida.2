@@ -399,11 +399,10 @@ export default function EventDetailsPage() {
                   <Button
                     variant="primary"
                     fullWidth
-                    onClick={handleAddToCalendar}
-                    icon={<Calendar className="h-4 w-4 shrink-0" />}
+                    onClick={() => setShowConfirmation(false)}
                     className="bg-[#FD5C05] text-white hover:bg-[#CC3D00] border-none font-bold uppercase tracking-wider text-xs py-3 rounded-xl cursor-pointer flex items-center justify-center gap-1.5 shadow-md"
                   >
-                    Add to Calendar
+                    Got it
                   </Button>
                 </div>
               </motion.div>
