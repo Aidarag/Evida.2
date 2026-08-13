@@ -11,13 +11,16 @@
 import { DBStructure } from './db';
 
 const REDIS_KEY = 'evida:db';
-const IS_PROD = process.env.UPSTASH_REDIS_REST_URL && process.env.UPSTASH_REDIS_REST_TOKEN;
+
+function isRedisConfigured(): boolean {
+  return Boolean(process.env.UPSTASH_REDIS_REST_URL && process.env.UPSTASH_REDIS_REST_TOKEN);
+}
 
 // ─── Redis client (lazy) ─────────────────────────────────────────────────────
 let redisClient: import('@upstash/redis').Redis | null = null;
 
 async function getRedis() {
-  if (!redisClient && IS_PROD) {
+  if (!redisClient && isRedisConfigured()) {
     const { Redis } = await import('@upstash/redis');
     redisClient = new Redis({
       url: process.env.UPSTASH_REDIS_REST_URL!,
@@ -29,7 +32,6 @@ async function getRedis() {
 
 // ─── Seed data (same initial data as db.ts) ─────────────────────────────────
 async function getSeedData(): Promise<DBStructure> {
-  // Import readDB from the sync fs-based db to get the seed data
   const { readDB } = await import('./db');
   return readDB();
 }
@@ -37,20 +39,32 @@ async function getSeedData(): Promise<DBStructure> {
 // ─── Public API ──────────────────────────────────────────────────────────────
 
 export async function readDBAsync(): Promise<DBStructure> {
-  if (IS_PROD) {
+  if (isRedisConfigured()) {
     const redis = await getRedis();
     if (!redis) throw new Error('Redis not available');
 
-    const data = await redis.get<DBStructure>(REDIS_KEY);
+    let data = await redis.get<any>(REDIS_KEY);
+
     if (data) {
-      // Ensure all required fields exist
-      if (!data.membershipRequests) data.membershipRequests = [];
-      return data;
+      if (typeof data === 'string') {
+        try {
+          data = JSON.parse(data);
+        } catch (err) {
+          console.error('Failed to parse Redis JSON string:', err);
+        }
+      }
+      const db = data as DBStructure;
+      if (!db.events) db.events = [];
+      if (!db.users) db.users = [];
+      if (!db.organizations) db.organizations = [];
+      if (!db.promotions) db.promotions = [];
+      if (!db.membershipRequests) db.membershipRequests = [];
+      return db;
     }
 
     // First time: seed Redis from initial data
     const seed = await getSeedData();
-    await redis.set(REDIS_KEY, JSON.stringify(seed));
+    await redis.set(REDIS_KEY, seed);
     return seed;
   }
 
@@ -60,10 +74,10 @@ export async function readDBAsync(): Promise<DBStructure> {
 }
 
 export async function writeDBAsync(data: DBStructure): Promise<void> {
-  if (IS_PROD) {
+  if (isRedisConfigured()) {
     const redis = await getRedis();
     if (!redis) throw new Error('Redis not available');
-    await redis.set(REDIS_KEY, JSON.stringify(data));
+    await redis.set(REDIS_KEY, data);
     return;
   }
 
@@ -76,10 +90,10 @@ export async function resetDBAsync(): Promise<DBStructure> {
   const { resetDB } = await import('./db');
   const freshData = resetDB();
 
-  if (IS_PROD) {
+  if (isRedisConfigured()) {
     const redis = await getRedis();
     if (redis) {
-      await redis.set(REDIS_KEY, JSON.stringify(freshData));
+      await redis.set(REDIS_KEY, freshData);
     }
   }
 
