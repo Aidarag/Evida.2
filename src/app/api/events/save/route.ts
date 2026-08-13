@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { readDB, writeDB } from '@/lib/db';
+import { readDBAsync, writeDBAsync } from '@/lib/db-redis';
 
 export async function POST(request: Request) {
   try {
@@ -10,7 +10,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Missing eventId or name' }, { status: 400 });
     }
 
-    const db = readDB();
+    const db = await readDBAsync();
     const userObj = db.users.find(u => u.name === name || u.username === name);
     const userNames = userObj ? [userObj.name, userObj.username].filter(Boolean) : [name];
     const isPromo = eventId.startsWith('promo-');
@@ -34,7 +34,7 @@ export async function POST(request: Request) {
       }
 
       db.promotions[promoIndex] = promo;
-      writeDB(db);
+      await writeDBAsync(db);
 
       return NextResponse.json({ saved: !isSaved, promotion: promo });
     } else {
@@ -56,7 +56,7 @@ export async function POST(request: Request) {
       }
 
       db.events[eventIndex] = event;
-      writeDB(db);
+      await writeDBAsync(db);
 
       return NextResponse.json({ saved: !isSaved, event });
     }

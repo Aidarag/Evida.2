@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { readDB, writeDB } from '@/lib/db';
+import { readDBAsync, writeDBAsync } from '@/lib/db-redis';
 
 export async function GET(request: Request) {
   try {
@@ -10,7 +10,7 @@ export async function GET(request: Request) {
       return NextResponse.json({ error: 'Username parameter is required' }, { status: 400 });
     }
 
-    const db = readDB();
+    const db = await readDBAsync();
     const user = db.users.find((u) => u.username === username);
     if (!user) {
       return NextResponse.json({ error: 'User not found' }, { status: 404 });
@@ -32,7 +32,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Username is required to update profile' }, { status: 400 });
     }
 
-    const db = readDB();
+    const db = await readDBAsync();
     const idx = db.users.findIndex((u) => u.username === username);
     if (idx === -1) {
       return NextResponse.json({ error: 'User not found' }, { status: 404 });
@@ -40,7 +40,6 @@ export async function POST(request: Request) {
 
     const user = db.users[idx];
 
-    // Perform updates
     if (name !== undefined) user.name = name.trim() || user.name;
     if (major !== undefined) user.major = major.trim();
     if (graduationYear !== undefined) user.graduationYear = graduationYear.trim();
@@ -53,12 +52,11 @@ export async function POST(request: Request) {
     if (classification !== undefined) user.classification = classification.trim();
     if (privacy !== undefined) user.privacy = privacy;
 
-    // Also update gradYear in sync with graduationYear
     if (user.graduationYear) {
       user.gradYear = user.graduationYear;
     }
 
-    writeDB(db);
+    await writeDBAsync(db);
 
     const { password: _, ...safeUser } = user;
     return NextResponse.json(safeUser);

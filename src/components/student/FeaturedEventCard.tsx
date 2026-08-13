@@ -2,11 +2,10 @@
 
 import React from 'react';
 import { Event } from '@/lib/types';
-import { Calendar, Bookmark, MapPin } from 'lucide-react';
+import { Bookmark, MapPin } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useEvents } from '@/lib/context/EventContext';
 import { useUser } from '@/lib/context/UserContext';
-import { downloadEventICS } from '@/lib/calendar';
 
 interface FeaturedEventCardProps {
   event: Event;
@@ -14,7 +13,7 @@ interface FeaturedEventCardProps {
 }
 
 export default function FeaturedEventCard({ event, onClick }: FeaturedEventCardProps) {
-  const { saveToggle, rsvpToggle } = useEvents();
+  const { saveToggle } = useEvents();
   const { currentUser } = useUser();
 
   const isSaved = currentUser 
@@ -117,51 +116,29 @@ export default function FeaturedEventCard({ event, onClick }: FeaturedEventCardP
           </p>
         </div>
 
-        {/* 4. Invite Action Footer (Avatars + Compact Add to Calendar Button) */}
-        <div className="pt-4 border-t border-black/[0.04] flex items-center justify-between gap-2">
+        {/* 4. Attendee Footer */}
+        <div className="pt-4 border-t border-black/[0.04] flex items-center gap-2">
           {/* Attendee Avatars */}
-          <div className="flex items-center gap-2">
-            <div className="flex -space-x-2">
-              <img 
-                src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=80&h=80&fit=crop&crop=face" 
-                alt="Attendee" 
-                className="h-6 w-6 rounded-full border-2 border-white object-cover"
-              />
-              <img 
-                src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=80&h=80&fit=crop&crop=face" 
-                alt="Attendee" 
-                className="h-6 w-6 rounded-full border-2 border-white object-cover"
-              />
-              <img 
-                src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=80&h=80&fit=crop&crop=face" 
-                alt="Attendee" 
-                className="h-6 w-6 rounded-full border-2 border-white object-cover"
-              />
-            </div>
-            <span className="text-[#5A554E] text-[10px] font-bold whitespace-nowrap">
-              +{goingCount} going
-            </span>
+          <div className="flex -space-x-2">
+            <img 
+              src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=80&h=80&fit=crop&crop=face" 
+              alt="Attendee" 
+              className="h-6 w-6 rounded-full border-2 border-white object-cover"
+            />
+            <img 
+              src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=80&h=80&fit=crop&crop=face" 
+              alt="Attendee" 
+              className="h-6 w-6 rounded-full border-2 border-white object-cover"
+            />
+            <img 
+              src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=80&h=80&fit=crop&crop=face" 
+              alt="Attendee" 
+              className="h-6 w-6 rounded-full border-2 border-white object-cover"
+            />
           </div>
-
-          {/* Compact Add to Calendar Button */}
-          <button
-            onClick={async (e) => {
-              e.stopPropagation();
-              try {
-                if (currentUser && !event.attendees?.includes(currentUser.name)) {
-                  await rsvpToggle(event.id, 'rsvp');
-                }
-                downloadEventICS(event);
-              } catch (error) {
-                console.error('Error adding event to calendar:', error);
-              }
-            }}
-            className="inline-flex items-center gap-1.5 bg-white border border-black/10 hover:border-transparent hover:bg-[#FD5C05] hover:text-white text-[#2A2621] font-bold text-[10px] uppercase tracking-wider py-1.5 px-3.5 rounded-full transition-all duration-300 shadow-sm cursor-pointer whitespace-nowrap"
-            style={{ fontFamily: 'var(--font-display)' }}
-          >
-            <Calendar className="h-3.5 w-3.5" />
-            Add to Calendar
-          </button>
+          <span className="text-[#5A554E] text-[10px] font-bold whitespace-nowrap">
+            +{goingCount} going
+          </span>
         </div>
       </div>
     </motion.div>

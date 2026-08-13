@@ -1059,49 +1059,61 @@ const initialNotifications: Notification[] = [
   }
 ];
 
+export const initialDBData: DBStructure = {
+  events: initialEvents,
+  promotions: initialPromotions,
+  organizations: initialOrganizations,
+  users: initialUsers,
+  notifications: initialNotifications,
+  membershipRequests: []
+};
+
 // Ensure DB initialization
 function ensureDB() {
-  const dir = path.dirname(DB_PATH);
-  if (!fs.existsSync(dir)) {
-    fs.mkdirSync(dir, { recursive: true });
-  }
-  if (!fs.existsSync(DB_PATH)) {
-    const defaultData: DBStructure = {
-      events: initialEvents,
-      promotions: initialPromotions,
-      organizations: initialOrganizations,
-      users: initialUsers,
-      notifications: initialNotifications,
-      membershipRequests: []
-    };
-    fs.writeFileSync(DB_PATH, JSON.stringify(defaultData, null, 2), 'utf8');
+  try {
+    const dir = path.dirname(DB_PATH);
+    if (!fs.existsSync(dir)) {
+      fs.mkdirSync(dir, { recursive: true });
+    }
+    if (!fs.existsSync(DB_PATH)) {
+      fs.writeFileSync(DB_PATH, JSON.stringify(initialDBData, null, 2), 'utf8');
+    }
+  } catch (e) {
+    // Read-only filesystem in Vercel - ignore
   }
 }
 
 export function readDB(): DBStructure {
-  ensureDB();
-  const data = fs.readFileSync(DB_PATH, 'utf8');
-  const db = JSON.parse(data) as DBStructure;
-  if (!db.membershipRequests) {
-    db.membershipRequests = [];
+  try {
+    if (fs.existsSync(DB_PATH)) {
+      const data = fs.readFileSync(DB_PATH, 'utf8');
+      const db = JSON.parse(data) as DBStructure;
+      if (!db.membershipRequests) {
+        db.membershipRequests = [];
+      }
+      return db;
+    }
+  } catch (e) {
+    // Read-only filesystem or missing file
   }
-  return db;
+  return initialDBData;
 }
 
 export function writeDB(data: DBStructure) {
-  ensureDB();
-  fs.writeFileSync(DB_PATH, JSON.stringify(data, null, 2), 'utf8');
+  try {
+    ensureDB();
+    fs.writeFileSync(DB_PATH, JSON.stringify(data, null, 2), 'utf8');
+  } catch (e) {
+    // Read-only filesystem in Vercel
+  }
 }
 
 export function resetDB() {
-  const defaultData: DBStructure = {
-    events: initialEvents,
-    promotions: initialPromotions,
-    organizations: initialOrganizations,
-    users: initialUsers,
-    notifications: initialNotifications,
-    membershipRequests: []
-  };
-  writeDB(defaultData);
-  return defaultData;
+  try {
+    writeDB(initialDBData);
+  } catch (e) {
+    // Read-only filesystem
+  }
+  return initialDBData;
 }
+

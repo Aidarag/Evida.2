@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { readDB, writeDB } from '@/lib/db';
+import { readDBAsync, writeDBAsync } from '@/lib/db-redis';
 
 export async function POST(
   request: Request,
@@ -14,7 +14,7 @@ export async function POST(
       return NextResponse.json({ error: 'Missing name or action' }, { status: 400 });
     }
 
-    const db = readDB();
+    const db = await readDBAsync();
     const eventIndex = db.events.findIndex((e) => e.id === id);
 
     if (eventIndex === -1) {
@@ -52,10 +52,10 @@ export async function POST(
     }
 
     db.events[eventIndex] = event;
-    writeDB(db);
+    await writeDBAsync(db);
 
     return NextResponse.json(event);
-  } catch (error) {
-    return NextResponse.json({ error: 'Failed to process RSVP' }, { status: 500 });
+  } catch (error: any) {
+    return NextResponse.json({ error: 'Failed to process RSVP', details: String(error?.message || error) }, { status: 500 });
   }
 }

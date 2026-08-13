@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { readDB, writeDB } from '@/lib/db';
+import { readDBAsync, writeDBAsync } from '@/lib/db-redis';
 import { Event, Notification } from '@/lib/types';
 
 // Helper to get random custom gradient for HYPERACTIVE visuals
@@ -17,7 +17,7 @@ function getRandomGradient() {
 
 export async function GET() {
   try {
-    const db = readDB();
+    const db = await readDBAsync();
     return NextResponse.json(db.events);
   } catch (error) {
     return NextResponse.json({ error: 'Failed to read events data' }, { status: 500 });
@@ -49,14 +49,13 @@ export async function POST(request: Request) {
       visibility,
       status: bodyStatus,
       isFeatured,
-      creatorUsername // Username of submitter to receive notifications
+      creatorUsername
     } = body;
 
     if (!title || !description || !date || !time || !location || !organizer) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
     }
 
-    // Smart Auto-Categorization Logic
     let complexityType: 'quick' | 'standard' | 'complex' = 'standard';
     const isFunding = !!fundingRequested;
     const isTransport = !!transportationNeeded;
@@ -70,8 +69,8 @@ export async function POST(request: Request) {
       complexityType = 'standard';
     }
 
-    const db = readDB();
-    
+    const db = await readDBAsync();
+
     const newEvent: Event = {
       id: `evt-${Date.now()}`,
       title,
@@ -105,7 +104,6 @@ export async function POST(request: Request) {
 
     db.events.unshift(newEvent);
 
-    // Create a submittal notification
     if (creatorUsername) {
       const newNotif: Notification = {
         id: `notif-${Date.now()}`,
@@ -119,7 +117,7 @@ export async function POST(request: Request) {
       db.notifications.unshift(newNotif);
     }
 
-    writeDB(db);
+    await writeDBAsync(db);
 
     return NextResponse.json(newEvent, { status: 201 });
   } catch (error) {

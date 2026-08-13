@@ -78,8 +78,6 @@ html, body {
    ─────────────────────────────────────────────── */
 h1, h2, h3, h4, h5, h6, .text-heading, .text-heading-2, .text-heading-3, .text-title {
   display: block;
-  overflow: visible;
-  text-overflow: clip;
 }
 
 h1, .text-hero, .text-heading {
@@ -104,12 +102,6 @@ h1, .text-hero, .text-heading {
   text-overflow: clip;
 }
 
-/* Override truncate utility to allow full text and wrapping */
-.truncate {
-  white-space: normal !important;
-  overflow: visible !important;
-  text-overflow: clip !important;
-}
 
 
 h2, .text-section-heading, .text-heading-2 {
