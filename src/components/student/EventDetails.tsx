@@ -238,21 +238,28 @@ export default function EventDetails({
               />
             </button>
 
-            <button
-              onClick={() => onRSVP(event.id, 'rsvp')}
-              className={`flex-1 flex items-center justify-center gap-2 rounded-full py-3.5 text-xs font-bold transition-all hover:scale-[1.01] cursor-pointer shadow-lg ${
-                isRsvped
-                  ? 'bg-emerald-600 text-white shadow-emerald-500/10'
-                  : 'bg-[#FD5C05] text-[#2A2621] shadow-[#FD5C05]/25 hover:bg-[#CC3D00]'
-              }`}
-            >
-              {isRsvped ? (
-                <XCircle className="h-4.5 w-4.5" />
-              ) : (
+            {isRsvped && (new Date(event.date + 'T23:59:59') < new Date()) ? (
+              <div className="flex-1 flex items-center justify-center gap-2 rounded-full py-3.5 text-xs font-bold bg-emerald-600/10 border border-emerald-600/30 text-emerald-600 shadow-xs cursor-default">
                 <CheckCircle className="h-4.5 w-4.5" />
-              )}
-              {isRsvped ? 'CANCEL RSVP' : 'GET TICKET / RSVP GOING'}
-            </button>
+                <span>ATTENDED EVENT ✓</span>
+              </div>
+            ) : (
+              <button
+                onClick={() => onRSVP(event.id, 'rsvp')}
+                className={`flex-1 flex items-center justify-center gap-2 rounded-full py-3.5 text-xs font-bold transition-all hover:scale-[1.01] cursor-pointer shadow-lg ${
+                  isRsvped
+                    ? 'bg-emerald-600 text-white shadow-emerald-500/10'
+                    : 'bg-[#FD5C05] text-[#2A2621] shadow-[#FD5C05]/25 hover:bg-[#CC3D00]'
+                }`}
+              >
+                {isRsvped ? (
+                  <XCircle className="h-4.5 w-4.5" />
+                ) : (
+                  <CheckCircle className="h-4.5 w-4.5" />
+                )}
+                {isRsvped ? 'CANCEL RSVP' : 'GET TICKET / RSVP GOING'}
+              </button>
+            )}
           </div>
 
         </div>

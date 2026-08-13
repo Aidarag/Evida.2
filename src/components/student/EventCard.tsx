@@ -230,27 +230,37 @@ const EventCardInner = React.memo(function EventCardInner({
                     <Check className="h-3.5 w-3.5 shrink-0 text-emerald-600" />
                     <span>Added</span>
                   </button>
-                  <button
-                    type="button"
-                    onClick={async (e) => {
-                      e.stopPropagation();
-                      setRsvpLoading(true);
-                      if (onRsvp) {
-                        onRsvp(e);
-                      } else {
-                        await rsvpToggle(event.id, 'rsvp');
-                      }
-                      setRsvpLoading(false);
-                    }}
-                    className="inline-flex items-center gap-1 bg-[#FD5C05] hover:bg-red-600 border border-[#FD5C05] hover:border-red-600 text-white font-extrabold text-[9px] uppercase tracking-wider py-1.5 px-3.5 rounded-full transition-all duration-300 shadow-sm cursor-pointer whitespace-nowrap group/going"
-                    title="Click to Cancel RSVP"
-                    style={{ fontFamily: 'var(--font-display)' }}
-                  >
-                    <Check className="h-3 w-3 shrink-0 group-hover/going:hidden text-white" />
-                    <X className="h-3 w-3 shrink-0 hidden group-hover/going:block text-white" />
-                    <span className="group-hover/going:hidden">Going</span>
-                    <span className="hidden group-hover/going:inline">Cancel</span>
-                  </button>
+                  {(new Date(event.date + 'T23:59:59') < new Date()) ? (
+                    <span 
+                      className="inline-flex items-center gap-1 bg-emerald-600 text-white font-extrabold text-[9px] uppercase tracking-wider py-1.5 px-3 rounded-full shadow-sm whitespace-nowrap cursor-default"
+                      style={{ fontFamily: 'var(--font-display)' }}
+                    >
+                      <Check className="h-3 w-3 shrink-0 text-white" />
+                      <span>Attended</span>
+                    </span>
+                  ) : (
+                    <button
+                      type="button"
+                      onClick={async (e) => {
+                        e.stopPropagation();
+                        setRsvpLoading(true);
+                        if (onRsvp) {
+                          onRsvp(e);
+                        } else {
+                          await rsvpToggle(event.id, 'rsvp');
+                        }
+                        setRsvpLoading(false);
+                      }}
+                      className="inline-flex items-center gap-1 bg-[#FD5C05] hover:bg-red-600 border border-[#FD5C05] hover:border-red-600 text-white font-extrabold text-[9px] uppercase tracking-wider py-1.5 px-3.5 rounded-full transition-all duration-300 shadow-sm cursor-pointer whitespace-nowrap group/going"
+                      title="Click to Cancel RSVP"
+                      style={{ fontFamily: 'var(--font-display)' }}
+                    >
+                      <Check className="h-3 w-3 shrink-0 group-hover/going:hidden text-white" />
+                      <X className="h-3 w-3 shrink-0 hidden group-hover/going:block text-white" />
+                      <span className="group-hover/going:hidden">Going</span>
+                      <span className="hidden group-hover/going:inline">Cancel</span>
+                    </button>
+                  )}
                 </>
               ) : (
                 <button

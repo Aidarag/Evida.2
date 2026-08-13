@@ -205,6 +205,7 @@ export default function EventDetailsModal({
           {event.status === 'approved' ? (
             <div className="flex items-center justify-end gap-3 pt-4 border-t border-white/5">
               <button
+                type="button"
                 onClick={() => onRSVP(event.id, 'interested')}
                 className={`flex items-center gap-1.5 rounded-xl px-4 py-2.5 text-xs font-bold transition-all hover:scale-[1.02] cursor-pointer ${
                   isInterested
@@ -215,17 +216,26 @@ export default function EventDetailsModal({
                 <Heart className={`h-4 w-4 ${isInterested ? 'fill-rose-400 text-rose-400' : ''}`} />
                 Interested
               </button>
-              <button
-                onClick={() => onRSVP(event.id, 'rsvp')}
-                className={`flex items-center gap-1.5 rounded-xl px-5 py-2.5 text-xs font-bold transition-all hover:scale-[1.02] cursor-pointer ${
-                  isRsvped
-                    ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-500/10'
-                    : 'bg-indigo-600 hover:bg-indigo-700 text-white shadow-lg shadow-indigo-500/20'
-                }`}
-              >
-                <CheckCircle className="h-4 w-4" />
-                {isRsvped ? 'Going (Cancel)' : 'RSVP Going'}
-              </button>
+
+              {isRsvped && (new Date(event.date + 'T23:59:59') < new Date()) ? (
+                <span className="flex items-center gap-1.5 rounded-xl px-5 py-2.5 text-xs font-bold bg-emerald-600/10 border border-emerald-600/30 text-emerald-400 cursor-default">
+                  <CheckCircle className="h-4 w-4" />
+                  <span>Attended ✓</span>
+                </span>
+              ) : (
+                <button
+                  type="button"
+                  onClick={() => onRSVP(event.id, 'rsvp')}
+                  className={`flex items-center gap-1.5 rounded-xl px-5 py-2.5 text-xs font-bold transition-all hover:scale-[1.02] cursor-pointer ${
+                    isRsvped
+                      ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-500/10'
+                      : 'bg-indigo-600 hover:bg-indigo-700 text-white shadow-lg shadow-indigo-500/20'
+                  }`}
+                >
+                  <CheckCircle className="h-4 w-4" />
+                  {isRsvped ? 'Going (Cancel)' : 'RSVP Going'}
+                </button>
+              )}
             </div>
           ) : (
             /* Moderation pending/rejection alerts */

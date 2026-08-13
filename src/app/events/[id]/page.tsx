@@ -241,18 +241,33 @@ export default function EventDetailsPage() {
             <div className="pt-6 border-t border-white/[0.06] space-y-4">
               {currentUser ? (
                 isAttending ? (
-                  <div className="relative w-full">
-                    <Button 
-                      variant="primary" 
-                      size="lg" 
-                      fullWidth
-                      className="bg-red-600 hover:bg-red-700 text-white border-none font-bold flex items-center justify-center gap-1.5 cursor-pointer shadow-md"
-                      onClick={handleCancelRSVP}
-                    >
-                      <XCircle className="h-4 w-4 shrink-0 text-white" />
-                      <span>Cancel RSVP</span>
-                    </Button>
-                  </div>
+                  (new Date(event.date + 'T23:59:59') < new Date()) ? (
+                    <div className="relative w-full">
+                      <Button 
+                        variant="secondary" 
+                        size="lg" 
+                        fullWidth
+                        disabled
+                        className="bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-bold flex items-center justify-center gap-1.5 cursor-default shadow-xs"
+                      >
+                        <CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-400" />
+                        <span>Attended Event ✓</span>
+                      </Button>
+                    </div>
+                  ) : (
+                    <div className="relative w-full">
+                      <Button 
+                        variant="primary" 
+                        size="lg" 
+                        fullWidth
+                        className="bg-red-600 hover:bg-red-700 text-white border-none font-bold flex items-center justify-center gap-1.5 cursor-pointer shadow-md"
+                        onClick={handleCancelRSVP}
+                      >
+                        <XCircle className="h-4 w-4 shrink-0 text-white" />
+                        <span>Cancel RSVP</span>
+                      </Button>
+                    </div>
+                  )
                 ) : (
                   <div className="relative w-full">
                     <Button 

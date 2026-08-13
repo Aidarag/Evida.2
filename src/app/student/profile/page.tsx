@@ -964,16 +964,22 @@ function StudentProfilePageContent() {
                                 <MapPin className="h-3 w-3 text-[#FD5C05]" /> {evt.location}
                               </p>
                               {isOwner && (
-                                <button
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    rsvpToggle(evt.id, 'rsvp');
-                                    setToast({ message: 'RSVP cancelled', undoId: evt.id });
-                                  }}
-                                  className="w-full py-1.5 text-[9px] font-black uppercase tracking-wider text-red-500 hover:bg-red-50 rounded-xl border border-red-200 transition-all cursor-pointer"
-                                >
-                                  Cancel RSVP
-                                </button>
+                                (new Date(evt.date + 'T23:59:59') < new Date()) ? (
+                                  <span className="w-full py-1.5 text-[9px] font-black uppercase tracking-wider text-emerald-600 bg-emerald-50 rounded-xl border border-emerald-200 text-center block">
+                                    Attended ✓
+                                  </span>
+                                ) : (
+                                  <button
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      rsvpToggle(evt.id, 'rsvp');
+                                      setToast({ message: 'RSVP cancelled', undoId: evt.id });
+                                    }}
+                                    className="w-full py-1.5 text-[9px] font-black uppercase tracking-wider text-red-500 hover:bg-red-50 rounded-xl border border-red-200 transition-all cursor-pointer"
+                                  >
+                                    Cancel RSVP
+                                  </button>
+                                )
                               )}
                             </div>
                           </div>
