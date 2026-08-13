@@ -5,6 +5,7 @@ import { useEvents } from '@/lib/context/EventContext';
 import { useUser } from '@/lib/context/UserContext';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import DefaultEvidaFlyer from '@/components/ui/DefaultEvidaFlyer';
 import { 
   Search, 
   Compass, 
@@ -346,7 +347,7 @@ export default function ExplorePage() {
   // Helper to render promotion cards
   const renderPromotionCard = (promo: Promotion, forceCategoryText?: string, isGridItem: boolean = false) => {
     const isSaved = currentUser ? (promo.savedBy?.includes(currentUser.name) || (currentUser.username ? promo.savedBy?.includes(currentUser.username) : false)) : false;
-    const coverImage = promo.flyerImage || promo.image || getPromoImage(promo.category);
+    const hasCustomFlyer = Boolean(promo.flyerImage || promo.image);
 
     return (
       <motion.div
@@ -361,12 +362,17 @@ export default function ExplorePage() {
           }}
           className="w-full h-full bg-white border border-black/[0.06] hover:border-[#FD5C05] rounded-2xl overflow-hidden shadow-xs hover:shadow-[0_10px_24px_rgba(253,92,5,0.12)] transition-all duration-300 flex flex-col justify-between group cursor-pointer"
         >
-          <div className="aspect-[16/10] w-full bg-[#FD5C05]/10 shrink-0 relative overflow-hidden">
-            <img src={coverImage} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt="" />
-            
-            <span className="absolute top-2.5 left-2.5 text-[8px] font-black uppercase tracking-wider bg-black/75 backdrop-blur-md text-white px-2.5 py-0.5 rounded-full border border-white/10">
-              {forceCategoryText || promo.category}
-            </span>
+          <div className="aspect-[16/10] w-full bg-[#1E1B18] shrink-0 relative overflow-hidden">
+            {hasCustomFlyer ? (
+              <>
+                <img src={promo.flyerImage || promo.image} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt={promo.title} />
+                <span className="absolute top-2.5 left-2.5 text-[8px] font-black uppercase tracking-wider bg-black/75 backdrop-blur-md text-white px-2.5 py-0.5 rounded-full border border-white/10">
+                  {forceCategoryText || promo.category}
+                </span>
+              </>
+            ) : (
+              <DefaultEvidaFlyer category={forceCategoryText || promo.category} title={promo.title} />
+            )}
 
             {promo.isFree !== undefined && (
               <span className={`absolute bottom-2.5 right-2.5 text-[8px] font-black uppercase tracking-wider px-2 py-0.5 rounded-full border shadow-sm ${
