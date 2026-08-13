@@ -553,7 +553,7 @@ function CategoryDetailContent() {
                       <p className="text-[9px] text-[#5A554E] font-bold uppercase tracking-wider mt-1">{org.members.length} members</p>
                     </div>
                   </div>
-                  <span className="text-[9px] font-black uppercase text-[#5A554E] group-hover:text-[#2A2621] transition-colors pl-2 shrink-0">View →</span>
+                  <span className="text-[9px] font-black uppercase text-[#FD5C05] bg-[#FD5C05]/10 px-3 py-1.5 rounded-full border border-[#FD5C05]/20 group-hover:bg-[#FD5C05] group-hover:text-white transition-all pl-2.5 shrink-0">Join Org →</span>
                 </div>
               ))}
             </div>

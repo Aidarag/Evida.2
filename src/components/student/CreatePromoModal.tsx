@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useRef } from 'react';
-import { X, Sparkles, Image as ImageIcon } from 'lucide-react';
+import { X, Sparkles, Image as ImageIcon, Ticket, CreditCard } from 'lucide-react';
 import { User } from '@/lib/types';
 
 interface CreatePromoModalProps {
@@ -241,33 +241,33 @@ export default function CreatePromoModal({
             </div>
           </div>
 
-          {/* Pricing Selector (Gratuit vs Payant) */}
+          {/* Pricing Selector */}
           <div className="space-y-2 rounded-xl border border-white/10 bg-slate-900/40 p-3.5">
             <label className="text-xs font-bold text-[#5A554E] uppercase tracking-wide block">
-              Pricing Mode {!flyerImageDataUrl && <span className="text-amber-400 font-bold">(Choose Gratuit / Payant)</span>}
+              Pricing Mode {!flyerImageDataUrl && <span className="text-amber-400 font-bold">(Choose Option)</span>}
             </label>
             <div className="grid grid-cols-2 gap-2">
               <button
                 type="button"
                 onClick={() => { setIsFree(true); setPrice(''); }}
-                className={`py-2 px-3 rounded-lg text-xs font-extrabold uppercase tracking-wider transition-all border cursor-pointer ${
+                className={`py-2 px-3 rounded-lg text-xs font-extrabold uppercase tracking-wider transition-all border cursor-pointer flex items-center justify-center gap-1.5 ${
                   isFree 
                     ? 'bg-emerald-600 text-white border-emerald-500 shadow-md' 
                     : 'bg-slate-900 text-slate-400 border-white/10 hover:border-white/20'
                 }`}
               >
-                Gratuit / Free
+                <Ticket className="h-4 w-4" /> Free
               </button>
               <button
                 type="button"
                 onClick={() => setIsFree(false)}
-                className={`py-2 px-3 rounded-lg text-xs font-extrabold uppercase tracking-wider transition-all border cursor-pointer ${
+                className={`py-2 px-3 rounded-lg text-xs font-extrabold uppercase tracking-wider transition-all border cursor-pointer flex items-center justify-center gap-1.5 ${
                   !isFree 
                     ? 'bg-indigo-600 text-white border-indigo-500 shadow-md' 
                     : 'bg-slate-900 text-slate-400 border-white/10 hover:border-white/20'
                 }`}
               >
-                Payant / Paid
+                <CreditCard className="h-4 w-4" /> Paid
               </button>
             </div>
             {!isFree && (

@@ -2,8 +2,10 @@
 
 import React, { useState } from 'react';
 import { Building, Users, Star, Plus, ShieldCheck, Eye, Bookmark, CheckCircle, Calendar, XCircle, Clock, UserPlus } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 import { Organization, Event, User } from '@/lib/types';
 import { useEvents } from '@/lib/context/EventContext';
+import { useUser } from '@/lib/context/UserContext';
 
 interface OrgWorkspaceProps {
   currentUser: User;
@@ -20,7 +22,9 @@ export default function OrgWorkspace({
   onOpenDetails,
   onOpenCreate,
 }: OrgWorkspaceProps) {
+  const router = useRouter();
   const { createOrg } = useEvents();
+  const { setActiveProfile } = useUser();
 
   // Find organizations the user belongs to
   const userOrgs = organizations.filter((org) =>
@@ -66,16 +70,24 @@ export default function OrgWorkspace({
     if (!newOrgName || !newOrgDescription) return;
     setCreatingOrg(true);
     try {
-      await createOrg({
+      const created = (await createOrg({
         name: newOrgName,
         description: newOrgDescription,
         verified: false,
-        members: [currentUser.name],
+        member: currentUser.name,
         logoColor: 'indigo'
-      });
+      })) as any;
       setNewOrgName('');
       setNewOrgDescription('');
       setCreateOrgOpen(false);
+      if (created && created.id) {
+        setActiveProfile({
+          type: 'organization',
+          orgId: created.id,
+          name: created.name
+        });
+        router.push(`/organization/${created.id}/dashboard`);
+      }
     } catch (err) {
       console.error(err);
     } finally {

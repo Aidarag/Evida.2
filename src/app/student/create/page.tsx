@@ -5,7 +5,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { useUser } from '@/lib/context/UserContext';
 import { useEvents } from '@/lib/context/EventContext';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Calendar, Tag, ArrowRight, ArrowLeft, Check, Users, User, Shield, Sparkles, Image as ImageIcon, Info, Megaphone, Ticket, CircleDollarSign } from 'lucide-react';
+import { Calendar, Tag, ArrowRight, ArrowLeft, Check, Users, User, Shield, Sparkles, Zap, Clock, Image as ImageIcon, Info, Megaphone, Ticket, CircleDollarSign, CreditCard } from 'lucide-react';
 import Button from '@/components/ui/Button';
 import Card from '@/components/ui/Card';
 import Input from '@/components/ui/Input';
@@ -477,10 +477,10 @@ function CreateListingPageContent() {
                 className="p-6 flex flex-col items-center text-center gap-4 hover:border-[var(--color-evida-lime)]/50 cursor-pointer group"
               >
                 <div className="h-12 w-12 rounded-xl bg-[var(--color-evida-lime)]/10 text-[var(--color-evida-lime)] flex items-center justify-center group-hover:scale-105 transition-transform shrink-0">
-                  <Sparkles className="h-5 w-5" />
+                  <Zap className="h-5 w-5" />
                 </div>
                 <div>
-                  <h3 className="text-lg font-bold text-[#2A2621] uppercase tracking-wide">Without School Facilities</h3>
+                  <h3 className="text-lg font-bold text-[#2A2621] uppercase tracking-wide">Out school</h3>
                   <p className="text-xs text-[#5A554E] mt-2 leading-relaxed">
                     Not using any school spaces or resources. Your event will be shared with the campus community immediately.
                   </p>
@@ -494,10 +494,10 @@ function CreateListingPageContent() {
                 className="p-6 flex flex-col items-center text-center gap-4 hover:border-[var(--color-evida-blue)]/50 cursor-pointer group"
               >
                 <div className="h-12 w-12 rounded-xl bg-[var(--color-evida-blue)]/10 text-[var(--color-evida-blue)] flex items-center justify-center group-hover:scale-105 transition-transform shrink-0">
-                  <Shield className="h-5 w-5" />
+                  <Clock className="h-5 w-5" />
                 </div>
                 <div>
-                  <h3 className="text-lg font-bold text-[#2A2621] uppercase tracking-wide">Using School Facilities</h3>
+                  <h3 className="text-lg font-bold text-[#2A2621] uppercase tracking-wide">On school</h3>
                   <p className="text-xs text-[#5A554E] mt-2 leading-relaxed">
                     Requesting campus rooms, fields, or school resources. Your event will be submitted for school review before publishing.
                   </p>
@@ -535,7 +535,7 @@ function CreateListingPageContent() {
                 <span className="text-[10px] font-bold text-gray-500 uppercase tracking-widest block text-left">
                   {createType === 'promotion' 
                     ? 'Promotion Campaign' 
-                    : `${creatorEntity === 'student' ? 'My Event' : 'Organization Event'} — ${eventSubtype === 'quick' ? 'No Facilities' : 'Using School Facilities'}`}
+                    : `${creatorEntity === 'student' ? 'My Event' : 'Organization Event'} — ${eventSubtype === 'quick' ? 'Out School' : 'On School'}`}
                 </span>
                 <h1 className="font-extrabold text-[#2A2621] tracking-wide text-left" style={{ fontFamily: 'var(--font-display)' }}>
                   {createType === 'promotion' ? 'Create Promotion' : 'Event Details'}
@@ -697,25 +697,33 @@ function CreateListingPageContent() {
                         <button
                           type="button"
                           onClick={() => setEventForm(prev => ({ ...prev, free: true, price: '' }))}
-                          className={`p-4 rounded-xl border flex flex-col items-center justify-center gap-1.5 transition-all cursor-pointer ${
+                          className={`p-4 rounded-2xl border flex flex-col items-center justify-center gap-2 transition-all cursor-pointer ${
                             eventForm.free 
                               ? 'bg-[#FD5C05]/10 border-[#FD5C05] text-[#2A2621] font-bold shadow-sm' 
                               : 'bg-white border-black/10 text-[#5A554E] hover:border-black/25'
                           }`}
                         >
-                          <Ticket className="h-5 w-5 text-[#FD5C05]" />
+                          <div className={`h-8 w-8 rounded-xl flex items-center justify-center transition-colors ${
+                            eventForm.free ? 'bg-[#FD5C05] text-white shadow-sm' : 'bg-black/5 text-[#5A554E]'
+                          }`}>
+                            <Ticket className="h-4 w-4" />
+                          </div>
                           <span className="text-xs uppercase tracking-wider font-extrabold">Free Event</span>
                         </button>
                         <button
                           type="button"
                           onClick={() => setEventForm(prev => ({ ...prev, free: false }))}
-                          className={`p-4 rounded-xl border flex flex-col items-center justify-center gap-1.5 transition-all cursor-pointer ${
+                          className={`p-4 rounded-2xl border flex flex-col items-center justify-center gap-2 transition-all cursor-pointer ${
                             !eventForm.free 
                               ? 'bg-[#FD5C05]/10 border-[#FD5C05] text-[#2A2621] font-bold shadow-sm' 
                               : 'bg-white border-black/10 text-[#5A554E] hover:border-black/25'
                           }`}
                         >
-                          <CircleDollarSign className="h-5 w-5 text-[#FD5C05]" />
+                          <div className={`h-8 w-8 rounded-xl flex items-center justify-center transition-colors ${
+                            !eventForm.free ? 'bg-[#FD5C05] text-white shadow-sm' : 'bg-black/5 text-[#5A554E]'
+                          }`}>
+                            <CreditCard className="h-4 w-4" />
+                          </div>
                           <span className="text-xs uppercase tracking-wider font-extrabold">Paid Event</span>
                         </button>
                       </div>
@@ -911,7 +919,7 @@ function CreateListingPageContent() {
                     <div className="space-y-2.5 p-4 rounded-2xl border border-black/[0.06] bg-[#FCFAF2] text-left">
                       <div className="flex items-center justify-between">
                         <label className="block text-[10px] font-bold text-[#5A554E] uppercase tracking-widest">
-                          Service Pricing {!promoForm.flyerImageDataUrl && <span className="text-[#FD5C05] font-black">(Choose Gratuit or Payant)</span>}
+                          Service Pricing {!promoForm.flyerImageDataUrl && <span className="text-[#FD5C05] font-black">(Choose Option)</span>}
                         </label>
                       </div>
                       
@@ -925,7 +933,8 @@ function CreateListingPageContent() {
                               : 'bg-white text-[#2A2621] border-black/10 hover:border-black/20'
                           }`}
                         >
-                          <span>Gratuit / Free</span>
+                          <Ticket className="h-4 w-4" />
+                          <span>Free</span>
                         </button>
 
                         <button
@@ -937,7 +946,8 @@ function CreateListingPageContent() {
                               : 'bg-white text-[#2A2621] border-black/10 hover:border-black/20'
                           }`}
                         >
-                          <span>Payant / Paid</span>
+                          <CreditCard className="h-4 w-4" />
+                          <span>Paid</span>
                         </button>
                       </div>
 

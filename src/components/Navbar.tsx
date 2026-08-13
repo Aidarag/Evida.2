@@ -648,6 +648,7 @@ export function ProfileSwitcher() {
 
   const handleSwitchToOrg = (orgId: string, name: string) => {
     setActiveProfile({ type: 'organization', orgId, name });
+    router.push(`/organization/${orgId}/dashboard`);
     setDropdownOpen(false);
   };
 
@@ -659,6 +660,7 @@ export function ProfileSwitcher() {
       const newOrg = (await createOrg({
         name: orgName.trim(),
         description: orgDesc.trim(),
+        category: orgCategory || 'Social',
         logoColor: orgColor
       })) as any;
       if (newOrg) {
@@ -668,7 +670,7 @@ export function ProfileSwitcher() {
           orgId: newOrg.id,
           name: newOrg.name
         });
-        router.push(`/org/${newOrg.id}/dashboard`);
+        router.push(`/organization/${newOrg.id}/dashboard`);
         setCreateModalOpen(false);
         setOnboardingStep(1);
         setOrgName('');
