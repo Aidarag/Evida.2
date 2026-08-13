@@ -55,7 +55,7 @@ export async function POST(
     await writeDBAsync(db);
 
     return NextResponse.json(event);
-  } catch (error) {
-    return NextResponse.json({ error: 'Failed to process RSVP' }, { status: 500 });
+  } catch (error: any) {
+    return NextResponse.json({ error: 'Failed to process RSVP', details: String(error?.message || error) }, { status: 500 });
   }
 }
