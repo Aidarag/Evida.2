@@ -112,6 +112,9 @@ export interface Promotion {
   socialLink?: string;
   feedback?: string;
   image?: string;
+  flyerImage?: string;
+  isFree?: boolean;
+  price?: string;
   createdAt?: string;
   savedBy?: string[];
 }

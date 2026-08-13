@@ -1,7 +1,7 @@
 'use client';
 
-import React, { useState } from 'react';
-import { X, Sparkles } from 'lucide-react';
+import React, { useState, useRef } from 'react';
+import { X, Sparkles, Image as ImageIcon } from 'lucide-react';
 import { User } from '@/lib/types';
 
 interface CreatePromoModalProps {
@@ -23,7 +23,11 @@ export default function CreatePromoModal({
   const [contactValue, setContactValue] = useState('');
   const [socialLink, setSocialLink] = useState('');
   const [description, setDescription] = useState('');
+  const [flyerImageDataUrl, setFlyerImageDataUrl] = useState('');
+  const [isFree, setIsFree] = useState(true);
+  const [price, setPrice] = useState('');
   const [submitting, setSubmitting] = useState(false);
+  const flyerInputRef = useRef<HTMLInputElement>(null);
 
   if (!isOpen) return null;
 
@@ -44,7 +48,10 @@ export default function CreatePromoModal({
         preferredContactMethod,
         contactValue,
         socialLink: socialLink.trim() || undefined,
-        organizer: currentUser.name
+        organizer: currentUser.name,
+        flyerImage: flyerImageDataUrl || undefined,
+        isFree,
+        price: isFree ? 'Free' : (price || 'Paid'),
       };
 
       await onSubmit(payload);
@@ -56,6 +63,9 @@ export default function CreatePromoModal({
       setContactValue('');
       setSocialLink('');
       setDescription('');
+      setFlyerImageDataUrl('');
+      setIsFree(true);
+      setPrice('');
     } catch (error) {
       console.error(error);
     } finally {
@@ -69,14 +79,14 @@ export default function CreatePromoModal({
       <div className="absolute inset-0 bg-slate-950/80 backdrop-blur-sm" onClick={onClose}></div>
 
       {/* Modal */}
-      <div className="relative w-full max-w-lg overflow-hidden rounded-2xl border border-white/10 bg-slate-950 text-slate-100 shadow-2xl transition-all">
+      <div className="relative w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-2xl border border-white/10 bg-slate-950 text-slate-100 shadow-2xl transition-all">
         {/* Header decoration */}
-        <div className="h-1.5 w-full bg-gradient-to-r from-violet-500 to-indigo-500" />
+        <div className="h-1.5 w-full bg-gradient-to-r from-violet-500 to-indigo-500 sticky top-0 z-10" />
 
         {/* Close button */}
         <button
           onClick={onClose}
-          className="absolute right-4 top-4 rounded-lg p-1.5 text-[#5A554E] hover:bg-[#FFFDE1]/5 hover:text-white transition-colors cursor-pointer"
+          className="absolute right-4 top-4 rounded-lg p-1.5 text-[#5A554E] hover:bg-white/5 hover:text-white transition-colors cursor-pointer z-10"
         >
           <X className="h-4.5 w-4.5" />
         </button>
@@ -182,6 +192,95 @@ export default function CreatePromoModal({
               placeholder="Provide details about menu, rates, availability, experience, or ordering instructions."
               className="w-full rounded-xl border border-white/10 bg-slate-900/50 py-2 px-3 text-xs text-white placeholder-slate-600 focus:border-indigo-500 focus:outline-none resize-none"
             />
+          </div>
+
+          {/* Flyer Upload Section */}
+          <div className="space-y-1.5">
+            <div className="flex items-center justify-between">
+              <label className="text-xs font-bold text-[#5A554E] uppercase tracking-wide">Flyer / Promo Banner (Optional)</label>
+              {flyerImageDataUrl && (
+                <button
+                  type="button"
+                  onClick={() => setFlyerImageDataUrl('')}
+                  className="text-red-400 hover:underline text-[10px] font-bold lowercase cursor-pointer"
+                >
+                  Remove flyer
+                </button>
+              )}
+            </div>
+            <input
+              ref={flyerInputRef}
+              type="file"
+              accept="image/*"
+              className="hidden"
+              onChange={(e) => {
+                const file = e.target.files?.[0];
+                if (!file) return;
+                const reader = new FileReader();
+                reader.onload = (ev) => {
+                  setFlyerImageDataUrl(ev.target?.result as string);
+                };
+                reader.readAsDataURL(file);
+              }}
+            />
+            <div
+              className="w-full rounded-xl border border-dashed border-white/20 bg-slate-900/30 p-4 flex flex-col items-center justify-center gap-2 hover:bg-white/5 transition-all cursor-pointer"
+              onClick={() => flyerInputRef.current?.click()}
+            >
+              {flyerImageDataUrl ? (
+                <img src={flyerImageDataUrl} className="h-32 w-full object-cover rounded-lg" alt="Flyer Preview" />
+              ) : (
+                <>
+                  <ImageIcon className="h-5 w-5 text-slate-500" />
+                  <div className="text-center">
+                    <p className="text-xs font-semibold text-slate-300">Click or drag to upload flyer</p>
+                    <p className="text-[10px] text-slate-500">PNG, JPG up to 5MB</p>
+                  </div>
+                </>
+              )}
+            </div>
+          </div>
+
+          {/* Pricing Selector (Gratuit vs Payant) */}
+          <div className="space-y-2 rounded-xl border border-white/10 bg-slate-900/40 p-3.5">
+            <label className="text-xs font-bold text-[#5A554E] uppercase tracking-wide block">
+              Pricing Mode {!flyerImageDataUrl && <span className="text-amber-400 font-bold">(Choose Gratuit / Payant)</span>}
+            </label>
+            <div className="grid grid-cols-2 gap-2">
+              <button
+                type="button"
+                onClick={() => { setIsFree(true); setPrice(''); }}
+                className={`py-2 px-3 rounded-lg text-xs font-extrabold uppercase tracking-wider transition-all border cursor-pointer ${
+                  isFree 
+                    ? 'bg-emerald-600 text-white border-emerald-500 shadow-md' 
+                    : 'bg-slate-900 text-slate-400 border-white/10 hover:border-white/20'
+                }`}
+              >
+                Gratuit / Free
+              </button>
+              <button
+                type="button"
+                onClick={() => setIsFree(false)}
+                className={`py-2 px-3 rounded-lg text-xs font-extrabold uppercase tracking-wider transition-all border cursor-pointer ${
+                  !isFree 
+                    ? 'bg-indigo-600 text-white border-indigo-500 shadow-md' 
+                    : 'bg-slate-900 text-slate-400 border-white/10 hover:border-white/20'
+                }`}
+              >
+                Payant / Paid
+              </button>
+            </div>
+            {!isFree && (
+              <div className="pt-2">
+                <input
+                  type="text"
+                  placeholder="Price details (e.g. $15/hr, $10 fixed)"
+                  value={price}
+                  onChange={(e) => setPrice(e.target.value)}
+                  className="w-full rounded-xl border border-white/10 bg-slate-900/50 py-2 px-3 text-xs text-white placeholder-slate-600 focus:border-indigo-500 focus:outline-none"
+                />
+              </div>
+            )}
           </div>
 
           {/* Disclaimer */}

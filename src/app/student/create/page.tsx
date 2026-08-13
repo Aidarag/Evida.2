@@ -27,6 +27,7 @@ function CreateListingPageContent() {
   const [draftId, setDraftId] = useState<string | null>(null);
   const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const promoFileInputRef = useRef<HTMLInputElement>(null);
 
 
 
@@ -52,6 +53,9 @@ function CreateListingPageContent() {
     category: 'academic',
     organizerName: '',
     contactInfo: '',
+    flyerImageDataUrl: '',
+    isFree: true,
+    price: '',
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -196,6 +200,9 @@ function CreateListingPageContent() {
           category: promoForm.category,
           organizer: activeProfile.type === 'organization' ? activeProfile.name : (promoForm.organizerName || currentUser!.name),
           contactInfo: promoForm.contactInfo,
+          flyerImage: promoForm.flyerImageDataUrl || undefined,
+          isFree: promoForm.isFree,
+          price: promoForm.isFree ? 'Free' : (promoForm.price || 'Paid'),
         }),
       });
 
@@ -852,6 +859,103 @@ function CreateListingPageContent() {
                       onChange={e => setPromoForm({...promoForm, contactInfo: e.target.value})}
                       required
                     />
+
+                    {/* Flyer Upload Section */}
+                    <div className="space-y-1.5 text-left">
+                      <label className="block text-[10px] font-bold text-[#5A554E] uppercase tracking-widest flex items-center justify-between">
+                        <span>Flyer / Promo Banner (Optional)</span>
+                        {promoForm.flyerImageDataUrl && (
+                          <button
+                            type="button"
+                            onClick={() => setPromoForm(prev => ({ ...prev, flyerImageDataUrl: '' }))}
+                            className="text-red-500 hover:underline text-[9px] font-bold lowercase cursor-pointer"
+                          >
+                            Remove flyer
+                          </button>
+                        )}
+                      </label>
+                      <input
+                        ref={promoFileInputRef}
+                        type="file"
+                        accept="image/*"
+                        className="hidden"
+                        onChange={(e) => {
+                          const file = e.target.files?.[0];
+                          if (!file) return;
+                          const reader = new FileReader();
+                          reader.onload = (ev) => {
+                            setPromoForm(prev => ({ ...prev, flyerImageDataUrl: ev.target?.result as string }));
+                          };
+                          reader.readAsDataURL(file);
+                        }}
+                      />
+                      <div
+                        className="w-full rounded-2xl border-2 border-dashed border-black/10 bg-slate-50/50 p-5 flex flex-col items-center justify-center gap-2 hover:bg-[#FD5C05]/5 hover:border-[#FD5C05]/40 transition-all duration-300 cursor-pointer shadow-sm"
+                        onClick={() => promoFileInputRef.current?.click()}
+                      >
+                        {promoForm.flyerImageDataUrl ? (
+                          <img src={promoForm.flyerImageDataUrl} className="h-36 w-full object-cover rounded-xl animate-fade-in" alt="promo flyer preview" />
+                        ) : (
+                          <>
+                            <ImageIcon className="h-6 w-6 text-[#5A554E]/60" />
+                            <div className="text-center">
+                              <p className="text-xs font-bold text-[#2A2621]">Click or drag to upload flyer image</p>
+                              <p className="text-[10px] text-[#5A554E]">PNG, JPG up to 5MB</p>
+                            </div>
+                          </>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Pricing Option Section (Free vs Paid option) */}
+                    <div className="space-y-2.5 p-4 rounded-2xl border border-black/[0.06] bg-[#FCFAF2] text-left">
+                      <div className="flex items-center justify-between">
+                        <label className="block text-[10px] font-bold text-[#5A554E] uppercase tracking-widest">
+                          Service Pricing {!promoForm.flyerImageDataUrl && <span className="text-[#FD5C05] font-black">(Choose Gratuit or Payant)</span>}
+                        </label>
+                      </div>
+                      
+                      <div className="grid grid-cols-2 gap-3">
+                        <button
+                          type="button"
+                          onClick={() => setPromoForm(prev => ({ ...prev, isFree: true, price: '' }))}
+                          className={`py-2.5 px-4 rounded-xl text-xs font-extrabold uppercase tracking-wider transition-all border cursor-pointer flex items-center justify-center gap-2 ${
+                            promoForm.isFree 
+                              ? 'bg-emerald-600 text-white border-emerald-600 shadow-sm' 
+                              : 'bg-white text-[#2A2621] border-black/10 hover:border-black/20'
+                          }`}
+                        >
+                          <span>Gratuit / Free</span>
+                        </button>
+
+                        <button
+                          type="button"
+                          onClick={() => setPromoForm(prev => ({ ...prev, isFree: false }))}
+                          className={`py-2.5 px-4 rounded-xl text-xs font-extrabold uppercase tracking-wider transition-all border cursor-pointer flex items-center justify-center gap-2 ${
+                            !promoForm.isFree 
+                              ? 'bg-[#FD5C05] text-white border-[#FD5C05] shadow-sm' 
+                              : 'bg-white text-[#2A2621] border-black/10 hover:border-black/20'
+                          }`}
+                        >
+                          <span>Payant / Paid</span>
+                        </button>
+                      </div>
+
+                      {!promoForm.isFree && (
+                        <div className="pt-2 animate-fade-in space-y-1">
+                          <label className="block text-[10px] font-bold text-[#5A554E] uppercase tracking-wider">
+                            Price / Rate Details
+                          </label>
+                          <input
+                            type="text"
+                            placeholder="e.g. $15/hr, $10 mini session, fixed rate..."
+                            value={promoForm.price}
+                            onChange={e => setPromoForm(prev => ({ ...prev, price: e.target.value }))}
+                            className="w-full rounded-xl bg-white border border-black/10 px-4 py-2.5 text-xs text-[#2A2621] focus:outline-none focus:border-[#FD5C05] font-semibold"
+                          />
+                        </div>
+                      )}
+                    </div>
                   </div>
 
                   <div className="pt-6 border-t border-[#D8D2BC]/30 flex justify-end">

@@ -14,7 +14,20 @@ export async function GET() {
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { title, description, category, organizer, contactInfo } = body;
+    const { 
+      title, 
+      description, 
+      category, 
+      organizer, 
+      contactInfo, 
+      flyerImage, 
+      image, 
+      isFree, 
+      price, 
+      preferredContactMethod, 
+      contactValue, 
+      socialLink 
+    } = body;
 
     if (!title || !description || !category || !organizer || !contactInfo) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
@@ -31,6 +44,13 @@ export async function POST(request: Request) {
       date: new Date().toISOString().split('T')[0],
       organizer,
       contactInfo,
+      preferredContactMethod,
+      contactValue,
+      socialLink,
+      flyerImage: flyerImage || image || undefined,
+      image: flyerImage || image || undefined,
+      isFree: isFree !== undefined ? isFree : true,
+      price: price || (isFree === false ? 'Paid' : 'Free'),
     };
 
     db.promotions.unshift(newPromo);

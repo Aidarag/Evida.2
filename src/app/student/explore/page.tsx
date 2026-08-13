@@ -346,7 +346,7 @@ export default function ExplorePage() {
   // Helper to render promotion cards
   const renderPromotionCard = (promo: Promotion, forceCategoryText?: string, isGridItem: boolean = false) => {
     const isSaved = currentUser ? (promo.savedBy?.includes(currentUser.name) || (currentUser.username ? promo.savedBy?.includes(currentUser.username) : false)) : false;
-    const coverImage = promo.image || getPromoImage(promo.category);
+    const coverImage = promo.flyerImage || promo.image || getPromoImage(promo.category);
 
     return (
       <motion.div
@@ -367,6 +367,16 @@ export default function ExplorePage() {
             <span className="absolute top-2.5 left-2.5 text-[8px] font-black uppercase tracking-wider bg-black/75 backdrop-blur-md text-white px-2.5 py-0.5 rounded-full border border-white/10">
               {forceCategoryText || promo.category}
             </span>
+
+            {promo.isFree !== undefined && (
+              <span className={`absolute bottom-2.5 right-2.5 text-[8px] font-black uppercase tracking-wider px-2 py-0.5 rounded-full border shadow-sm ${
+                promo.isFree 
+                  ? 'bg-emerald-600 text-white border-emerald-500' 
+                  : 'bg-[#FD5C05] text-white border-[#FD5C05]'
+              }`}>
+                {promo.isFree ? 'Gratuit' : (promo.price || 'Payant')}
+              </span>
+            )}
 
             {currentUser && (
               <button 
