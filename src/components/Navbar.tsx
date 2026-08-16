@@ -92,8 +92,8 @@ export function DesktopNav({
             )}
 
             {/* Logo */}
-            <Link href="/" className="flex items-center gap-2 group">
-              <EvidaLogo size={28} lightMode={true} />
+            <Link href="/" className="flex items-center group">
+              <EvidaLogo size={32} lightMode={true} />
             </Link>
             
             {/* Public links */}
@@ -214,6 +214,7 @@ export function DesktopNav({
 // ─────────────────────────────────────────────────
 export const MobileBottomNav = React.memo(function MobileBottomNav({ variant = 'student' }: { variant?: 'student' | 'school' }) {
   const pathname = usePathname();
+  const { activeProfile } = useUser();
   const [isPreview, setIsPreview] = React.useState(false);
 
   React.useEffect(() => {
@@ -225,12 +226,16 @@ export const MobileBottomNav = React.memo(function MobileBottomNav({ variant = '
     }
   }, []);
 
+  const profileHref = activeProfile?.type === 'organization' && activeProfile.orgId
+    ? `/student/organizations/${activeProfile.orgId}`
+    : '/student/profile';
+
   const studentTabs = [
     { href: '/student/dashboard', icon: Home, label: 'Home' },
     { href: '/student/explore', icon: Compass, label: 'Explore', disabledInPreview: true },
     { href: '/student/create', icon: Plus, label: 'Create', isSpecial: true, disabledInPreview: true },
     { href: '/student/calendar', icon: Calendar, label: 'Calendar', disabledInPreview: true },
-    { href: '/student/profile', icon: User, label: 'Profile', disabledInPreview: true },
+    { href: profileHref, icon: User, label: activeProfile?.type === 'organization' ? 'Org Profile' : 'Profile', disabledInPreview: true },
   ];
 
   const schoolTabs = [
@@ -333,20 +338,24 @@ export function DesktopSidebar({
   onChangeState?: (state: 'expanded' | 'collapsed' | 'hidden') => void;
 }) {
   const pathname = usePathname();
-  const { logout } = useUser();
+  const { logout, activeProfile } = useUser();
+
+  const profileHref = activeProfile?.type === 'organization' && activeProfile.orgId
+    ? `/student/organizations/${activeProfile.orgId}`
+    : '/student/profile';
 
   const studentLinks = [
     { href: '/student/dashboard', icon: Home, label: 'Home' },
     { href: '/student/explore', icon: Compass, label: 'Explore' },
     { href: '/student/calendar', icon: Calendar, label: 'Calendar' },
-    { href: '/student/profile', icon: User, label: 'Profile' },
+    { href: profileHref, icon: User, label: activeProfile?.type === 'organization' ? 'Org Profile' : 'Profile' },
     { href: '/student/create', icon: Plus, label: 'Create Event' },
   ];
 
   const schoolLinks = [
     { href: '/school/dashboard', icon: Home, label: 'Overview' },
     { href: '/school/review', icon: ClipboardList, label: 'Review Queue' },
-    { href: '/school/featured', icon: Star, label: 'Featured Events' },
+    { href: '/school/analytics', icon: BarChart3, label: 'Analytics' },
     { href: '/school/organizations', icon: Building2, label: 'Organizations' },
   ];
 
@@ -492,19 +501,24 @@ export function TabletDrawerSidebar({
   onClose: () => void; 
 }) {
   const pathname = usePathname();
-  const { logout } = useUser();
+  const { logout, activeProfile } = useUser();
+
+  const profileHref = activeProfile?.type === 'organization' && activeProfile.orgId
+    ? `/student/organizations/${activeProfile.orgId}`
+    : '/student/profile';
+
   const studentLinks = [
     { href: '/student/dashboard', icon: Home, label: 'Home' },
     { href: '/student/explore', icon: Compass, label: 'Explore' },
     { href: '/student/calendar', icon: Calendar, label: 'Calendar' },
-    { href: '/student/profile', icon: User, label: 'Profile' },
+    { href: profileHref, icon: User, label: activeProfile?.type === 'organization' ? 'Org Profile' : 'Profile' },
     { href: '/student/create', icon: Plus, label: 'Create Event' },
   ];
 
   const schoolLinks = [
     { href: '/school/dashboard', icon: Home, label: 'Overview' },
     { href: '/school/review', icon: ClipboardList, label: 'Review Queue' },
-    { href: '/school/featured', icon: Star, label: 'Featured Events' },
+    { href: '/school/analytics', icon: BarChart3, label: 'Analytics' },
     { href: '/school/organizations', icon: Building2, label: 'Organizations' },
   ];
 

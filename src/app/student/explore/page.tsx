@@ -28,6 +28,7 @@ import {
   ArrowRight,
   Shield,
   CheckCircle2,
+  XCircle,
   Bookmark,
   Ticket,
   CreditCard
@@ -58,6 +59,24 @@ export default function ExplorePage() {
   
   // Search result tab state: 'all' | 'events' | 'orgs' | 'promos'
   const [searchTab, setSearchTab] = useState<'all' | 'events' | 'orgs' | 'promos'>('all');
+
+  // Campus Organizations filter states (Certified / Non-Certified + Types)
+  const [exploreOrgStatusFilter, setExploreOrgStatusFilter] = useState<'all' | 'verified' | 'unverified'>('all');
+  const [exploreOrgTypeFilter, setExploreOrgTypeFilter] = useState<string>('all');
+
+  const filteredExploreOrgs = useMemo(() => {
+    return organizations.filter(org => {
+      if (exploreOrgStatusFilter === 'verified' && !org.verified) return false;
+      if (exploreOrgStatusFilter === 'unverified' && org.verified) return false;
+      if (exploreOrgTypeFilter !== 'all') {
+        const cat = (org.category || '').toLowerCase();
+        const name = org.name.toLowerCase();
+        const target = exploreOrgTypeFilter.toLowerCase();
+        if (!cat.includes(target) && !name.includes(target)) return false;
+      }
+      return true;
+    });
+  }, [organizations, exploreOrgStatusFilter, exploreOrgTypeFilter]);
 
   const promotions = useMemo(() => allPromotions.filter((p: Promotion) => p.status === 'approved'), [allPromotions]);
 
@@ -515,14 +534,74 @@ export default function ExplorePage() {
             </div>
 
             {/* 4. Campus Organizations */}
-            <div className="space-y-1.5">
+            <div className="space-y-2.5">
               {renderSectionHeader('Campus Organizations', 'Organizations', <Shield className="h-4 w-4" />, false)}
-              {organizations.length > 0 ? (
+              
+              {/* Organization Filter Controls Bar */}
+              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 bg-white rounded-2xl p-3 border border-black/[0.06] shadow-2xs">
+                {/* Status Filters */}
+                <div className="flex items-center gap-1.5 flex-wrap text-[9.5px]">
+                  <span className="font-extrabold uppercase text-[#5A554E] mr-1">Status:</span>
+                  <button
+                    onClick={() => setExploreOrgStatusFilter('all')}
+                    className={`px-2.5 py-1 rounded-full font-black uppercase tracking-wider transition-all border-none cursor-pointer ${
+                      exploreOrgStatusFilter === 'all'
+                        ? 'bg-[#2A2621] text-white shadow-xs'
+                        : 'bg-[#F8F6F0] text-[#5A554E] hover:bg-black/[0.06]'
+                    }`}
+                  >
+                    All ({organizations.length})
+                  </button>
+                  <button
+                    onClick={() => setExploreOrgStatusFilter('verified')}
+                    className={`px-2.5 py-1 rounded-full font-black uppercase tracking-wider transition-all border-none cursor-pointer flex items-center gap-1 ${
+                      exploreOrgStatusFilter === 'verified'
+                        ? 'bg-emerald-600 text-white shadow-xs'
+                        : 'bg-emerald-500/10 text-emerald-700 hover:bg-emerald-500/20'
+                    }`}
+                  >
+                    <CheckCircle2 className="h-3 w-3" /> Certified ({organizations.filter(o => o.verified).length})
+                  </button>
+                  <button
+                    onClick={() => setExploreOrgStatusFilter('unverified')}
+                    className={`px-2.5 py-1 rounded-full font-black uppercase tracking-wider transition-all border-none cursor-pointer flex items-center gap-1 ${
+                      exploreOrgStatusFilter === 'unverified'
+                        ? 'bg-amber-600 text-white shadow-xs'
+                        : 'bg-amber-500/10 text-amber-800 hover:bg-amber-500/20'
+                    }`}
+                  >
+                    <XCircle className="h-3 w-3" /> Non-Certified ({organizations.filter(o => !o.verified).length})
+                  </button>
+                </div>
+
+                {/* Type Filters */}
+                <div className="flex items-center gap-1.5 overflow-x-auto scrollbar-none max-w-full text-[9px]">
+                  <span className="font-extrabold uppercase text-[#5A554E] shrink-0 mr-1">Type:</span>
+                  {['all', 'academic', 'cultural', 'student government', 'social', 'sports', 'career'].map((cat) => {
+                    const isActive = exploreOrgTypeFilter === cat;
+                    return (
+                      <button
+                        key={cat}
+                        onClick={() => setExploreOrgTypeFilter(cat)}
+                        className={`px-2.5 py-1 rounded-full font-black uppercase tracking-wider shrink-0 transition-all border-none cursor-pointer ${
+                          isActive
+                            ? 'bg-[#FD5C05] text-white shadow-xs'
+                            : 'bg-[#F8F6F0] text-[#5A554E] hover:bg-black/[0.06]'
+                        }`}
+                      >
+                        {cat === 'all' ? 'All Types' : cat.toUpperCase()}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {filteredExploreOrgs.length > 0 ? (
                 <div className="flex gap-3 overflow-x-auto pb-2 pt-0.5 scrollbar-none select-none scroll-smooth">
-                  {organizations.map(org => renderOrganizationCard(org))}
+                  {filteredExploreOrgs.map(org => renderOrganizationCard(org))}
                 </div>
               ) : (
-                <p className="text-xs text-[#5A554E] italic pl-1">No organizations found.</p>
+                <p className="text-xs text-[#5A554E] italic pl-1 py-3">No campus organizations match the selected filters.</p>
               )}
             </div>
 

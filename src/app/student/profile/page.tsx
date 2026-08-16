@@ -64,7 +64,7 @@ const MOCK_CALENDAR_EVENTS = [
 ];
 
 function StudentProfilePageContent() {
-  const { currentUser, setCurrentUser, logout } = useUser();
+  const { currentUser, setCurrentUser, logout, activeProfile } = useUser();
   const { events, organizations, saveToggle, rsvpToggle, deleteEvent } = useEvents();
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -74,6 +74,13 @@ function StudentProfilePageContent() {
   const [loadingProfile, setLoadingProfile] = useState(true);
 
   const isOwner = !usernameParam || (currentUser && usernameParam === currentUser.username);
+
+  // If in Organization profile mode, redirect /student/profile to the active organization's profile page
+  useEffect(() => {
+    if (isOwner && activeProfile?.type === 'organization' && activeProfile.orgId) {
+      router.replace(`/student/organizations/${activeProfile.orgId}`);
+    }
+  }, [isOwner, activeProfile, router]);
 
   const allEvents = events; // Only real events from context — no mock data
 

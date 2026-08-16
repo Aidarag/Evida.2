@@ -25,17 +25,37 @@ export default function OrganizationsPage() {
   const { organizations, toggleVerifyOrg, suspendOrg, requestInfoOrg, deleteOrg } = useEvents();
   const { currentUser } = useUser();
   const [searchQuery, setSearchQuery] = useState('');
+  const [statusFilter, setStatusFilter] = useState<'all' | 'verified' | 'unverified'>('all');
+  const [categoryFilter, setCategoryFilter] = useState<string>('all');
   const [requestInfoModal, setRequestInfoModal] = useState(false);
   const [selectedOrgId, setSelectedOrgId] = useState('');
   const [note, setNote] = useState('');
 
   if (!currentUser) return null;
 
-  const filteredOrgs = organizations.filter(org => 
-    org.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    (org.description && org.description.toLowerCase().includes(searchQuery.toLowerCase())) ||
-    (org.category && org.category.toLowerCase().includes(searchQuery.toLowerCase()))
-  );
+  const filteredOrgs = organizations.filter(org => {
+    // 1. Search Query
+    const matchesSearch = 
+      org.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      (org.description && org.description.toLowerCase().includes(searchQuery.toLowerCase())) ||
+      (org.category && org.category.toLowerCase().includes(searchQuery.toLowerCase()));
+    if (!matchesSearch) return false;
+
+    // 2. Verification Status (Certified vs Non-Certified)
+    if (statusFilter === 'verified' && !org.verified) return false;
+    if (statusFilter === 'unverified' && org.verified) return false;
+
+    // 3. Category / Type Filter
+    if (categoryFilter !== 'all') {
+      const cat = (org.category || '').toLowerCase();
+      const name = org.name.toLowerCase();
+      const target = categoryFilter.toLowerCase();
+      const matchesCat = cat.includes(target) || name.includes(target);
+      if (!matchesCat) return false;
+    }
+
+    return true;
+  });
 
   const handleRequestInfo = () => {
     if (!selectedOrgId) return;
@@ -45,7 +65,7 @@ export default function OrganizationsPage() {
   };
 
   return (
-    <div className="p-4 sm:p-6 md:p-10 space-y-8 max-w-6xl mx-auto font-sans text-[#2A2621] text-left">
+    <div className="p-4 sm:p-6 md:p-10 space-y-6 max-w-6xl mx-auto font-sans text-[#2A2621] text-left">
       
       {/* Header */}
       <div className="bg-white rounded-[28px] border border-black/[0.06] p-6 sm:p-8 shadow-sm flex flex-col md:flex-row gap-6 justify-between md:items-end">
@@ -72,6 +92,66 @@ export default function OrganizationsPage() {
               onChange={(e) => setSearchQuery(e.target.value)}
             />
           </div>
+        </div>
+      </div>
+
+      {/* ── Organization Filters Bar (Certified/Non-certified + Org Types) ── */}
+      <div className="bg-white rounded-[24px] border border-black/[0.06] p-4 sm:p-5 shadow-sm space-y-3.5">
+        {/* Row 1: Verification Status Filters */}
+        <div className="flex items-center gap-2 flex-wrap">
+          <span className="text-[10px] font-black uppercase text-[#5A554E] tracking-wider shrink-0 mr-1">Status:</span>
+          <button
+            onClick={() => setStatusFilter('all')}
+            className={`px-3.5 py-1.5 rounded-full text-[10px] font-black uppercase tracking-wider transition-all border-none cursor-pointer ${
+              statusFilter === 'all'
+                ? 'bg-[#2A2621] text-white shadow-xs'
+                : 'bg-[#F8F6F0] text-[#5A554E] hover:bg-black/[0.06]'
+            }`}
+          >
+            All Statuses ({organizations.length})
+          </button>
+          <button
+            onClick={() => setStatusFilter('verified')}
+            className={`px-3.5 py-1.5 rounded-full text-[10px] font-black uppercase tracking-wider transition-all border-none cursor-pointer flex items-center gap-1.5 ${
+              statusFilter === 'verified'
+                ? 'bg-emerald-600 text-white shadow-xs'
+                : 'bg-emerald-500/10 text-emerald-700 hover:bg-emerald-500/20'
+            }`}
+          >
+            <CheckCircle2 className="h-3 w-3" /> Certified / Verified ({organizations.filter(o => o.verified).length})
+          </button>
+          <button
+            onClick={() => setStatusFilter('unverified')}
+            className={`px-3.5 py-1.5 rounded-full text-[10px] font-black uppercase tracking-wider transition-all border-none cursor-pointer flex items-center gap-1.5 ${
+              statusFilter === 'unverified'
+                ? 'bg-amber-600 text-white shadow-xs'
+                : 'bg-amber-500/10 text-amber-800 hover:bg-amber-500/20'
+            }`}
+          >
+            <XCircle className="h-3 w-3" /> Non-Certified / Unverified ({organizations.filter(o => !o.verified).length})
+          </button>
+        </div>
+
+        {/* Row 2: Organization Type Category Filters */}
+        <div className="flex items-center gap-2 overflow-x-auto scrollbar-none pb-0.5 border-t border-black/[0.04] pt-2.5">
+          <span className="text-[10px] font-black uppercase text-[#5A554E] tracking-wider shrink-0 mr-1">Type:</span>
+          {['all', 'academic', 'cultural', 'student government', 'social', 'sports', 'career', 'service'].map((cat) => {
+            const isActive = categoryFilter === cat;
+            const label = cat === 'all' ? 'All Types' : cat.toUpperCase();
+            return (
+              <button
+                key={cat}
+                onClick={() => setCategoryFilter(cat)}
+                className={`px-3 py-1.5 rounded-full text-[9.5px] font-black uppercase tracking-wider shrink-0 transition-all border-none cursor-pointer ${
+                  isActive
+                    ? 'bg-[#FD5C05] text-white shadow-xs'
+                    : 'bg-[#F8F6F0] text-[#5A554E] hover:bg-black/[0.06]'
+                }`}
+              >
+                {label}
+              </button>
+            );
+          })}
         </div>
       </div>
 
