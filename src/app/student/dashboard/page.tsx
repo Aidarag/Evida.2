@@ -656,7 +656,7 @@ export default function StudentDashboardPage() {
                         </div>
 
                         {/* Event Title */}
-                        <div className="h-[2.5rem] flex items-center overflow-hidden">
+                        <div className="min-h-[2.8rem] sm:min-h-[3rem] flex items-start">
                           <h3
                             onClick={() => {
                               if (isPromo && promo) {
@@ -665,7 +665,7 @@ export default function StudentDashboardPage() {
                                 router.push(`/events/${event.id}`);
                               }
                             }}
-                            className="text-sm sm:text-base font-bold text-[#2A2621] tracking-tight leading-tight line-clamp-2 hover:text-[#FD5C05] transition-colors cursor-pointer uppercase w-full"
+                            className="text-sm sm:text-base font-bold text-[#2A2621] tracking-tight leading-snug line-clamp-2 hover:text-[#FD5C05] transition-colors cursor-pointer uppercase w-full"
                             style={{ fontFamily: 'var(--font-display)' }}
                           >
                             {item.title}
@@ -673,7 +673,7 @@ export default function StudentDashboardPage() {
                         </div>
 
                         {/* Description */}
-                        <div className="h-[2.5rem] flex items-center overflow-hidden">
+                        <div className="min-h-[2.5rem] flex items-start pt-1">
                           <p className="text-xs text-[#5A554E] leading-relaxed line-clamp-2 w-full">
                             {item.description}
                           </p>

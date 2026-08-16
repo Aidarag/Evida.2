@@ -170,8 +170,8 @@ const EventCardInner = React.memo(function EventCardInner({
           </div>
 
           {/* Event Title */}
-          <div className="h-[2.75rem] flex items-center overflow-hidden">
-            <h3 className="text-[#2A2621] font-bold text-sm sm:text-base line-clamp-2 leading-tight tracking-tight hover:text-[#FD5C05] transition-colors block w-full">
+          <div className="min-h-[2.8rem] sm:min-h-[3rem] flex items-start">
+            <h3 className="text-[#2A2621] font-bold text-sm sm:text-base line-clamp-2 leading-snug tracking-tight hover:text-[#FD5C05] transition-colors block w-full">
               {event.title}
             </h3>
           </div>
@@ -183,7 +183,7 @@ const EventCardInner = React.memo(function EventCardInner({
           </div>
 
           {/* Description */}
-          <div className="h-[2.5rem] flex items-center overflow-hidden">
+          <div className="min-h-[2.5rem] flex items-start pt-1">
             <p className="text-[#5A554E] text-xs leading-relaxed font-light line-clamp-2 w-full">
               {event.description || `Join us for the ${event.title}, happening soon.`}
             </p>

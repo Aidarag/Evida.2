@@ -263,8 +263,8 @@ export default function ExplorePage() {
               <span className="text-[9px] font-black uppercase tracking-wider text-[#FD5C05] block">
                 {formattedDate} • {evt.time || '7:00 PM'}
               </span>
-              <div className="h-[2.5rem] flex items-center overflow-hidden">
-                <h3 className="font-bold text-xs text-[#2A2621] group-hover:text-[#FD5C05] transition-colors leading-tight line-clamp-2 text-left w-full">
+              <div className="min-h-[2.5rem] sm:min-h-[2.8rem] flex items-start">
+                <h3 className="font-bold text-xs sm:text-sm text-[#2A2621] group-hover:text-[#FD5C05] transition-colors leading-snug line-clamp-2 text-left w-full">
                   {evt.title}
                 </h3>
               </div>
@@ -311,14 +311,16 @@ export default function ExplorePage() {
             )}
           </div>
           <div>
-            <div className="min-h-[2.4rem] flex items-start overflow-hidden pt-0.5">
-              <h3 className="font-bold text-xs text-[#2A2621] group-hover:text-[#FD5C05] transition-colors leading-snug line-clamp-2 text-left">
+            <div className="min-h-[2.5rem] sm:min-h-[2.8rem] flex items-start">
+              <h3 className="font-bold text-xs sm:text-sm text-[#2A2621] group-hover:text-[#FD5C05] transition-colors leading-snug line-clamp-2 text-left w-full">
                 {org.name}
               </h3>
             </div>
-            <p className="text-[10.5px] text-[#5A554E] line-clamp-2 leading-relaxed font-medium mt-1 text-left">
-              {org.description}
-            </p>
+            <div className="min-h-[2.4rem] flex items-start mt-1">
+              <p className="text-[10.5px] text-[#5A554E] line-clamp-2 leading-relaxed font-medium text-left w-full">
+                {org.description || 'Welcome to our official campus organization profile directory.'}
+              </p>
+            </div>
           </div>
         </div>
         <div className="pt-2 border-t border-black/[0.04] flex items-center justify-between text-[9px] text-[#5A554E] font-bold uppercase tracking-wider">
