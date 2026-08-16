@@ -6,7 +6,7 @@ import { useUser } from '@/lib/context/UserContext';
 import { Event, Organization } from '@/lib/types';
 import Card from '@/components/ui/Card';
 import VerifiedBadge from '@/components/ui/VerifiedBadge';
-import { ClipboardList, Check, X, Calendar, MapPin, Users, AlertTriangle, ShieldCheck, HelpCircle, Ban, Send, Sparkles, Clock, Building, Trash2 } from 'lucide-react';
+import { ClipboardList, Check, X, Calendar, MapPin, Users, AlertTriangle, ShieldCheck, HelpCircle, Ban, Send, Sparkles, Clock, Building, Trash2, CheckCircle2, XCircle } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 function getTailwindBgColor(color: string) {
@@ -26,7 +26,8 @@ function getTailwindBgColor(color: string) {
 export default function ReviewQueuePage() {
   const { events, organizations, reviewEvent, toggleVerifyOrg, suspendOrg, requestInfoOrg, deleteOrg } = useEvents();
   const { currentUser } = useUser();
-  const [activeQueue, setActiveQueue] = useState<'all' | 'quick' | 'standard' | 'complex'>('all');
+  const [statusFilter, setStatusFilter] = useState<'all' | 'verified' | 'unverified'>('all');
+  const [categoryFilter, setCategoryFilter] = useState<string>('all');
   const [orgRequestInfoModal, setOrgRequestInfoModal] = useState(false);
   const [selectedOrgId, setSelectedOrgId] = useState('');
   const [orgNote, setOrgNote] = useState('');
@@ -34,12 +35,33 @@ export default function ReviewQueuePage() {
   if (!currentUser) return null;
 
   const pendingEvents = events.filter((e) => e.status === 'pending');
-  
-  const displayEvents = activeQueue === 'all' 
-    ? pendingEvents 
-    : pendingEvents.filter((e) => e.complexityType === activeQueue);
 
-  const pendingOrgs = organizations.filter((o) => !o.verified || o.verificationStatus === 'pending');
+  const verifiedCount = pendingEvents.filter(e => {
+    return e.organizationId ? organizations.find(o => o.id === e.organizationId)?.verified : false;
+  }).length;
+
+  const unverifiedCount = pendingEvents.length - verifiedCount;
+  
+  const displayEvents = pendingEvents.filter(event => {
+    // 1. Host Verification Status Filter (Certified vs Non-Certified)
+    const isOrgVerified = event.organizationId
+      ? organizations.find(o => o.id === event.organizationId)?.verified || false
+      : false;
+
+    if (statusFilter === 'verified' && !isOrgVerified) return false;
+    if (statusFilter === 'unverified' && isOrgVerified) return false;
+
+    // 2. Category / Type Filter
+    if (categoryFilter !== 'all') {
+      const cat = (event.category || '').toLowerCase();
+      const title = (event.title || '').toLowerCase();
+      const target = categoryFilter.toLowerCase();
+      const matchesCat = cat.includes(target) || title.includes(target);
+      if (!matchesCat) return false;
+    }
+
+    return true;
+  });
 
   const handleReview = (id: string, status: 'approved' | 'rejected') => {
     reviewEvent(id, status, status === 'rejected' ? 'Does not meet campus guidelines.' : undefined);
@@ -59,7 +81,7 @@ export default function ReviewQueuePage() {
   };
 
   return (
-    <div className="p-4 sm:p-6 md:p-10 space-y-10 max-w-6xl mx-auto font-sans text-[#2A2621] text-left">
+    <div className="p-4 sm:p-6 md:p-10 space-y-6 max-w-6xl mx-auto font-sans text-[#2A2621] text-left">
       
       {/* ── Page Header ── */}
       <div className="space-y-4 bg-white rounded-[28px] border border-black/[0.06] p-6 sm:p-8 shadow-sm">
@@ -80,27 +102,65 @@ export default function ReviewQueuePage() {
             Review and approve pending student experiences and event submissions.
           </p>
         </div>
+      </div>
 
-        {/* Filter Pills */}
-        <div className="flex gap-2 flex-wrap pt-2">
-          {[
-            { id: 'all' as const, label: `All (${pendingEvents.length})` },
-            { id: 'quick' as const, label: 'Quick' },
-            { id: 'standard' as const, label: 'Standard' },
-            { id: 'complex' as const, label: 'Complex' },
-          ].map((pill) => (
-            <button
-              key={pill.id}
-              onClick={() => setActiveQueue(pill.id)}
-              className={`px-4 py-2 rounded-full text-xs font-black uppercase tracking-wider transition-all cursor-pointer border-none ${
-                activeQueue === pill.id
-                  ? 'bg-[#FD5C05] text-white shadow-md shadow-[#FD5C05]/20'
-                  : 'bg-[#F8F6F0] text-[#5A554E] hover:bg-black/[0.06] hover:text-[#2A2621]'
-              }`}
-            >
-              {pill.label}
-            </button>
-          ))}
+      {/* ── Filter Bar (Status: Certified/Unverified + Type: Event Categories) ── */}
+      <div className="bg-white rounded-[24px] border border-black/[0.06] p-4 sm:p-5 shadow-sm space-y-3.5">
+        {/* Row 1: Verification Status Filters */}
+        <div className="flex items-center gap-2 flex-wrap">
+          <span className="text-[10px] font-black uppercase text-[#5A554E] tracking-wider shrink-0 mr-1">Status:</span>
+          <button
+            onClick={() => setStatusFilter('all')}
+            className={`px-3.5 py-1.5 rounded-full text-[10px] font-black uppercase tracking-wider transition-all border-none cursor-pointer ${
+              statusFilter === 'all'
+                ? 'bg-[#2A2621] text-white shadow-xs'
+                : 'bg-[#F8F6F0] text-[#5A554E] hover:bg-black/[0.06]'
+            }`}
+          >
+            All Statuses ({pendingEvents.length})
+          </button>
+          <button
+            onClick={() => setStatusFilter('verified')}
+            className={`px-3.5 py-1.5 rounded-full text-[10px] font-black uppercase tracking-wider transition-all border-none cursor-pointer flex items-center gap-1.5 ${
+              statusFilter === 'verified'
+                ? 'bg-emerald-600 text-white shadow-xs'
+                : 'bg-emerald-500/10 text-emerald-700 hover:bg-emerald-500/20'
+            }`}
+          >
+            <CheckCircle2 className="h-3 w-3" /> Certified / Verified ({verifiedCount})
+          </button>
+          <button
+            onClick={() => setStatusFilter('unverified')}
+            className={`px-3.5 py-1.5 rounded-full text-[10px] font-black uppercase tracking-wider transition-all border-none cursor-pointer flex items-center gap-1.5 ${
+              statusFilter === 'unverified'
+                ? 'bg-amber-600 text-white shadow-xs'
+                : 'bg-amber-500/10 text-amber-800 hover:bg-amber-500/20'
+            }`}
+          >
+            <XCircle className="h-3 w-3" /> Non-Certified / Unverified ({unverifiedCount})
+          </button>
+        </div>
+
+        {/* Row 2: Organization / Event Type Category Filters */}
+        <div className="flex items-center gap-2 overflow-x-auto scrollbar-none pb-0.5 border-t border-black/[0.04] pt-2.5">
+          <span className="text-[10px] font-black uppercase text-[#5A554E] tracking-wider shrink-0 mr-1">Type:</span>
+          {['all', 'academic', 'cultural', 'student government', 'social', 'sports', 'career', 'service'].map((cat) => {
+            const isActive = categoryFilter === cat;
+            const label = cat === 'all' ? 'All Types' : cat.toUpperCase();
+            return (
+              <button
+                key={cat}
+                onClick={() => setCategoryFilter(cat)}
+                className={`px-3 py-1.5 rounded-full text-[9.5px] font-black uppercase tracking-wider shrink-0 transition-all border-none cursor-pointer ${
+                  isActive
+                    ? 'bg-[#FD5C05] text-white shadow-xs'
+                    : 'bg-[#F8F6F0] text-[#5A554E] hover:bg-black/[0.06]'
+                }`}
+              >
+                {label}
+              </button>
+            );
+          })}
         </div>
       </div>
 

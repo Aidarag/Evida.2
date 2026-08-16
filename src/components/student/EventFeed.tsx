@@ -134,7 +134,7 @@ export default function EventFeed({
                 : 'border-transparent text-[#5A554E] hover:text-slate-200'
             }`}
           >
-            Going
+            Attended
           </button>
           <button
             onClick={() => setActiveTab('promos')}

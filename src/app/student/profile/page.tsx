@@ -368,9 +368,9 @@ function StudentProfilePageContent() {
     if (!profileUser) return [];
     const tabs = [];
     
-    // Going
+    // Attended
     if (isOwner || privacySettings.going === 'public') {
-      tabs.push({ id: 'going' as const, label: 'Going' });
+      tabs.push({ id: 'going' as const, label: 'Attended' });
     }
     // Saved
     if (isOwner || privacySettings.saved === 'public') {

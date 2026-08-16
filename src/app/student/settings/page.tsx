@@ -491,7 +491,7 @@ export default function StudentSettingsPage() {
                   </div>
                   
                   {([
-                    { key: 'going', label: 'Going Tab', desc: 'Lists events you plan to attend' },
+                    { key: 'going', label: 'Attended Tab', desc: 'Lists events you have attended or plan to attend' },
                     { key: 'saved', label: 'Saved Tab', desc: 'Lists events you have saved for later' },
                     { key: 'hosted', label: 'Hosted Tab', desc: 'Lists events and promotions you host' },
                     { key: 'organizations', label: 'Organizations Tab', desc: 'Lists organizations you manage or belong to' }

@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Bookmark } from 'lucide-react';
+import { Bookmark, MapPin, Users, ArrowRight } from 'lucide-react';
 import { Event, Promotion } from '@/lib/types';
 import { motion } from 'framer-motion';
 import { useEvents } from '@/lib/context/EventContext';
@@ -18,7 +18,7 @@ interface EventCardProps {
   className?: string;
 }
 
-// 1. Presentational Component implementing CSS Grid Card Architecture (184px image, 106px content, 50px footer = 340px total)
+// 1. Presentational Component implementing CSS Grid Card Architecture (170px image, 150px content, 50px footer = 370px total)
 const EventCardInner = React.memo(function EventCardInner({
   event,
   onClick,
@@ -73,19 +73,20 @@ const EventCardInner = React.memo(function EventCardInner({
     : (event as Promotion).organizer;
   const orgName = orgNameRaw ? orgNameRaw.substring(0, 30) : '';
 
-  // Title text & Description text (Max 90 chars safeguard with ellipsis)
+  // Title text & Description text
   const titleText = event.title;
   const descriptionText = (event.description || '').substring(0, 90);
+  const locationText = !isPromo ? ((event as Event).location || 'Campus Center') : 'Campus Wide';
 
   return (
     <motion.article
       whileHover={{ y: -4 }}
       transition={{ type: 'spring', stiffness: 400, damping: 30 }}
-      className={`event-card group bg-white rounded-[16px] overflow-hidden border border-black/[0.06] shadow-xs hover:shadow-md transition-all duration-300 w-full sm:w-[300px] shrink-0 h-[370px] min-h-[370px] max-h-[370px] grid grid-rows-[170px_150px_50px] relative select-none cursor-pointer ${className}`}
+      className={`event-card group bg-white rounded-[16px] overflow-hidden border border-black/[0.06] shadow-xs hover:shadow-md transition-all duration-300 w-full sm:w-[300px] shrink-0 h-[385px] min-h-[385px] max-h-[385px] grid grid-rows-[165px_170px_50px] relative select-none cursor-pointer ${className}`}
       onClick={onClick}
     >
-      {/* 1. IMAGE WRAPPER (Row 1: 170px) */}
-      <div className="event-card__image-wrapper relative w-full h-[170px] overflow-hidden bg-gray-100">
+      {/* 1. IMAGE WRAPPER (Row 1: 165px) */}
+      <div className="event-card__image-wrapper relative w-full h-[165px] overflow-hidden bg-gray-100">
         <div
           className={`event-card__image w-full h-full object-cover transition-transform duration-500 group-hover:scale-105 ${bgClass}`}
           style={bgStyle}
@@ -100,7 +101,7 @@ const EventCardInner = React.memo(function EventCardInner({
 
         {/* Price Badge & Bookmark top right */}
         <div className="absolute top-3 right-3 z-20 flex items-center gap-1.5">
-          <span className="px-2 py-0.5 text-[8.5px] font-black uppercase tracking-wider bg-[#FD5C05] text-white rounded-full shadow-xs shrink-0 max-w-[65px] truncate">
+          <span className="px-2.5 py-0.5 text-[8.5px] font-black uppercase tracking-wider bg-[#FD5C05] text-white rounded-full shadow-xs shrink-0 max-w-[65px] truncate">
             {priceText}
           </span>
           <button
@@ -130,17 +131,17 @@ const EventCardInner = React.memo(function EventCardInner({
         </div>
       </div>
 
-      {/* 2. CONTENT WRAPPER (Row 2: 150px - Date, Title & 2-Line Light Description) */}
-      <div className="event-card__content p-[12px_20px_10px] overflow-hidden flex flex-col justify-start text-left min-h-0">
-        {/* Date / Time */}
-        <div className="event-card__date h-[16px] text-[11px] leading-[16px] font-bold text-[#FD5C05] uppercase tracking-wider whitespace-nowrap overflow-hidden text-ellipsis block">
-          {fullDateTime}
-        </div>
+      {/* 2. CONTENT WRAPPER (Row 2: 170px - Date, Title, Description & Location metadata) */}
+      <div className="event-card__content p-4 overflow-hidden flex flex-col justify-between text-left min-h-0">
+        <div className="space-y-1.5 min-h-0">
+          {/* Date / Time */}
+          <div className="event-card__date text-[10.5px] leading-tight font-bold text-[#FD5C05] uppercase tracking-wider truncate block">
+            {fullDateTime}
+          </div>
 
-        {/* Title (2 lines max, 52px reserved height for zero clipping) */}
-        <div className="mt-[4px] h-[52px] min-h-[52px] max-h-[52px] flex items-start overflow-hidden">
+          {/* Title (2 lines max, clean 20px leading, no clipping) */}
           <h3
-            className="event-card__title text-[#2A2621] font-bold text-[18px] sm:text-[19px] leading-[25px] tracking-tight group-hover:text-[#FD5C05] transition-colors block w-full text-left"
+            className="event-card__title text-[#2A2621] font-bold text-[16px] leading-[20px] tracking-tight group-hover:text-[#FD5C05] transition-colors line-clamp-2 block w-full text-left"
             style={{
               display: '-webkit-box',
               WebkitBoxOrient: 'vertical',
@@ -151,12 +152,10 @@ const EventCardInner = React.memo(function EventCardInner({
           >
             {titleText}
           </h3>
-        </div>
 
-        {/* Light Description (2 lines max with Ellipsis ..., 6px clear spacing to avoid overlap) */}
-        <div className="mt-[6px] h-[34px] min-h-[34px] max-h-[34px] flex items-start overflow-hidden">
+          {/* Light Description (2 lines max, clean 15px leading) */}
           <p
-            className="text-[11px] leading-[16px] font-semibold text-[#5A554E]/80 text-left block w-full"
+            className="text-[10.5px] leading-[15px] font-semibold text-[#5A554E]/80 line-clamp-2 block w-full text-left"
             style={{
               display: '-webkit-box',
               WebkitBoxOrient: 'vertical',
@@ -167,27 +166,34 @@ const EventCardInner = React.memo(function EventCardInner({
             {descriptionText || 'Join us for this upcoming campus activity and experience.'}
           </p>
         </div>
+
+        {/* Location & Metadata Bar */}
+        <div className="flex items-center gap-1.5 text-[9.5px] font-bold text-[#5A554E] pt-2 border-t border-black/[0.04] mt-1 shrink-0">
+          <span className="flex items-center gap-1 bg-[#F8F6F0] px-2 py-0.5 rounded-md border border-black/[0.04] truncate max-w-[160px]">
+            <MapPin className="h-3 w-3 text-[#FD5C05] shrink-0" />
+            <span className="truncate">{locationText}</span>
+          </span>
+          {!isPromo && (event as Event).attendees && (event as Event).attendees.length > 0 && (
+            <span className="flex items-center gap-1 bg-[#F8F6F0] px-2 py-0.5 rounded-md border border-black/[0.04] shrink-0">
+              <Users className="h-3 w-3 text-[#5A554E] shrink-0" />
+              <span>{(event as Event).attendees.length}</span>
+            </span>
+          )}
+        </div>
       </div>
 
-      {/* 3. FOOTER (Row 3: 50px - Completely independent Grid row) */}
-      <div className="event-card__footer h-[50px] px-[20px] flex items-center gap-2 border-t border-black/[0.06] min-w-0">
+      {/* 3. FOOTER (Row 3: 50px - Independent Grid row with View Event CTA) */}
+      <div className="event-card__footer h-[50px] px-[18px] flex items-center justify-between border-t border-black/[0.06] min-w-0">
         {/* Organization Name */}
-        <div className="event-card__organization flex-1 min-w-0 text-[11px] leading-[14px] font-bold text-[#5A554E] whitespace-nowrap overflow-hidden text-ellipsis flex items-center gap-1">
+        <div className="event-card__organization flex-1 min-w-0 text-[11px] leading-[14px] font-bold text-[#5A554E] whitespace-nowrap overflow-hidden text-ellipsis flex items-center gap-1 pr-2">
           <span className="truncate">{orgName}</span>
           {isOrgVerified && <VerifiedBadge className="h-3.5 w-3.5 shrink-0 text-[#FD5C05]" />}
         </div>
 
-        {/* Price / Action Badge */}
-        <div className="event-card__price shrink-0">
-          {!isPromo ? (
-            <span className="px-2.5 py-1 bg-[#FD5C05] text-white text-[9px] font-black uppercase tracking-wider rounded-full shadow-xs">
-              {(event as Event).free ? 'FREE' : `$${(event as Event).price || 'JOIN'}`}
-            </span>
-          ) : (
-            <span className="px-2.5 py-1 bg-[#2A2621] text-white text-[9px] font-black uppercase tracking-wider rounded-full shadow-xs">
-              PROMO
-            </span>
-          )}
+        {/* View Event Action CTA Button Link (Replaces duplicate FREE badge!) */}
+        <div className="event-card__action shrink-0 flex items-center gap-1 text-[10.5px] font-black uppercase tracking-wider text-[#FD5C05] group-hover:text-[#CC3D00] transition-colors">
+          <span>View Event</span>
+          <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1" />
         </div>
       </div>
     </motion.article>
