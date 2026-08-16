@@ -263,9 +263,8 @@ export default function ExplorePage() {
               <span className="text-[9px] font-black uppercase tracking-wider text-[#FD5C05] block">
                 {formattedDate} • {evt.time || '7:00 PM'}
               </span>
-              {/* Bulletproof title area: text-xs leading-snug fits 2 lines comfortably in min-h-[2.4rem] */}
-              <div className="min-h-[2.4rem] flex items-start overflow-hidden pt-0.5">
-                <h3 className="font-bold text-xs text-[#2A2621] group-hover:text-[#FD5C05] transition-colors leading-snug line-clamp-2 text-left">
+              <div className="h-[2.5rem] flex items-center overflow-hidden">
+                <h3 className="font-bold text-xs text-[#2A2621] group-hover:text-[#FD5C05] transition-colors leading-tight line-clamp-2 text-left w-full">
                   {evt.title}
                 </h3>
               </div>
@@ -291,7 +290,7 @@ export default function ExplorePage() {
       key={org.id}
       whileHover={{ y: -4, scale: 1.01 }}
       transition={{ type: "spring", stiffness: 400, damping: 25 }}
-      className={`${isGridItem ? 'w-full' : 'w-56 sm:w-64 shrink-0'} flex flex-col min-h-[210px] h-full`}
+      className={`${isGridItem ? 'w-full' : 'w-56 sm:w-64 shrink-0'} flex flex-col min-h-[220px] h-full`}
     >
       <div
         onClick={() => router.push(`/student/organizations/${org.id}`)}

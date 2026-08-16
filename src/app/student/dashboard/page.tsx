@@ -656,24 +656,28 @@ export default function StudentDashboardPage() {
                         </div>
 
                         {/* Event Title */}
-                        <h3
-                          onClick={() => {
-                            if (isPromo && promo) {
-                              window.location.href = `mailto:${promo.contactInfo}?subject=Inquiry regarding: ${promo.title}`;
-                            } else if (event) {
-                              router.push(`/events/${event.id}`);
-                            }
-                          }}
-                          className="text-base font-bold text-[#2A2621] tracking-tight leading-snug line-clamp-1 hover:text-[#FD5C05] transition-colors cursor-pointer uppercase"
-                          style={{ fontFamily: 'var(--font-display)' }}
-                        >
-                          {item.title}
-                        </h3>
+                        <div className="h-[2.5rem] flex items-center overflow-hidden">
+                          <h3
+                            onClick={() => {
+                              if (isPromo && promo) {
+                                window.location.href = `mailto:${promo.contactInfo}?subject=Inquiry regarding: ${promo.title}`;
+                              } else if (event) {
+                                router.push(`/events/${event.id}`);
+                              }
+                            }}
+                            className="text-sm sm:text-base font-bold text-[#2A2621] tracking-tight leading-tight line-clamp-2 hover:text-[#FD5C05] transition-colors cursor-pointer uppercase w-full"
+                            style={{ fontFamily: 'var(--font-display)' }}
+                          >
+                            {item.title}
+                          </h3>
+                        </div>
 
                         {/* Description */}
-                        <p className="text-xs text-[#5A554E] leading-relaxed line-clamp-2">
-                          {item.description}
-                        </p>
+                        <div className="h-[2.5rem] flex items-center overflow-hidden">
+                          <p className="text-xs text-[#5A554E] leading-relaxed line-clamp-2 w-full">
+                            {item.description}
+                          </p>
+                        </div>
                       </div>
 
                       {/* Event/Promo Details: Date & Time, Location/Contact */}
