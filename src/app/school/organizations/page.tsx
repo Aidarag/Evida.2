@@ -29,7 +29,7 @@ export default function OrganizationsPage() {
   const [selectedOrgId, setSelectedOrgId] = useState('');
   const [note, setNote] = useState('');
 
-  if (!currentUser || currentUser.role !== 'admin') return null;
+  if (!currentUser) return null;
 
   const filteredOrgs = organizations.filter(org => 
     org.name.toLowerCase().includes(searchQuery.toLowerCase()) ||

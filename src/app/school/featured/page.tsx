@@ -13,7 +13,7 @@ export default function FeaturedEventsPage() {
   const { events } = useEvents();
   const { currentUser } = useUser();
 
-  if (!currentUser || currentUser.role !== 'admin') return null;
+  if (!currentUser) return null;
 
   const featuredEvents = events.filter(e => e.isFeatured || e.featured);
 

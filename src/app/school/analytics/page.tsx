@@ -11,7 +11,7 @@ export default function AnalyticsPage() {
   const { events, organizations } = useEvents();
   const { currentUser } = useUser();
 
-  if (!currentUser || currentUser.role !== 'admin') return null;
+  if (!currentUser) return null;
 
   const totalApproved = events.filter(e => e.status === 'approved').length;
   const totalRsvps = events.reduce((acc, ev) => acc + ev.attendees.length, 0);

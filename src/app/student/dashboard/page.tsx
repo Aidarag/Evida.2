@@ -167,12 +167,28 @@ export default function StudentDashboardPage() {
   // Base list of rsvp and saved events for stats cards
   const rsvpEventsList = approvedEvents.filter(e => currentUser ? e.attendees.includes(currentUser.name) && (e.ownershipType === 'school' || e.ownershipType === 'organization') : false);
   const savedEventsList = approvedEvents.filter(e => currentUser ? (e.savedBy?.includes(currentUser.name) || (currentUser.username ? e.savedBy?.includes(currentUser.username) : false)) && (e.ownershipType === 'school' || e.ownershipType === 'organization') : false);
+  const isOrgMode = activeProfile.type === 'organization';
+  const activeOrg = isOrgMode ? organizations.find(o => o.id === activeProfile.orgId) : null;
+  const activeOrgName = isOrgMode ? (activeOrg ? activeOrg.name : activeProfile.name) : '';
+  const myOrgEvents = isOrgMode ? events.filter(e => e.organizationId === activeProfile.orgId || e.organizationName === activeOrgName) : [];
+
   const matchesCategory = useCallback((item: Event | Promotion) => {
     if (selectedCategory === 'All') return true;
     const cat = item.category?.toLowerCase() || '';
     const title = item.title.toLowerCase();
     const sel = selectedCategory.toLowerCase();
     const isPromo = !('ownershipType' in item);
+
+    if (isOrgMode) {
+      if (sel === 'academic') return cat.includes('academ') || title.includes('stem') || title.includes('expo') || title.includes('study') || title.includes('calculus');
+      if (sel === 'social') return cat.includes('social') || cat.includes('party') || title.includes('social') || title.includes('welcome') || title.includes('rally');
+      if (sel === 'sports') return cat.includes('sport') || cat.includes('athlet') || title.includes('opener') || title.includes('game');
+      if (sel === 'career') return cat.includes('career') || cat.includes('job') || title.includes('fair') || title.includes('career');
+      if (sel === 'culture') return cat.includes('culture') || cat.includes('art') || title.includes('show') || title.includes('yard');
+      if (sel === 'workshops') return cat.includes('workshop') || title.includes('workshop');
+      if (sel === 'parties') return cat.includes('party') || title.includes('rave');
+      return cat.includes(sel) || title.includes(sel);
+    }
 
     if (activeFeed === 'official') {
       if (sel === 'livingstone college') {
@@ -219,7 +235,7 @@ export default function StudentDashboardPage() {
       }
       return true;
     }
-  }, [activeFeed, selectedCategory]);
+  }, [activeFeed, isOrgMode, selectedCategory]);
 
   const feedItems = useMemo(() => {
     if (activeFeed === 'official') {
@@ -275,6 +291,15 @@ export default function StudentDashboardPage() {
     });
   }, [feedItems, searchQuery, matchQuery, matchesCategory]);
 
+  const filteredOrgEvents = useMemo(() => {
+    if (!isOrgMode) return [];
+    return myOrgEvents.filter(e => {
+      const matchesSearch = matchQuery([e.title, e.description, e.location, e.category], searchQuery);
+      if (!matchesSearch) return false;
+      return matchesCategory(e);
+    });
+  }, [isOrgMode, myOrgEvents, searchQuery, matchQuery, matchesCategory]);
+
   const sortedFilteredItems = useMemo(() => {
     return [...filteredItems].sort((a, b) => {
       // 1. Featured pins at top
@@ -314,7 +339,20 @@ export default function StudentDashboardPage() {
     { name: 'Parties', icon: Wine },
   ];
 
-  const currentCategories = activeFeed === 'official' ? officialCategories : studentCategories;
+  const orgCategories = [
+    { name: 'All', icon: Compass },
+    { name: 'Academic', icon: GraduationCap },
+    { name: 'Social', icon: Users },
+    { name: 'Sports', icon: Trophy },
+    { name: 'Career', icon: Briefcase },
+    { name: 'Culture', icon: Sparkles },
+    { name: 'Workshops', icon: Cpu },
+    { name: 'Parties', icon: Wine },
+  ];
+
+  const currentCategories = isOrgMode
+    ? orgCategories
+    : (activeFeed === 'official' ? officialCategories : studentCategories);
 
   // ── Actions ──
   const handleLike = (eventId: string) => {
@@ -342,11 +380,6 @@ export default function StudentDashboardPage() {
   };
 
   if (!currentUser) return null;
-
-  const isOrgMode = activeProfile.type === 'organization';
-  const activeOrg = isOrgMode ? organizations.find(o => o.id === activeProfile.orgId) : null;
-  const activeOrgName = isOrgMode ? (activeOrg ? activeOrg.name : activeProfile.name) : '';
-  const myOrgEvents = isOrgMode ? events.filter(e => e.organizationId === activeProfile.orgId || e.organizationName === activeOrgName) : [];
 
   return (
     <div className="max-w-5xl mx-auto px-4 py-4 pb-28 md:pb-12 space-y-4">
@@ -548,13 +581,13 @@ export default function StudentDashboardPage() {
               }
             </p>
             <span className="text-[10px] font-extrabold text-[#5A554E] block pt-1">
-              Showing {(isOrgMode && orgDashboardTab === 'org-events' ? myOrgEvents : sortedFilteredItems).length} events
+              Showing {(isOrgMode && orgDashboardTab === 'org-events' ? filteredOrgEvents : sortedFilteredItems).length} events
             </span>
           </div>
 
-          {(isOrgMode && orgDashboardTab === 'org-events' ? myOrgEvents : sortedFilteredItems).length > 0 ? (
+          {(isOrgMode && orgDashboardTab === 'org-events' ? filteredOrgEvents : sortedFilteredItems).length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-              {(isOrgMode && orgDashboardTab === 'org-events' ? myOrgEvents : sortedFilteredItems).map((item) => {
+              {(isOrgMode && orgDashboardTab === 'org-events' ? filteredOrgEvents : sortedFilteredItems).map((item) => {
                 const isPromo = !('ownershipType' in item);
                 const event = isPromo ? null : (item as any);
                 const promo = isPromo ? (item as any) : null;

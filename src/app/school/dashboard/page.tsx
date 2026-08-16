@@ -14,7 +14,7 @@ export default function SchoolDashboardPage() {
   const { events, organizations } = useEvents();
   const router = useRouter();
 
-  if (!currentUser || currentUser.role !== 'admin') return null;
+  if (!currentUser) return null;
 
   // Key Metrics
   const pendingEvents = events.filter(e => e.status === 'pending');

@@ -31,7 +31,7 @@ export default function ReviewQueuePage() {
   const [selectedOrgId, setSelectedOrgId] = useState('');
   const [orgNote, setOrgNote] = useState('');
 
-  if (!currentUser || currentUser.role !== 'admin') return null;
+  if (!currentUser) return null;
 
   const pendingEvents = events.filter((e) => e.status === 'pending');
   
