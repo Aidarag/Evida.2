@@ -392,21 +392,17 @@ export default function OrganizationProfilePage() {
           <span className="text-[10px] font-extrabold text-[#5A554E] uppercase tracking-widest">
             Campus Directory
           </span>
-        </div>
-
-        {/* Header CTA Button */}
+                {/* Header CTA Button */}
         {currentUser && (
           <div className="flex items-center gap-2">
-            {isAdminOrLeader && (
+            {isAdminOrLeader ? (
               <button
                 onClick={() => setActiveTab('manage')}
-                className="px-4 py-1.5 bg-[#2A2621] hover:bg-[#FD5C05] text-white text-xs font-black uppercase tracking-wider rounded-full shadow-sm transition-all cursor-pointer flex items-center gap-1.5"
+                className="px-4 py-1.5 bg-[#2A2621] hover:bg-[#FD5C05] text-white text-xs font-black uppercase tracking-wider rounded-full shadow-sm transition-all cursor-pointer flex items-center gap-1.5 border-none"
               >
                 <Settings className="h-3.5 w-3.5" /> Dashboard & Settings
               </button>
-            )}
-
-            {isMember ? (
+            ) : isMember ? (
               <button
                 onClick={() => handleRemoveMember(currentUser.name)}
                 className="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-emerald-100 border border-emerald-200 text-emerald-800 text-xs font-black uppercase tracking-wider rounded-full shadow-xs hover:bg-red-50 hover:text-red-600 hover:border-red-200 transition-all cursor-pointer"
@@ -498,9 +494,16 @@ export default function OrganizationProfilePage() {
               </div>
             </div>
 
-            {/* Header Action Button (Join Organization) */}
+            {/* Header Action Button (Join Organization / Dashboard) */}
             <div className="pt-2 md:pt-0 shrink-0">
-              {isMember ? (
+              {isAdminOrLeader ? (
+                <button 
+                  onClick={() => setActiveTab('manage')}
+                  className="px-6 py-2.5 rounded-full bg-[#2A2621] hover:bg-[#FD5C05] text-white font-black text-xs uppercase tracking-wider transition-all cursor-pointer flex items-center gap-2 shadow-md border-none"
+                >
+                  <Settings className="h-4 w-4" /> Dashboard & Settings
+                </button>
+              ) : isMember ? (
                 <button 
                   onClick={() => handleRemoveMember(currentUser!.name)}
                   className="px-5 py-2 rounded-full border border-emerald-600/30 bg-emerald-50 text-emerald-700 font-black text-xs uppercase tracking-wider hover:bg-red-50 hover:text-red-600 hover:border-red-200 transition-all cursor-pointer flex items-center gap-2 shadow-xs"
@@ -523,7 +526,7 @@ export default function OrganizationProfilePage() {
                   <UserPlus className="h-4 w-4" /> {isJoining ? 'Submitting...' : 'Join Organization'}
                 </button>
               )}
-            </div>
+            </div>          </div>
 
           </div>
 
