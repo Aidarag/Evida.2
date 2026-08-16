@@ -428,7 +428,7 @@ export default function OrganizationProfilePage() {
                 disabled={isJoining}
                 className="inline-flex items-center gap-1.5 px-4 py-1.5 bg-[#FD5C05] hover:bg-[#CC3D00] text-white text-xs font-black uppercase tracking-wider rounded-full shadow-md shadow-[#FD5C05]/20 cursor-pointer transition-all disabled:opacity-50 border-none"
               >
-                <UserPlus className="h-3.5 w-3.5" /> {isJoining ? 'Joining...' : 'Rejoindre l\'organisation'}
+                <UserPlus className="h-3.5 w-3.5" /> {isJoining ? 'Joining...' : 'Join Organization'}
               </button>
             )}
           </div>
@@ -498,7 +498,7 @@ export default function OrganizationProfilePage() {
               </div>
             </div>
 
-            {/* Header Action Button (Rejoindre l'organisation) */}
+            {/* Header Action Button (Join Organization) */}
             <div className="pt-2 md:pt-0 shrink-0">
               {isMember ? (
                 <button 
@@ -520,7 +520,7 @@ export default function OrganizationProfilePage() {
                   disabled={isJoining}
                   className="px-6 py-2.5 rounded-full bg-[#FD5C05] hover:bg-[#CC3D00] text-white font-black text-xs uppercase tracking-wider transition-all cursor-pointer flex items-center gap-2 shadow-md shadow-[#FD5C05]/20 disabled:opacity-50 border-none"
                 >
-                  <UserPlus className="h-4 w-4" /> {isJoining ? 'Submitting...' : 'Rejoindre l\'organisation'}
+                  <UserPlus className="h-4 w-4" /> {isJoining ? 'Submitting...' : 'Join Organization'}
                 </button>
               )}
             </div>
@@ -599,7 +599,7 @@ export default function OrganizationProfilePage() {
                         onClick={handleJoinOrg}
                         className="text-[10px] font-extrabold uppercase text-[#FD5C05] hover:underline cursor-pointer bg-transparent border-none"
                       >
-                        + Rejoindre l'organisation
+                        + Join Organization
                       </button>
                     )}
                   </div>
@@ -664,7 +664,7 @@ export default function OrganizationProfilePage() {
                       disabled={isJoining}
                       className="w-full py-2.5 bg-[#FD5C05] hover:bg-[#CC3D00] text-white rounded-xl text-xs font-black uppercase tracking-wider transition-all cursor-pointer shadow-md shadow-[#FD5C05]/20 flex items-center justify-center gap-2 border-none"
                     >
-                      <UserPlus className="h-4 w-4" /> {isJoining ? 'Joining...' : 'Rejoindre l\'organisation'}
+                      <UserPlus className="h-4 w-4" /> {isJoining ? 'Joining...' : 'Join Organization'}
                     </button>
                   </div>
                 )}

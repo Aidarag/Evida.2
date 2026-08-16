@@ -31,7 +31,9 @@ import {
   Mail,
   UserCheck,
   Heart,
-  Bookmark
+  Bookmark,
+  Plus,
+  Building2
 } from 'lucide-react';
 import Button from '@/components/ui/Button';
 import VerifiedBadge from '@/components/ui/VerifiedBadge';
@@ -138,10 +140,11 @@ function StudentProfilePageContent() {
   // Promotions State
   const [promotions, setPromotions] = useState<any[]>([]);
 
-  // Membership requests state for advisor reviews
+  // Membership requests state for advisor reviews & user pending requests
   const [membershipRequests, setMembershipRequests] = useState<any[]>([]);
+  const [userMembershipRequests, setUserMembershipRequests] = useState<any[]>([]);
 
-  // Fetch membership requests on mount
+  // Fetch all membership requests (for advisor review)
   const fetchMembershipRequests = async () => {
     try {
       const res = await fetch('/api/organizations/membership');
@@ -151,6 +154,42 @@ function StudentProfilePageContent() {
       }
     } catch (e) {
       console.error('Failed to load membership requests:', e);
+    }
+  };
+
+  // Fetch membership requests specifically submitted by profileUser
+  const fetchUserMembershipRequests = async (username?: string) => {
+    const targetUsername = username || profileUser?.username || currentUser?.username;
+    if (!targetUsername) return;
+    try {
+      const res = await fetch(`/api/organizations/membership?username=${targetUsername}`);
+      if (res.ok) {
+        const data = await res.json();
+        setUserMembershipRequests(data);
+      }
+    } catch (e) {
+      console.error('Failed to load user membership requests:', e);
+    }
+  };
+
+  const handleCancelRequest = async (requestId: string) => {
+    try {
+      const res = await fetch('/api/organizations/membership', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          action: 'cancel',
+          id: requestId,
+          username: currentUser?.username
+        })
+      });
+
+      if (res.ok) {
+        fetchUserMembershipRequests();
+        setToast({ message: 'Join request cancelled', undoId: '' });
+      }
+    } catch (e) {
+      console.error('Failed to cancel membership request:', e);
     }
   };
 
@@ -185,6 +224,7 @@ function StudentProfilePageContent() {
 
       if (res.ok) {
         fetchMembershipRequests();
+        fetchUserMembershipRequests();
         syncProfile();
       }
     } catch (e) {
@@ -209,6 +249,13 @@ function StudentProfilePageContent() {
       fetchMembershipRequests();
     }
   }, [currentUser?.username, isOwner]);
+
+  // Fetch user specific membership requests when profileUser is ready
+  useEffect(() => {
+    if (profileUser?.username) {
+      fetchUserMembershipRequests(profileUser.username);
+    }
+  }, [profileUser?.username]);
 
   // Keep profileUser in sync with currentUser when user updates their own profile details
   useEffect(() => {
@@ -278,6 +325,28 @@ function StudentProfilePageContent() {
   // Organizations
   const myOrgs = profileUser ? organizations.filter(org => (profileUser.organizations || []).includes(org.id)) : [];
 
+  // Categorized Organizations
+  const createdOrgs = useMemo(() => {
+    if (!profileUser) return [];
+    return myOrgs.filter(org => {
+      const isCreator = org.creatorUsername && (
+        org.creatorUsername.toLowerCase() === profileUser.username?.toLowerCase() ||
+        org.creatorUsername.toLowerCase() === profileUser.name?.toLowerCase()
+      );
+      const role = org.memberRoles?.[profileUser.name] || org.memberRoles?.[profileUser.username];
+      const isPresident = role === 'President' || role === 'Founder' || role === 'Creator';
+      return isCreator || isPresident;
+    });
+  }, [myOrgs, profileUser]);
+
+  const joinedOrgs = useMemo(() => {
+    return myOrgs.filter(org => !createdOrgs.some(c => c.id === org.id));
+  }, [myOrgs, createdOrgs]);
+
+  const pendingRequests = useMemo(() => {
+    return userMembershipRequests.filter(req => req.status === 'pending');
+  }, [userMembershipRequests]);
+
   // Dynamic Visible Tabs Calculation based on Privacy & Activity
   const privacySettings = useMemo(() => {
     return {
@@ -306,15 +375,15 @@ function StudentProfilePageContent() {
         tabs.push({ id: 'hosted' as const, label: 'Hosted' });
       }
     }
-    // Organizations (only if myOrgs.length > 0)
-    if (myOrgs.length > 0) {
+    // Organizations (if has orgs or pending requests or is owner)
+    if (myOrgs.length > 0 || pendingRequests.length > 0 || isOwner) {
       if (isOwner || privacySettings.organizations === 'public') {
         tabs.push({ id: 'orgs' as const, label: 'Organizations' });
       }
     }
     
     return tabs;
-  }, [profileUser, isOwner, privacySettings.going, privacySettings.saved, privacySettings.hosted, privacySettings.organizations, hostedCount, myOrgs.length]);
+  }, [profileUser, isOwner, privacySettings.going, privacySettings.saved, privacySettings.hosted, privacySettings.organizations, hostedCount, myOrgs.length, pendingRequests.length]);
 
   // Adjust active tab if it's no longer visible
   useEffect(() => {
@@ -1027,56 +1096,173 @@ function StudentProfilePageContent() {
 
               {/* TAB 4: MY ORGANIZATIONS */}
               {activeTab === 'orgs' && (
-                <div className="space-y-4 text-left">
-                  <h3 className="text-sm font-black uppercase tracking-wider text-[#2A2621]">
-                    {isOwner ? "My Campus Groups" : `${profileUser.name}'s Campus Groups`} ({myOrgs.length})
-                  </h3>
-                  {myOrgs.length > 0 ? (
-                    <div className="grid gap-4 sm:grid-cols-2">
-                      {myOrgs.map(org => {
-                        const userRole = org.memberRoles?.[profileUser.name] || 
-                                         org.memberRoles?.[profileUser.username] || 
-                                         (org.members[0] === profileUser.name ? 'President' : 'Member');
-                        return (
-                          <div 
-                            key={org.id} 
-                            onClick={() => router.push(`/student/organizations/${org.id}`)}
-                            className="bg-white rounded-2xl p-4 flex items-center justify-between border border-black/[0.04] shadow-sm hover:border-[#FD5C05]/40 hover:scale-[1.01] transition-all cursor-pointer group"
-                          >
-                            <div className="flex items-center gap-3.5 min-w-0">
-                              <div 
-                                className="h-12 w-12 rounded-xl flex items-center justify-center font-black text-white text-xs shrink-0 shadow-sm transition-transform group-hover:scale-105"
-                                style={{ backgroundColor: org.logoColor || '#2A2621' }}
-                              >
-                                {org.name.substring(0, 2).toUpperCase()}
-                              </div>
-                              <div className="min-w-0 text-left">
-                                <p className="font-bold text-[#2A2621] text-xs uppercase tracking-tight group-hover:text-[#FD5C05] transition-colors truncate">
-                                  {org.name}
-                                </p>
-                                <div className="flex items-center gap-2 mt-0.5">
-                                  <span className="px-1.5 py-0.5 rounded bg-black/[0.04] text-[#5A554E] text-[8px] font-bold uppercase tracking-wider">
-                                    {userRole}
-                                  </span>
-                                  <span className="text-[9px] text-[#5A554E] font-semibold">
-                                    {org.members.length} members
-                                  </span>
+                <div className="space-y-8 text-left">
+                  
+                  {/* Section 1: Created Organizations */}
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-between">
+                      <h3 className="text-sm font-black uppercase tracking-wider text-[#2A2621] flex items-center gap-2">
+                        <Shield className="h-4 w-4 text-[#FD5C05]" />
+                        {isOwner ? "Organizations Created By You" : `Organizations Created By ${profileUser.name}`} ({createdOrgs.length})
+                      </h3>
+                      {isOwner && (
+                        <button
+                          onClick={() => router.push('/student/organizations/create')}
+                          className="flex items-center gap-1.5 px-3 py-1.5 bg-[#FD5C05]/10 hover:bg-[#FD5C05]/20 text-[#FD5C05] text-[10px] font-extrabold uppercase rounded-xl transition-colors cursor-pointer"
+                        >
+                          <Plus className="h-3.5 w-3.5" />
+                          Create Group
+                        </button>
+                      )}
+                    </div>
+
+                    {createdOrgs.length > 0 ? (
+                      <div className="grid gap-4 sm:grid-cols-2">
+                        {createdOrgs.map(org => {
+                          const userRole = org.memberRoles?.[profileUser.name] || 
+                                           org.memberRoles?.[profileUser.username] || 'President';
+                          return (
+                            <div 
+                              key={org.id} 
+                              onClick={() => router.push(`/student/organizations/${org.id}`)}
+                              className="bg-white rounded-2xl p-4 flex items-center justify-between border border-black/[0.04] shadow-sm hover:border-[#FD5C05]/40 hover:scale-[1.01] transition-all cursor-pointer group"
+                            >
+                              <div className="flex items-center gap-3.5 min-w-0">
+                                <div 
+                                  className="h-12 w-12 rounded-xl flex items-center justify-center font-black text-white text-xs shrink-0 shadow-sm transition-transform group-hover:scale-105"
+                                  style={{ backgroundColor: org.logoColor || '#2A2621' }}
+                                >
+                                  {org.name.substring(0, 2).toUpperCase()}
+                                </div>
+                                <div className="min-w-0 text-left">
+                                  <p className="font-bold text-[#2A2621] text-xs uppercase tracking-tight group-hover:text-[#FD5C05] transition-colors truncate">
+                                    {org.name}
+                                  </p>
+                                  <div className="flex items-center gap-2 mt-0.5">
+                                    <span className="px-1.5 py-0.5 rounded bg-[#FD5C05]/10 text-[#FD5C05] text-[8px] font-extrabold uppercase tracking-wider border border-[#FD5C05]/20">
+                                      {userRole}
+                                    </span>
+                                    <span className="text-[9px] text-[#5A554E] font-semibold">
+                                      {org.members.length} members
+                                    </span>
+                                  </div>
                                 </div>
                               </div>
+                              {isOwner && <span className="text-[9px] font-black uppercase text-[#5A554E] group-hover:text-[#2A2621] transition-colors shrink-0">Manage →</span>}
                             </div>
-                            {isOwner && <span className="text-[9px] font-black uppercase text-[#5A554E] group-hover:text-[#2A2621] transition-colors shrink-0">Manage →</span>}
-                          </div>
-                        );
-                      })}
-                    </div>
-                  ) : (
-                    <div className="bg-white rounded-2xl p-8 border border-black/[0.04] text-center">
-                      <Users className="h-10 w-10 text-[#FD5C05]/20 mx-auto mb-2" />
-                      <p className="text-xs text-[#5A554E]">
-                        {isOwner ? "Not associated with any groups." : `${profileUser.name} is not associated with any groups.`}
-                      </p>
+                          );
+                        })}
+                      </div>
+                    ) : (
+                      <div className="bg-white rounded-2xl p-6 border border-black/[0.04] text-center">
+                        <p className="text-xs text-[#5A554E]">
+                          {isOwner ? "You haven't created any organizations yet." : `${profileUser.name} hasn't created any organizations.`}
+                        </p>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Section 2: Joined Organizations */}
+                  <div className="space-y-4">
+                    <h3 className="text-sm font-black uppercase tracking-wider text-[#2A2621] flex items-center gap-2">
+                      <Users className="h-4 w-4 text-[#FD5C05]" />
+                      {isOwner ? "Joined Organizations" : `Organizations ${profileUser.name} Joined`} ({joinedOrgs.length})
+                    </h3>
+
+                    {joinedOrgs.length > 0 ? (
+                      <div className="grid gap-4 sm:grid-cols-2">
+                        {joinedOrgs.map(org => {
+                          const userRole = org.memberRoles?.[profileUser.name] || 
+                                           org.memberRoles?.[profileUser.username] || 'Member';
+                          return (
+                            <div 
+                              key={org.id} 
+                              onClick={() => router.push(`/student/organizations/${org.id}`)}
+                              className="bg-white rounded-2xl p-4 flex items-center justify-between border border-black/[0.04] shadow-sm hover:border-[#FD5C05]/40 hover:scale-[1.01] transition-all cursor-pointer group"
+                            >
+                              <div className="flex items-center gap-3.5 min-w-0">
+                                <div 
+                                  className="h-12 w-12 rounded-xl flex items-center justify-center font-black text-white text-xs shrink-0 shadow-sm transition-transform group-hover:scale-105"
+                                  style={{ backgroundColor: org.logoColor || '#2A2621' }}
+                                >
+                                  {org.name.substring(0, 2).toUpperCase()}
+                                </div>
+                                <div className="min-w-0 text-left">
+                                  <p className="font-bold text-[#2A2621] text-xs uppercase tracking-tight group-hover:text-[#FD5C05] transition-colors truncate">
+                                    {org.name}
+                                  </p>
+                                  <div className="flex items-center gap-2 mt-0.5">
+                                    <span className="px-1.5 py-0.5 rounded bg-black/[0.04] text-[#5A554E] text-[8px] font-bold uppercase tracking-wider">
+                                      {userRole}
+                                    </span>
+                                    <span className="text-[9px] text-[#5A554E] font-semibold">
+                                      {org.members.length} members
+                                    </span>
+                                  </div>
+                                </div>
+                              </div>
+                              <span className="text-[9px] font-black uppercase text-[#5A554E] group-hover:text-[#2A2621] transition-colors shrink-0">View →</span>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    ) : (
+                      <div className="bg-white rounded-2xl p-6 border border-black/[0.04] text-center">
+                        <p className="text-xs text-[#5A554E]">
+                          {isOwner ? "You haven't joined any other organizations yet." : `${profileUser.name} hasn't joined any other organizations.`}
+                        </p>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Section 3: Pending Membership Requests */}
+                  {isOwner && (
+                    <div className="space-y-4">
+                      <h3 className="text-sm font-black uppercase tracking-wider text-[#2A2621] flex items-center gap-2">
+                        <Clock className="h-4 w-4 text-[#FD5C05]" />
+                        Pending Join Requests ({pendingRequests.length})
+                      </h3>
+
+                      {pendingRequests.length > 0 ? (
+                        <div className="grid gap-4 sm:grid-cols-2">
+                          {pendingRequests.map(req => (
+                            <div 
+                              key={req.id} 
+                              className="bg-white rounded-2xl p-4 flex items-center justify-between border border-amber-200/60 bg-amber-50/20 shadow-sm"
+                            >
+                              <div className="flex items-center gap-3.5 min-w-0">
+                                <div className="h-10 w-10 rounded-xl bg-amber-500/10 text-amber-600 flex items-center justify-center font-black text-xs shrink-0 border border-amber-300/40">
+                                  <Clock className="h-5 w-5" />
+                                </div>
+                                <div className="min-w-0 text-left">
+                                  <p className="font-bold text-[#2A2621] text-xs uppercase tracking-tight truncate">
+                                    {req.orgName}
+                                  </p>
+                                  <div className="flex items-center gap-2 mt-0.5">
+                                    <span className="px-1.5 py-0.5 rounded bg-amber-100 text-amber-700 text-[8px] font-extrabold uppercase tracking-wider border border-amber-200">
+                                      Pending Approval
+                                    </span>
+                                  </div>
+                                </div>
+                              </div>
+
+                              <button
+                                onClick={() => handleCancelRequest(req.id)}
+                                className="px-3 py-1.5 text-[9px] font-black uppercase tracking-wider text-rose-600 hover:bg-rose-50 rounded-xl border border-rose-200/70 transition-all cursor-pointer shrink-0 ml-2"
+                              >
+                                Cancel
+                              </button>
+                            </div>
+                          ))}
+                        </div>
+                      ) : (
+                        <div className="bg-white rounded-2xl p-6 border border-black/[0.04] text-center">
+                          <p className="text-xs text-[#5A554E]">No pending join requests.</p>
+                        </div>
+                      )}
                     </div>
                   )}
+
                 </div>
               )}
             </motion.div>
