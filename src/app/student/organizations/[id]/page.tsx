@@ -367,7 +367,7 @@ export default function OrganizationProfilePage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#D8D2BC] text-[#2A2621] pb-16 font-sans">
+    <div className="min-h-screen bg-[#FAF9F5] text-[#2A2621] pb-16 font-sans">
       
       {/* ── Top Header Navigation ── */}
       <div className="sticky top-0 z-30 h-14 w-full border-b border-[#D8D2BC]/30 bg-white/80 backdrop-blur-md px-6 flex items-center justify-between">

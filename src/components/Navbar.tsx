@@ -517,7 +517,7 @@ export function TabletDrawerSidebar({
             animate={{ x: 0 }}
             exit={{ x: '-100%' }}
             transition={{ type: 'spring', damping: 25, stiffness: 220 }}
-            className="fixed top-0 left-0 bottom-0 z-55 w-64 bg-[#D8D2BC] border-r border-black/[0.04] flex flex-col justify-between p-6 shadow-2xl lg:hidden text-left"
+            className="fixed top-0 left-0 bottom-0 z-55 w-64 bg-[#FAF9F5] border-r border-black/[0.04] flex flex-col justify-between p-6 shadow-2xl lg:hidden text-left"
           >
             <div className="space-y-4">
               {/* Drawer Header with Close Button */}

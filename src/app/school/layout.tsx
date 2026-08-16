@@ -13,9 +13,9 @@ export default function SchoolLayout({
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
   return (
-    <div className="min-h-screen bg-[#D8D2BC] text-[#2A2621] flex flex-col lg:flex-row">
+    <div className="min-h-screen bg-[#FAF9F5] text-[#2A2621] flex flex-col lg:flex-row font-sans">
       {/* Mobile Top Nav (visible only on small screens) */}
-      <div className="md:hidden sticky top-0 z-40 w-full h-16 border-b border-black/[0.04] bg-[#D8D2BC]/90 backdrop-blur-xl flex items-center justify-center">
+      <div className="md:hidden sticky top-0 z-40 w-full h-16 border-b border-black/[0.04] bg-[#FAF9F5]/90 backdrop-blur-xl flex items-center justify-center shadow-xs">
         <span className="text-lg font-bold tracking-tight text-[#2A2621] flex items-center gap-2">
           <EvidaLogo size={22} showText={true} lightMode={true} />
           <span className="text-[10px] bg-[#FD5C05] text-[#2A2621] font-bold px-1.5 py-0.5 rounded-full uppercase tracking-wider">Admin</span>

@@ -84,7 +84,7 @@ export default function CreateOrganizationPage() {
   const selectedHex = LOGO_COLORS.find(c => c.id === orgColor)?.hex || '#FD5C05';
 
   return (
-    <div className="min-h-screen bg-[#D8D2BC] text-[#2A2621] py-8 px-4 sm:px-6 font-sans">
+    <div className="min-h-screen bg-[#FAF9F5] text-[#2A2621] py-8 px-4 sm:px-6 font-sans">
       <div className="max-w-3xl mx-auto space-y-6">
         
         {/* Top Header */}
