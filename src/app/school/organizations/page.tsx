@@ -4,13 +4,22 @@ import React, { useState } from 'react';
 import { useEvents } from '@/lib/context/EventContext';
 import { useUser } from '@/lib/context/UserContext';
 import Card from '@/components/ui/Card';
-import Badge from '@/components/ui/Badge';
-import Button from '@/components/ui/Button';
-import Input from '@/components/ui/Input';
-import Modal from '@/components/ui/Modal';
-import EmptyState from '@/components/ui/EmptyState';
-import { Building2, Search, CheckCircle2, XCircle } from 'lucide-react';
-import { motion } from 'framer-motion';
+import VerifiedBadge from '@/components/ui/VerifiedBadge';
+import { Building2, Search, CheckCircle2, XCircle, ShieldCheck, HelpCircle, Ban, Send, Users, Sparkles, Building } from 'lucide-react';
+
+function getTailwindBgColor(color: string) {
+  const mapping: Record<string, string> = {
+    indigo: '#6366f1',
+    sky: '#0ea5e9',
+    emerald: '#10b981',
+    violet: '#8b5cf6',
+    amber: '#f59e0b',
+    rose: '#f43f5e',
+    teal: '#14b8a6',
+    orange: '#FD5C05',
+  };
+  return mapping[color] || '#FD5C05';
+}
 
 export default function OrganizationsPage() {
   const { organizations, toggleVerifyOrg, suspendOrg, requestInfoOrg } = useEvents();
@@ -24,29 +33,41 @@ export default function OrganizationsPage() {
 
   const filteredOrgs = organizations.filter(org => 
     org.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    org.description.toLowerCase().includes(searchQuery.toLowerCase())
+    (org.description && org.description.toLowerCase().includes(searchQuery.toLowerCase())) ||
+    (org.category && org.category.toLowerCase().includes(searchQuery.toLowerCase()))
   );
 
   const handleRequestInfo = () => {
+    if (!selectedOrgId) return;
     requestInfoOrg(selectedOrgId, note);
     setRequestInfoModal(false);
     setNote('');
   };
 
   return (
-    <div className="p-6 md:p-10 space-y-8 max-w-6xl mx-auto">
+    <div className="p-4 sm:p-6 md:p-10 space-y-8 max-w-6xl mx-auto font-sans text-[#2A2621] text-left">
+      
       {/* Header */}
-      <div className="flex flex-col md:flex-row gap-6 justify-between md:items-end">
+      <div className="bg-white rounded-[28px] border border-black/[0.06] p-6 sm:p-8 shadow-sm flex flex-col md:flex-row gap-6 justify-between md:items-end">
         <div className="space-y-2">
-          <h1 className="text-3xl font-extrabold text-[#2A2621] tracking-tight">Organizations</h1>
-          <p className="text-sm text-[#5A554E]">Manage and verify campus student groups.</p>
+          <span className="bg-[#FD5C05]/10 text-[#FD5C05] text-[9.5px] font-black uppercase tracking-widest px-3 py-1 rounded-full border border-[#FD5C05]/20 flex items-center gap-1.5 w-fit">
+            <Building2 className="h-3.5 w-3.5" /> Campus Directory
+          </span>
+          <h1 className="text-2xl sm:text-3xl font-black text-[#2A2621] uppercase tracking-tight" style={{ fontFamily: 'var(--font-display)' }}>
+            Organizations Management
+          </h1>
+          <p className="text-xs sm:text-sm text-[#5A554E] font-medium leading-relaxed">
+            Manage, verify, and monitor student organizations registered at Livingstone College.
+          </p>
         </div>
+
         <div className="w-full md:w-80">
-           <div className="relative">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-[#5A554E]/50" />
-            <Input
-              placeholder="Search organizations..."
-              className="pl-12 rounded-full"
+          <div className="relative">
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-[#5A554E]" />
+            <input
+              type="text"
+              placeholder="Search organizations or categories..."
+              className="w-full bg-[#F8F6F0] border border-black/[0.08] rounded-full pl-11 pr-4 py-2.5 text-xs text-[#2A2621] font-semibold focus:outline-none focus:border-[#FD5C05] focus:bg-white transition-all shadow-xs"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
@@ -54,71 +75,131 @@ export default function OrganizationsPage() {
         </div>
       </div>
 
-      {/* Grid */}
+      {/* Organizations Grid */}
       {filteredOrgs.length > 0 ? (
         <div className="grid sm:grid-cols-2 gap-6">
-          {filteredOrgs.map((org) => (
-            <Card key={org.id} className="p-6 flex flex-col h-full">
-              <div className="flex items-start justify-between gap-4">
-                <div className="flex items-center gap-4">
-                  <div className={`h-14 w-14 rounded-2xl bg-gradient-to-br flex items-center justify-center from-${org.logoColor}-500 to-${org.logoColor}-700 shrink-0`}>
-                    <span className="font-bold text-[#2A2621] text-xl">{org.name.charAt(0)}</span>
-                  </div>
-                  <div>
-                    <h3 className="text-lg font-bold text-[#2A2621] leading-snug">{org.name}</h3>
-                    <div className="flex items-center gap-2 mt-1">
-                      <span className="text-xs text-[#5A554E]">{org.members.length} members</span>
-                      <span className="h-1 w-1 rounded-full bg-[#2A2621]/25" />
-                      {org.verified ? (
-                        <span className="flex items-center gap-1 text-[10px] font-bold text-[#2A2621] uppercase">
-                          <CheckCircle2 className="h-3 w-3" /> Verified
-                        </span>
-                      ) : (
-                        <span className="flex items-center gap-1 text-[10px] font-bold text-[#5A554E] uppercase">
-                          <XCircle className="h-3 w-3" /> Unverified
-                        </span>
-                      )}
+          {filteredOrgs.map((org) => {
+            const bgHex = getTailwindBgColor(org.logoColor || 'indigo');
+            return (
+              <Card key={org.id} className="p-6 rounded-[28px] border border-black/[0.06] bg-white shadow-sm flex flex-col justify-between space-y-5 text-left">
+                <div className="flex items-start justify-between gap-4">
+                  <div className="flex items-center gap-4">
+                    <div
+                      className="h-14 w-14 rounded-2xl text-white font-black text-xl flex items-center justify-center shadow-sm shrink-0"
+                      style={{ backgroundColor: bgHex }}
+                    >
+                      {org.name.charAt(0).toUpperCase()}
+                    </div>
+                    <div className="space-y-1">
+                      <div className="flex items-center gap-1.5">
+                        <h3 className="text-base font-black text-[#2A2621] uppercase tracking-tight leading-snug">
+                          {org.name}
+                        </h3>
+                        {org.verified && <VerifiedBadge className="h-4 w-4" />}
+                      </div>
+                      <p className="text-xs text-[#5A554E] line-clamp-2 font-medium">
+                        {org.description || org.aboutUs || 'No description provided.'}
+                      </p>
                     </div>
                   </div>
                 </div>
-              </div>
 
-              <p className="text-sm text-[#5A554E] mt-4 flex-1">
-                {org.description}
-              </p>
+                <div className="flex flex-wrap items-center gap-3 text-[10px] font-bold text-[#5A554E] uppercase border-t border-black/[0.04] pt-3">
+                  <span>{org.members.length} members</span>
+                  <span>•</span>
+                  <span>Category: {org.category || 'Social'}</span>
+                  <span>•</span>
+                  <span className={org.verified ? 'text-emerald-600 font-extrabold' : 'text-amber-700 font-extrabold'}>
+                    {org.verified ? 'Verified ✓' : 'Unverified'}
+                  </span>
+                </div>
 
-              <div className="pt-5 mt-5 border-t border-[#D8D2BC]/30 flex justify-end gap-2">
-                <Button variant="ghost" size="sm" onClick={() => suspendOrg(org.id)}>Suspend</Button>
-                <Button variant="ghost" size="sm" onClick={() => { setSelectedOrgId(org.id); setRequestInfoModal(true); }}>Request Info</Button>
-                <Button
-                  variant={org.verified ? "ghost" : "neon"}
-                  size="sm"
-                  onClick={() => toggleVerifyOrg(org.id)}
-                >
-                  {org.verified ? "Revoke Verification" : "Verify Organization"}
-                </Button>
-              </div>
-            </Card>
-          ))}
+                <div className="pt-2 flex flex-wrap items-center justify-end gap-2">
+                  <button
+                    onClick={() => suspendOrg(org.id)}
+                    className="px-3.5 py-2 bg-red-500/10 hover:bg-red-500/20 text-red-600 rounded-xl text-xs font-extrabold uppercase tracking-wider transition-all border border-red-200 cursor-pointer flex items-center gap-1"
+                  >
+                    <Ban className="h-3.5 w-3.5" /> Suspend
+                  </button>
+                  <button
+                    onClick={() => {
+                      setSelectedOrgId(org.id);
+                      setRequestInfoModal(true);
+                    }}
+                    className="px-3.5 py-2 bg-[#F8F6F0] hover:bg-black/[0.06] text-[#2A2621] rounded-xl text-xs font-extrabold uppercase tracking-wider transition-all border border-black/[0.06] cursor-pointer flex items-center gap-1"
+                  >
+                    <HelpCircle className="h-3.5 w-3.5" /> Request Info
+                  </button>
+                  <button
+                    onClick={() => toggleVerifyOrg(org.id)}
+                    className={`px-4 py-2 rounded-xl text-xs font-black uppercase tracking-wider transition-all cursor-pointer border-none flex items-center gap-1.5 ${
+                      org.verified
+                        ? 'bg-amber-100 text-amber-900 hover:bg-amber-200'
+                        : 'bg-[#FD5C05] hover:bg-[#CC3D00] text-white shadow-md shadow-[#FD5C05]/20'
+                    }`}
+                  >
+                    <ShieldCheck className="h-4 w-4" />
+                    {org.verified ? 'Revoke Verification' : 'Verify Organization'}
+                  </button>
+                </div>
+              </Card>
+            );
+          })}
         </div>
       ) : (
-        <EmptyState
-          icon={<Building2 className="h-8 w-8 text-[#5A554E]" />}
-          title="No organizations found"
-        />
+        <div className="bg-white rounded-[28px] border border-black/[0.06] p-12 text-center shadow-sm flex flex-col items-center justify-center space-y-3">
+          <Building className="h-10 w-10 text-[#5A554E]" />
+          <h3 className="text-base font-extrabold text-[#2A2621] uppercase tracking-tight">No Organizations Found</h3>
+          <p className="text-xs text-[#5A554E] max-w-sm font-medium">Try searching for a different name or category.</p>
+        </div>
       )}
 
-      <Modal isOpen={requestInfoModal} onClose={() => setRequestInfoModal(false)} title="Request Information">
-        <div className="space-y-4">
-          <textarea
-            className="w-full p-3 border rounded-lg"
-            placeholder="Enter request details..."
-            value={note}
-            onChange={(e) => setNote(e.target.value)}
-          />
-          <Button onClick={handleRequestInfo}>Send Request</Button>
+      {/* Request Info Modal */}
+      {requestInfoModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in">
+          <div className="relative w-full max-w-md bg-white rounded-[28px] p-7 shadow-2xl border border-black/[0.08] text-left space-y-4">
+            <div className="flex justify-between items-center">
+              <h3 className="text-base font-black text-[#2A2621] uppercase tracking-tight flex items-center gap-2">
+                <HelpCircle className="h-5 w-5 text-[#FD5C05]" /> Request Information
+              </h3>
+              <button
+                onClick={() => setRequestInfoModal(false)}
+                className="h-8 w-8 rounded-full bg-black/[0.04] hover:bg-black/[0.08] flex items-center justify-center text-[#5A554E] cursor-pointer border-none"
+              >
+                ✕
+              </button>
+            </div>
+
+            <p className="text-xs text-[#5A554E] font-medium leading-relaxed">
+              Send an official inquiry or requested documentation notice to the organization officers.
+            </p>
+
+            <textarea
+              rows={4}
+              className="w-full bg-[#F8F6F0] border border-black/[0.08] rounded-2xl p-3.5 text-xs text-[#2A2621] font-medium focus:outline-none focus:border-[#FD5C05] focus:bg-white resize-none"
+              placeholder="Enter details of required documents, officer clarification, or campus compliance info..."
+              value={note}
+              onChange={(e) => setNote(e.target.value)}
+            />
+
+            <div className="flex justify-end gap-3 pt-2">
+              <button
+                onClick={() => setRequestInfoModal(false)}
+                className="px-4 py-2.5 rounded-xl border border-black/10 text-xs font-bold text-[#5A554E] hover:bg-slate-50 cursor-pointer"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleRequestInfo}
+                className="px-5 py-2.5 bg-[#FD5C05] hover:bg-[#CC3D00] text-white text-xs font-black uppercase tracking-wider rounded-xl transition-all cursor-pointer border-none shadow-md shadow-[#FD5C05]/20 flex items-center gap-1.5"
+              >
+                <Send className="h-3.5 w-3.5" /> Send Inquiry
+              </button>
+            </div>
+          </div>
         </div>
-      </Modal>
+      )}
+
     </div>
   );
 }
