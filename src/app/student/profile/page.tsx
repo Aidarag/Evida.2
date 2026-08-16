@@ -777,223 +777,89 @@ function StudentProfilePageContent() {
               exit={{ opacity: 0, y: -10 }}
               transition={{ duration: 0.2 }}
             >
-              {/* TAB 1: GOING (Calendar + RSVP Timeline Grid) */}
+              {/* TAB 1: GOING (Event Cards Grid) */}
               {activeTab === 'going' && (
-                <div className="space-y-8">
-                  {/* Campus Calendar month grid card */}
-                  <div className="bg-white border border-black/[0.04] rounded-[28px] p-6 shadow-sm space-y-6">
-                    <div className="flex items-center justify-between border-b border-black/[0.04] pb-4">
-                      <div className="text-left">
-                        <span className="text-[#FD5C05] text-[9px] font-black uppercase tracking-widest flex items-center gap-1.5 mb-0.5">
-                          <Calendar className="h-3.5 w-3.5" /> RSVP Timeline
-                        </span>
-                        <h3 className="font-extrabold text-[#2A2621] text-lg uppercase tracking-tight" style={{ fontFamily: 'var(--font-display)' }}>
-                          Campus Calendar ({calendarDate.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })})
-                        </h3>
-                      </div>
-                      
-                      <div className="flex gap-1.5">
-                        <button 
-                          onClick={() => handleMonthNav('prev')}
-                          className="h-8 w-8 border border-black/[0.06] hover:bg-slate-50 text-black rounded-full flex items-center justify-center cursor-pointer transition-all"
+                <div className="space-y-4 text-left">
+                  <h3 className="text-sm font-black uppercase tracking-wider text-[#2A2621]">
+                    {isOwner ? "Attended Events" : `${profileUser.name}'s Attended Events`} ({attendedEvents.length})
+                  </h3>
+                  {attendedEvents.length > 0 ? (
+                    <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3">
+                      {attendedEvents.map(evt => (
+                        <div 
+                          key={evt.id}
+                          onClick={() => router.push(`/events/${evt.id}`)}
+                          className="bg-white border border-black/[0.04] rounded-2xl overflow-hidden hover:border-[#FD5C05]/40 hover:scale-[1.01] transition-all cursor-pointer shadow-sm flex flex-col h-full group"
                         >
-                          <ChevronLeft className="h-4 w-4" />
-                        </button>
-                        <button 
-                          onClick={() => handleMonthNav('next')}
-                          className="h-8 w-8 border border-black/[0.06] hover:bg-slate-50 text-black rounded-full flex items-center justify-center cursor-pointer transition-all"
-                        >
-                          <ChevronRight className="h-4 w-4" />
-                        </button>
-                      </div>
-                    </div>
+                          <div className="h-32 w-full bg-[#FD5C05]/10 shrink-0 relative">
+                            {evt.coverImage.includes('from-') ? (
+                              <div className={`w-full h-full bg-gradient-to-br ${evt.coverImage}`} />
+                            ) : (
+                              <img src={evt.coverImage} className="w-full h-full object-cover" alt="" />
+                            )}
+                            <span className="absolute top-2 left-2 text-[8px] font-black uppercase tracking-wider bg-black/60 backdrop-blur-[2px] text-white px-2 py-0.5 rounded">
+                              {evt.category}
+                            </span>
 
-                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
-                      {/* Calendar Month Grid */}
-                      <div className="lg:col-span-2 space-y-4">
-                        <div className="grid grid-cols-7 gap-1 text-center font-bold text-[9px] tracking-wider text-[#5A554E] uppercase">
-                          <span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span>
-                        </div>
-                        <div className="grid grid-cols-7 gap-1.5">
-                          {calendarDays.map((cell, idx) => {
-                            const dayEvents = cell.isCurrentMonth ? getEventsForDate(cell.date) : [];
-
-                            return (
-                              <div 
-                                key={idx}
-                                onClick={() => {
-                                  if (dayEvents.length > 0) {
-                                    setSelectedDayEvents(dayEvents);
-                                    setSelectedDateLabel(cell.date.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }));
-                                  }
+                            {currentUser && (
+                              <button 
+                                type="button"
+                                onClick={(e) => {
+                                  e.preventDefault();
+                                  e.stopPropagation();
+                                  saveToggle(evt.id);
                                 }}
-                                className={`
-                                  relative aspect-square border rounded-xl p-1.5 cursor-pointer flex flex-col items-center justify-between transition-all duration-200
-                                  ${cell.isCurrentMonth 
-                                    ? 'bg-white border-black/[0.04] hover:bg-black/[0.01] hover:border-[#FD5C05]/30'
-                                    : 'bg-black/[0.01] border-transparent text-[#5A554E] opacity-35'
-                                  }
-                                `}
+                                className="absolute top-1.5 right-1.5 z-20 cursor-pointer focus:outline-none p-1 group"
+                                title={evt.savedBy?.includes(currentUser.name) ? "Unsave Event" : "Save Event"}
                               >
-                                <span className={`text-xs font-extrabold ${cell.isCurrentMonth ? 'text-[#2A2621]' : 'text-[#5A554E]'}`}>
-                                  {cell.day}
-                                </span>
-
-                                {cell.isCurrentMonth && dayEvents.length > 0 && (
-                                  <div className="h-1.5 w-1.5 rounded-full bg-[#FD5C05] mb-1 shrink-0" />
-                                )}
-                              </div>
-                            );
-                          })}
-                        </div>
-                      </div>
-
-                      {/* Day Inspector Panel */}
-                      <div className="lg:col-span-1 border border-black/[0.04] rounded-2xl p-4 bg-slate-50/50 space-y-4">
-                        <div className="border-b border-black/[0.04] pb-2 text-left">
-                          <span className="text-[9px] font-bold text-[#5A554E] uppercase tracking-wider flex items-center gap-1">
-                            <Clock className="h-3.5 w-3.5" /> Date Selection
-                          </span>
-                          <h4 className="font-extrabold text-[#2A2621] text-xs uppercase tracking-wider mt-0.5">
-                            {selectedDateLabel}
-                          </h4>
-                        </div>
-
-                        <div className="space-y-3 max-h-60 overflow-y-auto pr-1 text-left">
-                          {selectedDayEvents.length > 0 ? (
-                            selectedDayEvents.map((evt, idx) => {
-                              const isUserGoing = currentUser ? evt.attendees?.includes(currentUser.name) : false;
-                              return (
-                                <div 
-                                  key={idx}
-                                  className="bg-white border border-black/[0.04] rounded-xl p-3.5 shadow-sm space-y-2.5 text-left"
-                                >
-                                  <div className="flex items-start justify-between gap-1.5">
-                                    <h5 className="font-bold text-xs text-[#2A2621] uppercase tracking-wide leading-tight">
-                                      {evt.title}
-                                    </h5>
-                                    {isUserGoing && (
-                                      <span className="text-[7px] font-black uppercase bg-[#FD5C05] text-white px-1.5 py-0.5 rounded-full shrink-0 flex items-center gap-0.5">
-                                        Going
-                                      </span>
-                                    )}
-                                  </div>
-                                  
-                                  <div className="text-[10px] text-[#5A554E] font-medium space-y-0.5">
-                                    <p className="flex items-center gap-1"><Clock className="h-3 w-3" /> {evt.time || 'All Day'}</p>
-                                    <p className="flex items-center gap-1"><MapPin className="h-3 w-3" /> {evt.location || 'Campus'}</p>
-                                  </div>
-
-                                  <div className="pt-2 border-t border-black/[0.04] flex items-center gap-1.5">
-                                    <button
-                                      className="flex-1 bg-[#2A2621] hover:bg-[#FD5C05] hover:text-[#2A2621] text-white py-1 px-2 text-[8px] font-bold uppercase rounded-lg cursor-pointer flex items-center justify-center gap-1 border-none transition-all"
-                                      onClick={() => handleDownloadCalendar(evt)}
-                                    >
-                                      <Calendar className="h-3 w-3" /> ICS Sync
-                                    </button>
-                                    <Link
-                                      href={`/events/${evt.id}`}
-                                      className="flex-1 py-1 px-2 text-center bg-black/[0.03] hover:bg-black/[0.08] text-[#2A2621] rounded-lg text-[8px] font-black uppercase tracking-wider transition-all"
-                                    >
-                                      View
-                                    </Link>
-                                  </div>
-                                </div>
-                              );
-                            })
-                          ) : (
-                            <p className="text-[10px] text-[#5A554E] italic py-8 text-center bg-white rounded-xl border border-black/[0.03]">
-                              No RSVP'd activities on this day.
-                            </p>
-                          )}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* List of Attended Events */}
-                  <div className="space-y-4 text-left">
-                    <h3 className="text-sm font-black uppercase tracking-wider text-[#2A2621]">
-                      {isOwner ? "Attended Events" : `${profileUser.name}'s Attended Events`} ({attendedEvents.length})
-                    </h3>
-                    {attendedEvents.length > 0 ? (
-                      <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3">
-                        {attendedEvents.map(evt => (
-                          <div 
-                            key={evt.id}
-                            onClick={() => router.push(`/events/${evt.id}`)}
-                            className="bg-white border border-black/[0.04] rounded-2xl overflow-hidden hover:border-[#FD5C05]/40 hover:scale-[1.01] transition-all cursor-pointer shadow-sm flex flex-col h-full group"
-                          >
-                            <div className="h-32 w-full bg-[#FD5C05]/10 shrink-0 relative">
-                              {evt.coverImage.includes('from-') ? (
-                                <div className={`w-full h-full bg-gradient-to-br ${evt.coverImage}`} />
-                              ) : (
-                                <img src={evt.coverImage} className="w-full h-full object-cover" alt="" />
-                              )}
-                              <span className="absolute top-2 left-2 text-[8px] font-black uppercase tracking-wider bg-black/60 backdrop-blur-[2px] text-white px-2 py-0.5 rounded">
-                                {evt.category}
-                              </span>
-
-                              {currentUser && (
-                                <button 
-                                  type="button"
-                                  onClick={(e) => {
-                                    e.preventDefault();
-                                    e.stopPropagation();
-                                    saveToggle(evt.id);
-                                  }}
-                                  className="absolute top-1.5 right-1.5 z-20 cursor-pointer focus:outline-none p-1 group"
-                                  title={evt.savedBy?.includes(currentUser.name) ? "Unsave Event" : "Save Event"}
-                                >
-                                  <Bookmark 
-                                    className={`h-4.5 w-4.5 transition-all duration-150 ease-in-out ${
-                                      evt.savedBy?.includes(currentUser.name) 
-                                        ? 'fill-[#FD5C05] text-[#FD5C05]' 
-                                        : 'text-white hover:text-[#FD5C05]/90 drop-shadow-[0_1px_2px_rgba(0,0,0,0.5)]'
-                                    }`} 
-                                  />
-                                </button>
-                              )}
-                            </div>
-                            <div className="p-4 flex-1 flex flex-col justify-between space-y-3">
-                              <div onClick={() => router.push(`/events/${evt.id}`)}>
-                                <p className="font-bold text-xs text-[#2A2621] uppercase tracking-wide line-clamp-2">{evt.title}</p>
-                                <p className="text-[9px] text-[#5A554E] font-medium mt-1">{evt.date} • {evt.time}</p>
-                              </div>
-                              <p className="text-[10px] text-[#5A554E] font-bold uppercase tracking-wider flex items-center gap-1">
-                                <MapPin className="h-3 w-3 text-[#FD5C05]" /> {evt.location}
-                              </p>
-                              {isOwner && (
-                                (new Date(evt.date + 'T23:59:59') < new Date()) ? (
-                                  <span className="w-full py-1.5 text-[9px] font-black uppercase tracking-wider text-emerald-600 bg-emerald-50 rounded-xl border border-emerald-200 text-center block">
-                                    Attended ✓
-                                  </span>
-                                ) : (
-                                  <button
-                                    onClick={(e) => {
-                                      e.stopPropagation();
-                                      rsvpToggle(evt.id, 'rsvp');
-                                      setToast({ message: 'RSVP cancelled', undoId: evt.id });
-                                    }}
-                                    className="w-full py-1.5 text-[9px] font-black uppercase tracking-wider text-red-500 hover:bg-red-50 rounded-xl border border-red-200 transition-all cursor-pointer"
-                                  >
-                                    Cancel RSVP
-                                  </button>
-                                )
-                              )}
-                            </div>
+                                <Bookmark 
+                                  className={`h-4.5 w-4.5 transition-all duration-150 ease-in-out ${
+                                    evt.savedBy?.includes(currentUser.name) 
+                                      ? 'fill-[#FD5C05] text-[#FD5C05]' 
+                                      : 'text-white hover:text-[#FD5C05]/90 drop-shadow-[0_1px_2px_rgba(0,0,0,0.5)]'
+                                  }`} 
+                                />
+                              </button>
+                            )}
                           </div>
-                        ))}
-                      </div>
-                    ) : (
-                      <div className="bg-white rounded-2xl p-8 border border-black/[0.04] text-center">
-                        <CalendarCheck className="h-10 w-10 text-[#FD5C05]/20 mx-auto mb-2" />
-                        <p className="text-xs text-[#5A554E]">
-                          {isOwner ? "You haven't RSVP'd to any events yet." : `${profileUser.name} hasn't RSVP'd to any events yet.`}
-                        </p>
-                      </div>
-                    )}
-                  </div>
+                          <div className="p-4 flex-1 flex flex-col justify-between space-y-3">
+                            <div onClick={() => router.push(`/events/${evt.id}`)}>
+                              <p className="font-bold text-xs text-[#2A2621] uppercase tracking-wide line-clamp-2">{evt.title}</p>
+                              <p className="text-[9px] text-[#5A554E] font-medium mt-1">{evt.date} • {evt.time}</p>
+                            </div>
+                            <p className="text-[10px] text-[#5A554E] font-bold uppercase tracking-wider flex items-center gap-1">
+                              <MapPin className="h-3 w-3 text-[#FD5C05]" /> {evt.location}
+                            </p>
+                            {isOwner && (
+                              (new Date(evt.date + 'T23:59:59') < new Date()) ? (
+                                <span className="w-full py-1.5 text-[9px] font-black uppercase tracking-wider text-emerald-600 bg-emerald-50 rounded-xl border border-emerald-200 text-center block">
+                                  Attended ✓
+                                </span>
+                              ) : (
+                                <button
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    rsvpToggle(evt.id, 'rsvp');
+                                    setToast({ message: 'RSVP cancelled', undoId: evt.id });
+                                  }}
+                                  className="w-full py-1.5 text-[9px] font-black uppercase tracking-wider text-red-500 hover:bg-red-50 rounded-xl border border-red-200 transition-all cursor-pointer"
+                                >
+                                  Cancel RSVP
+                                </button>
+                              )
+                            )}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="bg-white rounded-2xl p-8 border border-black/[0.04] text-center">
+                      <CalendarCheck className="h-10 w-10 text-[#FD5C05]/20 mx-auto mb-2" />
+                      <p className="text-xs text-[#5A554E]">
+                        {isOwner ? "You haven't RSVP'd to any events yet." : `${profileUser.name} hasn't RSVP'd to any events yet.`}
+                      </p>
+                    </div>
+                  )}
                 </div>
               )}
 
