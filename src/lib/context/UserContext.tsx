@@ -78,26 +78,30 @@ export function UserProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     // Check localStorage for persisted user
     const stored = typeof window !== 'undefined' ? localStorage.getItem('evida-user') : null;
+    const loggedOut = typeof window !== 'undefined' ? sessionStorage.getItem('evida-logged-out') : null;
     if (stored) {
       try {
         const parsed = JSON.parse(stored);
         if (parsed && parsed.username) {
           const matched = DEFAULT_USERS.find((u) => u.username === parsed.username);
           setCurrentUser(matched || parsed);
-        } else {
-          // No valid stored user — auto-login as default student
+        } else if (!loggedOut) {
           setCurrentUser(DEFAULT_USERS[0]);
           localStorage.setItem('evida-user', JSON.stringify(DEFAULT_USERS[0]));
         }
       } catch {
-        setCurrentUser(DEFAULT_USERS[0]);
-        localStorage.setItem('evida-user', JSON.stringify(DEFAULT_USERS[0]));
+        if (!loggedOut) {
+          setCurrentUser(DEFAULT_USERS[0]);
+          localStorage.setItem('evida-user', JSON.stringify(DEFAULT_USERS[0]));
+        }
       }
     } else {
-      // No stored session at all — auto-login as default student
-      setCurrentUser(DEFAULT_USERS[0]);
-      if (typeof window !== 'undefined') {
-        localStorage.setItem('evida-user', JSON.stringify(DEFAULT_USERS[0]));
+      // If user has not explicitly logged out, default to first user for easy demo access
+      if (!loggedOut) {
+        setCurrentUser(DEFAULT_USERS[0]);
+        if (typeof window !== 'undefined') {
+          localStorage.setItem('evida-user', JSON.stringify(DEFAULT_USERS[0]));
+        }
       }
     }
 
@@ -116,6 +120,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
     setCurrentUser(user);
     if (typeof window !== 'undefined') {
       localStorage.setItem('evida-user', JSON.stringify(user));
+      sessionStorage.removeItem('evida-logged-out');
     }
   }, []);
 
@@ -132,8 +137,9 @@ export function UserProvider({ children }: { children: ReactNode }) {
     if (typeof window !== 'undefined') {
       localStorage.removeItem('evida-user');
       localStorage.removeItem('evida-active-profile');
+      sessionStorage.setItem('evida-logged-out', 'true');
       sessionStorage.setItem('evida_force_redirect_splash', 'true');
-      window.location.href = '/';
+      window.location.href = '/login';
     }
   }, []);
 

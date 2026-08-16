@@ -4,7 +4,7 @@ import React from 'react';
 import { createPortal } from 'react-dom';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Home, Compass, Plus, User, Settings, BarChart3, Shield, Star, ClipboardList, Building2, Menu, X, Calendar, ChevronDown, ChevronLeft, ChevronRight, Bell, Bookmark, Megaphone, Users, Sparkles, ArrowLeft, ArrowRight } from 'lucide-react';
+import { Home, Compass, Plus, User, Settings, BarChart3, Shield, Star, ClipboardList, Building2, Menu, X, Calendar, ChevronDown, ChevronLeft, ChevronRight, Bell, Bookmark, Megaphone, Users, Sparkles, ArrowLeft, ArrowRight, LogOut } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useUser } from '@/lib/context/UserContext';
 import { useEvents } from '@/lib/context/EventContext';
@@ -333,6 +333,7 @@ export function DesktopSidebar({
   onChangeState?: (state: 'expanded' | 'collapsed' | 'hidden') => void;
 }) {
   const pathname = usePathname();
+  const { logout } = useUser();
 
   const studentLinks = [
     { href: '/student/dashboard', icon: Home, label: 'Home' },
@@ -437,7 +438,7 @@ export function DesktopSidebar({
       </div>
 
       <div className="space-y-3">
-        <div className="border-t border-black/[0.04] pt-4">
+        <div className="border-t border-black/[0.04] pt-4 space-y-1">
           {variant === 'student' ? (
             <Link 
               href="/school/dashboard" 
@@ -461,6 +462,17 @@ export function DesktopSidebar({
               {state !== 'collapsed' && <span>Student Portal</span>}
             </Link>
           )}
+
+          <button 
+            onClick={logout}
+            title={state === 'collapsed' ? "Sign Out" : undefined}
+            className={`w-full flex items-center rounded-xl text-xs text-red-600 hover:bg-red-50 hover:text-red-700 transition-colors cursor-pointer border-none bg-transparent ${
+              state === 'collapsed' ? 'justify-center p-2.5 w-10 h-10 mx-auto' : 'gap-3 px-4 py-2.5'
+            }`}
+          >
+            <LogOut className="h-4 w-4 shrink-0 text-red-500" />
+            {state !== 'collapsed' && <span className="font-extrabold">Sign Out</span>}
+          </button>
         </div>
       </div>
     </aside>
@@ -480,6 +492,7 @@ export function TabletDrawerSidebar({
   onClose: () => void; 
 }) {
   const pathname = usePathname();
+  const { logout } = useUser();
   const studentLinks = [
     { href: '/student/dashboard', icon: Home, label: 'Home' },
     { href: '/student/explore', icon: Compass, label: 'Explore' },
@@ -562,7 +575,7 @@ export function TabletDrawerSidebar({
             </div>
 
             <div className="space-y-3">
-              <div className="border-t border-black/[0.04] pt-4">
+              <div className="border-t border-black/[0.04] pt-4 space-y-1">
                 {variant === 'student' ? (
                   <Link 
                     href="/school/dashboard" 
@@ -582,6 +595,16 @@ export function TabletDrawerSidebar({
                     Student Portal
                   </Link>
                 )}
+                <button 
+                  onClick={() => {
+                    onClose();
+                    logout();
+                  }}
+                  className="w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-xs font-extrabold text-red-600 hover:bg-red-50 transition-colors cursor-pointer border-none bg-transparent"
+                >
+                  <LogOut className="h-4 w-4 text-red-500" />
+                  <span>Sign Out</span>
+                </button>
               </div>
             </div>
           </motion.aside>
@@ -606,7 +629,7 @@ function getTailwindBgColor(color: string) {
 
 export function ProfileSwitcher() {
   const router = useRouter();
-  const { currentUser, activeProfile, setActiveProfile } = useUser();
+  const { currentUser, activeProfile, setActiveProfile, logout } = useUser();
   const { organizations } = useEvents();
   const [dropdownOpen, setDropdownOpen] = React.useState(false);
 
@@ -645,8 +668,6 @@ export function ProfileSwitcher() {
     setDropdownOpen(false);
   };
 
-
-
   return (
     <div className="relative inline-block text-left" ref={dropdownRef}>
       {/* Trigger Button */}
@@ -667,7 +688,7 @@ export function ProfileSwitcher() {
         ) : (
           <>
             <div
-              className="h-7 w-7 rounded-full flex items-center justify-center text-white text-[10px] font-black select-none shrink-0 shadow-sm"
+              className="h-7 w-7 rounded-full flex items-center justify-center text-white text-[10px] font-black shrink-0 shadow-sm"
               style={{
                 backgroundColor:
                   activeProfile.orgId &&
@@ -755,7 +776,7 @@ export function ProfileSwitcher() {
               })}
             </div>
 
-            {/* Always visible Create Organization Action */}
+            {/* Always visible Create Organization & Sign Out Actions */}
             <div className="p-1.5 space-y-1">
               <button
                 onClick={() => {
@@ -766,6 +787,17 @@ export function ProfileSwitcher() {
               >
                 <Plus className="h-4 w-4 text-[#FD5C05] stroke-[3]" />
                 <span className="truncate">Create New Organization</span>
+              </button>
+
+              <button
+                onClick={() => {
+                  setDropdownOpen(false);
+                  logout();
+                }}
+                className="w-full text-left flex items-center gap-2 px-3 py-2 rounded-xl text-red-600 hover:bg-red-50 font-extrabold text-xs cursor-pointer transition-all border-none bg-transparent"
+              >
+                <LogOut className="h-4 w-4 text-red-500" />
+                <span className="truncate">Sign Out</span>
               </button>
             </div>
           </motion.div>

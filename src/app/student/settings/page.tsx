@@ -185,6 +185,12 @@ export default function StudentSettingsPage() {
         { id: 'terms', label: 'Terms of Service', subtitle: 'User conduct & policies', Icon: FileText, iconBg: 'bg-teal-500/10', iconColor: 'text-teal-600', onClick: () => setActiveModal('terms') },
         { id: 'policy', label: 'Privacy Policy', subtitle: 'Data usage standards', Icon: Lock, iconBg: 'bg-slate-500/10', iconColor: 'text-slate-600', onClick: () => setActiveModal('policy') },
       ]
+    },
+    {
+      title: 'Session',
+      items: [
+        { id: 'logout', label: 'Sign Out', subtitle: 'Disconnect from your active Evida session', Icon: LogOut, iconBg: 'bg-red-500/10', iconColor: 'text-red-600', onClick: handleLogout },
+      ]
     }
   ];
 
