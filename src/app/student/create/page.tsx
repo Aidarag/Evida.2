@@ -480,7 +480,7 @@ function CreateListingPageContent() {
                   <Zap className="h-5 w-5" />
                 </div>
                 <div>
-                  <h3 className="text-lg font-bold text-[#2A2621] uppercase tracking-wide">Out school</h3>
+                  <h3 className="text-lg font-bold text-[#2A2621] uppercase tracking-wide">Off Campus</h3>
                   <p className="text-xs text-[#5A554E] mt-2 leading-relaxed">
                     Not using any school spaces or resources. Your event will be shared with the campus community immediately.
                   </p>
@@ -497,7 +497,7 @@ function CreateListingPageContent() {
                   <Clock className="h-5 w-5" />
                 </div>
                 <div>
-                  <h3 className="text-lg font-bold text-[#2A2621] uppercase tracking-wide">On school</h3>
+                  <h3 className="text-lg font-bold text-[#2A2621] uppercase tracking-wide">On Campus</h3>
                   <p className="text-xs text-[#5A554E] mt-2 leading-relaxed">
                     Requesting campus rooms, fields, or school resources. Your event will be submitted for school review before publishing.
                   </p>
@@ -535,7 +535,7 @@ function CreateListingPageContent() {
                 <span className="text-[10px] font-bold text-gray-500 uppercase tracking-widest block text-left">
                   {createType === 'promotion' 
                     ? 'Promotion Campaign' 
-                    : `${creatorEntity === 'student' ? 'My Event' : 'Organization Event'} — ${eventSubtype === 'quick' ? 'Out School' : 'On School'}`}
+                    : `${creatorEntity === 'student' ? 'My Event' : 'Organization Event'} — ${eventSubtype === 'quick' ? 'Off Campus' : 'On Campus'}`}
                 </span>
                 <h1 className="font-extrabold text-[#2A2621] tracking-wide text-left" style={{ fontFamily: 'var(--font-display)' }}>
                   {createType === 'promotion' ? 'Create Promotion' : 'Event Details'}
