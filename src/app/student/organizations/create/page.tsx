@@ -5,7 +5,6 @@ import { useRouter } from 'next/navigation';
 import { useEvents } from '@/lib/context/EventContext';
 import { useUser } from '@/lib/context/UserContext';
 import { ArrowLeft, Building2, Calendar, Megaphone, Users, Sparkles, Check, Globe, Mail, ShieldCheck, ArrowRight, Info } from 'lucide-react';
-import Button from '@/components/ui/Button';
 import Card from '@/components/ui/Card';
 
 const LOGO_COLORS = [
@@ -41,7 +40,11 @@ export default function CreateOrganizationPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!orgName.trim() || !orgDesc.trim()) return;
+    if (!orgName.trim() || !orgDesc.trim()) {
+      alert('Please fill out the organization name and description in Step 1.');
+      setStep(1);
+      return;
+    }
 
     setIsSubmitting(true);
     try {
@@ -114,33 +117,29 @@ export default function CreateOrganizationPage() {
         {/* Form Container */}
         <Card className="p-6 sm:p-8 rounded-[28px] border-2 border-black/[0.04] bg-white text-[#2A2621] shadow-sm text-left">
           
-          {/* Stepper Bar */}
-          <div className="flex items-center justify-between border-b border-black/[0.06] pb-6 mb-6 gap-2">
+          {/* Stepper Bar (Switchable MVP Tabs) */}
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between border-b border-black/[0.06] pb-6 mb-6 gap-2.5">
             {[
-              { num: 1, label: 'General Info' },
-              { num: 2, label: 'Branding & Contact' },
-              { num: 3, label: 'Review & Create' },
+              { num: 1, label: 'GENERAL INFO' },
+              { num: 2, label: 'BRANDING & CONTACT' },
+              { num: 3, label: 'REVIEW & CREATE' },
             ].map((s) => (
               <button
                 key={s.num}
                 type="button"
-                onClick={() => {
-                  if (s.num === 2 && !orgName.trim()) return;
-                  if (s.num === 3 && (!orgName.trim() || !orgDesc.trim())) return;
-                  setStep(s.num);
-                }}
-                className={`flex-1 flex items-center justify-center gap-2 py-2 px-3 rounded-xl transition-all cursor-pointer text-xs font-bold ${
+                onClick={() => setStep(s.num)}
+                className={`flex-1 flex items-center justify-center gap-2.5 py-3 px-4 rounded-full transition-all cursor-pointer text-xs font-black uppercase tracking-wider border-none ${
                   step === s.num
-                    ? 'bg-[#FD5C05] text-white shadow-xs'
-                    : step > s.num
-                    ? 'bg-[#FD5C05]/10 text-[#FD5C05]'
-                    : 'bg-black/[0.03] text-[#5A554E]'
+                    ? 'bg-[#FD5C05] text-white shadow-md shadow-[#FD5C05]/20 scale-[1.02]'
+                    : 'bg-[#F8F6F0] text-[#5A554E] hover:bg-black/[0.06] hover:text-[#2A2621]'
                 }`}
               >
-                <span className="h-5 w-5 rounded-full bg-white/20 flex items-center justify-center text-[10px] font-black shrink-0">
-                  {step > s.num ? '✓' : s.num}
+                <span className={`h-5 w-5 rounded-full flex items-center justify-center text-[10px] font-black shrink-0 ${
+                  step === s.num ? 'bg-white text-[#FD5C05]' : 'bg-black/10 text-[#5A554E]'
+                }`}>
+                  {s.num}
                 </span>
-                <span className="hidden sm:inline uppercase text-[10px] tracking-wider truncate">{s.label}</span>
+                <span className="truncate">{s.label}</span>
               </button>
             ))}
           </div>
@@ -149,7 +148,7 @@ export default function CreateOrganizationPage() {
             
             {/* STEP 1: General Info */}
             {step === 1 && (
-              <div className="space-y-5">
+              <div className="space-y-5 animate-fade-in">
                 <div className="space-y-1.5">
                   <label className="block text-xs font-bold uppercase tracking-wider text-[#5A554E]">
                     Organization Name *
@@ -216,9 +215,8 @@ export default function CreateOrganizationPage() {
                 <div className="pt-4 border-t border-black/[0.04] flex justify-end">
                   <button
                     type="button"
-                    disabled={!orgName.trim() || !orgDesc.trim()}
                     onClick={() => setStep(2)}
-                    className="px-6 py-3 rounded-full bg-[#2A2621] hover:bg-[#FD5C05] text-white text-xs font-black uppercase tracking-wider transition-all disabled:opacity-40 cursor-pointer border-none flex items-center gap-2 shadow-sm"
+                    className="px-6 py-3 rounded-full bg-[#2A2621] hover:bg-[#FD5C05] text-white text-xs font-black uppercase tracking-wider transition-all cursor-pointer border-none flex items-center gap-2 shadow-sm"
                   >
                     Continue to Branding <ArrowRight className="h-4 w-4" />
                   </button>
@@ -228,7 +226,7 @@ export default function CreateOrganizationPage() {
 
             {/* STEP 2: Branding & Contact */}
             {step === 2 && (
-              <div className="space-y-5">
+              <div className="space-y-5 animate-fade-in">
                 <div className="space-y-2">
                   <label className="block text-xs font-bold uppercase tracking-wider text-[#5A554E]">
                     Choose Theme Logo Color
@@ -299,7 +297,7 @@ export default function CreateOrganizationPage() {
                     onClick={() => setStep(1)}
                     className="px-5 py-2.5 rounded-full border border-black/10 hover:bg-slate-50 text-[#2A2621] text-xs font-bold uppercase tracking-wider transition-all cursor-pointer"
                   >
-                    ← Back
+                    ← Step 1: General Info
                   </button>
                   <button
                     type="button"
@@ -314,7 +312,7 @@ export default function CreateOrganizationPage() {
 
             {/* STEP 3: Review & Submit */}
             {step === 3 && (
-              <div className="space-y-6">
+              <div className="space-y-6 animate-fade-in">
                 
                 {/* Live Card Preview */}
                 <div className="p-5 bg-gradient-to-b from-[#FDFBF7] to-white border border-[#FD5C05]/20 rounded-2xl space-y-4 shadow-xs">
@@ -360,7 +358,7 @@ export default function CreateOrganizationPage() {
                     onClick={() => setStep(2)}
                     className="px-5 py-2.5 rounded-full border border-black/10 hover:bg-slate-50 text-[#2A2621] text-xs font-bold uppercase tracking-wider transition-all cursor-pointer"
                   >
-                    ← Back
+                    ← Step 2: Branding
                   </button>
 
                   <button
