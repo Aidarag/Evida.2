@@ -133,18 +133,18 @@ const EventCardInner = React.memo(function EventCardInner({
         </div>
       </div>
 
-      {/* 2. CONTENT BODY (Padding: 14px 18px 12px, flex: 1, min-height: 0) */}
-      <div className="p-[14px_18px_12px] flex flex-col flex-1 min-h-0 justify-between text-left">
+      {/* 2. CONTENT BODY (Padding: 12px 16px 10px, flex: 1, min-height: 0) */}
+      <div className="p-[12px_16px_10px] flex flex-col flex-1 min-h-0 justify-between text-left">
         <div className="space-y-1">
           {/* Date & Time (11px, font-weight: 700, single line) */}
-          <div className="text-[#FD5C05] text-[11px] font-bold uppercase tracking-wider truncate block leading-none">
+          <div className="text-[#FD5C05] text-[11px] font-bold uppercase tracking-wider truncate block leading-none h-[14px]">
             {fullDateTime}
           </div>
 
-          {/* Title (20px, font-weight: 700, line-height: 1.05, reserved height exactly 2 lines, line-clamp: 2) */}
-          <div className="h-[46px] min-h-[46px] max-h-[46px] flex items-start overflow-hidden pt-0.5">
+          {/* Title (18px, font-weight: 700, line-height: 1.15, reserved height 52px for 2 full lines without clipping) */}
+          <div className="h-[52px] min-h-[52px] max-h-[52px] flex items-start overflow-hidden pt-0.5">
             <h3
-              className="text-[#2A2621] font-bold text-[20px] leading-[1.05] tracking-tight group-hover:text-[#FD5C05] transition-colors block w-full text-left"
+              className="text-[#2A2621] font-bold text-[17px] sm:text-[18px] leading-[1.15] tracking-tight group-hover:text-[#FD5C05] transition-colors block w-full text-left"
               style={{
                 display: '-webkit-box',
                 WebkitBoxOrient: 'vertical',
