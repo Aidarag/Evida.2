@@ -31,7 +31,7 @@ export default function OrganizationProfilePage() {
   const params = useParams();
   const router = useRouter();
   const { id } = params as { id: string };
-  const { events, organizations, saveToggle } = useEvents();
+  const { events, organizations, saveToggle, deleteOrg } = useEvents();
   const { currentUser, activeProfile } = useUser();
 
   const [activeTab, setActiveTab] = useState<'home' | 'events' | 'news' | 'about' | 'manage'>('home');
@@ -42,6 +42,17 @@ export default function OrganizationProfilePage() {
   const [annTitle, setAnnTitle] = useState('');
   const [annContent, setAnnContent] = useState('');
   const [isPostingAnn, setIsPostingAnn] = useState(false);
+
+  const handleDeleteOrganization = async () => {
+    if (!org) return;
+    if (!confirm(`Are you sure you want to permanently delete "${org.name}"? This action cannot be undone.`)) {
+      return;
+    }
+    const success = await deleteOrg(org.id);
+    if (success) {
+      router.push('/student/dashboard');
+    }
+  };
 
   // Find organization
   const org = organizations.find((o) => o.id === id);
@@ -1067,6 +1078,26 @@ export default function OrganizationProfilePage() {
                       </div>
                     );
                   })}
+                </div>
+              </div>
+
+              {/* Danger Zone: Delete Organization */}
+              <div className="bg-red-500/5 rounded-[24px] border border-red-500/20 p-6 space-y-4 shadow-sm text-left">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                  <div>
+                    <h3 className="text-xs font-black tracking-widest text-red-600 uppercase flex items-center gap-1.5">
+                      <Trash2 className="h-4 w-4" /> Danger Zone
+                    </h3>
+                    <p className="text-xs text-[#5A554E] font-medium mt-1">
+                      Permanently delete this organization, member records, announcements, and remove it from Evida.
+                    </p>
+                  </div>
+                  <button
+                    onClick={handleDeleteOrganization}
+                    className="px-4 py-2.5 bg-red-600 hover:bg-red-700 text-white text-xs font-black uppercase tracking-wider rounded-xl transition-all cursor-pointer shadow-md shadow-red-600/20 flex items-center gap-1.5 border-none shrink-0"
+                  >
+                    <Trash2 className="h-4 w-4" /> Delete Organization
+                  </button>
                 </div>
               </div>
 

@@ -133,6 +133,17 @@ export async function POST(request: Request) {
       return NextResponse.json(org);
     }
 
+    if (action === 'delete') {
+      const idx = db.organizations.findIndex((o) => o.id === id);
+      if (idx === -1) return NextResponse.json({ error: 'Organization not found' }, { status: 404 });
+      db.organizations.splice(idx, 1);
+      db.users.forEach((u) => {
+        if (u.organizations) u.organizations = u.organizations.filter((oId) => oId !== id);
+      });
+      await writeDBAsync(db);
+      return NextResponse.json({ success: true, message: 'Organization deleted' });
+    }
+
     if (!name || !description) {
       return NextResponse.json({ error: 'Name and description are required' }, { status: 400 });
     }
@@ -181,5 +192,35 @@ export async function POST(request: Request) {
     return NextResponse.json(newOrg, { status: 201 });
   } catch (error) {
     return NextResponse.json({ error: 'Failed to manage organization' }, { status: 500 });
+  }
+}
+
+export async function DELETE(request: Request) {
+  try {
+    const { searchParams } = new URL(request.url);
+    const id = searchParams.get('id');
+
+    if (!id) {
+      return NextResponse.json({ error: 'Organization ID required' }, { status: 400 });
+    }
+
+    const db = await readDBAsync();
+    const idx = db.organizations.findIndex((o) => o.id === id);
+
+    if (idx === -1) {
+      return NextResponse.json({ error: 'Organization not found' }, { status: 404 });
+    }
+
+    db.organizations.splice(idx, 1);
+    db.users.forEach((u) => {
+      if (u.organizations) {
+        u.organizations = u.organizations.filter((oId) => oId !== id);
+      }
+    });
+
+    await writeDBAsync(db);
+    return NextResponse.json({ success: true, message: 'Organization deleted' });
+  } catch (error) {
+    return NextResponse.json({ error: 'Failed to delete organization' }, { status: 500 });
   }
 }

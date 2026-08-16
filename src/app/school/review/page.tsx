@@ -6,7 +6,7 @@ import { useUser } from '@/lib/context/UserContext';
 import { Event, Organization } from '@/lib/types';
 import Card from '@/components/ui/Card';
 import VerifiedBadge from '@/components/ui/VerifiedBadge';
-import { ClipboardList, Check, X, Calendar, MapPin, Users, AlertTriangle, ShieldCheck, HelpCircle, Ban, Send, Sparkles, Clock, Building } from 'lucide-react';
+import { ClipboardList, Check, X, Calendar, MapPin, Users, AlertTriangle, ShieldCheck, HelpCircle, Ban, Send, Sparkles, Clock, Building, Trash2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 function getTailwindBgColor(color: string) {
@@ -24,7 +24,7 @@ function getTailwindBgColor(color: string) {
 }
 
 export default function ReviewQueuePage() {
-  const { events, organizations, reviewEvent, toggleVerifyOrg, suspendOrg, requestInfoOrg } = useEvents();
+  const { events, organizations, reviewEvent, toggleVerifyOrg, suspendOrg, requestInfoOrg, deleteOrg } = useEvents();
   const { currentUser } = useUser();
   const [activeQueue, setActiveQueue] = useState<'all' | 'quick' | 'standard' | 'complex'>('all');
   const [orgRequestInfoModal, setOrgRequestInfoModal] = useState(false);
@@ -241,6 +241,17 @@ export default function ReviewQueuePage() {
                   </div>
 
                   <div className="pt-2 flex flex-wrap items-center justify-end gap-2">
+                    <button
+                      onClick={() => {
+                        if (confirm(`Are you sure you want to delete "${org.name}"?`)) {
+                          deleteOrg(org.id);
+                        }
+                      }}
+                      className="px-3.5 py-2 bg-red-600 hover:bg-red-700 text-white rounded-xl text-xs font-extrabold uppercase tracking-wider transition-all cursor-pointer border-none flex items-center gap-1 shadow-sm"
+                      title="Delete Organization"
+                    >
+                      <Trash2 className="h-3.5 w-3.5" /> Delete
+                    </button>
                     <button
                       onClick={() => suspendOrg(org.id)}
                       className="px-3.5 py-2 bg-red-500/10 hover:bg-red-500/20 text-red-600 rounded-xl text-xs font-extrabold uppercase tracking-wider transition-all border border-red-200 cursor-pointer flex items-center gap-1"
