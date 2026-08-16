@@ -129,8 +129,8 @@ export default function OrgWorkspace({
 
         <div className="flex items-center gap-2">
           <button
-            onClick={() => setCreateOrgOpen(true)}
-            className="flex items-center gap-1 bg-[#2A2621] text-white text-xs font-bold rounded-full px-4 py-2.5 transition-all hover:bg-[#FD5C05] hover:text-[#2A2621] cursor-pointer shadow-sm"
+            onClick={() => router.push('/student/organizations/create')}
+            className="flex items-center gap-1 bg-[#2A2621] text-white text-xs font-bold rounded-full px-4 py-2.5 transition-all hover:bg-[#FD5C05] hover:text-[#2A2621] cursor-pointer shadow-sm border-none"
           >
             <Plus className="h-4 w-4" />
             New Organization
