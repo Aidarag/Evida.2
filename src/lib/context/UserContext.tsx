@@ -118,8 +118,10 @@ export function UserProvider({ children }: { children: ReactNode }) {
 
   const handleSetUser = useCallback((user: User) => {
     setCurrentUser(user);
+    setActiveProfileState({ type: 'student' });
     if (typeof window !== 'undefined') {
       localStorage.setItem('evida-user', JSON.stringify(user));
+      localStorage.setItem('evida-active-profile', JSON.stringify({ type: 'student' }));
       sessionStorage.removeItem('evida-logged-out');
     }
   }, []);

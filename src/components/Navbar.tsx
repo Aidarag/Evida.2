@@ -648,24 +648,36 @@ export function ProfileSwitcher() {
   if (!currentUser) return null;
 
   // Filter organizations the user is member of/officer of
-  const myOrgs = organizations.filter(org => 
-    (currentUser.organizations || []).includes(org.id) ||
-    org.members?.includes(currentUser.name) ||
-    (currentUser.username ? org.members?.includes(currentUser.username) : false) ||
-    org.creatorUsername === currentUser.username ||
-    org.creatorUsername === currentUser.name
-  );
+  const myOrgs = organizations.filter(org => {
+    if (!currentUser) return false;
+    const isIdMatch = (currentUser.organizations || []).includes(org.id);
+    const isMemberName = org.members?.some(m => m?.toLowerCase() === currentUser.name?.toLowerCase());
+    const isMemberUsername = Boolean(currentUser.username && org.members?.some(m => m?.toLowerCase() === currentUser.username?.toLowerCase()));
+    const isCreator = Boolean(
+      org.creatorUsername && (
+        org.creatorUsername.toLowerCase() === currentUser.username?.toLowerCase() ||
+        org.creatorUsername.toLowerCase() === currentUser.name?.toLowerCase()
+      )
+    );
+    const hasRole = Boolean(
+      (currentUser.name && org.memberRoles?.[currentUser.name]) ||
+      (currentUser.username && org.memberRoles?.[currentUser.username])
+    );
+    return isIdMatch || isMemberName || isMemberUsername || isCreator || hasRole;
+  });
 
   const handleSwitchToStudent = () => {
     setActiveProfile({ type: 'student' });
-    router.push('/student/dashboard');
     setDropdownOpen(false);
+    router.push('/student/dashboard');
+    router.refresh();
   };
 
   const handleSwitchToOrg = (orgId: string, name: string) => {
     setActiveProfile({ type: 'organization', orgId, name });
-    router.push(`/student/organizations/${orgId}`);
     setDropdownOpen(false);
+    router.push(`/student/organizations/${orgId}`);
+    router.refresh();
   };
 
   return (
