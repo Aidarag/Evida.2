@@ -210,7 +210,7 @@ export default function ExplorePage() {
     />
   );
 
-  // Helper to render organization cards (CSS Grid Architecture: 52px header, 145px content, 48px footer = 245px total)
+  // Helper to render organization cards (CSS Grid Architecture: 52px header, 150px content, 48px footer = 250px total)
   const renderOrganizationCard = (org: Organization, isGridItem: boolean = false) => {
     const bgLogoColor = (!org.logoColor || org.logoColor.toLowerCase() === 'white' || org.logoColor === '#ffffff')
       ? '#FD5C05'
@@ -222,7 +222,7 @@ export default function ExplorePage() {
         whileHover={{ y: -4 }}
         transition={{ type: "spring", stiffness: 400, damping: 25 }}
         onClick={() => router.push(`/student/organizations/${org.id}`)}
-        className={`${isGridItem ? 'w-full' : 'w-64 sm:w-[260px] shrink-0'} bg-white border border-black/[0.06] hover:border-[#FD5C05] rounded-[16px] overflow-hidden shadow-xs hover:shadow-md transition-all duration-300 cursor-pointer group h-[245px] min-h-[245px] max-h-[245px] grid grid-rows-[52px_145px_48px] select-none text-left`}
+        className={`${isGridItem ? 'w-full' : 'w-64 sm:w-[260px] shrink-0'} bg-white border border-black/[0.06] hover:border-[#FD5C05] rounded-[16px] overflow-hidden shadow-xs hover:shadow-md transition-all duration-300 cursor-pointer group h-[250px] min-h-[250px] max-h-[250px] grid grid-rows-[52px_150px_48px] select-none text-left`}
       >
         {/* Row 1: Header (52px) */}
         <div className="px-4 pt-3.5 pb-1 flex items-center justify-between">
@@ -239,12 +239,12 @@ export default function ExplorePage() {
           )}
         </div>
 
-        {/* Row 2: Content (145px - Title + Description ONLY) */}
+        {/* Row 2: Content (150px - Title + Description ONLY) */}
         <div className="px-4 pt-1 pb-2 flex flex-col justify-start overflow-hidden min-h-0">
-          {/* Title (2 lines max, reserved 44px) */}
-          <div className="h-[44px] min-h-[44px] max-h-[44px] flex items-start overflow-hidden">
+          {/* Title (2 lines max, 52px reserved height for zero clipping) */}
+          <div className="h-[52px] min-h-[52px] max-h-[52px] flex items-start overflow-hidden">
             <h3 
-              className="font-bold text-[18px] leading-[22px] text-[#2A2621] group-hover:text-[#FD5C05] transition-colors tracking-tight text-left block w-full"
+              className="font-bold text-[17px] sm:text-[18px] leading-[22px] text-[#2A2621] group-hover:text-[#FD5C05] transition-colors tracking-tight text-left block w-full"
               style={{
                 display: '-webkit-box',
                 WebkitBoxOrient: 'vertical',
@@ -257,10 +257,10 @@ export default function ExplorePage() {
             </h3>
           </div>
 
-          {/* Description (3 lines max, reserved 54px) */}
-          <div className="mt-1.5 h-[54px] min-h-[54px] max-h-[54px] flex items-start overflow-hidden">
+          {/* Description (3 lines max, reserved 48px) */}
+          <div className="mt-1 h-[48px] min-h-[48px] max-h-[48px] flex items-start overflow-hidden">
             <p 
-              className="text-[11px] leading-[17px] font-semibold text-[#5A554E] text-left block w-full"
+              className="text-[11px] leading-[16px] font-semibold text-[#5A554E] text-left block w-full"
               style={{
                 display: '-webkit-box',
                 WebkitBoxOrient: 'vertical',
