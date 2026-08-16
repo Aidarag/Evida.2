@@ -392,20 +392,22 @@ export default function OrganizationProfilePage() {
           <span className="text-[10px] font-extrabold text-[#5A554E] uppercase tracking-widest">
             Campus Directory
           </span>
-                {/* Header CTA Button */}
+        </div>
+
+        {/* Header CTA Button */}
         {currentUser && (
           <div className="flex items-center gap-2">
             {isAdminOrLeader ? (
               <button
                 onClick={() => setActiveTab('manage')}
-                className="px-4 py-1.5 bg-[#2A2621] hover:bg-[#FD5C05] text-white text-xs font-black uppercase tracking-wider rounded-full shadow-sm transition-all cursor-pointer flex items-center gap-1.5 border-none"
+                className="px-3 sm:px-4 py-1.5 bg-[#2A2621] hover:bg-[#FD5C05] text-white text-xs font-black uppercase tracking-wider rounded-full shadow-sm transition-all cursor-pointer flex items-center gap-1.5 border-none whitespace-nowrap shrink-0"
               >
-                <Settings className="h-3.5 w-3.5" /> Dashboard & Settings
+                <Settings className="h-3.5 w-3.5" /> <span className="hidden sm:inline">Dashboard & Settings</span><span className="sm:hidden">Manage</span>
               </button>
             ) : isMember ? (
               <button
                 onClick={() => handleRemoveMember(currentUser.name)}
-                className="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-emerald-100 border border-emerald-200 text-emerald-800 text-xs font-black uppercase tracking-wider rounded-full shadow-xs hover:bg-red-50 hover:text-red-600 hover:border-red-200 transition-all cursor-pointer"
+                className="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-emerald-100 border border-emerald-200 text-emerald-800 text-xs font-black uppercase tracking-wider rounded-full shadow-xs hover:bg-red-50 hover:text-red-600 hover:border-red-200 transition-all cursor-pointer whitespace-nowrap shrink-0"
                 title="Click to leave organization"
               >
                 <UserCheck className="h-3.5 w-3.5" /> Member (Joined)
@@ -413,16 +415,16 @@ export default function OrganizationProfilePage() {
             ) : pendingReq ? (
               <button
                 onClick={() => handleCancelRequest(pendingReq.id)}
-                className="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-amber-100 border border-amber-200 text-amber-800 hover:bg-amber-200 text-xs font-black uppercase tracking-wider rounded-full shadow-xs cursor-pointer transition-all"
+                className="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-amber-100 border border-amber-200 text-amber-800 hover:bg-amber-200 text-xs font-black uppercase tracking-wider rounded-full shadow-xs cursor-pointer transition-all whitespace-nowrap shrink-0"
                 title="Click to cancel pending request"
               >
-                <Clock className="h-3.5 w-3.5 animate-pulse" /> Pending Approval (Cancel)
+                <Clock className="h-3.5 w-3.5 animate-pulse" /> Pending Approval
               </button>
             ) : (
               <button
                 onClick={handleJoinOrg}
                 disabled={isJoining}
-                className="inline-flex items-center gap-1.5 px-4 py-1.5 bg-[#FD5C05] hover:bg-[#CC3D00] text-white text-xs font-black uppercase tracking-wider rounded-full shadow-md shadow-[#FD5C05]/20 cursor-pointer transition-all disabled:opacity-50 border-none"
+                className="inline-flex items-center gap-1.5 px-4 py-1.5 bg-[#FD5C05] hover:bg-[#CC3D00] text-white text-xs font-black uppercase tracking-wider rounded-full shadow-md shadow-[#FD5C05]/20 cursor-pointer transition-all disabled:opacity-50 border-none whitespace-nowrap shrink-0"
               >
                 <UserPlus className="h-3.5 w-3.5" /> {isJoining ? 'Joining...' : 'Join Organization'}
               </button>
@@ -526,7 +528,7 @@ export default function OrganizationProfilePage() {
                   <UserPlus className="h-4 w-4" /> {isJoining ? 'Submitting...' : 'Join Organization'}
                 </button>
               )}
-            </div>          </div>
+            </div>
 
           </div>
 
@@ -608,13 +610,13 @@ export default function OrganizationProfilePage() {
                   </div>
                   <div className="grid gap-3 sm:grid-cols-2">
                     {org.members.map((member, idx) => (
-                      <div key={member} className="flex items-center gap-3 p-3 rounded-2xl bg-slate-50 border border-black/[0.04]">
-                        <div className="h-7 w-7 rounded-lg bg-[#FD5C05]/10 border border-[#FD5C05]/20 flex items-center justify-center text-[10px] font-extrabold text-[#2A2621]">
+                      <div key={member} className="flex items-center gap-3 p-3 rounded-2xl bg-slate-50 border border-black/[0.04] min-w-0">
+                        <div className="h-7 w-7 rounded-lg bg-[#FD5C05]/10 border border-[#FD5C05]/20 flex items-center justify-center text-[10px] font-extrabold text-[#2A2621] shrink-0">
                           {member.substring(0, 2).toUpperCase()}
                         </div>
-                        <div>
-                          <p className="text-xs font-bold text-[#2A2621] uppercase">{member}</p>
-                          <p className="text-[9px] text-[#5A554E] font-semibold tracking-wider">
+                        <div className="min-w-0 flex-1">
+                          <p className="text-xs font-bold text-[#2A2621] uppercase truncate">{member}</p>
+                          <p className="text-[9px] text-[#5A554E] font-semibold tracking-wider truncate">
                             {org.memberRoles?.[member] || (idx === 0 ? 'President' : idx === 1 ? 'Vice President' : 'Member')}
                           </p>
                         </div>
