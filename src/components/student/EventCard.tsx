@@ -1,14 +1,12 @@
 'use client';
 
-import React from 'react';
-import { MapPin, Calendar, Bookmark, Check, CheckCircle, Mail, X } from 'lucide-react';
+import React, { useState } from 'react';
+import { MapPin, Bookmark, Check, CheckCircle, Mail, X } from 'lucide-react';
 import { Event, Promotion } from '@/lib/types';
 import { motion } from 'framer-motion';
-import { useState } from 'react';
 import { useEvents } from '@/lib/context/EventContext';
 import { useUser } from '@/lib/context/UserContext';
 import VerifiedBadge from '@/components/ui/VerifiedBadge';
-import { downloadEventICS } from '@/lib/calendar';
 
 interface EventCardProps {
   event: Event | Promotion;
@@ -17,9 +15,10 @@ interface EventCardProps {
   isSaved?: boolean;
   onRsvp?: (e: React.MouseEvent) => void;
   isAttending?: boolean;
+  className?: string;
 }
 
-// 1. Presentational Component wrapped with React.memo
+// 1. Standardized Presentational EventCard Component
 const EventCardInner = React.memo(function EventCardInner({
   event,
   onClick,
@@ -32,6 +31,7 @@ const EventCardInner = React.memo(function EventCardInner({
   isOrgVerified,
   saveToggle,
   rsvpToggle,
+  className = '',
 }: EventCardProps & {
   effectiveIsSaved: boolean;
   effectiveIsAttending: boolean;
@@ -40,88 +40,72 @@ const EventCardInner = React.memo(function EventCardInner({
   rsvpToggle: (id: string, action: 'rsvp' | 'interested') => void;
 }) {
   const [saveLoading, setSaveLoading] = useState(false);
-  const [rsvpLoading, setRsvpLoading] = useState(false);
 
-  // Check if it's a promotion
   const isPromo = !('ownershipType' in event);
 
-  // Set up cover image
+  // Cover image with fallback
   const coverImage = isPromo
     ? '/pexels-markus-winkler-1430818-12199407.jpg'
-    : event.coverImage;
+    : (event.coverImage || '/pexels-hanna-elesha-abraham-1587801282-27498756.jpg');
 
   const isGradient = coverImage ? coverImage.includes('from-') : false;
-  const bgClass = isGradient ? coverImage : (coverImage ? '' : 'bg-[#D8D2BC]');
-  const bgStyle = (!isGradient && coverImage) ? { backgroundImage: `url(${coverImage})`, backgroundSize: 'cover', backgroundPosition: 'center' } : {};
+  const bgClass = isGradient ? coverImage : '';
+  const bgStyle = (!isGradient && coverImage)
+    ? { backgroundImage: `url(${coverImage})`, backgroundSize: 'cover', backgroundPosition: 'center' }
+    : {};
 
-  // Parse the date
-  // Parse the date
+  // Date & Time (Max 22 characters)
   const dateObj = new Date(event.date + 'T00:00:00');
-  const month = dateObj.toLocaleDateString('en-US', { month: 'short' });
+  const month = dateObj.toLocaleDateString('en-US', { month: 'short' }).toUpperCase();
   const day = dateObj.getDate();
-  const formattedDate = `${month} ${day}`;
-
+  const rawDateStr = `${month} ${day}`;
   const timeStr = !isPromo && (event as Event).time ? (event as Event).time : '7:00 PM';
+  const fullDateTime = `${rawDateStr} • ${timeStr}`.substring(0, 22);
 
-  // Real attendee count
-  const goingCount = !isPromo ? ((event as Event).attendees?.length ?? 0) : 0;
+  // Category Badge (Max 16 characters)
+  const rawCategory = isPromo ? 'Promotion' : ((event as Event).category || 'Social');
+  const categoryText = rawCategory.toUpperCase().substring(0, 16);
 
-  const getCategoryStyles = (cat?: string) => {
-    if (isPromo) return 'bg-[#FD5C05]/15 text-[#2A2621] border-[#FD5C05]/25';
-    const c = cat?.toLowerCase() || '';
-    if (c.includes('sport') || c.includes('athlet') || c.includes('trophy')) {
-      return 'bg-[#FD5C05]/15 text-[#2A2621] border-[#FD5C05]/25';
-    }
-    if (c.includes('music') || c.includes('concert') || c.includes('party') || c.includes('show') || c.includes('art') || c.includes('greek')) {
-      return 'bg-[#D8D2BC]/30 text-[#2A2621] border-black/10';
-    }
-    if (c.includes('career') || c.includes('fair') || c.includes('workshop') || c.includes('hackathon') || c.includes('academic')) {
-      return 'bg-[#FD5C05]/15 text-[#2A2621] border-[#FD5C05]/25';
-    }
-    return 'bg-[#FD5C05]/15 text-[#2A2621] border-[#FD5C05]/25';
-  };
+  // Price Badge (Max 8 characters)
+  const priceText = !isPromo
+    ? ((event as Event).free ? 'FREE' : `$${(event as Event).price || 'TICKETED'}`).substring(0, 8)
+    : 'PROMO';
 
-  // ICS download helper
-  const handleDownloadICS = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    if (isPromo) { onClick(); return; }
-    try {
-      downloadEventICS(event as Event);
-    } catch (error) {
-      console.error('Error adding event to calendar:', error);
-    }
-  };
+  // Organization Name (Max 30 characters)
+  const orgNameRaw = !isPromo
+    ? ((event as Event).organizationName || (event as Event).organizer || 'Campus Org')
+    : (event as Promotion).organizer;
+  const orgName = orgNameRaw ? orgNameRaw.substring(0, 30) : '';
+
+  // Title text
+  const titleText = event.title;
 
   return (
     <motion.div
-      whileHover={{ y: -6 }}
+      whileHover={{ y: -4 }}
       transition={{ type: 'spring', stiffness: 400, damping: 30 }}
-      className="group flex flex-col bg-white rounded-[24px] overflow-hidden border border-black/[0.04] shadow-[var(--shadow-premium-sm)] hover:shadow-[var(--shadow-premium-md)] transition-all duration-300 h-full justify-between relative"
+      className={`group flex flex-col bg-white rounded-[16px] overflow-hidden border border-black/[0.06] shadow-xs hover:shadow-md transition-all duration-300 w-full sm:w-[276px] shrink-0 h-[310px] min-h-[310px] max-h-[310px] justify-between relative select-none cursor-pointer ${className}`}
+      onClick={onClick}
     >
-      {/* 1. Image Container */}
-      <div
-        onClick={onClick}
-        className="relative aspect-[16/10] w-full overflow-hidden bg-gray-50 cursor-pointer"
-      >
+      {/* 1. IMAGE CONTAINER (Width: 100%, Height: 170px, object-fit: cover, flex-shrink: 0) */}
+      <div className="relative w-full h-[170px] shrink-0 overflow-hidden bg-gray-100">
         <div
-          className={`absolute inset-0 transition-transform duration-700 group-hover:scale-105 ${bgClass}`}
+          className={`w-full h-full object-cover transition-transform duration-500 group-hover:scale-105 ${bgClass}`}
           style={bgStyle}
         />
 
         {/* Category Badge top left */}
-        <div className="absolute top-4 left-4 z-10 flex items-center gap-2">
-          <span className={`px-3 py-1 text-[9px] font-extrabold tracking-wider uppercase rounded-full border shadow-sm backdrop-blur-sm ${getCategoryStyles(isPromo ? 'Promotion' : (event as Event).category)}`}>
-            {isPromo ? 'Promotion' : (event as Event).category}
+        <div className="absolute top-3 left-3 z-10">
+          <span className="px-2.5 py-1 text-[9px] font-black uppercase tracking-wider bg-black/80 backdrop-blur-md text-white rounded-full border border-white/10 shadow-xs max-w-[120px] truncate block">
+            {categoryText}
           </span>
         </div>
 
-        {/* Pricing Badge & Bookmark top right */}
-        <div className="absolute top-4 right-4 z-20 flex items-center gap-2">
-          {!isPromo && (
-            <span className="px-2.5 py-0.5 text-[8.5px] font-black uppercase tracking-wider bg-[#FD5C05] text-white rounded-full shadow-sm">
-              {(event as Event).free ? 'FREE' : `$${(event as Event).price || 'TICKETED'}`}
-            </span>
-          )}
+        {/* Price Badge & Bookmark top right */}
+        <div className="absolute top-3 right-3 z-20 flex items-center gap-1.5">
+          <span className="px-2 py-0.5 text-[8.5px] font-black uppercase tracking-wider bg-[#FD5C05] text-white rounded-full shadow-xs shrink-0 max-w-[65px] truncate">
+            {priceText}
+          </span>
           <button
             type="button"
             onClick={(e) => {
@@ -134,173 +118,66 @@ const EventCardInner = React.memo(function EventCardInner({
               }
               setTimeout(() => setSaveLoading(false), 300);
             }}
-            className="cursor-pointer focus:outline-none p-1 group"
+            className="cursor-pointer focus:outline-none p-0.5 group/save shrink-0"
             disabled={saveLoading}
             title={effectiveIsSaved ? 'Unsave Event' : 'Save Event'}
           >
             <Bookmark
-              className={`h-5 w-5 transition-all duration-150 ease-in-out ${
+              className={`h-4 w-4 transition-all duration-150 ease-in-out ${
                 effectiveIsSaved
                   ? 'fill-[#FD5C05] text-[#FD5C05]'
-                  : 'text-white hover:text-[#FD5C05]/90 drop-shadow-[0_1px_2px_rgba(0,0,0,0.5)]'
-              }`} 
-              aria-pressed={effectiveIsSaved}
-              aria-label={effectiveIsSaved ? 'Unsave Event' : 'Save Event'}
+                  : 'text-white hover:text-[#FD5C05]/90 drop-shadow-[0_1px_2px_rgba(0,0,0,0.6)]'
+              }`}
             />
           </button>
         </div>
       </div>
 
-      {/* 3. Content Body */}
-      <div className="p-6 flex flex-col flex-1 justify-between gap-4 text-left">
-        <div className="space-y-2 cursor-pointer" onClick={onClick}>
-          {/* Date & Time */}
-          <div className="text-[#2A2621]/85 text-[10px] font-bold uppercase tracking-widest">
-            {formattedDate} • {timeStr}
+      {/* 2. CONTENT BODY (Padding: 14px 18px 12px, flex: 1, min-height: 0) */}
+      <div className="p-[14px_18px_12px] flex flex-col flex-1 min-h-0 justify-between text-left">
+        <div className="space-y-1">
+          {/* Date & Time (11px, font-weight: 700, single line) */}
+          <div className="text-[#FD5C05] text-[11px] font-bold uppercase tracking-wider truncate block leading-none">
+            {fullDateTime}
           </div>
 
-          {/* Organization Name with rosette badge */}
-          <div className="flex items-center gap-1 text-[10px] text-[#5A554E] font-bold uppercase tracking-wider min-h-[1rem]">
-            {!isPromo && (event as Event).organizationName ? (
-              <>
-                <span className="truncate">{(event as Event).organizationName}</span>
-                {isOrgVerified && <VerifiedBadge className="h-3.5 w-3.5 shrink-0" />}
-              </>
-            ) : null}
-          </div>
-
-          {/* Event Title */}
-          <div className="min-h-[2.8rem] sm:min-h-[3rem] flex items-start">
-            <h3 className="text-[#2A2621] font-bold text-sm sm:text-base line-clamp-2 leading-snug tracking-tight hover:text-[#FD5C05] transition-colors block w-full">
-              {event.title}
+          {/* Title (20px, font-weight: 700, line-height: 1.05, reserved height exactly 2 lines, line-clamp: 2) */}
+          <div className="h-[46px] min-h-[46px] max-h-[46px] flex items-start overflow-hidden pt-0.5">
+            <h3
+              className="text-[#2A2621] font-bold text-[20px] leading-[1.05] tracking-tight group-hover:text-[#FD5C05] transition-colors block w-full text-left"
+              style={{
+                display: '-webkit-box',
+                WebkitBoxOrient: 'vertical',
+                WebkitLineClamp: 2,
+                overflow: 'hidden',
+                fontFamily: 'var(--font-display)',
+              }}
+            >
+              {titleText}
             </h3>
-          </div>
-
-          {/* Location Row */}
-          <div className="flex items-center gap-1.5 text-[#5A554E] text-xs font-semibold">
-            <MapPin className="h-3.5 w-3.5 shrink-0 text-[#5A554E]" />
-            <span className="truncate">{isPromo ? (event as Promotion).organizer : (event as Event).location}</span>
-          </div>
-
-          {/* Description */}
-          <div className="min-h-[2.5rem] flex items-start pt-1">
-            <p className="text-[#5A554E] text-xs leading-relaxed font-light line-clamp-2 w-full">
-              {event.description || `Join us for the ${event.title}, happening soon.`}
-            </p>
           </div>
         </div>
 
-        {/* 4. Footer */}
-        <div className="pt-4 border-t border-black/[0.04] flex items-center justify-between gap-2">
-          {/* Attendee count */}
-          <div className="flex items-center gap-2">
-            <div className="flex -space-x-2">
-              {[
-                { initials: 'MC', bg: '#FD5C05', color: '#2A2621' },
-                { initials: 'SJ', bg: '#2A2621', color: '#fff' },
-                { initials: 'AR', bg: '#5A554E', color: '#fff' },
-              ].map((av) => (
-                <div
-                  key={av.initials}
-                  className="h-6 w-6 rounded-full border-2 border-white flex items-center justify-center text-[7px] font-extrabold shrink-0"
-                  style={{ background: av.bg, color: av.color }}
-                >
-                  {av.initials}
-                </div>
-              ))}
-            </div>
-            <span className="text-[#5A554E] text-[10px] font-bold whitespace-nowrap">
-              {goingCount > 0 ? `+${goingCount} going` : 'Be the first'}
-            </span>
+        {/* 3. FOOTER (margin-top: auto, aligned at exact same spot across all cards) */}
+        <div className="mt-auto pt-2 border-t border-black/[0.04] flex items-center justify-between gap-2 min-w-0">
+          {/* Organization Name (11px, font-weight: 700, single line) */}
+          <div className="flex items-center gap-1 text-[11px] text-[#5A554E] font-bold truncate min-w-0 flex-1">
+            <span className="truncate">{orgName}</span>
+            {isOrgVerified && <VerifiedBadge className="h-3.5 w-3.5 shrink-0 text-[#FD5C05]" />}
           </div>
 
-          {/* Action buttons - RSVP going and calendar download */}
-          {!isPromo ? (
-            <div className="flex gap-1.5">
-              {effectiveIsAttending ? (
-                <>
-                  <button
-                    type="button"
-                    onClick={async (e) => {
-                      e.stopPropagation();
-                      if (onRsvp) {
-                        onRsvp(e);
-                      } else {
-                        await rsvpToggle(event.id, 'rsvp');
-                      }
-                    }}
-                    className="inline-flex items-center gap-1 bg-emerald-50 border border-emerald-200 text-emerald-700 hover:bg-emerald-100 font-bold text-[9px] uppercase tracking-wider py-1.5 px-3 rounded-full transition-all duration-300 shadow-sm cursor-pointer whitespace-nowrap"
-                    title="Added to Calendar"
-                    style={{ fontFamily: 'var(--font-display)' }}
-                  >
-                    <Check className="h-3.5 w-3.5 shrink-0 text-emerald-600" />
-                    <span>Added</span>
-                  </button>
-                  {(new Date(event.date + 'T23:59:59') < new Date()) ? (
-                    <span 
-                      className="inline-flex items-center gap-1 bg-emerald-600 text-white font-extrabold text-[9px] uppercase tracking-wider py-1.5 px-3 rounded-full shadow-sm whitespace-nowrap cursor-default"
-                      style={{ fontFamily: 'var(--font-display)' }}
-                    >
-                      <Check className="h-3 w-3 shrink-0 text-white" />
-                      <span>Attended</span>
-                    </span>
-                  ) : (
-                    <button
-                      type="button"
-                      onClick={async (e) => {
-                        e.stopPropagation();
-                        setRsvpLoading(true);
-                        if (onRsvp) {
-                          onRsvp(e);
-                        } else {
-                          await rsvpToggle(event.id, 'rsvp');
-                        }
-                        setRsvpLoading(false);
-                      }}
-                      className="inline-flex items-center gap-1 bg-[#FD5C05] hover:bg-red-600 border border-[#FD5C05] hover:border-red-600 text-white font-extrabold text-[9px] uppercase tracking-wider py-1.5 px-3.5 rounded-full transition-all duration-300 shadow-sm cursor-pointer whitespace-nowrap group/going"
-                      title="Click to Cancel RSVP"
-                      style={{ fontFamily: 'var(--font-display)' }}
-                    >
-                      <Check className="h-3 w-3 shrink-0 group-hover/going:hidden text-white" />
-                      <X className="h-3 w-3 shrink-0 hidden group-hover/going:block text-white" />
-                      <span className="group-hover/going:hidden">Going</span>
-                      <span className="hidden group-hover/going:inline">Cancel</span>
-                    </button>
-                  )}
-                </>
-              ) : (
-                <button
-                  type="button"
-                  onClick={async (e) => {
-                    e.stopPropagation();
-                    setRsvpLoading(true);
-                    if (onRsvp) {
-                      onRsvp(e);
-                    } else {
-                      await rsvpToggle(event.id, 'rsvp');
-                    }
-                    setRsvpLoading(false);
-                  }}
-                  className="inline-flex items-center gap-1 bg-white border border-black/10 hover:border-transparent hover:bg-[#FD5C05] hover:text-white text-[#2A2621] font-bold text-[9px] uppercase tracking-wider py-1.5 px-4 rounded-full transition-all duration-300 shadow-sm cursor-pointer whitespace-nowrap"
-                  disabled={rsvpLoading}
-                  style={{ fontFamily: 'var(--font-display)' }}
-                >
-                  <CheckCircle className="h-3.5 w-3.5 shrink-0" />
-                  <span>{rsvpLoading ? '...' : 'RSVP'}</span>
-                </button>
-              )}
-            </div>
-          ) : (
-            <a
-              href={`mailto:${(event as Promotion).contactInfo}?subject=Inquiry regarding: ${event.title}`}
-              onClick={(e) => e.stopPropagation()}
-              className="inline-flex items-center gap-1.5 bg-white border border-black/10 hover:border-transparent hover:bg-[#FD5C05] hover:text-[#2A2621] text-[#2A2621] font-bold text-[9px] uppercase tracking-wider py-1.5 px-3 rounded-full transition-all duration-300 shadow-sm cursor-pointer whitespace-nowrap"
-              style={{ fontFamily: 'var(--font-display)' }}
-            >
-              <Mail className="h-3.5 w-3.5 shrink-0" />
-              <span>Email Organizer</span>
-            </a>
-          )}
+          {/* Action / Cost Badge in Footer */}
+          <div className="shrink-0">
+            {!isPromo ? (
+              <span className="px-2.5 py-1 bg-[#FD5C05] text-white text-[9px] font-black uppercase tracking-wider rounded-full shadow-xs">
+                {(event as Event).free ? 'FREE' : `$${(event as Event).price || 'JOIN'}`}
+              </span>
+            ) : (
+              <span className="px-2.5 py-1 bg-[#2A2621] text-white text-[9px] font-black uppercase tracking-wider rounded-full shadow-xs">
+                PROMO
+              </span>
+            )}
+          </div>
         </div>
       </div>
     </motion.div>
@@ -313,7 +190,6 @@ export default function EventCard(props: EventCardProps) {
   const { saveToggle, rsvpToggle, events, organizations } = useEvents();
   const { currentUser } = useUser();
 
-  // Compute effective states from up-to-date context
   const dbEvent = events.find(e => e.id === event.id);
 
   const effectiveIsSaved = dbEvent && currentUser
@@ -324,7 +200,6 @@ export default function EventCard(props: EventCardProps) {
     ? (dbEvent.attendees?.includes(currentUser.name) || (currentUser.username ? dbEvent.attendees?.includes(currentUser.username) : false))
     : (isAttending !== undefined ? isAttending : false);
 
-  // Check if it's a promotion
   const isPromo = !('ownershipType' in event);
 
   const isOrgVerified = !isPromo && (event as Event).organizationId

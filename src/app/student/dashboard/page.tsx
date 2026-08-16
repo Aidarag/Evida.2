@@ -29,6 +29,7 @@ import {
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import VerifiedBadge from '@/components/ui/VerifiedBadge';
+import EventCard from '@/components/student/EventCard';
 import { Event, Promotion } from '@/lib/types';
 import EvidaLogo from '@/components/ui/EvidaLogo';
 
@@ -570,188 +571,18 @@ export default function StudentDashboardPage() {
 
                 const cardId = item.id === 'evt-career-night' ? 'event-card-evt-career-night' : `event-card-${item.id}`;
                 return (
-                  <motion.div
+                  <EventCard
                     key={item.id}
-                    id={cardId}
-                    initial={{ opacity: 0, y: 15 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    data-tour="event-card"
-                    className="bg-white rounded-3xl border border-black/[0.04] shadow-sm hover:shadow-md transition-all flex flex-col justify-between overflow-hidden group relative"
-                  >
-                    {/* Event/Promo Image Banner */}
-                    <div
-                       className="relative h-36 w-full bg-[#2A2621] overflow-hidden cursor-pointer"
-                      onClick={() => {
-                        if (isPromo && promo) {
-                          window.location.href = `mailto:${promo.contactInfo}?subject=Inquiry regarding: ${promo.title}`;
-                        } else if (event) {
-                          router.push(`/events/${event.id}`);
-                        }
-                      }}
-                    >
-                      <img
-                        src={getEventImg(coverImgUrl, item.id)}
-                        alt={item.title}
-                        className="absolute inset-0 h-full w-full object-cover group-hover:scale-105 transition-transform duration-700 opacity-90"
-                      />
-                      {/* Dark overlay gradient */}
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
-
-                      {/* Left Badge: Category */}
-                      <div className="absolute top-4 left-4 z-10">
-                        <span className="rounded-full bg-white/90 border border-[#D8D2BC]/40 px-2.5 py-1 text-[8px] font-extrabold uppercase text-[#2A2621] shadow-sm">
-                          {isPromo ? 'PROMOTION' : (event?.category || '')}
-                        </span>
-                      </div>
-
-                      {/* Right Badge: Cost */}
-                      <div className="absolute top-4 right-12 z-10">
-                        <span className="rounded-full bg-[#FD5C05] text-white font-black px-2.5 py-1 text-[8px] uppercase shadow-sm">
-                          {isPromo ? 'STUDENT SERVICE' : (event?.free ? 'FREE' : 'TICKETED')}
-                        </span>
-                      </div>
-
-                      {/* Bookmark Button */}
-                      <button
-                        type="button"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          e.preventDefault();
-                          saveToggle(item.id);
-                        }}
-                        className="absolute top-3.5 right-3.5 z-20 cursor-pointer focus:outline-none p-1 group"
-                        title={isSaved ? "Unsave Event" : "Save Event"}
-                      >
-                        <Bookmark 
-                          className={`h-5 w-5 transition-all duration-150 ease-in-out ${
-                            isSaved 
-                              ? 'fill-[#FD5C05] text-[#FD5C05]' 
-                              : 'text-white hover:text-[#FD5C05]/90 drop-shadow-[0_1px_2px_rgba(0,0,0,0.5)]'
-                          }`} 
-                        />
-                      </button>
-
-                      {/* Bottom Overlay: Title preview */}
-                      <div className="absolute bottom-4 left-4 right-4 z-10">
-                        <span className="text-[9px] font-bold text-white/80 uppercase tracking-wider block drop-shadow-sm">
-                          {isPromo ? item.organizer : (event?.organizationName || event?.organizer || '')}
-                        </span>
-                      </div>
-                    </div>
-
-                    {/* Content Section */}
-                    <div className="p-5 flex-1 flex flex-col justify-between space-y-4 text-left">
-                      <div className="space-y-2">
-                        {/* Host details & verified green checkmark */}
-                        <div className="flex items-center gap-1.5">
-                          <p
-                            onClick={() => !isPromo && event?.organizationId && router.push(`/student/organizations/${event.organizationId}`)}
-                            className={`text-[10px] font-extrabold text-[#5A554E] uppercase tracking-wider flex items-center leading-none ${(!isPromo && event?.organizationId) ? 'cursor-pointer hover:underline' : ''}`}
-                          >
-                            {isPromo ? item.organizer : (event?.organizationName || event?.organizer || '')}
-                            {!isPromo && event?.organizationId && organizations.find(o => o.id === event.organizationId)?.verified && (
-                              <VerifiedBadge className="h-3.5 w-3.5 ml-1" />
-                            )}
-                          </p>
-                        </div>
-
-                        {/* Event Title */}
-                        <div className="min-h-[2.8rem] sm:min-h-[3rem] flex items-start">
-                          <h3
-                            onClick={() => {
-                              if (isPromo && promo) {
-                                window.location.href = `mailto:${promo.contactInfo}?subject=Inquiry regarding: ${promo.title}`;
-                              } else if (event) {
-                                router.push(`/events/${event.id}`);
-                              }
-                            }}
-                            className="text-sm sm:text-base font-bold text-[#2A2621] tracking-tight leading-snug line-clamp-2 hover:text-[#FD5C05] transition-colors cursor-pointer uppercase w-full"
-                            style={{ fontFamily: 'var(--font-display)' }}
-                          >
-                            {item.title}
-                          </h3>
-                        </div>
-
-                        {/* Description */}
-                        <div className="min-h-[2.5rem] flex items-start pt-1">
-                          <p className="text-xs text-[#5A554E] leading-relaxed line-clamp-2 w-full">
-                            {item.description}
-                          </p>
-                        </div>
-                      </div>
-
-                      {/* Event/Promo Details: Date & Time, Location/Contact */}
-                      <div className="space-y-2 pt-3 border-t border-black/[0.04]">
-                        <div className="flex items-center gap-2 text-[10px] font-extrabold text-[#2A2621]/80 uppercase">
-                          <Calendar className="h-3.5 w-3.5 text-[#2A2621]" />
-                          <span>{monthName} {day} {!isPromo && event && `• ${event.time}`}</span>
-                        </div>
-                        <div className="flex items-center gap-2 text-[10px] font-bold text-[#5A554E] uppercase truncate">
-                          {isPromo && promo ? (
-                            <>
-                              <Mail className="h-3.5 w-3.5 text-[#5A554E]" />
-                              <span className="truncate">{promo.contactInfo}</span>
-                            </>
-                          ) : (
-                            <>
-                              <MapPin className="h-3.5 w-3.5 text-[#5A554E]" />
-                              <span className="truncate">{event?.location || ''}</span>
-                            </>
-                          )}
-                        </div>
-                      </div>
-
-                      {/* Attendees Avatars Preview */}
-                      {!isPromo && event && event.attendees && event.attendees.length > 0 && (
-                        <div className="flex items-center gap-2 pt-1">
-                          <div className="flex -space-x-1.5">
-                            {event.attendees.slice(0, 3).map((name: string, i: number) => (
-                              <div
-                                key={i}
-                                className="h-5 w-5 rounded-full border border-white bg-slate-200 flex items-center justify-center text-[7px] font-black text-gray-700"
-                              >
-                                {name.substring(0, 2).toUpperCase()}
-                              </div>
-                            ))}
-                          </div>
-                          <span className="text-[10px] text-[#5A554E] font-semibold">
-                            {event.attendees.length} attending
-                          </span>
-                        </div>
-                      )}
-
-                      {/* Footer Actions (Direct Interaction) */}
-                      <div className="pt-3 border-t border-black/[0.04] flex items-center justify-between gap-2.5">
-                        {isPromo && promo ? (
-                          <a
-                            href={`mailto:${promo.contactInfo}?subject=Inquiry regarding: ${promo.title}`}
-                            className="flex-1 py-2 rounded-xl text-[10px] font-black uppercase tracking-wider bg-[#2A2621] text-white hover:bg-[#2a2a2a] transition-all flex items-center justify-center gap-1.5 cursor-pointer text-center animate-fade-in"
-                          >
-                            <Mail className="h-3.5 w-3.5" />
-                            Email Organizer
-                          </a>
-                        ) : (
-                          event && (
-                            <div className="flex-1 relative">
-                              <Link
-                                href={isPreview ? `/events/${event.id}?preview=true` : `/events/${event.id}`}
-                                className={`w-full py-2 rounded-xl text-[10px] font-black uppercase tracking-wider flex items-center justify-center gap-1.5 cursor-pointer text-center transition-all duration-300 ${
-                                  isPreview && (onboardingStep === 1 || onboardingStep === 0) && event.id === 'evt-career-night'
-                                    ? 'bg-[#FD5C05] text-white ring-2 ring-[#FD5C05] shadow-[0_0_16px_rgba(253,92,5,0.5)] animate-pulse font-black'
-                                    : 'bg-[#2A2621] text-white hover:bg-[#2a2a2a]'
-                                }`}
-                              >
-                                <span>View Event</span>
-                                {isPreview && (onboardingStep === 1 || onboardingStep === 0) && event.id === 'evt-career-night' && (
-                                  <span className="inline-block animate-bounce text-xs ml-1 text-[#FD5C05] font-black font-mono">{"(->)"}</span>
-                                )}
-                              </Link>
-                            </div>
-                          )
-                        )}
-                      </div>
-                    </div>
-                  </motion.div>
+                    event={item}
+                    onClick={() => {
+                      if (isPromo && promo) {
+                        window.location.href = `mailto:${promo.contactInfo}?subject=Inquiry regarding: ${promo.title}`;
+                      } else if (event) {
+                        router.push(`/events/${event.id}`);
+                      }
+                    }}
+                    className="w-full sm:w-full"
+                  />
                 );
               })}
             </div>

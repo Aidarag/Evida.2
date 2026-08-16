@@ -5,6 +5,7 @@ import { useEvents } from '@/lib/context/EventContext';
 import { useUser } from '@/lib/context/UserContext';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import EventCard from '@/components/student/EventCard';
 import DefaultEvidaFlyer from '@/components/ui/DefaultEvidaFlyer';
 import { 
   Search, 
@@ -199,90 +200,15 @@ export default function ExplorePage() {
     </div>
   );
 
-  const renderEventCard = (evt: Event, isGridItem: boolean = false) => {
-    const isSaved = currentUser ? (evt.savedBy?.includes(currentUser.name) || (currentUser.username ? evt.savedBy?.includes(currentUser.username) : false)) : false;
-    
-    // Date formatting matching home page (Jul 26)
-    const dateObj = new Date(evt.date + 'T00:00:00');
-    const monthStr = dateObj.toLocaleDateString('en-US', { month: 'short' });
-    const dayNum = dateObj.getDate();
-    const formattedDate = `${monthStr} ${dayNum}`;
-
-    return (
-      <motion.div
-        key={evt.id}
-        whileHover={{ y: -4, scale: 1.01 }}
-        transition={{ type: "spring", stiffness: 400, damping: 25 }}
-        className={`${isGridItem ? 'w-full' : 'w-56 sm:w-64 shrink-0'} flex flex-col min-h-[270px] h-full`}
-      >
-        <Link
-          href={`/events/${evt.id}`}
-          className="w-full h-full bg-white border border-black/[0.06] hover:border-[#FD5C05] rounded-2xl overflow-hidden shadow-xs hover:shadow-[0_10px_24px_rgba(253,92,5,0.12)] transition-all duration-300 flex flex-col justify-between group cursor-pointer"
-        >
-          <div className="aspect-[16/10] w-full bg-[#FD5C05]/10 shrink-0 relative overflow-hidden">
-            {evt.coverImage.includes('from-') ? (
-              <div className={`w-full h-full bg-gradient-to-br ${evt.coverImage} group-hover:scale-105 transition-transform duration-500`} />
-            ) : (
-              <img src={evt.coverImage} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt="" />
-            )}
-            
-            {/* Category Badge top left */}
-            <span className="absolute top-2.5 left-2.5 text-[8px] font-black uppercase tracking-wider bg-black/75 backdrop-blur-md text-white px-2.5 py-0.5 rounded-full border border-white/10">
-              {evt.category}
-            </span>
-
-            {/* Price Badge & Bookmark top right */}
-            <div className="absolute top-2.5 right-2.5 z-20 flex items-center gap-1.5">
-              <span className="text-[7.5px] font-black uppercase tracking-wider bg-[#FD5C05] text-white px-2.5 py-0.5 rounded-full shadow-sm">
-                {evt.free ? 'FREE' : `$${evt.price || 'TICKETED'}`}
-              </span>
-              {currentUser && (
-                <button 
-                  type="button"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    saveToggle(evt.id);
-                  }}
-                  className="cursor-pointer focus:outline-none p-0.5 group/btn"
-                  title={isSaved ? "Unsave Event" : "Save Event"}
-                >
-                  <Bookmark 
-                    className={`h-4 w-4 transition-all duration-150 ease-in-out ${
-                      isSaved 
-                        ? 'fill-[#FD5C05] text-[#FD5C05]' 
-                        : 'text-white hover:text-[#FD5C05]/90 drop-shadow-[0_1px_2px_rgba(0,0,0,0.5)]'
-                    }`} 
-                  />
-                </button>
-              )}
-            </div>
-          </div>
-          <div className="p-3.5 sm:p-4 flex flex-col justify-between flex-1 space-y-2">
-            <div className="space-y-1 text-left">
-              <span className="text-[9px] font-black uppercase tracking-wider text-[#FD5C05] block">
-                {formattedDate} • {evt.time || '7:00 PM'}
-              </span>
-              <div className="min-h-[2.5rem] sm:min-h-[2.8rem] flex items-start">
-                <h3 className="font-bold text-xs sm:text-sm text-[#2A2621] group-hover:text-[#FD5C05] transition-colors leading-snug line-clamp-2 text-left w-full">
-                  {evt.title}
-                </h3>
-              </div>
-            </div>
-            <div className="pt-2 border-t border-black/[0.04] flex items-center justify-between text-[9px] text-[#5A554E] font-semibold">
-              <span className="flex items-center gap-1.5 truncate max-w-[70%]">
-                <Users className="h-3.5 w-3.5 shrink-0 text-[#5A554E]" /> 
-                <span className="truncate">{evt.organizationName || evt.organizer}</span>
-              </span>
-              <span className="flex items-center gap-0.5 shrink-0 font-black text-white bg-[#FD5C05] px-2 py-0.5 rounded-full text-[8.5px] uppercase shadow-xs">
-                {evt.free ? 'FREE' : 'TICKETED'}
-              </span>
-            </div>
-          </div>
-        </Link>
-      </motion.div>
-    );
-  };
+  // Unified Event Card Renderer using standardized EventCard component
+  const renderEventCard = (evt: Event, isGridItem: boolean = false) => (
+    <EventCard
+      key={evt.id}
+      event={evt}
+      onClick={() => router.push(`/events/${evt.id}`)}
+      className={isGridItem ? 'w-full sm:w-full' : 'w-56 sm:w-64'}
+    />
+  );
 
   // Helper to render organization cards
   const renderOrganizationCard = (org: Organization, isGridItem: boolean = false) => (
