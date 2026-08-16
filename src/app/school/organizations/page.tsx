@@ -118,7 +118,7 @@ export default function OrganizationsPage() {
                 : 'bg-emerald-500/10 text-emerald-700 hover:bg-emerald-500/20'
             }`}
           >
-            <CheckCircle2 className="h-3 w-3" /> Certified / Verified ({organizations.filter(o => o.verified).length})
+            <CheckCircle2 className="h-3 w-3" /> Certified ({organizations.filter(o => o.verified).length})
           </button>
           <button
             onClick={() => setStatusFilter('unverified')}
@@ -128,7 +128,7 @@ export default function OrganizationsPage() {
                 : 'bg-amber-500/10 text-amber-800 hover:bg-amber-500/20'
             }`}
           >
-            <XCircle className="h-3 w-3" /> Non-Certified / Unverified ({organizations.filter(o => !o.verified).length})
+            <XCircle className="h-3 w-3" /> Non-Certified ({organizations.filter(o => !o.verified).length})
           </button>
         </div>
 

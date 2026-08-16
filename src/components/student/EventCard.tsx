@@ -75,7 +75,7 @@ const EventCardInner = React.memo(function EventCardInner({
 
   // Title text & Description text
   const titleText = event.title;
-  const descriptionText = (event.description || '').substring(0, 90);
+  const descriptionText = event.description || '';
   const locationText = !isPromo ? ((event as Event).location || 'Campus Center') : 'Campus Wide';
 
   return (

@@ -395,16 +395,9 @@ export default function OrganizationProfilePage() {
         </div>
 
         {/* Header CTA Button */}
-        {currentUser && (
+        {currentUser && !isAdminOrLeader && (
           <div className="flex items-center gap-2">
-            {isAdminOrLeader ? (
-              <button
-                onClick={() => setActiveTab('manage')}
-                className="px-3 sm:px-4 py-1.5 bg-[#2A2621] hover:bg-[#FD5C05] text-white text-xs font-black uppercase tracking-wider rounded-full shadow-sm transition-all cursor-pointer flex items-center gap-1.5 border-none whitespace-nowrap shrink-0"
-              >
-                <Settings className="h-3.5 w-3.5" /> <span className="hidden sm:inline">Dashboard & Settings</span><span className="sm:hidden">Manage</span>
-              </button>
-            ) : isMember ? (
+            {isMember ? (
               <button
                 onClick={() => handleRemoveMember(currentUser.name)}
                 className="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-emerald-100 border border-emerald-200 text-emerald-800 text-xs font-black uppercase tracking-wider rounded-full shadow-xs hover:bg-red-50 hover:text-red-600 hover:border-red-200 transition-all cursor-pointer whitespace-nowrap shrink-0"
@@ -499,12 +492,9 @@ export default function OrganizationProfilePage() {
             {/* Header Action Button (Join Organization / Dashboard) */}
             <div className="pt-2 md:pt-0 shrink-0">
               {isAdminOrLeader ? (
-                <button 
-                  onClick={() => setActiveTab('manage')}
-                  className="px-6 py-2.5 rounded-full bg-[#2A2621] hover:bg-[#FD5C05] text-white font-black text-xs uppercase tracking-wider transition-all cursor-pointer flex items-center gap-2 shadow-md border-none"
-                >
-                  <Settings className="h-4 w-4" /> Dashboard & Settings
-                </button>
+                <span className="px-4 py-2 rounded-full bg-[#FD5C05]/10 border border-[#FD5C05]/20 text-[#FD5C05] font-black text-xs uppercase tracking-wider flex items-center gap-2">
+                  <ShieldCheck className="h-4 w-4" /> Organization Leader
+                </span>
               ) : isMember ? (
                 <button 
                   onClick={() => handleRemoveMember(currentUser!.name)}

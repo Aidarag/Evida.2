@@ -17,13 +17,11 @@ export default function SchoolDashboardPage() {
   if (!currentUser) return null;
 
   // Key Metrics
-  const pendingEvents = events.filter(e => e.status === 'pending');
-  const quickQueue = pendingEvents.filter(e => e.complexityType === 'quick');
-  const standardQueue = pendingEvents.filter(e => e.complexityType === 'standard');
-  const complexQueue = pendingEvents.filter(e => e.complexityType === 'complex');
+  const pendingEventsCount = events.filter(e => e.status === 'pending').length;
+  const verifiedOrgsCount = organizations.filter(o => o.verified).length;
+  const unverifiedOrgsCount = organizations.filter(o => !o.verified).length;
 
   const totalApproved = events.filter(e => e.status === 'approved').length;
-  const unverifiedOrgs = organizations.filter(o => !o.verified).length;
 
   return (
     <div className="p-6 md:p-10 space-y-10 max-w-7xl mx-auto">
@@ -37,46 +35,58 @@ export default function SchoolDashboardPage() {
         </div>
       </div>
 
-      {/* Primary Action Needs (Queues) */}
+      {/* Account Verification & Review Metrics */}
       <div className="grid md:grid-cols-3 gap-6">
-        <Card className="p-6 flex flex-col justify-between h-40 border-l-4 border-l-[#FD5C05]">
-          <div className="flex justify-between items-start">
-            <div className="h-10 w-10 rounded-full bg-[#FD5C05]/10 flex items-center justify-center text-[#2A2621]">
-              <AlertTriangle className="h-5 w-5" />
+        <Link href="/school/organizations" className="block">
+          <Card className="p-6 flex flex-col justify-between h-40 border-l-4 border-l-emerald-500 hover:shadow-md transition-all cursor-pointer">
+            <div className="flex justify-between items-start">
+              <div className="h-10 w-10 rounded-full bg-emerald-500/10 flex items-center justify-center text-emerald-600">
+                <CheckCircle className="h-5 w-5" />
+              </div>
+              <span className="rounded-full bg-emerald-500/10 text-emerald-700 px-3 py-1 text-[10px] font-black uppercase tracking-wider">
+                Certified ✓
+              </span>
             </div>
-            <span className="rounded-full bg-[#FD5C05]/10 text-[#2A2621] px-3 py-1 text-[10px] font-bold uppercase">High Priority</span>
-          </div>
-          <div>
-            <div className="text-3xl font-bold text-[#2A2621]">{complexQueue.length}</div>
-            <p className="text-sm font-medium text-[#5A554E]">Complex events pending review</p>
-          </div>
-        </Card>
+            <div>
+              <div className="text-3xl font-extrabold text-[#2A2621]">{verifiedOrgsCount}</div>
+              <p className="text-xs font-bold text-[#5A554E] uppercase tracking-wider mt-1">Certified Organizations</p>
+            </div>
+          </Card>
+        </Link>
 
-        <Card className="p-6 flex flex-col justify-between h-40 border-l-4 border-l-[#FD5C05]">
-          <div className="flex justify-between items-start">
-            <div className="h-10 w-10 rounded-full bg-[#9DC4D5]/10 flex items-center justify-center text-[#2A2621]/70">
-              <Clock className="h-5 w-5" />
+        <Link href="/school/organizations" className="block">
+          <Card className="p-6 flex flex-col justify-between h-40 border-l-4 border-l-amber-500 hover:shadow-md transition-all cursor-pointer">
+            <div className="flex justify-between items-start">
+              <div className="h-10 w-10 rounded-full bg-amber-500/10 flex items-center justify-center text-amber-600">
+                <XCircle className="h-5 w-5" />
+              </div>
+              <span className="rounded-full bg-amber-500/10 text-amber-800 px-3 py-1 text-[10px] font-black uppercase tracking-wider">
+                Non-Certified ✕
+              </span>
             </div>
-            <span className="rounded-full bg-[#FD5C05]/15 text-[#2A2621] px-3 py-1 text-[10px] font-bold uppercase">Standard</span>
-          </div>
-          <div>
-            <div className="text-3xl font-bold text-[#2A2621]">{standardQueue.length}</div>
-            <p className="text-sm font-medium text-[#5A554E]">Standard events pending review</p>
-          </div>
-        </Card>
+            <div>
+              <div className="text-3xl font-extrabold text-[#2A2621]">{unverifiedOrgsCount}</div>
+              <p className="text-xs font-bold text-[#5A554E] uppercase tracking-wider mt-1">Non-Certified Organizations</p>
+            </div>
+          </Card>
+        </Link>
 
-        <Card className="p-6 flex flex-col justify-between h-40 border-l-4 border-l-[#22C55E]">
-          <div className="flex justify-between items-start">
-            <div className="h-10 w-10 rounded-full bg-[#22C55E]/10 flex items-center justify-center text-[#22C55E]">
-              <CheckCircle className="h-5 w-5" />
+        <Link href="/school/review" className="block">
+          <Card className="p-6 flex flex-col justify-between h-40 border-l-4 border-l-[#FD5C05] hover:shadow-md transition-all cursor-pointer">
+            <div className="flex justify-between items-start">
+              <div className="h-10 w-10 rounded-full bg-[#FD5C05]/10 flex items-center justify-center text-[#FD5C05]">
+                <Clock className="h-5 w-5" />
+              </div>
+              <span className="rounded-full bg-[#FD5C05]/10 text-[#FD5C05] px-3 py-1 text-[10px] font-black uppercase tracking-wider">
+                Pending Review
+              </span>
             </div>
-            <span className="rounded-full bg-[#22C55E]/10 text-[#22C55E] px-3 py-1 text-[10px] font-bold uppercase">Fast Track</span>
-          </div>
-          <div>
-            <div className="text-3xl font-bold text-[#2A2621]">{quickQueue.length}</div>
-            <p className="text-sm font-medium text-[#5A554E]">Quick events pending review</p>
-          </div>
-        </Card>
+            <div>
+              <div className="text-3xl font-extrabold text-[#2A2621]">{pendingEventsCount}</div>
+              <p className="text-xs font-bold text-[#5A554E] uppercase tracking-wider mt-1">Events Pending Campus Review</p>
+            </div>
+          </Card>
+        </Link>
       </div>
 
       <div className="grid md:grid-cols-2 gap-8">
@@ -92,7 +102,7 @@ export default function SchoolDashboardPage() {
             </Link>
             <Link href="/school/organizations">
               <Card className="p-5 flex flex-col items-center justify-center text-center gap-3 h-32 hover:border-[#FD5C05]/40 transition-colors relative">
-                {unverifiedOrgs > 0 && (
+                {unverifiedOrgsCount > 0 && (
                   <span className="absolute top-3 right-3 h-2 w-2 rounded-full bg-[#FD5C05]"></span>
                 )}
                 <Building2 className="h-6 w-6 text-[#2A2621]/70" />

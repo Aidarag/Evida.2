@@ -127,7 +127,7 @@ export default function ReviewQueuePage() {
                 : 'bg-emerald-500/10 text-emerald-700 hover:bg-emerald-500/20'
             }`}
           >
-            <CheckCircle2 className="h-3 w-3" /> Certified / Verified ({verifiedCount})
+            <CheckCircle2 className="h-3 w-3" /> Certified ({verifiedCount})
           </button>
           <button
             onClick={() => setStatusFilter('unverified')}
@@ -137,7 +137,7 @@ export default function ReviewQueuePage() {
                 : 'bg-amber-500/10 text-amber-800 hover:bg-amber-500/20'
             }`}
           >
-            <XCircle className="h-3 w-3" /> Non-Certified / Unverified ({unverifiedCount})
+            <XCircle className="h-3 w-3" /> Non-Certified ({unverifiedCount})
           </button>
         </div>
 
