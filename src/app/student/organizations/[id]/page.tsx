@@ -536,7 +536,7 @@ export default function OrganizationProfilePage() {
               { id: 'home' as const, label: 'Home' },
               { id: 'events' as const, label: `Events (${orgEvents.length})` },
               { id: 'news' as const, label: `News (${org.announcements?.length || 0})` },
-              { id: 'about' as const, label: 'About & Contact' },
+              { id: 'about' as const, label: 'Contact' },
               isAdminOrLeader ? { id: 'manage' as const, label: 'Dashboard & Manage' } : null,
             ].filter((t): t is { id: 'home' | 'events' | 'news' | 'about' | 'manage'; label: string } => !!t).map(tab => (
               <button
