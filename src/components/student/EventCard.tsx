@@ -81,11 +81,11 @@ const EventCardInner = React.memo(function EventCardInner({
     <motion.article
       whileHover={{ y: -4 }}
       transition={{ type: 'spring', stiffness: 400, damping: 30 }}
-      className={`event-card group bg-white rounded-[16px] overflow-hidden border border-black/[0.06] shadow-xs hover:shadow-md transition-all duration-300 w-full sm:w-[300px] shrink-0 h-[340px] grid grid-rows-[184px_106px_50px] relative select-none cursor-pointer ${className}`}
+      className={`event-card group bg-white rounded-[16px] overflow-hidden border border-black/[0.06] shadow-xs hover:shadow-md transition-all duration-300 w-full sm:w-[300px] shrink-0 h-[360px] min-h-[360px] max-h-[360px] grid grid-rows-[170px_140px_50px] relative select-none cursor-pointer ${className}`}
       onClick={onClick}
     >
-      {/* 1. IMAGE WRAPPER (Row 1: 184px) */}
-      <div className="event-card__image-wrapper relative w-full h-[184px] overflow-hidden bg-gray-100">
+      {/* 1. IMAGE WRAPPER (Row 1: 170px) */}
+      <div className="event-card__image-wrapper relative w-full h-[170px] overflow-hidden bg-gray-100">
         <div
           className={`event-card__image w-full h-full object-cover transition-transform duration-500 group-hover:scale-105 ${bgClass}`}
           style={bgStyle}
@@ -130,31 +130,43 @@ const EventCardInner = React.memo(function EventCardInner({
         </div>
       </div>
 
-      {/* 2. CONTENT WRAPPER (Row 2: 106px - Date, Title & Light Description) */}
-      <div className="event-card__content p-[12px_20px_8px] overflow-hidden flex flex-col justify-start text-left min-h-0">
+      {/* 2. CONTENT WRAPPER (Row 2: 140px - Date, Title & 2-Line Light Description) */}
+      <div className="event-card__content p-[12px_20px_10px] overflow-hidden flex flex-col justify-start text-left min-h-0">
         {/* Date / Time */}
-        <div className="event-card__date h-[14px] text-[11px] leading-[14px] font-bold text-[#FD5C05] uppercase tracking-wider whitespace-nowrap overflow-hidden text-ellipsis block">
+        <div className="event-card__date h-[16px] text-[11px] leading-[16px] font-bold text-[#FD5C05] uppercase tracking-wider whitespace-nowrap overflow-hidden text-ellipsis block">
           {fullDateTime}
         </div>
 
-        {/* Title (2 lines max) */}
-        <h3
-          className="event-card__title text-[#2A2621] font-bold text-[20px] sm:text-[22px] leading-[25px] tracking-tight group-hover:text-[#FD5C05] transition-colors mt-[3px] h-[50px] max-h-[50px] block w-full text-left"
-          style={{
-            display: '-webkit-box',
-            WebkitBoxOrient: 'vertical',
-            WebkitLineClamp: 2,
-            overflow: 'hidden',
-            fontFamily: 'var(--font-display)',
-          }}
-        >
-          {titleText}
-        </h3>
+        {/* Title (2 lines max, reserved 46px) */}
+        <div className="mt-[4px] h-[46px] min-h-[46px] max-h-[46px] flex items-start overflow-hidden">
+          <h3
+            className="event-card__title text-[#2A2621] font-bold text-[19px] sm:text-[20px] leading-[23px] tracking-tight group-hover:text-[#FD5C05] transition-colors block w-full text-left"
+            style={{
+              display: '-webkit-box',
+              WebkitBoxOrient: 'vertical',
+              WebkitLineClamp: 2,
+              overflow: 'hidden',
+              fontFamily: 'var(--font-display)',
+            }}
+          >
+            {titleText}
+          </h3>
+        </div>
 
-        {/* Light Description with Ellipsis (...) */}
-        <p className="text-[11px] leading-[16px] font-semibold text-[#5A554E]/75 truncate mt-[2px] block w-full h-[16px] max-h-[16px]">
-          {descriptionText || 'Join us for this upcoming campus activity.'}
-        </p>
+        {/* Light Description (2 lines max with Ellipsis ..., 6px clear spacing to avoid overlap) */}
+        <div className="mt-[6px] h-[34px] min-h-[34px] max-h-[34px] flex items-start overflow-hidden">
+          <p
+            className="text-[11px] leading-[16px] font-semibold text-[#5A554E]/80 text-left block w-full"
+            style={{
+              display: '-webkit-box',
+              WebkitBoxOrient: 'vertical',
+              WebkitLineClamp: 2,
+              overflow: 'hidden',
+            }}
+          >
+            {descriptionText || 'Join us for this upcoming campus activity and experience.'}
+          </p>
+        </div>
       </div>
 
       {/* 3. FOOTER (Row 3: 50px - Completely independent Grid row) */}
