@@ -73,8 +73,9 @@ const EventCardInner = React.memo(function EventCardInner({
     : (event as Promotion).organizer;
   const orgName = orgNameRaw ? orgNameRaw.substring(0, 30) : '';
 
-  // Title text
+  // Title text & Description text (Max 90 chars safeguard with ellipsis)
   const titleText = event.title;
+  const descriptionText = (event.description || '').substring(0, 90);
 
   return (
     <motion.article
@@ -129,16 +130,16 @@ const EventCardInner = React.memo(function EventCardInner({
         </div>
       </div>
 
-      {/* 2. CONTENT WRAPPER (Row 2: 106px - Date + Title ONLY) */}
-      <div className="event-card__content p-[14px_20px_8px] overflow-hidden flex flex-col justify-start text-left min-h-0">
+      {/* 2. CONTENT WRAPPER (Row 2: 106px - Date, Title & Light Description) */}
+      <div className="event-card__content p-[12px_20px_8px] overflow-hidden flex flex-col justify-start text-left min-h-0">
         {/* Date / Time */}
-        <div className="event-card__date h-[16px] text-[12px] leading-[16px] font-bold text-[#FD5C05] uppercase tracking-wider whitespace-nowrap overflow-hidden text-ellipsis block">
+        <div className="event-card__date h-[14px] text-[11px] leading-[14px] font-bold text-[#FD5C05] uppercase tracking-wider whitespace-nowrap overflow-hidden text-ellipsis block">
           {fullDateTime}
         </div>
 
-        {/* Title (26px, line-height 28px, 2 lines = 56px reserved height) */}
+        {/* Title (2 lines max) */}
         <h3
-          className="event-card__title text-[#2A2621] font-bold text-[24px] leading-[28px] tracking-tight group-hover:text-[#FD5C05] transition-colors mt-[5px] h-[56px] max-h-[56px] block w-full text-left"
+          className="event-card__title text-[#2A2621] font-bold text-[20px] sm:text-[22px] leading-[25px] tracking-tight group-hover:text-[#FD5C05] transition-colors mt-[3px] h-[50px] max-h-[50px] block w-full text-left"
           style={{
             display: '-webkit-box',
             WebkitBoxOrient: 'vertical',
@@ -149,6 +150,11 @@ const EventCardInner = React.memo(function EventCardInner({
         >
           {titleText}
         </h3>
+
+        {/* Light Description with Ellipsis (...) */}
+        <p className="text-[11px] leading-[16px] font-semibold text-[#5A554E]/75 truncate mt-[2px] block w-full h-[16px] max-h-[16px]">
+          {descriptionText || 'Join us for this upcoming campus activity.'}
+        </p>
       </div>
 
       {/* 3. FOOTER (Row 3: 50px - Completely independent Grid row) */}
