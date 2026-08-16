@@ -83,17 +83,11 @@ export default function SchoolDashboardPage() {
         {/* Quick Links */}
         <div className="space-y-4">
           <h2 className="text-xl font-bold text-[#2A2621]" style={{ fontFamily: 'var(--font-display)' }}>System Modules</h2>
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-3 gap-4">
              <Link href="/school/review">
               <Card className="p-5 flex flex-col items-center justify-center text-center gap-3 h-32 hover:border-[#FD5C05]/40 transition-colors">
                 <ClipboardList className="h-6 w-6 text-[#2A2621]/70" />
                 <span className="text-sm font-bold text-[#2A2621]">Review Queue</span>
-              </Card>
-            </Link>
-            <Link href="/school/featured">
-              <Card className="p-5 flex flex-col items-center justify-center text-center gap-3 h-32 hover:border-[#FD5C05]/40 transition-colors">
-                <Star className="h-6 w-6 text-[#FD5C05]" />
-                <span className="text-sm font-bold text-[#2A2621]">Featured Events</span>
               </Card>
             </Link>
             <Link href="/school/organizations">

@@ -68,7 +68,7 @@ export default function ReviewQueuePage() {
             <ShieldCheck className="h-3.5 w-3.5" /> School Administration
           </span>
           <span className="text-xs font-extrabold text-[#5A554E] uppercase tracking-wider">
-            {pendingEvents.length} Events • {pendingOrgs.length} Orgs Pending
+            {pendingEvents.length} Events Pending Review
           </span>
         </div>
 
@@ -77,7 +77,7 @@ export default function ReviewQueuePage() {
             Review Queue
           </h1>
           <p className="text-xs sm:text-sm text-[#5A554E] font-medium leading-relaxed mt-1">
-            Review and approve pending student experiences, event submissions, and organization verification requests.
+            Review and approve pending student experiences and event submissions.
           </p>
         </div>
 
@@ -183,113 +183,9 @@ export default function ReviewQueuePage() {
                 <ClipboardList className="h-7 w-7" />
               </div>
               <h3 className="text-base font-extrabold text-[#2A2621] uppercase tracking-tight">Queue is Empty</h3>
-              <p className="text-xs text-[#5A554E] max-w-sm font-medium">There are no pending student events requiring school review at this time.</p>
             </div>
           )}
         </AnimatePresence>
-      </div>
-
-      {/* ── Pending Organizations Section ── */}
-      <div className="space-y-4 pt-4">
-        <div className="flex items-center justify-between">
-          <div>
-            <h2 className="text-xl font-black text-[#2A2621] uppercase tracking-tight" style={{ fontFamily: 'var(--font-display)' }}>
-              Pending Organizations
-            </h2>
-            <p className="text-xs text-[#5A554E] font-medium mt-0.5">
-              Campus groups requesting official verification or registration.
-            </p>
-          </div>
-        </div>
-
-        {organizations.length > 0 ? (
-          <div className="grid sm:grid-cols-2 gap-6">
-            {organizations.map((org) => {
-              const bgHex = getTailwindBgColor(org.logoColor || 'indigo');
-              return (
-                <Card key={org.id} className="p-6 rounded-[28px] border border-black/[0.06] bg-white shadow-sm flex flex-col justify-between space-y-5 text-left">
-                  <div className="flex items-start justify-between gap-4">
-                    <div className="flex items-center gap-4">
-                      <div
-                        className="h-14 w-14 rounded-2xl text-white font-black text-xl flex items-center justify-center shadow-sm shrink-0"
-                        style={{ backgroundColor: bgHex }}
-                      >
-                        {org.name.charAt(0).toUpperCase()}
-                      </div>
-                      <div className="space-y-1">
-                        <div className="flex items-center gap-1.5">
-                          <h3 className="text-base font-black text-[#2A2621] uppercase tracking-tight leading-snug">
-                            {org.name}
-                          </h3>
-                          {org.verified && <VerifiedBadge className="h-4 w-4" />}
-                        </div>
-                        <p className="text-xs text-[#5A554E] line-clamp-2 font-medium">
-                          {org.description || org.aboutUs || 'No description provided.'}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="flex flex-wrap items-center gap-3 text-[10px] font-bold text-[#5A554E] uppercase border-t border-black/[0.04] pt-3">
-                    <span>{org.members.length} members</span>
-                    <span>•</span>
-                    <span>Category: {org.category || 'Social'}</span>
-                    <span>•</span>
-                    <span className={org.verified ? 'text-emerald-600 font-extrabold' : 'text-amber-700 font-extrabold'}>
-                      {org.verified ? 'Verified ✓' : 'Unverified'}
-                    </span>
-                  </div>
-
-                  <div className="pt-2 flex flex-wrap items-center justify-end gap-2">
-                    <button
-                      onClick={() => {
-                        if (confirm(`Are you sure you want to delete "${org.name}"?`)) {
-                          deleteOrg(org.id);
-                        }
-                      }}
-                      className="px-3.5 py-2 bg-red-600 hover:bg-red-700 text-white rounded-xl text-xs font-extrabold uppercase tracking-wider transition-all cursor-pointer border-none flex items-center gap-1 shadow-sm"
-                      title="Delete Organization"
-                    >
-                      <Trash2 className="h-3.5 w-3.5" /> Delete
-                    </button>
-                    <button
-                      onClick={() => suspendOrg(org.id)}
-                      className="px-3.5 py-2 bg-red-500/10 hover:bg-red-500/20 text-red-600 rounded-xl text-xs font-extrabold uppercase tracking-wider transition-all border border-red-200 cursor-pointer flex items-center gap-1"
-                    >
-                      <Ban className="h-3.5 w-3.5" /> Suspend
-                    </button>
-                    <button
-                      onClick={() => {
-                        setSelectedOrgId(org.id);
-                        setOrgRequestInfoModal(true);
-                      }}
-                      className="px-3.5 py-2 bg-[#F8F6F0] hover:bg-black/[0.06] text-[#2A2621] rounded-xl text-xs font-extrabold uppercase tracking-wider transition-all border border-black/[0.06] cursor-pointer flex items-center gap-1"
-                    >
-                      <HelpCircle className="h-3.5 w-3.5" /> Request Info
-                    </button>
-                    <button
-                      onClick={() => toggleVerifyOrg(org.id)}
-                      className={`px-4 py-2 rounded-xl text-xs font-black uppercase tracking-wider transition-all cursor-pointer border-none flex items-center gap-1.5 ${
-                        org.verified
-                          ? 'bg-amber-100 text-amber-900 hover:bg-amber-200'
-                          : 'bg-[#FD5C05] hover:bg-[#CC3D00] text-white shadow-md shadow-[#FD5C05]/20'
-                      }`}
-                    >
-                      <ShieldCheck className="h-4 w-4" />
-                      {org.verified ? 'Revoke Verification' : 'Verify Organization'}
-                    </button>
-                  </div>
-                </Card>
-              );
-            })}
-          </div>
-        ) : (
-          <div className="bg-white rounded-[28px] border border-black/[0.06] p-12 text-center shadow-sm flex flex-col items-center justify-center space-y-3">
-            <Building className="h-10 w-10 text-[#5A554E]" />
-            <h3 className="text-base font-extrabold text-[#2A2621] uppercase tracking-tight">No Pending Organizations</h3>
-            <p className="text-xs text-[#5A554E] max-w-sm font-medium">All campus organizations are verified.</p>
-          </div>
-        )}
       </div>
 
       {/* ── Request Info Modal ── */}
