@@ -639,16 +639,23 @@ export function ProfileSwitcher() {
   if (!currentUser) return null;
 
   // Filter organizations the user is member of/officer of
-  const myOrgs = organizations.filter(org => currentUser.organizations?.includes(org.id));
+  const myOrgs = organizations.filter(org => 
+    (currentUser.organizations || []).includes(org.id) ||
+    org.members?.includes(currentUser.name) ||
+    (currentUser.username ? org.members?.includes(currentUser.username) : false) ||
+    org.creatorUsername === currentUser.username ||
+    org.creatorUsername === currentUser.name
+  );
 
   const handleSwitchToStudent = () => {
     setActiveProfile({ type: 'student' });
+    router.push('/student/dashboard');
     setDropdownOpen(false);
   };
 
   const handleSwitchToOrg = (orgId: string, name: string) => {
     setActiveProfile({ type: 'organization', orgId, name });
-    router.push(`/organization/${orgId}/dashboard`);
+    router.push(`/student/organizations/${orgId}`);
     setDropdownOpen(false);
   };
 
@@ -670,7 +677,7 @@ export function ProfileSwitcher() {
           orgId: newOrg.id,
           name: newOrg.name
         });
-        router.push(`/organization/${newOrg.id}/dashboard`);
+        router.push(`/student/organizations/${newOrg.id}`);
         setCreateModalOpen(false);
         setOnboardingStep(1);
         setOrgName('');
@@ -793,22 +800,20 @@ export function ProfileSwitcher() {
               })}
             </div>
 
-            {/* Action options */}
-            {myOrgs.length === 0 && (
-              <div className="p-1.5 space-y-1">
-                <button
-                  onClick={() => {
-                    setDropdownOpen(false);
-                    setOnboardingStep(1);
-                    setCreateModalOpen(true);
-                  }}
-                  className="w-full text-left flex items-center gap-2 px-3 py-2 rounded-xl hover:bg-[#EAE4CF]/20 text-[#2A2621] font-bold text-xs cursor-pointer transition-all"
-                >
-                  <Plus className="h-4 w-4 text-[#FD5C05] stroke-[3]" />
-                  <span className="truncate">Create Organization</span>
-                </button>
-              </div>
-            )}
+            {/* Always visible Create Organization Action */}
+            <div className="p-1.5 space-y-1">
+              <button
+                onClick={() => {
+                  setDropdownOpen(false);
+                  setOnboardingStep(1);
+                  setCreateModalOpen(true);
+                }}
+                className="w-full text-left flex items-center gap-2 px-3 py-2 rounded-xl hover:bg-[#FD5C05]/10 text-[#FD5C05] font-extrabold text-xs cursor-pointer transition-all"
+              >
+                <Plus className="h-4 w-4 text-[#FD5C05] stroke-[3]" />
+                <span className="truncate">Create New Organization</span>
+              </button>
+            </div>
           </motion.div>
         )}
       </AnimatePresence>
