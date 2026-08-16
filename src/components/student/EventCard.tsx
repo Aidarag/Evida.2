@@ -160,17 +160,21 @@ const EventCardInner = React.memo(function EventCardInner({
           </div>
 
           {/* Organization Name with rosette badge */}
-          {!isPromo && (event as Event).organizationName && (
-            <div className="flex items-center gap-1 text-[10px] text-[#5A554E] font-bold uppercase tracking-wider">
-              <span>{(event as Event).organizationName}</span>
-              {isOrgVerified && <VerifiedBadge className="h-3.5 w-3.5" />}
-            </div>
-          )}
+          <div className="flex items-center gap-1 text-[10px] text-[#5A554E] font-bold uppercase tracking-wider min-h-[1rem]">
+            {!isPromo && (event as Event).organizationName ? (
+              <>
+                <span className="truncate">{(event as Event).organizationName}</span>
+                {isOrgVerified && <VerifiedBadge className="h-3.5 w-3.5 shrink-0" />}
+              </>
+            ) : null}
+          </div>
 
           {/* Event Title */}
-          <h3 className="text-[#2A2621] font-bold text-base sm:text-lg line-clamp-2 leading-snug tracking-tight hover:text-[#FD5C05] transition-colors block">
-            {event.title}
-          </h3>
+          <div className="min-h-[2.8rem] flex items-center">
+            <h3 className="text-[#2A2621] font-bold text-base line-clamp-2 leading-snug tracking-tight hover:text-[#FD5C05] transition-colors block w-full">
+              {event.title}
+            </h3>
+          </div>
 
           {/* Location Row */}
           <div className="flex items-center gap-1.5 text-[#5A554E] text-xs font-semibold">
@@ -179,7 +183,7 @@ const EventCardInner = React.memo(function EventCardInner({
           </div>
 
           {/* Description */}
-          <p className="text-[#5A554E] text-xs leading-relaxed font-light line-clamp-2 pt-1">
+          <p className="text-[#5A554E] text-xs leading-relaxed font-light line-clamp-2 pt-1 min-h-[2.5rem]">
             {event.description || `Join us for the ${event.title}, happening soon.`}
           </p>
         </div>
