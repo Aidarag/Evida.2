@@ -160,30 +160,30 @@ export default function StudentSettingsPage() {
       title: 'Account & Identity',
       items: [
         { id: 'profile', label: 'Edit Profile', subtitle: 'Avatar, bio & personal info', value: currentUser.avatar || 'MC', Icon: User, iconBg: 'bg-[#FD5C05]/10', iconColor: 'text-[#FD5C05]', onClick: () => router.push('/student/profile') },
-        { id: 'create-org', label: 'Create Organization', subtitle: 'Register a student group', Icon: Building, iconBg: 'bg-indigo-500/10', iconColor: 'text-indigo-600', onClick: () => setActiveModal('create-org') },
-        { id: 'org-verification', label: 'Organization Verification', subtitle: 'Checkmark status check', value: getOrgStatusSummary(), Icon: Shield, iconBg: 'bg-emerald-500/10', iconColor: 'text-emerald-600', onClick: () => setActiveModal('org-verification') },
-        { id: 'college', label: 'Linked Campus', subtitle: 'Verified student domain', value: currentUser.school || 'Livingstone College', Icon: Building, iconBg: 'bg-blue-500/10', iconColor: 'text-blue-600', onClick: () => setActiveModal('college') },
+        { id: 'create-org', label: 'Create Organization', subtitle: 'Register a student group', Icon: Building, iconBg: 'bg-[#FD5C05]/10', iconColor: 'text-[#FD5C05]', onClick: () => setActiveModal('create-org') },
+        { id: 'org-verification', label: 'Organization Verification', subtitle: 'Checkmark status check', value: getOrgStatusSummary(), Icon: Shield, iconBg: 'bg-[#FD5C05]/10', iconColor: 'text-[#FD5C05]', onClick: () => setActiveModal('org-verification') },
+        { id: 'college', label: 'Linked Campus', subtitle: 'Verified student domain', value: currentUser.school || 'Livingstone College', Icon: Building, iconBg: 'bg-[#FD5C05]/10', iconColor: 'text-[#FD5C05]', onClick: () => setActiveModal('college') },
       ]
     },
     {
       title: 'Preferences & Security',
       items: [
-        { id: 'notifications', label: 'Notifications', subtitle: 'Push alerts & event digests', value: 'On', Icon: Bell, iconBg: 'bg-amber-500/10', iconColor: 'text-amber-600', onClick: () => setActiveModal('notifications') },
-        { id: 'privacy', label: 'Privacy & Security', subtitle: 'Control public profile tabs', value: 'Private', Icon: Lock, iconBg: 'bg-violet-500/10', iconColor: 'text-violet-600', onClick: () => setActiveModal('privacy') },
+        { id: 'notifications', label: 'Notifications', subtitle: 'Push alerts & event digests', value: 'On', Icon: Bell, iconBg: 'bg-[#FD5C05]/10', iconColor: 'text-[#FD5C05]', onClick: () => setActiveModal('notifications') },
+        { id: 'privacy', label: 'Privacy & Security', subtitle: 'Control public profile tabs', value: 'Private', Icon: Lock, iconBg: 'bg-[#FD5C05]/10', iconColor: 'text-[#FD5C05]', onClick: () => setActiveModal('privacy') },
       ]
     },
     {
       title: 'Support & Feedback',
       items: [
-        { id: 'report', label: 'Report a Problem', subtitle: 'Troubleshoot issues or bugs', Icon: AlertTriangle, iconBg: 'bg-rose-500/10', iconColor: 'text-rose-600', onClick: () => setActiveModal('report') },
-        { id: 'feedback', label: 'Send Feedback', subtitle: 'Suggest features to Evida team', Icon: MessageSquare, iconBg: 'bg-sky-500/10', iconColor: 'text-sky-600', onClick: () => setActiveModal('feedback') },
+        { id: 'report', label: 'Report a Problem', subtitle: 'Troubleshoot issues or bugs', Icon: AlertTriangle, iconBg: 'bg-[#FD5C05]/10', iconColor: 'text-[#FD5C05]', onClick: () => setActiveModal('report') },
+        { id: 'feedback', label: 'Send Feedback', subtitle: 'Suggest features to Evida team', Icon: MessageSquare, iconBg: 'bg-[#FD5C05]/10', iconColor: 'text-[#FD5C05]', onClick: () => setActiveModal('feedback') },
       ]
     },
     {
       title: 'Legal',
       items: [
-        { id: 'terms', label: 'Terms of Service', subtitle: 'User conduct & policies', Icon: FileText, iconBg: 'bg-teal-500/10', iconColor: 'text-teal-600', onClick: () => setActiveModal('terms') },
-        { id: 'policy', label: 'Privacy Policy', subtitle: 'Data usage standards', Icon: Lock, iconBg: 'bg-slate-500/10', iconColor: 'text-slate-600', onClick: () => setActiveModal('policy') },
+        { id: 'terms', label: 'Terms of Service', subtitle: 'User conduct & policies', Icon: FileText, iconBg: 'bg-[#FD5C05]/10', iconColor: 'text-[#FD5C05]', onClick: () => setActiveModal('terms') },
+        { id: 'policy', label: 'Privacy Policy', subtitle: 'Data usage standards', Icon: Lock, iconBg: 'bg-[#FD5C05]/10', iconColor: 'text-[#FD5C05]', onClick: () => setActiveModal('policy') },
       ]
     },
     {
