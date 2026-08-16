@@ -23,7 +23,8 @@ import {
   Shield,
   Camera,
   Tag,
-  Home
+  Home,
+  Plus
 } from 'lucide-react';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -40,11 +41,12 @@ const EvidaLogoIcon = ({ className = 'h-3 w-3' }: { className?: string }) => {
 };
 
 export default function StudentDashboardPage() {
-  const { currentUser } = useUser();
+  const { currentUser, activeProfile, setActiveProfile } = useUser();
   const { events, promotions, organizations, notifications, saveToggle, rsvpToggle } = useEvents();
   const router = useRouter();
 
   const [activeFeed, setActiveFeed] = useState<'official' | 'student'>('official');
+  const [orgDashboardTab, setOrgDashboardTab] = useState<'org-events' | 'campus-feed'>('org-events');
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [likedEvents, setLikedEvents] = useState<Set<string>>(new Set());
@@ -340,41 +342,121 @@ export default function StudentDashboardPage() {
 
   if (!currentUser) return null;
 
+  const isOrgMode = activeProfile.type === 'organization';
+  const activeOrg = isOrgMode ? organizations.find(o => o.id === activeProfile.orgId) : null;
+  const activeOrgName = isOrgMode ? (activeOrg ? activeOrg.name : activeProfile.name) : '';
+  const myOrgEvents = isOrgMode ? events.filter(e => e.organizationId === activeProfile.orgId || e.organizationName === activeOrgName) : [];
+
   return (
     <div className="max-w-5xl mx-auto px-4 py-4 pb-28 md:pb-12 space-y-4">
 
-      {/* ── Header & Search ── */}
-      <div className="border-b border-black/[0.04] pb-4 space-y-3.5 text-left">
-        <div>
-          <h1 className="font-black text-2xl md:text-3xl text-[#2A2621] tracking-tight" style={{ fontFamily: 'var(--font-display)' }}>
-            Yo {currentUser.name.split(' ')[0]}!
-          </h1>
-          <p className="text-xs text-[#5A554E] font-semibold mt-1">
-            What's happening on campus today?
-          </p>
-        </div>
+      {/* ── Organization Mode Banner Header ── */}
+      {isOrgMode && (
+        <div className="bg-white rounded-3xl border border-[#FD5C05]/20 p-5 md:p-6 shadow-sm text-left space-y-4 relative overflow-hidden">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div className="flex items-center gap-3.5 min-w-0">
+              <div className="h-12 w-12 rounded-2xl bg-[#FD5C05] text-white flex items-center justify-center font-black text-lg shadow-sm shrink-0">
+                {activeOrgName.substring(0, 2).toUpperCase()}
+              </div>
+              <div className="min-w-0">
+                <div className="flex items-center gap-2">
+                  <span className="bg-[#FD5C05]/10 text-[#FD5C05] text-[9px] font-black uppercase tracking-wider px-2.5 py-0.5 rounded-full border border-[#FD5C05]/20 shrink-0">
+                    Active Organization Profile
+                  </span>
+                  {activeOrg?.verified && <VerifiedBadge className="h-4 w-4 shrink-0" />}
+                </div>
+                <h1 className="text-xl md:text-2xl font-black text-[#2A2621] uppercase tracking-tight mt-1 truncate" style={{ fontFamily: 'var(--font-display)' }}>
+                  {activeOrgName}
+                </h1>
+                <p className="text-xs text-[#5A554E] font-medium">Managed as officer by {currentUser.name}</p>
+              </div>
+            </div>
 
-        {/* Search Bar */}
-        <div className="relative max-w-xl">
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-[#5A554E] pointer-events-none" />
-          <input
-            ref={searchInputRef}
-            type="text"
-            value={searchQuery}
-            onChange={e => setSearchQuery(e.target.value)}
-            placeholder="Search events, organizations, or services…"
-            className="w-full pl-10 pr-10 py-2.5 rounded-xl bg-white border border-black/[0.06] text-xs text-[#2A2621] placeholder-[#5A554E]/60 focus:outline-none focus:border-[#FD5C05]/40 shadow-sm font-medium"
-          />
-          {searchQuery && (
+            <div className="flex flex-wrap items-center gap-2 shrink-0">
+              <button
+                onClick={() => router.push('/student/create')}
+                className="px-4 py-2 bg-[#FD5C05] hover:bg-[#CC3D00] text-white text-xs font-black uppercase tracking-wider rounded-xl transition-all shadow-sm flex items-center gap-1.5 border-none cursor-pointer"
+              >
+                <Plus className="h-4 w-4" /> Create Event
+              </button>
+              {activeOrg && (
+                <button
+                  onClick={() => router.push(`/student/organizations/${activeOrg.id}`)}
+                  className="px-4 py-2 bg-[#2A2621] hover:bg-black text-white text-xs font-black uppercase tracking-wider rounded-xl transition-all shadow-sm flex items-center gap-1.5 border-none cursor-pointer"
+                >
+                  <Home className="h-3.5 w-3.5" /> Org Page
+                </button>
+              )}
+              <button
+                onClick={() => setActiveProfile({ type: 'student' })}
+                className="px-3 py-2 bg-black/[0.04] hover:bg-black/10 text-[#2A2621] text-xs font-bold uppercase tracking-wider rounded-xl transition-all border-none cursor-pointer"
+                title="Switch back to Student Personal Profile"
+              >
+                Switch to Personal
+              </button>
+            </div>
+          </div>
+
+          {/* Org Workspace Tabs Toggle */}
+          <div className="flex items-center gap-2 border-t border-black/[0.05] pt-3 text-xs font-bold">
             <button
-              onClick={() => setSearchQuery('')}
-              className="absolute right-3 top-1/2 -translate-y-1/2 h-6 w-6 rounded-full bg-black/[0.06] flex items-center justify-center hover:bg-black/10 cursor-pointer"
+              onClick={() => setOrgDashboardTab('org-events')}
+              className={`px-3.5 py-1.5 rounded-xl transition-all cursor-pointer ${
+                orgDashboardTab === 'org-events'
+                  ? 'bg-[#FD5C05]/10 text-[#FD5C05] font-black'
+                  : 'text-[#5A554E] hover:bg-black/[0.04]'
+              }`}
             >
-              <X className="h-3.5 w-3.5 text-[#5A554E]" />
+              {activeOrgName} Events ({myOrgEvents.length})
             </button>
-          )}
+            <button
+              onClick={() => setOrgDashboardTab('campus-feed')}
+              className={`px-3.5 py-1.5 rounded-xl transition-all cursor-pointer ${
+                orgDashboardTab === 'campus-feed'
+                  ? 'bg-[#FD5C05]/10 text-[#FD5C05] font-black'
+                  : 'text-[#5A554E] hover:bg-black/[0.04]'
+              }`}
+            >
+              Campus Feed Preview
+            </button>
+          </div>
         </div>
-      </div>
+      )}
+
+      {/* ── Student Personal Welcome Header ── */}
+      {!isOrgMode && (
+        <div className="border-b border-black/[0.04] pb-4 space-y-3.5 text-left">
+          <div>
+            <h1 className="font-black text-2xl md:text-3xl text-[#2A2621] tracking-tight" style={{ fontFamily: 'var(--font-display)' }}>
+              Yo {currentUser.name.split(' ')[0]}!
+            </h1>
+            <p className="text-xs text-[#5A554E] font-semibold mt-1">
+              What's happening on campus today?
+            </p>
+          </div>
+
+          {/* Search Bar */}
+          <div className="relative max-w-xl">
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-[#5A554E] pointer-events-none" />
+            <input
+              ref={searchInputRef}
+              type="text"
+              value={searchQuery}
+              onChange={e => setSearchQuery(e.target.value)}
+              placeholder="Search events, organizations, or services…"
+              className="w-full pl-10 pr-10 py-2.5 rounded-xl bg-white border border-black/[0.06] text-xs text-[#2A2621] placeholder-[#5A554E]/60 focus:outline-none focus:border-[#FD5C05]/40 shadow-sm font-medium"
+            />
+            {searchQuery && (
+              <button
+                onClick={() => setSearchQuery('')}
+                className="absolute right-3 top-1/2 -translate-y-1/2 h-6 w-6 rounded-full bg-black/[0.06] flex items-center justify-center hover:bg-black/10 cursor-pointer"
+              >
+                <X className="h-3.5 w-3.5 text-[#5A554E]" />
+              </button>
+            )}
+          </div>
+        </div>
+      )}
 
       {/* ── Segmented Feed Toggle & Filter Controls ── */}
       <div className="bg-white/40 border border-black/[0.03] rounded-2xl p-3 space-y-2.5 shadow-sm">
@@ -450,23 +532,28 @@ export default function StudentDashboardPage() {
       {/* ── Main Dashboard Layout ── */}
       <div className="max-w-5xl mx-auto space-y-5">
           <div className="text-left space-y-1">
-            <h2 className="font-black tracking-tight text-[#2A2621] flex items-center gap-1.5" style={{ fontFamily: 'var(--font-display)' }}>
-              {activeFeed === 'official' ? 'Livingstone College' : 'For You'}
+            <h2 className="font-black tracking-tight text-[#2A2621] flex items-center gap-1.5 uppercase" style={{ fontFamily: 'var(--font-display)' }}>
+              {isOrgMode && orgDashboardTab === 'org-events'
+                ? `${activeOrgName} Experiences`
+                : (activeFeed === 'official' ? 'Livingstone College' : 'For You')
+              }
             </h2>
             <p className="text-xs font-bold text-[#5A554E] uppercase tracking-wider">
-              {activeFeed === 'official' 
-                ? 'Official school and organization events.' 
-                : 'Student-created promotions and community activities.'
+              {isOrgMode && orgDashboardTab === 'org-events'
+                ? `Experiences created and hosted by ${activeOrgName}.`
+                : (activeFeed === 'official' 
+                  ? 'Official school and organization events.' 
+                  : 'Student-created promotions and community activities.')
               }
             </p>
             <span className="text-[10px] font-extrabold text-[#5A554E] block pt-1">
-              Showing {sortedFilteredItems.length} {activeFeed === 'official' ? 'events' : 'postings'}
+              Showing {(isOrgMode && orgDashboardTab === 'org-events' ? myOrgEvents : sortedFilteredItems).length} events
             </span>
           </div>
 
-          {sortedFilteredItems.length > 0 ? (
+          {(isOrgMode && orgDashboardTab === 'org-events' ? myOrgEvents : sortedFilteredItems).length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-              {sortedFilteredItems.map((item) => {
+              {(isOrgMode && orgDashboardTab === 'org-events' ? myOrgEvents : sortedFilteredItems).map((item) => {
                 const isPromo = !('ownershipType' in item);
                 const event = isPromo ? null : (item as any);
                 const promo = isPromo ? (item as any) : null;

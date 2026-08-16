@@ -36,7 +36,7 @@ import { Event, Organization, Promotion } from '@/lib/types';
 
 export default function ExplorePage() {
   const { events, promotions: allPromotions, organizations, saveToggle } = useEvents();
-  const { currentUser } = useUser();
+  const { currentUser, activeProfile } = useUser();
   const router = useRouter();
 
   // Search state
@@ -489,6 +489,24 @@ export default function ExplorePage() {
           </button>
         )}
       </div>
+
+      {/* Org Mode Active Context Banner */}
+      {activeProfile?.type === 'organization' && (
+        <div className="bg-white rounded-2xl border border-[#FD5C05]/20 p-4 shadow-xs flex items-center justify-between gap-3 text-left">
+          <div className="flex items-center gap-3">
+            <div className="h-9 w-9 rounded-xl bg-[#FD5C05] text-white flex items-center justify-center font-black text-xs shrink-0">
+              {activeProfile.name.substring(0, 2).toUpperCase()}
+            </div>
+            <div>
+              <p className="text-[9px] font-black uppercase text-[#FD5C05] tracking-wider">Active Org Profile</p>
+              <p className="text-xs font-black text-[#2A2621] uppercase tracking-tight">{activeProfile.name}</p>
+            </div>
+          </div>
+          <span className="text-[10px] text-[#5A554E] font-semibold hidden sm:inline">
+            Exploring campus organizations, partnerships & official experiences
+          </span>
+        </div>
+      )}
 
       {/* ── Dynamic Layout Transition ── */}
       <AnimatePresence mode="wait">

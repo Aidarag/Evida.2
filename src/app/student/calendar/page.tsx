@@ -10,7 +10,8 @@ import {
   MapPin,
   Calendar,
   CheckCircle2,
-  Bookmark
+  Bookmark,
+  Building
 } from 'lucide-react';
 import { useEvents } from '@/lib/context/EventContext';
 import { useUser } from '@/lib/context/UserContext';
@@ -19,9 +20,22 @@ import { downloadEventICS } from '@/lib/calendar';
 
 export default function StudentCalendarPage() {
   const { events } = useEvents();
-  const { currentUser } = useUser();
+  const { currentUser, activeProfile } = useUser();
 
-  // Filter events to only those the user is attending (RSVP'd / I'm Going)
+  const [calendarFilter, setCalendarFilter] = useState<'org' | 'rsvp' | 'all'>(
+    activeProfile.type === 'organization' ? 'org' : 'rsvp'
+  );
+
+  // Filter events hosted by active organization
+  const orgEvents = React.useMemo(() => {
+    if (activeProfile.type !== 'organization') return [];
+    return events.filter(e =>
+      e.organizationId === activeProfile.orgId ||
+      (e.organizationName && e.organizationName.toLowerCase() === activeProfile.name.toLowerCase())
+    );
+  }, [events, activeProfile]);
+
+  // Filter events user is attending
   const userGoingEvents = React.useMemo(() => {
     if (!currentUser) return [];
     const name = currentUser.name;
@@ -34,6 +48,16 @@ export default function StudentCalendarPage() {
       )
     );
   }, [events, currentUser]);
+
+  const displayedCalendarEvents = React.useMemo(() => {
+    if (calendarFilter === 'org' && activeProfile.type === 'organization') {
+      return orgEvents;
+    }
+    if (calendarFilter === 'all') {
+      return events.filter(e => e.status === 'approved');
+    }
+    return userGoingEvents;
+  }, [calendarFilter, activeProfile, orgEvents, events, userGoingEvents]);
 
   // Determine initial calendar month based on user's events
   const [calendarDate, setCalendarDate] = useState<Date>(() => {
@@ -108,7 +132,7 @@ export default function StudentCalendarPage() {
     const m = String(date.getMonth() + 1).padStart(2, '0');
     const d = String(date.getDate()).padStart(2, '0');
     const dateString = `${y}-${m}-${d}`;
-    return userGoingEvents.filter(e => e.date === dateString);
+    return displayedCalendarEvents.filter(e => e.date === dateString);
   };
 
   const handleMonthNav = (direction: 'prev' | 'next') => {
@@ -145,21 +169,62 @@ export default function StudentCalendarPage() {
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-6 md:py-10 pb-28 md:pb-12 space-y-6">
-      {/* ── Header ── */}
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 border-b border-black/[0.04] pb-5">
+      {/* ── Header & Filter Controls ── */}
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 border-b border-black/[0.04] pb-5 text-left">
         <div>
-          <div className="flex items-center gap-3">
-            <h1 className="font-black text-[#2A2621] tracking-tight" style={{ fontFamily: 'var(--font-display)' }}>
+          <div className="flex flex-wrap items-center gap-3">
+            <h1 className="text-2xl md:text-3xl font-black text-[#2A2621] tracking-tight uppercase" style={{ fontFamily: 'var(--font-display)' }}>
               Campus Calendar
             </h1>
-            <span className="bg-[#FD5C05]/10 text-[#FD5C05] border border-[#FD5C05]/20 text-xs font-black px-3 py-1 rounded-full uppercase tracking-wider flex items-center gap-1.5">
-              <CheckCircle2 className="h-3.5 w-3.5" />
-              {userGoingEvents.length} {userGoingEvents.length === 1 ? 'Event Attending' : 'Events Attending'}
-            </span>
+            {activeProfile.type === 'organization' && (
+              <span className="bg-[#FD5C05]/10 text-[#FD5C05] border border-[#FD5C05]/20 text-xs font-black px-3 py-1 rounded-full uppercase tracking-wider flex items-center gap-1.5">
+                <Building className="h-3.5 w-3.5" />
+                Active Org: {activeProfile.name}
+              </span>
+            )}
           </div>
-          <p className="text-sm text-[#5A554E] font-semibold mt-2 leading-relaxed">
-            Events you have RSVP&apos;d to are automatically marked on your calendar below.
+          <p className="text-xs text-[#5A554E] font-semibold mt-1 leading-relaxed">
+            {activeProfile.type === 'organization'
+              ? `Viewing schedule and experiences for ${activeProfile.name}.`
+              : "Events you have RSVP'd to are automatically marked on your calendar below."
+            }
           </p>
+
+          {/* Filter Pills Toggle */}
+          <div className="flex flex-wrap items-center gap-2 pt-3">
+            {activeProfile.type === 'organization' && (
+              <button
+                onClick={() => setCalendarFilter('org')}
+                className={`px-3.5 py-1.5 rounded-full text-xs font-black uppercase tracking-wider transition-all cursor-pointer border ${
+                  calendarFilter === 'org'
+                    ? 'bg-[#FD5C05] text-white border-[#FD5C05] shadow-xs'
+                    : 'bg-white text-[#5A554E] border-black/[0.06] hover:bg-slate-50'
+                }`}
+              >
+                {activeProfile.name} Schedule ({orgEvents.length})
+              </button>
+            )}
+            <button
+              onClick={() => setCalendarFilter('rsvp')}
+              className={`px-3.5 py-1.5 rounded-full text-xs font-black uppercase tracking-wider transition-all cursor-pointer border ${
+                calendarFilter === 'rsvp'
+                  ? 'bg-[#FD5C05] text-white border-[#FD5C05] shadow-xs'
+                  : 'bg-white text-[#5A554E] border-black/[0.06] hover:bg-slate-50'
+              }`}
+            >
+              My RSVPs ({userGoingEvents.length})
+            </button>
+            <button
+              onClick={() => setCalendarFilter('all')}
+              className={`px-3.5 py-1.5 rounded-full text-xs font-black uppercase tracking-wider transition-all cursor-pointer border ${
+                calendarFilter === 'all'
+                  ? 'bg-[#FD5C05] text-white border-[#FD5C05] shadow-xs'
+                  : 'bg-white text-[#5A554E] border-black/[0.06] hover:bg-slate-50'
+              }`}
+            >
+              All Campus Events
+            </button>
+          </div>
         </div>
 
         {/* Category Legend */}
