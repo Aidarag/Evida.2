@@ -206,7 +206,7 @@ export default function ExplorePage() {
       key={evt.id}
       event={evt}
       onClick={() => router.push(`/events/${evt.id}`)}
-      className={isGridItem ? 'w-full sm:w-full' : 'w-56 sm:w-64'}
+      className={isGridItem ? 'w-full sm:w-full' : 'w-72 sm:w-[300px]'}
     />
   );
 

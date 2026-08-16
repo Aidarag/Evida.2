@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { MapPin, Bookmark, Check, CheckCircle, Mail, X } from 'lucide-react';
+import { Bookmark } from 'lucide-react';
 import { Event, Promotion } from '@/lib/types';
 import { motion } from 'framer-motion';
 import { useEvents } from '@/lib/context/EventContext';
@@ -18,19 +18,15 @@ interface EventCardProps {
   className?: string;
 }
 
-// 1. Standardized Presentational EventCard Component
+// 1. Presentational Component implementing CSS Grid Card Architecture (184px image, 106px content, 50px footer = 340px total)
 const EventCardInner = React.memo(function EventCardInner({
   event,
   onClick,
   onSave,
   isSaved,
-  onRsvp,
-  isAttending = false,
   effectiveIsSaved,
-  effectiveIsAttending,
   isOrgVerified,
   saveToggle,
-  rsvpToggle,
   className = '',
 }: EventCardProps & {
   effectiveIsSaved: boolean;
@@ -54,12 +50,12 @@ const EventCardInner = React.memo(function EventCardInner({
     ? { backgroundImage: `url(${coverImage})`, backgroundSize: 'cover', backgroundPosition: 'center' }
     : {};
 
-  // Date & Time (Max 22 characters)
+  // Date & Time (OCT 9 • 18:00)
   const dateObj = new Date(event.date + 'T00:00:00');
   const month = dateObj.toLocaleDateString('en-US', { month: 'short' }).toUpperCase();
   const day = dateObj.getDate();
   const rawDateStr = `${month} ${day}`;
-  const timeStr = !isPromo && (event as Event).time ? (event as Event).time : '7:00 PM';
+  const timeStr = !isPromo && (event as Event).time ? (event as Event).time : '18:00';
   const fullDateTime = `${rawDateStr} • ${timeStr}`.substring(0, 22);
 
   // Category Badge (Max 16 characters)
@@ -81,16 +77,16 @@ const EventCardInner = React.memo(function EventCardInner({
   const titleText = event.title;
 
   return (
-    <motion.div
+    <motion.article
       whileHover={{ y: -4 }}
       transition={{ type: 'spring', stiffness: 400, damping: 30 }}
-      className={`group flex flex-col bg-white rounded-[16px] overflow-hidden border border-black/[0.06] shadow-xs hover:shadow-md transition-all duration-300 w-full sm:w-[276px] shrink-0 h-[310px] min-h-[310px] max-h-[310px] justify-between relative select-none cursor-pointer ${className}`}
+      className={`event-card group bg-white rounded-[16px] overflow-hidden border border-black/[0.06] shadow-xs hover:shadow-md transition-all duration-300 w-full sm:w-[300px] shrink-0 h-[340px] grid grid-rows-[184px_106px_50px] relative select-none cursor-pointer ${className}`}
       onClick={onClick}
     >
-      {/* 1. IMAGE CONTAINER (Width: 100%, Height: 170px, object-fit: cover, flex-shrink: 0) */}
-      <div className="relative w-full h-[170px] shrink-0 overflow-hidden bg-gray-100">
+      {/* 1. IMAGE WRAPPER (Row 1: 184px) */}
+      <div className="event-card__image-wrapper relative w-full h-[184px] overflow-hidden bg-gray-100">
         <div
-          className={`w-full h-full object-cover transition-transform duration-500 group-hover:scale-105 ${bgClass}`}
+          className={`event-card__image w-full h-full object-cover transition-transform duration-500 group-hover:scale-105 ${bgClass}`}
           style={bgStyle}
         />
 
@@ -133,54 +129,50 @@ const EventCardInner = React.memo(function EventCardInner({
         </div>
       </div>
 
-      {/* 2. CONTENT BODY (Padding: 12px 16px 10px, flex: 1, min-height: 0) */}
-      <div className="p-[12px_16px_10px] flex flex-col flex-1 min-h-0 justify-between text-left">
-        <div className="space-y-1">
-          {/* Date & Time (11px, font-weight: 700, single line) */}
-          <div className="text-[#FD5C05] text-[11px] font-bold uppercase tracking-wider truncate block leading-none h-[14px]">
-            {fullDateTime}
-          </div>
-
-          {/* Title (18px, font-weight: 700, line-height: 1.15, reserved height 52px for 2 full lines without clipping) */}
-          <div className="h-[52px] min-h-[52px] max-h-[52px] flex items-start overflow-hidden pt-0.5">
-            <h3
-              className="text-[#2A2621] font-bold text-[17px] sm:text-[18px] leading-[1.15] tracking-tight group-hover:text-[#FD5C05] transition-colors block w-full text-left"
-              style={{
-                display: '-webkit-box',
-                WebkitBoxOrient: 'vertical',
-                WebkitLineClamp: 2,
-                overflow: 'hidden',
-                fontFamily: 'var(--font-display)',
-              }}
-            >
-              {titleText}
-            </h3>
-          </div>
+      {/* 2. CONTENT WRAPPER (Row 2: 106px - Date + Title ONLY) */}
+      <div className="event-card__content p-[14px_20px_8px] overflow-hidden flex flex-col justify-start text-left min-h-0">
+        {/* Date / Time */}
+        <div className="event-card__date h-[16px] text-[12px] leading-[16px] font-bold text-[#FD5C05] uppercase tracking-wider whitespace-nowrap overflow-hidden text-ellipsis block">
+          {fullDateTime}
         </div>
 
-        {/* 3. FOOTER (margin-top: auto, aligned at exact same spot across all cards) */}
-        <div className="mt-auto pt-2 border-t border-black/[0.04] flex items-center justify-between gap-2 min-w-0">
-          {/* Organization Name (11px, font-weight: 700, single line) */}
-          <div className="flex items-center gap-1 text-[11px] text-[#5A554E] font-bold truncate min-w-0 flex-1">
-            <span className="truncate">{orgName}</span>
-            {isOrgVerified && <VerifiedBadge className="h-3.5 w-3.5 shrink-0 text-[#FD5C05]" />}
-          </div>
+        {/* Title (26px, line-height 28px, 2 lines = 56px reserved height) */}
+        <h3
+          className="event-card__title text-[#2A2621] font-bold text-[24px] leading-[28px] tracking-tight group-hover:text-[#FD5C05] transition-colors mt-[5px] h-[56px] max-h-[56px] block w-full text-left"
+          style={{
+            display: '-webkit-box',
+            WebkitBoxOrient: 'vertical',
+            WebkitLineClamp: 2,
+            overflow: 'hidden',
+            fontFamily: 'var(--font-display)',
+          }}
+        >
+          {titleText}
+        </h3>
+      </div>
 
-          {/* Action / Cost Badge in Footer */}
-          <div className="shrink-0">
-            {!isPromo ? (
-              <span className="px-2.5 py-1 bg-[#FD5C05] text-white text-[9px] font-black uppercase tracking-wider rounded-full shadow-xs">
-                {(event as Event).free ? 'FREE' : `$${(event as Event).price || 'JOIN'}`}
-              </span>
-            ) : (
-              <span className="px-2.5 py-1 bg-[#2A2621] text-white text-[9px] font-black uppercase tracking-wider rounded-full shadow-xs">
-                PROMO
-              </span>
-            )}
-          </div>
+      {/* 3. FOOTER (Row 3: 50px - Completely independent Grid row) */}
+      <div className="event-card__footer h-[50px] px-[20px] flex items-center gap-2 border-t border-black/[0.06] min-w-0">
+        {/* Organization Name */}
+        <div className="event-card__organization flex-1 min-w-0 text-[11px] leading-[14px] font-bold text-[#5A554E] whitespace-nowrap overflow-hidden text-ellipsis flex items-center gap-1">
+          <span className="truncate">{orgName}</span>
+          {isOrgVerified && <VerifiedBadge className="h-3.5 w-3.5 shrink-0 text-[#FD5C05]" />}
+        </div>
+
+        {/* Price / Action Badge */}
+        <div className="event-card__price shrink-0">
+          {!isPromo ? (
+            <span className="px-2.5 py-1 bg-[#FD5C05] text-white text-[9px] font-black uppercase tracking-wider rounded-full shadow-xs">
+              {(event as Event).free ? 'FREE' : `$${(event as Event).price || 'JOIN'}`}
+            </span>
+          ) : (
+            <span className="px-2.5 py-1 bg-[#2A2621] text-white text-[9px] font-black uppercase tracking-wider rounded-full shadow-xs">
+              PROMO
+            </span>
+          )}
         </div>
       </div>
-    </motion.div>
+    </motion.article>
   );
 });
 
