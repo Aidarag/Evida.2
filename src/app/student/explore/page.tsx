@@ -210,54 +210,79 @@ export default function ExplorePage() {
     />
   );
 
-  // Helper to render organization cards
-  const renderOrganizationCard = (org: Organization, isGridItem: boolean = false) => (
-    <motion.div
-      key={org.id}
-      whileHover={{ y: -4, scale: 1.01 }}
-      transition={{ type: "spring", stiffness: 400, damping: 25 }}
-      className={`${isGridItem ? 'w-full' : 'w-56 sm:w-64 shrink-0'} flex flex-col min-h-[220px] h-full`}
-    >
-      <div
+  // Helper to render organization cards (CSS Grid Architecture: 52px header, 145px content, 48px footer = 245px total)
+  const renderOrganizationCard = (org: Organization, isGridItem: boolean = false) => {
+    const bgLogoColor = (!org.logoColor || org.logoColor.toLowerCase() === 'white' || org.logoColor === '#ffffff')
+      ? '#FD5C05'
+      : org.logoColor;
+
+    return (
+      <motion.article
+        key={org.id}
+        whileHover={{ y: -4 }}
+        transition={{ type: "spring", stiffness: 400, damping: 25 }}
         onClick={() => router.push(`/student/organizations/${org.id}`)}
-        className="w-full h-full bg-white border border-black/[0.06] hover:border-[#FD5C05] rounded-2xl p-4 shadow-xs hover:shadow-[0_10px_24px_rgba(253,92,5,0.12)] transition-all duration-300 cursor-pointer group flex flex-col justify-between space-y-2"
+        className={`${isGridItem ? 'w-full' : 'w-64 sm:w-[260px] shrink-0'} bg-white border border-black/[0.06] hover:border-[#FD5C05] rounded-[16px] overflow-hidden shadow-xs hover:shadow-md transition-all duration-300 cursor-pointer group h-[245px] min-h-[245px] max-h-[245px] grid grid-rows-[52px_145px_48px] select-none text-left`}
       >
-        <div className="space-y-2 text-left">
-          <div className="flex items-center justify-between">
-            <div
-              className="h-10 w-10 rounded-xl flex items-center justify-center font-black text-white text-xs shrink-0 shadow-xs transition-transform group-hover:scale-105"
-              style={{ backgroundColor: org.logoColor || '#2A2621' }}
-            >
-              {org.name.substring(0, 2).toUpperCase()}
-            </div>
-            {org.verified && (
-              <span className="flex items-center gap-1 text-[9px] font-black uppercase tracking-wider text-[#FD5C05] bg-[#FD5C05]/10 px-2 py-0.5 rounded-full border border-[#FD5C05]/20">
-                <CheckCircle2 className="h-3 w-3 text-[#FD5C05]" /> Verified
-              </span>
-            )}
+        {/* Row 1: Header (52px) */}
+        <div className="px-4 pt-3.5 pb-1 flex items-center justify-between">
+          <div
+            className="h-10 w-10 rounded-xl flex items-center justify-center font-black text-white text-xs shrink-0 shadow-xs transition-transform group-hover:scale-105"
+            style={{ backgroundColor: bgLogoColor }}
+          >
+            {org.name.substring(0, 2).toUpperCase()}
           </div>
-          <div>
-            <div className="min-h-[2.5rem] sm:min-h-[2.8rem] flex items-start">
-              <h3 className="font-bold text-xs sm:text-sm text-[#2A2621] group-hover:text-[#FD5C05] transition-colors leading-snug line-clamp-2 text-left w-full">
-                {org.name}
-              </h3>
-            </div>
-            <div className="min-h-[2.4rem] flex items-start mt-1">
-              <p className="text-[10.5px] text-[#5A554E] line-clamp-2 leading-relaxed font-medium text-left w-full">
-                {org.description || 'Welcome to our official campus organization profile directory.'}
-              </p>
-            </div>
+          {org.verified && (
+            <span className="flex items-center gap-1 text-[9px] font-black uppercase tracking-wider text-[#FD5C05] bg-[#FD5C05]/10 px-2.5 py-1 rounded-full border border-[#FD5C05]/20 shadow-2xs">
+              <CheckCircle2 className="h-3 w-3 text-[#FD5C05]" /> Verified
+            </span>
+          )}
+        </div>
+
+        {/* Row 2: Content (145px - Title + Description ONLY) */}
+        <div className="px-4 pt-1 pb-2 flex flex-col justify-start overflow-hidden min-h-0">
+          {/* Title (2 lines max, reserved 44px) */}
+          <div className="h-[44px] min-h-[44px] max-h-[44px] flex items-start overflow-hidden">
+            <h3 
+              className="font-bold text-[18px] leading-[22px] text-[#2A2621] group-hover:text-[#FD5C05] transition-colors tracking-tight text-left block w-full"
+              style={{
+                display: '-webkit-box',
+                WebkitBoxOrient: 'vertical',
+                WebkitLineClamp: 2,
+                overflow: 'hidden',
+                fontFamily: 'var(--font-display)',
+              }}
+            >
+              {org.name}
+            </h3>
+          </div>
+
+          {/* Description (3 lines max, reserved 54px) */}
+          <div className="mt-1.5 h-[54px] min-h-[54px] max-h-[54px] flex items-start overflow-hidden">
+            <p 
+              className="text-[11px] leading-[17px] font-semibold text-[#5A554E] text-left block w-full"
+              style={{
+                display: '-webkit-box',
+                WebkitBoxOrient: 'vertical',
+                WebkitLineClamp: 3,
+                overflow: 'hidden',
+              }}
+            >
+              {org.description || 'Official campus organization profile directory.'}
+            </p>
           </div>
         </div>
-        <div className="pt-2 border-t border-black/[0.04] flex items-center justify-between text-[9px] text-[#5A554E] font-bold uppercase tracking-wider">
-          <span>{org.members?.length || 0} members</span>
-          <span className="text-[#FD5C05] group-hover:translate-x-0.5 transition-transform flex items-center gap-1 font-black">
-            Join Organization <ArrowRight className="h-3 w-3" />
+
+        {/* Row 3: Footer (48px) */}
+        <div className="px-4 h-[48px] border-t border-black/[0.06] flex items-center justify-between text-[10px] text-[#5A554E] font-bold uppercase tracking-wider min-w-0">
+          <span className="shrink-0">{org.members?.length || 0} members</span>
+          <span className="text-[#FD5C05] group-hover:translate-x-0.5 transition-transform flex items-center gap-1 font-black shrink-0">
+            JOIN ORGANIZATION <ArrowRight className="h-3 w-3" />
           </span>
         </div>
-      </div>
-    </motion.div>
-  );
+      </motion.article>
+    );
+  };
 
   const getPromoImage = (category: string) => {
     const cat = category.toLowerCase();
