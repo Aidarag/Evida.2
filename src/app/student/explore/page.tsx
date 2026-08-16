@@ -27,7 +27,9 @@ import {
   ArrowRight,
   Shield,
   CheckCircle2,
-  Bookmark
+  Bookmark,
+  Ticket,
+  CreditCard
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Event, Organization, Promotion } from '@/lib/types';
@@ -323,7 +325,7 @@ export default function ExplorePage() {
         <div className="pt-2 border-t border-black/[0.04] flex items-center justify-between text-[9px] text-[#5A554E] font-bold uppercase tracking-wider">
           <span>{org.members?.length || 0} members</span>
           <span className="text-[#FD5C05] group-hover:translate-x-0.5 transition-transform flex items-center gap-1 font-black">
-            View Profile <ArrowRight className="h-3 w-3" />
+            Join Organization <ArrowRight className="h-3 w-3" />
           </span>
         </div>
       </div>
@@ -375,12 +377,22 @@ export default function ExplorePage() {
             )}
 
             {promo.isFree !== undefined && (
-              <span className={`absolute bottom-2.5 right-2.5 text-[8px] font-black uppercase tracking-wider px-2 py-0.5 rounded-full border shadow-sm ${
+              <span className={`absolute bottom-2.5 right-2.5 text-[8px] font-black uppercase tracking-wider px-2 py-0.5 rounded-full border shadow-sm flex items-center gap-1 ${
                 promo.isFree 
                   ? 'bg-emerald-600 text-white border-emerald-500' 
                   : 'bg-[#FD5C05] text-white border-[#FD5C05]'
               }`}>
-                {promo.isFree ? 'Gratuit' : (promo.price || 'Payant')}
+                {promo.isFree ? (
+                  <>
+                    <Ticket className="h-2.5 w-2.5" />
+                    <span>Free</span>
+                  </>
+                ) : (
+                  <>
+                    <CreditCard className="h-2.5 w-2.5" />
+                    <span>{promo.price || 'Paid'}</span>
+                  </>
+                )}
               </span>
             )}
 

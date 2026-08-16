@@ -96,6 +96,7 @@ export async function POST(request: Request) {
       id: `org-${Date.now()}`,
       name,
       description,
+      category: body.category || 'Social',
       verified: false,
       members: member ? [member] : [],
       logoColor: logoColor || 'indigo'

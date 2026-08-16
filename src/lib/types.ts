@@ -52,6 +52,7 @@ export interface Organization {
   saves?: number;
   rsvps?: number;
   memberRoles?: Record<string, string>; // username -> role
+  announcements?: { id: string; title: string; content: string; date: string; author: string }[];
 }
 
 export interface Event {

@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { useEvents } from '@/lib/context/EventContext';
 import { useUser } from '@/lib/context/UserContext';
-import { Building, Users, Calendar, MapPin, ShieldCheck, ArrowLeft, Globe, Mail, Info, Award, Heart, Check, X } from 'lucide-react';
+import { Building, Users, Calendar, MapPin, ShieldCheck, ArrowLeft, Globe, Mail, Info, Award, Heart, Check, X, UserPlus, UserCheck, Clock, Megaphone, Send, ShieldAlert, Sparkles } from 'lucide-react';
 import VerifiedBadge from '@/components/ui/VerifiedBadge';
 import EventCard from '@/components/student/EventCard';
 import Link from 'next/link';
@@ -23,8 +23,14 @@ export default function OrganizationProfilePage() {
   const { events, organizations, saveToggle } = useEvents();
   const { currentUser } = useUser();
 
-  const [activeTab, setActiveTab] = useState<'home' | 'events' | 'about' | 'manage'>('home');
+  const [activeTab, setActiveTab] = useState<'home' | 'events' | 'news' | 'about' | 'manage'>('home');
   const [membershipRequests, setMembershipRequests] = useState<any[]>([]);
+  const [isJoining, setIsJoining] = useState(false);
+  
+  // Announcement posting state
+  const [annTitle, setAnnTitle] = useState('');
+  const [annContent, setAnnContent] = useState('');
+  const [isPostingAnn, setIsPostingAnn] = useState(false);
 
   const fetchMembershipRequests = async () => {
     try {
@@ -44,6 +50,89 @@ export default function OrganizationProfilePage() {
 
   // Find organization
   const org = organizations.find((o) => o.id === id);
+
+  const isMember = currentUser && org?.members.includes(currentUser.name);
+  const pendingReq = currentUser && membershipRequests.find(
+    (r) => r.orgId === id && r.username === (currentUser.username || currentUser.name) && r.status === 'pending'
+  );
+
+  const handleJoinOrg = async () => {
+    if (!currentUser || !org) return;
+    setIsJoining(true);
+    try {
+      const res = await fetch('/api/organizations/membership', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          action: 'apply',
+          orgId: org.id,
+          orgName: org.name,
+          username: currentUser.username || currentUser.name,
+          studentName: currentUser.name
+        })
+      });
+      if (res.ok) {
+        await fetchMembershipRequests();
+      } else {
+        // Direct join fallback
+        const directRes = await fetch('/api/organizations', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            action: 'join',
+            id: org.id,
+            member: currentUser.name
+          })
+        });
+        if (directRes.ok) {
+          window.location.reload();
+        }
+      }
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setIsJoining(false);
+    }
+  };
+
+  const handleCancelRequest = async (requestId: string) => {
+    if (!currentUser) return;
+    try {
+      const res = await fetch('/api/organizations/membership', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          action: 'cancel',
+          id: requestId,
+          username: currentUser.username || currentUser.name
+        })
+      });
+      if (res.ok) {
+        fetchMembershipRequests();
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  const handleRequestVerification = async () => {
+    if (!org) return;
+    try {
+      const res = await fetch('/api/organizations', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          action: 'request-verification',
+          id: org.id
+        })
+      });
+      if (res.ok) {
+        window.location.reload();
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  };
 
   const handleUpdateRole = async (member: string, role: string) => {
     if (!org) return;
@@ -148,21 +237,50 @@ export default function OrganizationProfilePage() {
     <div className="min-h-screen bg-[#D8D2BC] text-[#2A2621] pb-16 font-sans">
       
       {/* ── Top Header Navigation ── */}
-      <div className="sticky top-0 z-30 h-14 w-full border-b border-[#D8D2BC]/30 bg-white/80 backdrop-blur-md px-6 flex items-center gap-3">
-        <button 
-          onClick={() => router.back()}
-          className="h-8 w-8 rounded-full bg-white border border-black/10 hover:bg-slate-50 flex items-center justify-center text-[#2A2621] shadow-sm transition-all cursor-pointer"
-        >
-          <ArrowLeft className="h-4 w-4" />
-        </button>
-        <span className="text-[10px] font-extrabold text-[#5A554E] uppercase tracking-widest">
-          Campus Directory
-        </span>
+      <div className="sticky top-0 z-30 h-14 w-full border-b border-[#D8D2BC]/30 bg-white/80 backdrop-blur-md px-6 flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <button 
+            onClick={() => router.back()}
+            className="h-8 w-8 rounded-full bg-white border border-black/10 hover:bg-slate-50 flex items-center justify-center text-[#2A2621] shadow-sm transition-all cursor-pointer"
+          >
+            <ArrowLeft className="h-4 w-4" />
+          </button>
+          <span className="text-[10px] font-extrabold text-[#5A554E] uppercase tracking-widest">
+            Campus Directory
+          </span>
+        </div>
+
+        {/* Header CTA Button */}
+        {currentUser && (
+          <div>
+            {isMember ? (
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-emerald-100 border border-emerald-200 text-emerald-800 text-xs font-black uppercase tracking-wider rounded-full shadow-xs">
+                <UserCheck className="h-3.5 w-3.5" /> Member
+              </span>
+            ) : pendingReq ? (
+              <button
+                onClick={() => handleCancelRequest(pendingReq.id)}
+                className="inline-flex items-center gap-1.5 px-3 py-1 bg-amber-100 border border-amber-200 text-amber-800 hover:bg-amber-200 text-xs font-black uppercase tracking-wider rounded-full shadow-xs cursor-pointer transition-all"
+                title="Click to cancel pending request"
+              >
+                <Clock className="h-3.5 w-3.5 animate-pulse" /> Request Pending (Cancel)
+              </button>
+            ) : (
+              <button
+                onClick={handleJoinOrg}
+                disabled={isJoining}
+                className="inline-flex items-center gap-1.5 px-4 py-1.5 bg-[#FD5C05] hover:bg-[#CC3D00] text-white text-xs font-black uppercase tracking-wider rounded-full shadow-md shadow-[#FD5C05]/20 cursor-pointer transition-all disabled:opacity-50"
+              >
+                <UserPlus className="h-3.5 w-3.5" /> {isJoining ? 'Joining...' : 'Join Organization'}
+              </button>
+            )}
+          </div>
+        )}
       </div>
 
       <div className="max-w-4xl mx-auto p-4 md:p-6 space-y-6">
         
-        {/* ── Banner & Logo Header (LinkedIn-style Profile Card) ── */}
+        {/* ── Banner & Logo Header Profile Card ── */}
         <div className="bg-white rounded-[28px] border border-[#D8D2BC]/30 overflow-hidden shadow-sm flex flex-col relative">
           
           {/* Banner cover */}
@@ -174,59 +292,93 @@ export default function OrganizationProfilePage() {
           </div>
 
           {/* Org details wrapper */}
-          <div className="px-6 md:px-8 pb-6 relative flex flex-col md:flex-row gap-6 md:items-end">
+          <div className="px-6 md:px-8 pb-6 relative flex flex-col md:flex-row gap-6 md:items-end justify-between">
             
-            {/* Logo Avatar (overlapping banner) */}
-            <div className="h-20 w-20 md:h-28 md:w-28 rounded-2xl bg-[#FD5C05] text-[#2A2621] font-extrabold text-3xl md:text-4xl flex items-center justify-center border-4 border-white shadow-md shrink-0 -mt-10 md:-mt-14 z-10">
-              {org.name.charAt(0).toUpperCase()}
+            <div className="flex flex-col md:flex-row items-start md:items-end gap-5">
+              {/* Logo Avatar */}
+              <div 
+                className="h-20 w-20 md:h-28 md:w-28 rounded-2xl text-white font-extrabold text-3xl md:text-4xl flex items-center justify-center border-4 border-white shadow-md shrink-0 -mt-10 md:-mt-14 z-10"
+                style={{ backgroundColor: org.logoColor || '#FD5C05' }}
+              >
+                {org.name.charAt(0).toUpperCase()}
+              </div>
+
+              {/* Title & Stats */}
+              <div className="space-y-2 pt-2 md:pt-4">
+                <div className="flex flex-wrap items-center gap-2">
+                  <h2 className="text-xl md:text-2xl font-black text-[#2A2621] uppercase tracking-tight flex items-center leading-none" style={{ fontFamily: 'var(--font-display)' }}>
+                    {org.name}
+                    {org.verified && <VerifiedBadge className="h-5 w-5" />}
+                  </h2>
+                </div>
+                <p className="text-xs text-[#5A554E] leading-relaxed max-w-xl">
+                  {org.description || 'Welcome to our official campus organization page. Join our organization to stay updated with upcoming student experiences.'}
+                </p>
+                
+                <div className="flex flex-wrap items-center gap-4 text-[10px] font-bold text-[#5A554E] pt-1 uppercase">
+                  <span className="flex items-center gap-1">
+                    <Users className="h-3.5 w-3.5 text-[#2A2621]" />
+                    {org.members.length} members
+                  </span>
+                  <span className="h-1.5 w-1.5 rounded-full bg-slate-300" />
+                  <span className="flex items-center gap-1">
+                    <Calendar className="h-3.5 w-3.5 text-[#2A2621]" />
+                    {orgEvents.length} events hosted
+                  </span>
+                  {org.verified && (
+                    <>
+                      <span className="h-1.5 w-1.5 rounded-full bg-slate-300" />
+                      <span className="flex items-center gap-0.5 text-emerald-600 font-extrabold">
+                        <ShieldCheck className="h-3.5 w-3.5" /> Verified Organization
+                      </span>
+                    </>
+                  )}
+                </div>
+              </div>
             </div>
 
-            {/* Title & Stats */}
-            <div className="flex-1 space-y-2 pt-2 md:pt-4">
-              <div className="flex flex-wrap items-center gap-2">
-                <h2 className="text-xl md:text-2xl font-black text-[#2A2621] uppercase tracking-tight flex items-center leading-none" style={{ fontFamily: 'var(--font-display)' }}>
-                  {org.name}
-                  {org.verified && <VerifiedBadge className="h-5 w-5" />}
-                </h2>
-              </div>
-              <p className="text-xs text-[#5A554E] leading-relaxed max-w-xl">
-                {org.description || 'Welcome to our official campus organization page. Follow us to stay updated with our upcoming student experiences.'}
-              </p>
-              
-              <div className="flex flex-wrap items-center gap-4 text-[10px] font-bold text-[#5A554E] pt-1 uppercase">
-                <span className="flex items-center gap-1">
-                  <Users className="h-3.5 w-3.5 text-[#2A2621]" />
-                  {org.members.length} members
-                </span>
-                <span className="h-1.5 w-1.5 rounded-full bg-slate-300" />
-                <span className="flex items-center gap-1">
-                  <Calendar className="h-3.5 w-3.5 text-[#2A2621]" />
-                  {orgEvents.length} events hosted
-                </span>
-                {org.verified && (
-                  <>
-                    <span className="h-1.5 w-1.5 rounded-full bg-slate-300" />
-                    <span className="flex items-center gap-0.5 text-emerald-600 font-extrabold">
-                      <ShieldCheck className="h-3.5 w-3.5" /> Verified Organization
-                    </span>
-                  </>
-                )}
-              </div>
+            {/* Header Action Button (Join Organization) */}
+            <div className="pt-2 md:pt-0 shrink-0">
+              {isMember ? (
+                <button 
+                  onClick={() => handleRemoveMember(currentUser.name)}
+                  className="px-5 py-2 rounded-full border border-emerald-600/30 bg-emerald-50 text-emerald-700 font-black text-xs uppercase tracking-wider hover:bg-red-50 hover:text-red-600 hover:border-red-200 transition-all cursor-pointer flex items-center gap-2 shadow-xs"
+                >
+                  <UserCheck className="h-4 w-4" /> Member (Joined)
+                </button>
+              ) : pendingReq ? (
+                <button
+                  onClick={() => handleCancelRequest(pendingReq.id)}
+                  className="px-5 py-2 rounded-full border border-amber-400 bg-amber-50 text-amber-800 font-black text-xs uppercase tracking-wider hover:bg-amber-100 transition-all cursor-pointer flex items-center gap-2 shadow-xs"
+                >
+                  <Clock className="h-4 w-4 text-amber-600 animate-pulse" /> Pending Approval
+                </button>
+              ) : (
+                <button
+                  onClick={handleJoinOrg}
+                  disabled={isJoining}
+                  className="px-6 py-2.5 rounded-full bg-[#FD5C05] hover:bg-[#CC3D00] text-white font-black text-xs uppercase tracking-wider transition-all cursor-pointer flex items-center gap-2 shadow-md shadow-[#FD5C05]/20 disabled:opacity-50"
+                >
+                  <UserPlus className="h-4 w-4" /> {isJoining ? 'Submitting...' : 'Join Organization'}
+                </button>
+              )}
             </div>
+
           </div>
 
           {/* Tab Selector */}
-          <div className="flex px-6 border-t border-[#D8D2BC]/30 text-xs font-bold text-[#5A554E] bg-slate-50/50">
+          <div className="flex px-6 border-t border-[#D8D2BC]/30 text-xs font-bold text-[#5A554E] bg-slate-50/50 overflow-x-auto">
             {[
               { id: 'home' as const, label: 'Home' },
               { id: 'events' as const, label: `Events (${orgEvents.length})` },
+              { id: 'news' as const, label: 'News & Updates' },
               { id: 'about' as const, label: 'About' },
               isAdminOrLeader ? { id: 'manage' as const, label: 'Manage' } : null,
-            ].filter((t): t is { id: 'home' | 'events' | 'about' | 'manage'; label: string } => !!t).map(tab => (
+            ].filter((t): t is { id: 'home' | 'events' | 'news' | 'about' | 'manage'; label: string } => !!t).map(tab => (
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={`py-3.5 px-4 border-b-2 transition-all cursor-pointer ${
+                className={`py-3.5 px-4 border-b-2 transition-all cursor-pointer whitespace-nowrap ${
                   activeTab === tab.id 
                     ? 'border-[#FD5C05] text-[#2A2621] font-extrabold bg-white' 
                     : 'border-transparent hover:text-[#2A2621]'
@@ -251,7 +403,14 @@ export default function OrganizationProfilePage() {
                 
                 {/* Highlights / About */}
                 <div className="bg-white rounded-[24px] border border-[#D8D2BC]/30 p-6 space-y-4 shadow-sm text-left">
-                  <h3 className="text-xs font-extrabold tracking-widest text-[#2A2621] uppercase">About Us</h3>
+                  <div className="flex items-center justify-between">
+                    <h3 className="text-xs font-extrabold tracking-widest text-[#2A2621] uppercase">About Us</h3>
+                    {org.category && (
+                      <span className="text-[9px] font-black uppercase tracking-wider text-[#FD5C05] bg-[#FD5C05]/10 px-2.5 py-0.5 rounded-full border border-[#FD5C05]/20">
+                        {org.category}
+                      </span>
+                    )}
+                  </div>
                   <p className="text-xs text-[#5A554E] leading-relaxed whitespace-pre-wrap">
                     {org.aboutUs || org.description || 'No description provided by this campus organization.'}
                   </p>
@@ -270,11 +429,21 @@ export default function OrganizationProfilePage() {
 
                 {/* Team / Members Roster */}
                 <div className="bg-white rounded-[24px] border border-[#D8D2BC]/30 p-6 space-y-4 shadow-sm text-left">
-                  <h3 className="text-xs font-extrabold tracking-widest text-[#5A554E] uppercase">
-                    {org.rosterType === 'team' || org.category === 'Sports' || org.category === 'Athletics'
-                      ? `Team Roster (${org.members.length})`
-                      : `Members Roster (${org.members.length})`}
-                  </h3>
+                  <div className="flex items-center justify-between">
+                    <h3 className="text-xs font-extrabold tracking-widest text-[#5A554E] uppercase">
+                      {org.rosterType === 'team' || org.category === 'Sports' || org.category === 'Athletics'
+                        ? `Team Roster (${org.members.length})`
+                        : `Members Roster (${org.members.length})`}
+                    </h3>
+                    {!isMember && (
+                      <button
+                        onClick={handleJoinOrg}
+                        className="text-[10px] font-extrabold uppercase text-[#FD5C05] hover:underline cursor-pointer"
+                      >
+                        + Join Roster
+                      </button>
+                    )}
+                  </div>
                   <div className="grid gap-3 sm:grid-cols-2">
                     {org.members.map((member, idx) => (
                       <div key={member} className="flex items-center gap-3 p-3 rounded-2xl bg-slate-50 border border-black/[0.04]">
@@ -326,6 +495,24 @@ export default function OrganizationProfilePage() {
                     </div>
                   )}
                 </div>
+
+                {/* Join CTA Box */}
+                {!isMember && (
+                  <div className="bg-[#2A2621] text-white rounded-[24px] p-6 space-y-3 text-left shadow-md">
+                    <span className="text-[9px] font-black uppercase tracking-widest text-[#FD5C05]">Campus Community</span>
+                    <h4 className="font-extrabold text-sm uppercase tracking-tight">Become a Member of {org.name}</h4>
+                    <p className="text-[11px] text-white/70 leading-relaxed">
+                      Connect with student officers, get exclusive access to announcements, and organize campus experiences together.
+                    </p>
+                    <button
+                      onClick={handleJoinOrg}
+                      disabled={isJoining}
+                      className="w-full py-2.5 bg-[#FD5C05] hover:bg-[#CC3D00] text-white rounded-xl text-xs font-black uppercase tracking-wider transition-all cursor-pointer shadow-md shadow-[#FD5C05]/20 flex items-center justify-center gap-2"
+                    >
+                      <UserPlus className="h-4 w-4" /> {isJoining ? 'Joining...' : 'Join Organization'}
+                    </button>
+                  </div>
+                )}
               </div>
 
             </div>
@@ -334,7 +521,7 @@ export default function OrganizationProfilePage() {
           {/* EVENTS TAB */}
           {activeTab === 'events' && (
             <div className="space-y-4 text-left">
-              <h3 className="text-xs font-extrabold tracking-widest text-[#2A2621] uppercase">Experiences Hosted by Members</h3>
+              <h3 className="text-xs font-extrabold tracking-widest text-[#2A2621] uppercase">Experiences Hosted by {org.name}</h3>
               {orgEvents.length === 0 ? (
                 <div className="bg-white rounded-[24px] border border-[#D8D2BC]/30 p-12 text-center shadow-sm">
                   <Calendar className="h-10 w-10 text-[#5A554E] mx-auto mb-3" />
@@ -360,13 +547,42 @@ export default function OrganizationProfilePage() {
             </div>
           )}
 
+          {/* NEWS & ANNOUNCEMENTS TAB */}
+          {activeTab === 'news' && (
+            <div className="space-y-6 text-left">
+              <div className="flex items-center justify-between">
+                <h3 className="text-xs font-extrabold tracking-widest text-[#2A2621] uppercase">Official Announcements</h3>
+              </div>
+
+              {/* Sample announcements & posts */}
+              <div className="space-y-4">
+                <div className="bg-white rounded-[24px] border border-[#D8D2BC]/30 p-6 space-y-3 shadow-sm">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <div className="h-7 w-7 rounded-lg bg-[#FD5C05] text-white flex items-center justify-center text-xs font-black">
+                        {org.name.charAt(0)}
+                      </div>
+                      <span className="font-extrabold text-xs text-[#2A2621] uppercase">{org.name}</span>
+                      {org.verified && <VerifiedBadge className="h-3.5 w-3.5" />}
+                    </div>
+                    <span className="text-[10px] text-[#5A554E] font-semibold">Just now</span>
+                  </div>
+                  <h4 className="font-bold text-sm text-[#2A2621]">Welcome to the Official Campus Organization Hub! 🎉</h4>
+                  <p className="text-xs text-[#5A554E] leading-relaxed">
+                    We are thrilled to officially connect with all Livingstone College students on Evida. Click "Join Organization" to receive early notifications on workshops, events, and campus meetings!
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
+
           {/* ABOUT TAB */}
           {activeTab === 'about' && (
             <div className="bg-white rounded-[28px] border border-[#D8D2BC]/30 p-6 space-y-6 shadow-sm text-left">
               <div className="space-y-2">
                 <h3 className="text-xs font-extrabold tracking-widest text-[#2A2621] uppercase">Organization Profile Overview</h3>
-                <p className="text-xs text-[#5A554E] leading-relaxed leading-relaxed">
-                  Welcome to the LinkedIn-inspired profile directory page for the {org.name}. Here, you can search and access comprehensive listings of all active campus events and checkouts created by our verified team leaders and member roster.
+                <p className="text-xs text-[#5A554E] leading-relaxed">
+                  Welcome to the official organization profile directory page for {org.name}. Here, you can search and access comprehensive listings of all active campus events created by our verified team leaders and member roster.
                 </p>
               </div>
 
@@ -377,8 +593,8 @@ export default function OrganizationProfilePage() {
                 </div>
                 <div className="space-y-1">
                   <p className="text-[10px] font-bold text-[#5A554E] uppercase tracking-wide">Verification Badge</p>
-                  <p className="font-extrabold text-emerald-600 uppercase flex items-center">
-                    {org.verified ? 'Verified Member checkmark' : 'Campus Registered'}
+                  <p className="font-extrabold text-emerald-600 uppercase flex items-center gap-1">
+                    {org.verified ? 'Verified Campus Group' : 'Campus Registered'}
                     {org.verified && <VerifiedBadge className="h-4.5 w-4.5" />}
                   </p>
                 </div>
@@ -390,6 +606,31 @@ export default function OrganizationProfilePage() {
           {activeTab === 'manage' && isAdminOrLeader && (
             <div className="space-y-6 text-left">
               
+              {/* Organization Verification Request */}
+              {!org.verified && (
+                <div className="bg-amber-500/10 border border-amber-500/30 rounded-[24px] p-6 space-y-3">
+                  <div className="flex items-center gap-2 text-amber-800">
+                    <ShieldAlert className="h-5 w-5" />
+                    <h3 className="text-xs font-black uppercase tracking-wider">Campus Verification</h3>
+                  </div>
+                  <p className="text-xs text-amber-900 leading-relaxed font-semibold">
+                    Official verification badges are awarded to student organizations registered with Livingstone College. Request verification to display the official badge on your profile and events.
+                  </p>
+                  {org.verificationStatus === 'pending' ? (
+                    <span className="inline-block text-xs font-black uppercase tracking-wider text-amber-700 bg-amber-200/60 px-4 py-2 rounded-xl">
+                      Verification Request Pending School Review
+                    </span>
+                  ) : (
+                    <button
+                      onClick={handleRequestVerification}
+                      className="px-5 py-2.5 bg-[#FD5C05] hover:bg-[#CC3D00] text-white text-xs font-black uppercase tracking-wider rounded-xl transition-all cursor-pointer shadow-md shadow-[#FD5C05]/20 flex items-center gap-2"
+                    >
+                      <ShieldCheck className="h-4 w-4" /> Request Verification Badge
+                    </button>
+                  )}
+                </div>
+              )}
+
               {/* Member Roster & Role Manager */}
               <div className="bg-white rounded-[24px] border border-[#D8D2BC]/30 p-6 space-y-4 shadow-sm">
                 <h3 className="text-xs font-extrabold tracking-widest text-[#2A2621] uppercase">Manage Member Roles</h3>
