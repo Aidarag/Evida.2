@@ -81,7 +81,7 @@ const EventCardInner = React.memo(function EventCardInner({
     <motion.article
       whileHover={{ y: -4 }}
       transition={{ type: 'spring', stiffness: 400, damping: 30 }}
-      className={`event-card group bg-white rounded-[16px] overflow-hidden border border-black/[0.06] shadow-xs hover:shadow-md transition-all duration-300 w-full sm:w-[300px] shrink-0 h-[360px] min-h-[360px] max-h-[360px] grid grid-rows-[170px_140px_50px] relative select-none cursor-pointer ${className}`}
+      className={`event-card group bg-white rounded-[16px] overflow-hidden border border-black/[0.06] shadow-xs hover:shadow-md transition-all duration-300 w-full sm:w-[300px] shrink-0 h-[370px] min-h-[370px] max-h-[370px] grid grid-rows-[170px_150px_50px] relative select-none cursor-pointer ${className}`}
       onClick={onClick}
     >
       {/* 1. IMAGE WRAPPER (Row 1: 170px) */}
@@ -130,17 +130,17 @@ const EventCardInner = React.memo(function EventCardInner({
         </div>
       </div>
 
-      {/* 2. CONTENT WRAPPER (Row 2: 140px - Date, Title & 2-Line Light Description) */}
+      {/* 2. CONTENT WRAPPER (Row 2: 150px - Date, Title & 2-Line Light Description) */}
       <div className="event-card__content p-[12px_20px_10px] overflow-hidden flex flex-col justify-start text-left min-h-0">
         {/* Date / Time */}
         <div className="event-card__date h-[16px] text-[11px] leading-[16px] font-bold text-[#FD5C05] uppercase tracking-wider whitespace-nowrap overflow-hidden text-ellipsis block">
           {fullDateTime}
         </div>
 
-        {/* Title (2 lines max, reserved 46px) */}
-        <div className="mt-[4px] h-[46px] min-h-[46px] max-h-[46px] flex items-start overflow-hidden">
+        {/* Title (2 lines max, 52px reserved height for zero clipping) */}
+        <div className="mt-[4px] h-[52px] min-h-[52px] max-h-[52px] flex items-start overflow-hidden">
           <h3
-            className="event-card__title text-[#2A2621] font-bold text-[19px] sm:text-[20px] leading-[23px] tracking-tight group-hover:text-[#FD5C05] transition-colors block w-full text-left"
+            className="event-card__title text-[#2A2621] font-bold text-[18px] sm:text-[19px] leading-[25px] tracking-tight group-hover:text-[#FD5C05] transition-colors block w-full text-left"
             style={{
               display: '-webkit-box',
               WebkitBoxOrient: 'vertical',
