@@ -47,6 +47,12 @@ export interface Organization {
   members: string[]; // student names
   teamRoster?: { name: string; role: string; avatar?: string }[];
   logoColor: string;
+  logoUrl?: string;
+  coverImage?: string;
+  website?: string;
+  email?: string;
+  joinSetting?: 'direct' | 'request';
+  creatorUsername?: string;
   schoolId?: string;
   views?: number;
   saves?: number;

@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="100%" height="100%">
+  <defs>
+    <linearGradient id="logo-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FB1C07"/>
+      <stop offset="35%" stop-color="#FD4002"/>
+      <stop offset="70%" stop-color="#FD5C05"/>
+      <stop offset="100%" stop-color="#FC7C0B"/>
+    </linearGradient>
+    <filter id="logo-glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="2" stdDeviation="2.5" flood-color="#FB1C07" flood-opacity="0.3"/>
+    </filter>
+  </defs>
+  <g filter="url(#logo-glow)">
+    <path d="M 6 42 L 6 22 L 24 6 L 24 15 L 15 24 L 15 42 Z" fill="url(#logo-grad)" opacity="0.95" />
+    <path d="M 42 42 L 42 22 L 24 6 L 24 15 L 33 24 L 33 42 Z" fill="url(#logo-grad)" opacity="0.95" />
+    <path d="M 24 10 L 36 22 L 24 34 L 12 22 Z M 24 16 L 30 22 L 24 28 L 18 22 Z" fill="#2A2621" opacity="0.95" />
+  </g>
+</svg>

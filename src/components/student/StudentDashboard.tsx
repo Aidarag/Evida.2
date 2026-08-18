@@ -189,7 +189,7 @@ export default function StudentDashboard({
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: 10 }}
-                  className="absolute right-0 top-11 w-80 rounded-2xl border border-black/10 bg-white p-4 shadow-2xl z-50 space-y-3"
+                  className="fixed sm:absolute top-16 sm:top-11 left-4 right-4 sm:left-auto sm:right-0 sm:w-80 rounded-2xl border border-black/[0.08] bg-white p-4 shadow-2xl z-50 space-y-3"
                 >
                   <div className="flex items-center justify-between border-b border-[#D8D2BC]/30 pb-2">
                     <span className="text-xs font-bold uppercase text-[#2A2621]">Notifications</span>

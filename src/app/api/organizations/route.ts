@@ -42,10 +42,44 @@ export async function POST(request: Request) {
       const org = db.organizations[idx];
       if (body.name) org.name = body.name;
       if (body.description) org.description = body.description;
-      if (body.aboutUs) org.aboutUs = body.aboutUs;
+      if (body.aboutUs !== undefined) org.aboutUs = body.aboutUs;
       if (body.category) org.category = body.category;
+      if (body.logoColor) org.logoColor = body.logoColor;
+      if (body.logoUrl !== undefined) org.logoUrl = body.logoUrl;
+      if (body.coverImage !== undefined) org.coverImage = body.coverImage;
+      if (body.website !== undefined) org.website = body.website;
+      if (body.email !== undefined) org.email = body.email;
+      if (body.joinSetting) org.joinSetting = body.joinSetting;
       if (body.rosterType) org.rosterType = body.rosterType;
       if (body.teamRoster) org.teamRoster = body.teamRoster;
+      await writeDBAsync(db);
+      return NextResponse.json(org);
+    }
+
+    if (action === 'post-announcement') {
+      const idx = db.organizations.findIndex((o) => o.id === id);
+      if (idx === -1) return NextResponse.json({ error: 'Organization not found' }, { status: 404 });
+      const org = db.organizations[idx];
+      if (!org.announcements) org.announcements = [];
+      const newAnn = {
+        id: `ann-${Date.now()}`,
+        title: body.title,
+        content: body.content,
+        date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
+        author: body.author || 'Organization Admin'
+      };
+      org.announcements.unshift(newAnn);
+      await writeDBAsync(db);
+      return NextResponse.json(org);
+    }
+
+    if (action === 'delete-announcement') {
+      const idx = db.organizations.findIndex((o) => o.id === id);
+      if (idx === -1) return NextResponse.json({ error: 'Organization not found' }, { status: 404 });
+      const org = db.organizations[idx];
+      if (org.announcements) {
+        org.announcements = org.announcements.filter((a: any) => a.id !== body.announcementId);
+      }
       await writeDBAsync(db);
       return NextResponse.json(org);
     }
@@ -60,7 +94,18 @@ export async function POST(request: Request) {
         if (org.memberRoles && org.memberRoles[member]) delete org.memberRoles[member];
       } else {
         org.members.push(member);
+        if (!org.memberRoles) org.memberRoles = {};
+        org.memberRoles[member] = 'Member';
       }
+
+      const uIdx = db.users.findIndex(u => u.name === member || u.username === member);
+      if (uIdx > -1) {
+        if (!db.users[uIdx].organizations) db.users[uIdx].organizations = [];
+        if (!db.users[uIdx].organizations.includes(id)) {
+          db.users[uIdx].organizations.push(id);
+        }
+      }
+
       await writeDBAsync(db);
       return NextResponse.json(org);
     }
@@ -88,18 +133,47 @@ export async function POST(request: Request) {
       return NextResponse.json(org);
     }
 
+    if (action === 'delete') {
+      const idx = db.organizations.findIndex((o) => o.id === id);
+      if (idx === -1) return NextResponse.json({ error: 'Organization not found' }, { status: 404 });
+      db.organizations.splice(idx, 1);
+      db.users.forEach((u) => {
+        if (u.organizations) u.organizations = u.organizations.filter((oId) => oId !== id);
+      });
+      await writeDBAsync(db);
+      return NextResponse.json({ success: true, message: 'Organization deleted' });
+    }
+
     if (!name || !description) {
       return NextResponse.json({ error: 'Name and description are required' }, { status: 400 });
     }
+
+    const cleanSlug = name.toLowerCase().replace(/[^a-z0-9]/g, '');
 
     const newOrg: Organization = {
       id: `org-${Date.now()}`,
       name,
       description,
+      aboutUs: body.aboutUs || description,
       category: body.category || 'Social',
       verified: false,
+      verificationStatus: 'unverified',
       members: member ? [member] : [],
-      logoColor: logoColor || 'indigo'
+      memberRoles: member ? { [member]: 'President' } : {},
+      logoColor: logoColor || 'indigo',
+      joinSetting: body.joinSetting || 'request',
+      website: body.website || `https://${cleanSlug || 'org'}.evida.app`,
+      email: body.email || `contact@${cleanSlug || 'org'}.org`,
+      creatorUsername: member,
+      announcements: [
+        {
+          id: `ann-${Date.now()}`,
+          title: `Welcome to ${name}! 🎉`,
+          content: `We are excited to launch our official presence on Evida! Join our organization to get access to member updates, exclusive events, and announcements.`,
+          date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
+          author: member || 'President'
+        }
+      ]
     };
 
     db.organizations.push(newOrg);
@@ -118,5 +192,35 @@ export async function POST(request: Request) {
     return NextResponse.json(newOrg, { status: 201 });
   } catch (error) {
     return NextResponse.json({ error: 'Failed to manage organization' }, { status: 500 });
+  }
+}
+
+export async function DELETE(request: Request) {
+  try {
+    const { searchParams } = new URL(request.url);
+    const id = searchParams.get('id');
+
+    if (!id) {
+      return NextResponse.json({ error: 'Organization ID required' }, { status: 400 });
+    }
+
+    const db = await readDBAsync();
+    const idx = db.organizations.findIndex((o) => o.id === id);
+
+    if (idx === -1) {
+      return NextResponse.json({ error: 'Organization not found' }, { status: 404 });
+    }
+
+    db.organizations.splice(idx, 1);
+    db.users.forEach((u) => {
+      if (u.organizations) {
+        u.organizations = u.organizations.filter((oId) => oId !== id);
+      }
+    });
+
+    await writeDBAsync(db);
+    return NextResponse.json({ success: true, message: 'Organization deleted' });
+  } catch (error) {
+    return NextResponse.json({ error: 'Failed to delete organization' }, { status: 500 });
   }
 }

@@ -31,7 +31,9 @@ import {
   Mail,
   UserCheck,
   Heart,
-  Bookmark
+  Bookmark,
+  Plus,
+  Building2
 } from 'lucide-react';
 import Button from '@/components/ui/Button';
 import VerifiedBadge from '@/components/ui/VerifiedBadge';
@@ -62,7 +64,7 @@ const MOCK_CALENDAR_EVENTS = [
 ];
 
 function StudentProfilePageContent() {
-  const { currentUser, setCurrentUser, logout } = useUser();
+  const { currentUser, setCurrentUser, logout, activeProfile } = useUser();
   const { events, organizations, saveToggle, rsvpToggle, deleteEvent } = useEvents();
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -72,6 +74,13 @@ function StudentProfilePageContent() {
   const [loadingProfile, setLoadingProfile] = useState(true);
 
   const isOwner = !usernameParam || (currentUser && usernameParam === currentUser.username);
+
+  // If in Organization profile mode, redirect /student/profile to the active organization's profile page
+  useEffect(() => {
+    if (isOwner && activeProfile?.type === 'organization' && activeProfile.orgId) {
+      router.replace(`/student/organizations/${activeProfile.orgId}`);
+    }
+  }, [isOwner, activeProfile, router]);
 
   const allEvents = events; // Only real events from context — no mock data
 
@@ -138,10 +147,11 @@ function StudentProfilePageContent() {
   // Promotions State
   const [promotions, setPromotions] = useState<any[]>([]);
 
-  // Membership requests state for advisor reviews
+  // Membership requests state for advisor reviews & user pending requests
   const [membershipRequests, setMembershipRequests] = useState<any[]>([]);
+  const [userMembershipRequests, setUserMembershipRequests] = useState<any[]>([]);
 
-  // Fetch membership requests on mount
+  // Fetch all membership requests (for advisor review)
   const fetchMembershipRequests = async () => {
     try {
       const res = await fetch('/api/organizations/membership');
@@ -151,6 +161,42 @@ function StudentProfilePageContent() {
       }
     } catch (e) {
       console.error('Failed to load membership requests:', e);
+    }
+  };
+
+  // Fetch membership requests specifically submitted by profileUser
+  const fetchUserMembershipRequests = async (username?: string) => {
+    const targetUsername = username || profileUser?.username || currentUser?.username;
+    if (!targetUsername) return;
+    try {
+      const res = await fetch(`/api/organizations/membership?username=${targetUsername}`);
+      if (res.ok) {
+        const data = await res.json();
+        setUserMembershipRequests(data);
+      }
+    } catch (e) {
+      console.error('Failed to load user membership requests:', e);
+    }
+  };
+
+  const handleCancelRequest = async (requestId: string) => {
+    try {
+      const res = await fetch('/api/organizations/membership', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          action: 'cancel',
+          id: requestId,
+          username: currentUser?.username
+        })
+      });
+
+      if (res.ok) {
+        fetchUserMembershipRequests();
+        setToast({ message: 'Join request cancelled', undoId: '' });
+      }
+    } catch (e) {
+      console.error('Failed to cancel membership request:', e);
     }
   };
 
@@ -185,6 +231,7 @@ function StudentProfilePageContent() {
 
       if (res.ok) {
         fetchMembershipRequests();
+        fetchUserMembershipRequests();
         syncProfile();
       }
     } catch (e) {
@@ -209,6 +256,13 @@ function StudentProfilePageContent() {
       fetchMembershipRequests();
     }
   }, [currentUser?.username, isOwner]);
+
+  // Fetch user specific membership requests when profileUser is ready
+  useEffect(() => {
+    if (profileUser?.username) {
+      fetchUserMembershipRequests(profileUser.username);
+    }
+  }, [profileUser?.username]);
 
   // Keep profileUser in sync with currentUser when user updates their own profile details
   useEffect(() => {
@@ -278,6 +332,28 @@ function StudentProfilePageContent() {
   // Organizations
   const myOrgs = profileUser ? organizations.filter(org => (profileUser.organizations || []).includes(org.id)) : [];
 
+  // Categorized Organizations
+  const createdOrgs = useMemo(() => {
+    if (!profileUser) return [];
+    return myOrgs.filter(org => {
+      const isCreator = org.creatorUsername && (
+        org.creatorUsername.toLowerCase() === profileUser.username?.toLowerCase() ||
+        org.creatorUsername.toLowerCase() === profileUser.name?.toLowerCase()
+      );
+      const role = org.memberRoles?.[profileUser.name] || org.memberRoles?.[profileUser.username];
+      const isPresident = role === 'President' || role === 'Founder' || role === 'Creator';
+      return isCreator || isPresident;
+    });
+  }, [myOrgs, profileUser]);
+
+  const joinedOrgs = useMemo(() => {
+    return myOrgs.filter(org => !createdOrgs.some(c => c.id === org.id));
+  }, [myOrgs, createdOrgs]);
+
+  const pendingRequests = useMemo(() => {
+    return userMembershipRequests.filter(req => req.status === 'pending');
+  }, [userMembershipRequests]);
+
   // Dynamic Visible Tabs Calculation based on Privacy & Activity
   const privacySettings = useMemo(() => {
     return {
@@ -292,9 +368,9 @@ function StudentProfilePageContent() {
     if (!profileUser) return [];
     const tabs = [];
     
-    // Going
+    // Attended
     if (isOwner || privacySettings.going === 'public') {
-      tabs.push({ id: 'going' as const, label: 'Going' });
+      tabs.push({ id: 'going' as const, label: 'Attended' });
     }
     // Saved
     if (isOwner || privacySettings.saved === 'public') {
@@ -306,15 +382,15 @@ function StudentProfilePageContent() {
         tabs.push({ id: 'hosted' as const, label: 'Hosted' });
       }
     }
-    // Organizations (only if myOrgs.length > 0)
-    if (myOrgs.length > 0) {
+    // Organizations (if has orgs or pending requests or is owner)
+    if (myOrgs.length > 0 || pendingRequests.length > 0 || isOwner) {
       if (isOwner || privacySettings.organizations === 'public') {
         tabs.push({ id: 'orgs' as const, label: 'Organizations' });
       }
     }
     
     return tabs;
-  }, [profileUser, isOwner, privacySettings.going, privacySettings.saved, privacySettings.hosted, privacySettings.organizations, hostedCount, myOrgs.length]);
+  }, [profileUser, isOwner, privacySettings.going, privacySettings.saved, privacySettings.hosted, privacySettings.organizations, hostedCount, myOrgs.length, pendingRequests.length]);
 
   // Adjust active tab if it's no longer visible
   useEffect(() => {
@@ -777,223 +853,89 @@ function StudentProfilePageContent() {
               exit={{ opacity: 0, y: -10 }}
               transition={{ duration: 0.2 }}
             >
-              {/* TAB 1: GOING (Calendar + RSVP Timeline Grid) */}
+              {/* TAB 1: GOING (Event Cards Grid) */}
               {activeTab === 'going' && (
-                <div className="space-y-8">
-                  {/* Campus Calendar month grid card */}
-                  <div className="bg-white border border-black/[0.04] rounded-[28px] p-6 shadow-sm space-y-6">
-                    <div className="flex items-center justify-between border-b border-black/[0.04] pb-4">
-                      <div className="text-left">
-                        <span className="text-[#FD5C05] text-[9px] font-black uppercase tracking-widest flex items-center gap-1.5 mb-0.5">
-                          <Calendar className="h-3.5 w-3.5" /> RSVP Timeline
-                        </span>
-                        <h3 className="font-extrabold text-[#2A2621] text-lg uppercase tracking-tight" style={{ fontFamily: 'var(--font-display)' }}>
-                          Campus Calendar ({calendarDate.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })})
-                        </h3>
-                      </div>
-                      
-                      <div className="flex gap-1.5">
-                        <button 
-                          onClick={() => handleMonthNav('prev')}
-                          className="h-8 w-8 border border-black/[0.06] hover:bg-slate-50 text-black rounded-full flex items-center justify-center cursor-pointer transition-all"
+                <div className="space-y-4 text-left">
+                  <h3 className="text-sm font-black uppercase tracking-wider text-[#2A2621]">
+                    {isOwner ? "Attended Events" : `${profileUser.name}'s Attended Events`} ({attendedEvents.length})
+                  </h3>
+                  {attendedEvents.length > 0 ? (
+                    <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3">
+                      {attendedEvents.map(evt => (
+                        <div 
+                          key={evt.id}
+                          onClick={() => router.push(`/events/${evt.id}`)}
+                          className="bg-white border border-black/[0.04] rounded-2xl overflow-hidden hover:border-[#FD5C05]/40 hover:scale-[1.01] transition-all cursor-pointer shadow-sm flex flex-col h-full group"
                         >
-                          <ChevronLeft className="h-4 w-4" />
-                        </button>
-                        <button 
-                          onClick={() => handleMonthNav('next')}
-                          className="h-8 w-8 border border-black/[0.06] hover:bg-slate-50 text-black rounded-full flex items-center justify-center cursor-pointer transition-all"
-                        >
-                          <ChevronRight className="h-4 w-4" />
-                        </button>
-                      </div>
-                    </div>
+                          <div className="h-32 w-full bg-[#FD5C05]/10 shrink-0 relative">
+                            {evt.coverImage.includes('from-') ? (
+                              <div className={`w-full h-full bg-gradient-to-br ${evt.coverImage}`} />
+                            ) : (
+                              <img src={evt.coverImage} className="w-full h-full object-cover" alt="" />
+                            )}
+                            <span className="absolute top-2 left-2 text-[8px] font-black uppercase tracking-wider bg-black/60 backdrop-blur-[2px] text-white px-2 py-0.5 rounded">
+                              {evt.category}
+                            </span>
 
-                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
-                      {/* Calendar Month Grid */}
-                      <div className="lg:col-span-2 space-y-4">
-                        <div className="grid grid-cols-7 gap-1 text-center font-bold text-[9px] tracking-wider text-[#5A554E] uppercase">
-                          <span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span>
-                        </div>
-                        <div className="grid grid-cols-7 gap-1.5">
-                          {calendarDays.map((cell, idx) => {
-                            const dayEvents = cell.isCurrentMonth ? getEventsForDate(cell.date) : [];
-
-                            return (
-                              <div 
-                                key={idx}
-                                onClick={() => {
-                                  if (dayEvents.length > 0) {
-                                    setSelectedDayEvents(dayEvents);
-                                    setSelectedDateLabel(cell.date.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }));
-                                  }
+                            {currentUser && (
+                              <button 
+                                type="button"
+                                onClick={(e) => {
+                                  e.preventDefault();
+                                  e.stopPropagation();
+                                  saveToggle(evt.id);
                                 }}
-                                className={`
-                                  relative aspect-square border rounded-xl p-1.5 cursor-pointer flex flex-col items-center justify-between transition-all duration-200
-                                  ${cell.isCurrentMonth 
-                                    ? 'bg-white border-black/[0.04] hover:bg-black/[0.01] hover:border-[#FD5C05]/30'
-                                    : 'bg-black/[0.01] border-transparent text-[#5A554E] opacity-35'
-                                  }
-                                `}
+                                className="absolute top-1.5 right-1.5 z-20 cursor-pointer focus:outline-none p-1 group"
+                                title={evt.savedBy?.includes(currentUser.name) ? "Unsave Event" : "Save Event"}
                               >
-                                <span className={`text-xs font-extrabold ${cell.isCurrentMonth ? 'text-[#2A2621]' : 'text-[#5A554E]'}`}>
-                                  {cell.day}
-                                </span>
-
-                                {cell.isCurrentMonth && dayEvents.length > 0 && (
-                                  <div className="h-1.5 w-1.5 rounded-full bg-[#FD5C05] mb-1 shrink-0" />
-                                )}
-                              </div>
-                            );
-                          })}
-                        </div>
-                      </div>
-
-                      {/* Day Inspector Panel */}
-                      <div className="lg:col-span-1 border border-black/[0.04] rounded-2xl p-4 bg-slate-50/50 space-y-4">
-                        <div className="border-b border-black/[0.04] pb-2 text-left">
-                          <span className="text-[9px] font-bold text-[#5A554E] uppercase tracking-wider flex items-center gap-1">
-                            <Clock className="h-3.5 w-3.5" /> Date Selection
-                          </span>
-                          <h4 className="font-extrabold text-[#2A2621] text-xs uppercase tracking-wider mt-0.5">
-                            {selectedDateLabel}
-                          </h4>
-                        </div>
-
-                        <div className="space-y-3 max-h-60 overflow-y-auto pr-1 text-left">
-                          {selectedDayEvents.length > 0 ? (
-                            selectedDayEvents.map((evt, idx) => {
-                              const isUserGoing = currentUser ? evt.attendees?.includes(currentUser.name) : false;
-                              return (
-                                <div 
-                                  key={idx}
-                                  className="bg-white border border-black/[0.04] rounded-xl p-3.5 shadow-sm space-y-2.5 text-left"
-                                >
-                                  <div className="flex items-start justify-between gap-1.5">
-                                    <h5 className="font-bold text-xs text-[#2A2621] uppercase tracking-wide leading-tight">
-                                      {evt.title}
-                                    </h5>
-                                    {isUserGoing && (
-                                      <span className="text-[7px] font-black uppercase bg-[#FD5C05] text-white px-1.5 py-0.5 rounded-full shrink-0 flex items-center gap-0.5">
-                                        Going
-                                      </span>
-                                    )}
-                                  </div>
-                                  
-                                  <div className="text-[10px] text-[#5A554E] font-medium space-y-0.5">
-                                    <p className="flex items-center gap-1"><Clock className="h-3 w-3" /> {evt.time || 'All Day'}</p>
-                                    <p className="flex items-center gap-1"><MapPin className="h-3 w-3" /> {evt.location || 'Campus'}</p>
-                                  </div>
-
-                                  <div className="pt-2 border-t border-black/[0.04] flex items-center gap-1.5">
-                                    <button
-                                      className="flex-1 bg-[#2A2621] hover:bg-[#FD5C05] hover:text-[#2A2621] text-white py-1 px-2 text-[8px] font-bold uppercase rounded-lg cursor-pointer flex items-center justify-center gap-1 border-none transition-all"
-                                      onClick={() => handleDownloadCalendar(evt)}
-                                    >
-                                      <Calendar className="h-3 w-3" /> ICS Sync
-                                    </button>
-                                    <Link
-                                      href={`/events/${evt.id}`}
-                                      className="flex-1 py-1 px-2 text-center bg-black/[0.03] hover:bg-black/[0.08] text-[#2A2621] rounded-lg text-[8px] font-black uppercase tracking-wider transition-all"
-                                    >
-                                      View
-                                    </Link>
-                                  </div>
-                                </div>
-                              );
-                            })
-                          ) : (
-                            <p className="text-[10px] text-[#5A554E] italic py-8 text-center bg-white rounded-xl border border-black/[0.03]">
-                              No RSVP'd activities on this day.
-                            </p>
-                          )}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* List of Attended Events */}
-                  <div className="space-y-4 text-left">
-                    <h3 className="text-sm font-black uppercase tracking-wider text-[#2A2621]">
-                      {isOwner ? "Attended Events" : `${profileUser.name}'s Attended Events`} ({attendedEvents.length})
-                    </h3>
-                    {attendedEvents.length > 0 ? (
-                      <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3">
-                        {attendedEvents.map(evt => (
-                          <div 
-                            key={evt.id}
-                            onClick={() => router.push(`/events/${evt.id}`)}
-                            className="bg-white border border-black/[0.04] rounded-2xl overflow-hidden hover:border-[#FD5C05]/40 hover:scale-[1.01] transition-all cursor-pointer shadow-sm flex flex-col h-full group"
-                          >
-                            <div className="h-32 w-full bg-[#FD5C05]/10 shrink-0 relative">
-                              {evt.coverImage.includes('from-') ? (
-                                <div className={`w-full h-full bg-gradient-to-br ${evt.coverImage}`} />
-                              ) : (
-                                <img src={evt.coverImage} className="w-full h-full object-cover" alt="" />
-                              )}
-                              <span className="absolute top-2 left-2 text-[8px] font-black uppercase tracking-wider bg-black/60 backdrop-blur-[2px] text-white px-2 py-0.5 rounded">
-                                {evt.category}
-                              </span>
-
-                              {currentUser && (
-                                <button 
-                                  type="button"
-                                  onClick={(e) => {
-                                    e.preventDefault();
-                                    e.stopPropagation();
-                                    saveToggle(evt.id);
-                                  }}
-                                  className="absolute top-1.5 right-1.5 z-20 cursor-pointer focus:outline-none p-1 group"
-                                  title={evt.savedBy?.includes(currentUser.name) ? "Unsave Event" : "Save Event"}
-                                >
-                                  <Bookmark 
-                                    className={`h-4.5 w-4.5 transition-all duration-150 ease-in-out ${
-                                      evt.savedBy?.includes(currentUser.name) 
-                                        ? 'fill-[#FD5C05] text-[#FD5C05]' 
-                                        : 'text-white hover:text-[#FD5C05]/90 drop-shadow-[0_1px_2px_rgba(0,0,0,0.5)]'
-                                    }`} 
-                                  />
-                                </button>
-                              )}
-                            </div>
-                            <div className="p-4 flex-1 flex flex-col justify-between space-y-3">
-                              <div onClick={() => router.push(`/events/${evt.id}`)}>
-                                <p className="font-bold text-xs text-[#2A2621] uppercase tracking-wide line-clamp-2">{evt.title}</p>
-                                <p className="text-[9px] text-[#5A554E] font-medium mt-1">{evt.date} • {evt.time}</p>
-                              </div>
-                              <p className="text-[10px] text-[#5A554E] font-bold uppercase tracking-wider flex items-center gap-1">
-                                <MapPin className="h-3 w-3 text-[#FD5C05]" /> {evt.location}
-                              </p>
-                              {isOwner && (
-                                (new Date(evt.date + 'T23:59:59') < new Date()) ? (
-                                  <span className="w-full py-1.5 text-[9px] font-black uppercase tracking-wider text-emerald-600 bg-emerald-50 rounded-xl border border-emerald-200 text-center block">
-                                    Attended ✓
-                                  </span>
-                                ) : (
-                                  <button
-                                    onClick={(e) => {
-                                      e.stopPropagation();
-                                      rsvpToggle(evt.id, 'rsvp');
-                                      setToast({ message: 'RSVP cancelled', undoId: evt.id });
-                                    }}
-                                    className="w-full py-1.5 text-[9px] font-black uppercase tracking-wider text-red-500 hover:bg-red-50 rounded-xl border border-red-200 transition-all cursor-pointer"
-                                  >
-                                    Cancel RSVP
-                                  </button>
-                                )
-                              )}
-                            </div>
+                                <Bookmark 
+                                  className={`h-4.5 w-4.5 transition-all duration-150 ease-in-out ${
+                                    evt.savedBy?.includes(currentUser.name) 
+                                      ? 'fill-[#FD5C05] text-[#FD5C05]' 
+                                      : 'text-white hover:text-[#FD5C05]/90 drop-shadow-[0_1px_2px_rgba(0,0,0,0.5)]'
+                                  }`} 
+                                />
+                              </button>
+                            )}
                           </div>
-                        ))}
-                      </div>
-                    ) : (
-                      <div className="bg-white rounded-2xl p-8 border border-black/[0.04] text-center">
-                        <CalendarCheck className="h-10 w-10 text-[#FD5C05]/20 mx-auto mb-2" />
-                        <p className="text-xs text-[#5A554E]">
-                          {isOwner ? "You haven't RSVP'd to any events yet." : `${profileUser.name} hasn't RSVP'd to any events yet.`}
-                        </p>
-                      </div>
-                    )}
-                  </div>
+                          <div className="p-4 flex-1 flex flex-col justify-between space-y-3">
+                            <div onClick={() => router.push(`/events/${evt.id}`)}>
+                              <p className="font-bold text-xs text-[#2A2621] uppercase tracking-wide line-clamp-2">{evt.title}</p>
+                              <p className="text-[9px] text-[#5A554E] font-medium mt-1">{evt.date} • {evt.time}</p>
+                            </div>
+                            <p className="text-[10px] text-[#5A554E] font-bold uppercase tracking-wider flex items-center gap-1">
+                              <MapPin className="h-3 w-3 text-[#FD5C05]" /> {evt.location}
+                            </p>
+                            {isOwner && (
+                              (new Date(evt.date + 'T23:59:59') < new Date()) ? (
+                                <span className="w-full py-1.5 text-[9px] font-black uppercase tracking-wider text-emerald-600 bg-emerald-50 rounded-xl border border-emerald-200 text-center block">
+                                  Attended ✓
+                                </span>
+                              ) : (
+                                <button
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    rsvpToggle(evt.id, 'rsvp');
+                                    setToast({ message: 'RSVP cancelled', undoId: evt.id });
+                                  }}
+                                  className="w-full py-1.5 text-[9px] font-black uppercase tracking-wider text-red-500 hover:bg-red-50 rounded-xl border border-red-200 transition-all cursor-pointer"
+                                >
+                                  Cancel RSVP
+                                </button>
+                              )
+                            )}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="bg-white rounded-2xl p-8 border border-black/[0.04] text-center">
+                      <CalendarCheck className="h-10 w-10 text-[#FD5C05]/20 mx-auto mb-2" />
+                      <p className="text-xs text-[#5A554E]">
+                        {isOwner ? "You haven't RSVP'd to any events yet." : `${profileUser.name} hasn't RSVP'd to any events yet.`}
+                      </p>
+                    </div>
+                  )}
                 </div>
               )}
 
@@ -1161,56 +1103,173 @@ function StudentProfilePageContent() {
 
               {/* TAB 4: MY ORGANIZATIONS */}
               {activeTab === 'orgs' && (
-                <div className="space-y-4 text-left">
-                  <h3 className="text-sm font-black uppercase tracking-wider text-[#2A2621]">
-                    {isOwner ? "My Campus Groups" : `${profileUser.name}'s Campus Groups`} ({myOrgs.length})
-                  </h3>
-                  {myOrgs.length > 0 ? (
-                    <div className="grid gap-4 sm:grid-cols-2">
-                      {myOrgs.map(org => {
-                        const userRole = org.memberRoles?.[profileUser.name] || 
-                                         org.memberRoles?.[profileUser.username] || 
-                                         (org.members[0] === profileUser.name ? 'President' : 'Member');
-                        return (
-                          <div 
-                            key={org.id} 
-                            onClick={() => router.push(`/student/organizations/${org.id}`)}
-                            className="bg-white rounded-2xl p-4 flex items-center justify-between border border-black/[0.04] shadow-sm hover:border-[#FD5C05]/40 hover:scale-[1.01] transition-all cursor-pointer group"
-                          >
-                            <div className="flex items-center gap-3.5 min-w-0">
-                              <div 
-                                className="h-12 w-12 rounded-xl flex items-center justify-center font-black text-white text-xs shrink-0 shadow-sm transition-transform group-hover:scale-105"
-                                style={{ backgroundColor: org.logoColor || '#2A2621' }}
-                              >
-                                {org.name.substring(0, 2).toUpperCase()}
-                              </div>
-                              <div className="min-w-0 text-left">
-                                <p className="font-bold text-[#2A2621] text-xs uppercase tracking-tight group-hover:text-[#FD5C05] transition-colors truncate">
-                                  {org.name}
-                                </p>
-                                <div className="flex items-center gap-2 mt-0.5">
-                                  <span className="px-1.5 py-0.5 rounded bg-black/[0.04] text-[#5A554E] text-[8px] font-bold uppercase tracking-wider">
-                                    {userRole}
-                                  </span>
-                                  <span className="text-[9px] text-[#5A554E] font-semibold">
-                                    {org.members.length} members
-                                  </span>
+                <div className="space-y-8 text-left">
+                  
+                  {/* Section 1: Created Organizations */}
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-between">
+                      <h3 className="text-sm font-black uppercase tracking-wider text-[#2A2621] flex items-center gap-2">
+                        <Shield className="h-4 w-4 text-[#FD5C05]" />
+                        {isOwner ? "Organizations Created By You" : `Organizations Created By ${profileUser.name}`} ({createdOrgs.length})
+                      </h3>
+                      {isOwner && (
+                        <button
+                          onClick={() => router.push('/student/organizations/create')}
+                          className="flex items-center gap-1.5 px-3 py-1.5 bg-[#FD5C05]/10 hover:bg-[#FD5C05]/20 text-[#FD5C05] text-[10px] font-extrabold uppercase rounded-xl transition-colors cursor-pointer"
+                        >
+                          <Plus className="h-3.5 w-3.5" />
+                          Create Group
+                        </button>
+                      )}
+                    </div>
+
+                    {createdOrgs.length > 0 ? (
+                      <div className="grid gap-4 sm:grid-cols-2">
+                        {createdOrgs.map(org => {
+                          const userRole = org.memberRoles?.[profileUser.name] || 
+                                           org.memberRoles?.[profileUser.username] || 'President';
+                          return (
+                            <div 
+                              key={org.id} 
+                              onClick={() => router.push(`/student/organizations/${org.id}`)}
+                              className="bg-white rounded-2xl p-4 flex items-center justify-between border border-black/[0.04] shadow-sm hover:border-[#FD5C05]/40 hover:scale-[1.01] transition-all cursor-pointer group"
+                            >
+                              <div className="flex items-center gap-3.5 min-w-0">
+                                <div 
+                                  className="h-12 w-12 rounded-xl flex items-center justify-center font-black text-white text-xs shrink-0 shadow-sm transition-transform group-hover:scale-105"
+                                  style={{ backgroundColor: org.logoColor || '#2A2621' }}
+                                >
+                                  {org.name.substring(0, 2).toUpperCase()}
+                                </div>
+                                <div className="min-w-0 text-left">
+                                  <p className="font-bold text-[#2A2621] text-xs uppercase tracking-tight group-hover:text-[#FD5C05] transition-colors truncate">
+                                    {org.name}
+                                  </p>
+                                  <div className="flex items-center gap-2 mt-0.5">
+                                    <span className="px-1.5 py-0.5 rounded bg-[#FD5C05]/10 text-[#FD5C05] text-[8px] font-extrabold uppercase tracking-wider border border-[#FD5C05]/20">
+                                      {userRole}
+                                    </span>
+                                    <span className="text-[9px] text-[#5A554E] font-semibold">
+                                      {org.members.length} members
+                                    </span>
+                                  </div>
                                 </div>
                               </div>
+                              {isOwner && <span className="text-[9px] font-black uppercase text-[#5A554E] group-hover:text-[#2A2621] transition-colors shrink-0">Manage →</span>}
                             </div>
-                            {isOwner && <span className="text-[9px] font-black uppercase text-[#5A554E] group-hover:text-[#2A2621] transition-colors shrink-0">Manage →</span>}
-                          </div>
-                        );
-                      })}
-                    </div>
-                  ) : (
-                    <div className="bg-white rounded-2xl p-8 border border-black/[0.04] text-center">
-                      <Users className="h-10 w-10 text-[#FD5C05]/20 mx-auto mb-2" />
-                      <p className="text-xs text-[#5A554E]">
-                        {isOwner ? "Not associated with any groups." : `${profileUser.name} is not associated with any groups.`}
-                      </p>
+                          );
+                        })}
+                      </div>
+                    ) : (
+                      <div className="bg-white rounded-2xl p-6 border border-black/[0.04] text-center">
+                        <p className="text-xs text-[#5A554E]">
+                          {isOwner ? "You haven't created any organizations yet." : `${profileUser.name} hasn't created any organizations.`}
+                        </p>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Section 2: Joined Organizations */}
+                  <div className="space-y-4">
+                    <h3 className="text-sm font-black uppercase tracking-wider text-[#2A2621] flex items-center gap-2">
+                      <Users className="h-4 w-4 text-[#FD5C05]" />
+                      {isOwner ? "Joined Organizations" : `Organizations ${profileUser.name} Joined`} ({joinedOrgs.length})
+                    </h3>
+
+                    {joinedOrgs.length > 0 ? (
+                      <div className="grid gap-4 sm:grid-cols-2">
+                        {joinedOrgs.map(org => {
+                          const userRole = org.memberRoles?.[profileUser.name] || 
+                                           org.memberRoles?.[profileUser.username] || 'Member';
+                          return (
+                            <div 
+                              key={org.id} 
+                              onClick={() => router.push(`/student/organizations/${org.id}`)}
+                              className="bg-white rounded-2xl p-4 flex items-center justify-between border border-black/[0.04] shadow-sm hover:border-[#FD5C05]/40 hover:scale-[1.01] transition-all cursor-pointer group"
+                            >
+                              <div className="flex items-center gap-3.5 min-w-0">
+                                <div 
+                                  className="h-12 w-12 rounded-xl flex items-center justify-center font-black text-white text-xs shrink-0 shadow-sm transition-transform group-hover:scale-105"
+                                  style={{ backgroundColor: org.logoColor || '#2A2621' }}
+                                >
+                                  {org.name.substring(0, 2).toUpperCase()}
+                                </div>
+                                <div className="min-w-0 text-left">
+                                  <p className="font-bold text-[#2A2621] text-xs uppercase tracking-tight group-hover:text-[#FD5C05] transition-colors truncate">
+                                    {org.name}
+                                  </p>
+                                  <div className="flex items-center gap-2 mt-0.5">
+                                    <span className="px-1.5 py-0.5 rounded bg-black/[0.04] text-[#5A554E] text-[8px] font-bold uppercase tracking-wider">
+                                      {userRole}
+                                    </span>
+                                    <span className="text-[9px] text-[#5A554E] font-semibold">
+                                      {org.members.length} members
+                                    </span>
+                                  </div>
+                                </div>
+                              </div>
+                              <span className="text-[9px] font-black uppercase text-[#5A554E] group-hover:text-[#2A2621] transition-colors shrink-0">View →</span>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    ) : (
+                      <div className="bg-white rounded-2xl p-6 border border-black/[0.04] text-center">
+                        <p className="text-xs text-[#5A554E]">
+                          {isOwner ? "You haven't joined any other organizations yet." : `${profileUser.name} hasn't joined any other organizations.`}
+                        </p>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Section 3: Pending Membership Requests */}
+                  {isOwner && (
+                    <div className="space-y-4">
+                      <h3 className="text-sm font-black uppercase tracking-wider text-[#2A2621] flex items-center gap-2">
+                        <Clock className="h-4 w-4 text-[#FD5C05]" />
+                        Pending Join Requests ({pendingRequests.length})
+                      </h3>
+
+                      {pendingRequests.length > 0 ? (
+                        <div className="grid gap-4 sm:grid-cols-2">
+                          {pendingRequests.map(req => (
+                            <div 
+                              key={req.id} 
+                              className="bg-white rounded-2xl p-4 flex items-center justify-between border border-amber-200/60 bg-amber-50/20 shadow-sm"
+                            >
+                              <div className="flex items-center gap-3.5 min-w-0">
+                                <div className="h-10 w-10 rounded-xl bg-amber-500/10 text-amber-600 flex items-center justify-center font-black text-xs shrink-0 border border-amber-300/40">
+                                  <Clock className="h-5 w-5" />
+                                </div>
+                                <div className="min-w-0 text-left">
+                                  <p className="font-bold text-[#2A2621] text-xs uppercase tracking-tight truncate">
+                                    {req.orgName}
+                                  </p>
+                                  <div className="flex items-center gap-2 mt-0.5">
+                                    <span className="px-1.5 py-0.5 rounded bg-amber-100 text-amber-700 text-[8px] font-extrabold uppercase tracking-wider border border-amber-200">
+                                      Pending Approval
+                                    </span>
+                                  </div>
+                                </div>
+                              </div>
+
+                              <button
+                                onClick={() => handleCancelRequest(req.id)}
+                                className="px-3 py-1.5 text-[9px] font-black uppercase tracking-wider text-rose-600 hover:bg-rose-50 rounded-xl border border-rose-200/70 transition-all cursor-pointer shrink-0 ml-2"
+                              >
+                                Cancel
+                              </button>
+                            </div>
+                          ))}
+                        </div>
+                      ) : (
+                        <div className="bg-white rounded-2xl p-6 border border-black/[0.04] text-center">
+                          <p className="text-xs text-[#5A554E]">No pending join requests.</p>
+                        </div>
+                      )}
                     </div>
                   )}
+
                 </div>
               )}
             </motion.div>

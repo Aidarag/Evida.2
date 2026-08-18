@@ -5,6 +5,7 @@ import { useEvents } from '@/lib/context/EventContext';
 import { useUser } from '@/lib/context/UserContext';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import EventCard from '@/components/student/EventCard';
 import DefaultEvidaFlyer from '@/components/ui/DefaultEvidaFlyer';
 import { 
   Search, 
@@ -27,6 +28,7 @@ import {
   ArrowRight,
   Shield,
   CheckCircle2,
+  XCircle,
   Bookmark,
   Ticket,
   CreditCard
@@ -36,7 +38,7 @@ import { Event, Organization, Promotion } from '@/lib/types';
 
 export default function ExplorePage() {
   const { events, promotions: allPromotions, organizations, saveToggle } = useEvents();
-  const { currentUser } = useUser();
+  const { currentUser, activeProfile } = useUser();
   const router = useRouter();
 
   // Search state
@@ -57,6 +59,24 @@ export default function ExplorePage() {
   
   // Search result tab state: 'all' | 'events' | 'orgs' | 'promos'
   const [searchTab, setSearchTab] = useState<'all' | 'events' | 'orgs' | 'promos'>('all');
+
+  // Campus Organizations filter states (Certified / Non-Certified + Types)
+  const [exploreOrgStatusFilter, setExploreOrgStatusFilter] = useState<'all' | 'verified' | 'unverified'>('all');
+  const [exploreOrgTypeFilter, setExploreOrgTypeFilter] = useState<string>('all');
+
+  const filteredExploreOrgs = useMemo(() => {
+    return organizations.filter(org => {
+      if (exploreOrgStatusFilter === 'verified' && !org.verified) return false;
+      if (exploreOrgStatusFilter === 'unverified' && org.verified) return false;
+      if (exploreOrgTypeFilter !== 'all') {
+        const cat = (org.category || '').toLowerCase();
+        const name = org.name.toLowerCase();
+        const target = exploreOrgTypeFilter.toLowerCase();
+        if (!cat.includes(target) && !name.includes(target)) return false;
+      }
+      return true;
+    });
+  }, [organizations, exploreOrgStatusFilter, exploreOrgTypeFilter]);
 
   const promotions = useMemo(() => allPromotions.filter((p: Promotion) => p.status === 'approved'), [allPromotions]);
 
@@ -199,138 +219,89 @@ export default function ExplorePage() {
     </div>
   );
 
-  const renderEventCard = (evt: Event, isGridItem: boolean = false) => {
-    const isSaved = currentUser ? (evt.savedBy?.includes(currentUser.name) || (currentUser.username ? evt.savedBy?.includes(currentUser.username) : false)) : false;
-    
-    // Date formatting matching home page (Jul 26)
-    const dateObj = new Date(evt.date + 'T00:00:00');
-    const monthStr = dateObj.toLocaleDateString('en-US', { month: 'short' });
-    const dayNum = dateObj.getDate();
-    const formattedDate = `${monthStr} ${dayNum}`;
+  // Unified Event Card Renderer using standardized EventCard component
+  const renderEventCard = (evt: Event, isGridItem: boolean = false) => (
+    <EventCard
+      key={evt.id}
+      event={evt}
+      onClick={() => router.push(`/events/${evt.id}`)}
+      className={isGridItem ? 'w-full sm:w-full' : 'w-72 sm:w-[300px]'}
+    />
+  );
+
+  // Helper to render organization cards (CSS Grid Architecture: 52px header, 150px content, 48px footer = 250px total)
+  const renderOrganizationCard = (org: Organization, isGridItem: boolean = false) => {
+    const bgLogoColor = (!org.logoColor || org.logoColor.toLowerCase() === 'white' || org.logoColor === '#ffffff')
+      ? '#FD5C05'
+      : org.logoColor;
 
     return (
-      <motion.div
-        key={evt.id}
-        whileHover={{ y: -4, scale: 1.01 }}
+      <motion.article
+        key={org.id}
+        whileHover={{ y: -4 }}
         transition={{ type: "spring", stiffness: 400, damping: 25 }}
-        className={`${isGridItem ? 'w-full' : 'w-56 sm:w-64 shrink-0'} flex flex-col min-h-[270px] h-full`}
-      >
-        <Link
-          href={`/events/${evt.id}`}
-          className="w-full h-full bg-white border border-black/[0.06] hover:border-[#FD5C05] rounded-2xl overflow-hidden shadow-xs hover:shadow-[0_10px_24px_rgba(253,92,5,0.12)] transition-all duration-300 flex flex-col justify-between group cursor-pointer"
-        >
-          <div className="aspect-[16/10] w-full bg-[#FD5C05]/10 shrink-0 relative overflow-hidden">
-            {evt.coverImage.includes('from-') ? (
-              <div className={`w-full h-full bg-gradient-to-br ${evt.coverImage} group-hover:scale-105 transition-transform duration-500`} />
-            ) : (
-              <img src={evt.coverImage} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt="" />
-            )}
-            
-            {/* Category Badge top left */}
-            <span className="absolute top-2.5 left-2.5 text-[8px] font-black uppercase tracking-wider bg-black/75 backdrop-blur-md text-white px-2.5 py-0.5 rounded-full border border-white/10">
-              {evt.category}
-            </span>
-
-            {/* Price Badge & Bookmark top right */}
-            <div className="absolute top-2.5 right-2.5 z-20 flex items-center gap-1.5">
-              <span className="text-[7.5px] font-black uppercase tracking-wider bg-[#FD5C05] text-white px-2.5 py-0.5 rounded-full shadow-sm">
-                {evt.free ? 'FREE' : `$${evt.price || 'TICKETED'}`}
-              </span>
-              {currentUser && (
-                <button 
-                  type="button"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    saveToggle(evt.id);
-                  }}
-                  className="cursor-pointer focus:outline-none p-0.5 group/btn"
-                  title={isSaved ? "Unsave Event" : "Save Event"}
-                >
-                  <Bookmark 
-                    className={`h-4 w-4 transition-all duration-150 ease-in-out ${
-                      isSaved 
-                        ? 'fill-[#FD5C05] text-[#FD5C05]' 
-                        : 'text-white hover:text-[#FD5C05]/90 drop-shadow-[0_1px_2px_rgba(0,0,0,0.5)]'
-                    }`} 
-                  />
-                </button>
-              )}
-            </div>
-          </div>
-          <div className="p-3.5 sm:p-4 flex flex-col justify-between flex-1 space-y-2">
-            <div className="space-y-1 text-left">
-              <span className="text-[9px] font-black uppercase tracking-wider text-[#FD5C05] block">
-                {formattedDate} • {evt.time || '7:00 PM'}
-              </span>
-              {/* Bulletproof title area: text-xs leading-snug fits 2 lines comfortably in min-h-[2.4rem] */}
-              <div className="min-h-[2.4rem] flex items-start overflow-hidden pt-0.5">
-                <h3 className="font-bold text-xs text-[#2A2621] group-hover:text-[#FD5C05] transition-colors leading-snug line-clamp-2 text-left">
-                  {evt.title}
-                </h3>
-              </div>
-            </div>
-            <div className="pt-2 border-t border-black/[0.04] flex items-center justify-between text-[9px] text-[#5A554E] font-semibold">
-              <span className="flex items-center gap-1.5 truncate max-w-[70%]">
-                <Users className="h-3.5 w-3.5 shrink-0 text-[#5A554E]" /> 
-                <span className="truncate">{evt.organizationName || evt.organizer}</span>
-              </span>
-              <span className="flex items-center gap-0.5 shrink-0 font-black text-white bg-[#FD5C05] px-2 py-0.5 rounded-full text-[8.5px] uppercase shadow-xs">
-                {evt.free ? 'FREE' : 'TICKETED'}
-              </span>
-            </div>
-          </div>
-        </Link>
-      </motion.div>
-    );
-  };
-
-  // Helper to render organization cards
-  const renderOrganizationCard = (org: Organization, isGridItem: boolean = false) => (
-    <motion.div
-      key={org.id}
-      whileHover={{ y: -4, scale: 1.01 }}
-      transition={{ type: "spring", stiffness: 400, damping: 25 }}
-      className={`${isGridItem ? 'w-full' : 'w-56 sm:w-64 shrink-0'} flex flex-col min-h-[210px] h-full`}
-    >
-      <div
         onClick={() => router.push(`/student/organizations/${org.id}`)}
-        className="w-full h-full bg-white border border-black/[0.06] hover:border-[#FD5C05] rounded-2xl p-4 shadow-xs hover:shadow-[0_10px_24px_rgba(253,92,5,0.12)] transition-all duration-300 cursor-pointer group flex flex-col justify-between space-y-2"
+        className={`${isGridItem ? 'w-full' : 'w-64 sm:w-[260px] shrink-0'} bg-white border border-black/[0.06] hover:border-[#FD5C05] rounded-[16px] overflow-hidden shadow-xs hover:shadow-md transition-all duration-300 cursor-pointer group h-[250px] min-h-[250px] max-h-[250px] grid grid-rows-[52px_150px_48px] select-none text-left`}
       >
-        <div className="space-y-2 text-left">
-          <div className="flex items-center justify-between">
-            <div
-              className="h-10 w-10 rounded-xl flex items-center justify-center font-black text-white text-xs shrink-0 shadow-xs transition-transform group-hover:scale-105"
-              style={{ backgroundColor: org.logoColor || '#2A2621' }}
-            >
-              {org.name.substring(0, 2).toUpperCase()}
-            </div>
-            {org.verified && (
-              <span className="flex items-center gap-1 text-[9px] font-black uppercase tracking-wider text-[#FD5C05] bg-[#FD5C05]/10 px-2 py-0.5 rounded-full border border-[#FD5C05]/20">
-                <CheckCircle2 className="h-3 w-3 text-[#FD5C05]" /> Verified
-              </span>
-            )}
+        {/* Row 1: Header (52px) */}
+        <div className="px-4 pt-3.5 pb-1 flex items-center justify-between">
+          <div
+            className="h-10 w-10 rounded-xl flex items-center justify-center font-black text-white text-xs shrink-0 shadow-xs transition-transform group-hover:scale-105"
+            style={{ backgroundColor: bgLogoColor }}
+          >
+            {org.name.substring(0, 2).toUpperCase()}
           </div>
-          <div>
-            <div className="min-h-[2.4rem] flex items-start overflow-hidden pt-0.5">
-              <h3 className="font-bold text-xs text-[#2A2621] group-hover:text-[#FD5C05] transition-colors leading-snug line-clamp-2 text-left">
-                {org.name}
-              </h3>
-            </div>
-            <p className="text-[10.5px] text-[#5A554E] line-clamp-2 leading-relaxed font-medium mt-1 text-left">
-              {org.description}
+          {org.verified && (
+            <span className="flex items-center gap-1 text-[9px] font-black uppercase tracking-wider text-[#FD5C05] bg-[#FD5C05]/10 px-2.5 py-1 rounded-full border border-[#FD5C05]/20 shadow-2xs">
+              <CheckCircle2 className="h-3 w-3 text-[#FD5C05]" /> Verified
+            </span>
+          )}
+        </div>
+
+        {/* Row 2: Content (150px - Title + Description ONLY) */}
+        <div className="px-4 pt-1 pb-2 flex flex-col justify-start overflow-hidden min-h-0">
+          {/* Title (2 lines max, 52px reserved height for zero clipping) */}
+          <div className="h-[52px] min-h-[52px] max-h-[52px] flex items-start overflow-hidden">
+            <h3 
+              className="font-bold text-[17px] sm:text-[18px] leading-[22px] text-[#2A2621] group-hover:text-[#FD5C05] transition-colors tracking-tight text-left block w-full"
+              style={{
+                display: '-webkit-box',
+                WebkitBoxOrient: 'vertical',
+                WebkitLineClamp: 2,
+                overflow: 'hidden',
+                fontFamily: 'var(--font-display)',
+              }}
+            >
+              {org.name}
+            </h3>
+          </div>
+
+          {/* Description (3 lines max, reserved 48px) */}
+          <div className="mt-1 h-[48px] min-h-[48px] max-h-[48px] flex items-start overflow-hidden">
+            <p 
+              className="text-[11px] leading-[16px] font-semibold text-[#5A554E] text-left block w-full"
+              style={{
+                display: '-webkit-box',
+                WebkitBoxOrient: 'vertical',
+                WebkitLineClamp: 3,
+                overflow: 'hidden',
+              }}
+            >
+              {org.description || 'Official campus organization profile directory.'}
             </p>
           </div>
         </div>
-        <div className="pt-2 border-t border-black/[0.04] flex items-center justify-between text-[9px] text-[#5A554E] font-bold uppercase tracking-wider">
-          <span>{org.members?.length || 0} members</span>
-          <span className="text-[#FD5C05] group-hover:translate-x-0.5 transition-transform flex items-center gap-1 font-black">
-            Join Organization <ArrowRight className="h-3 w-3" />
+
+        {/* Row 3: Footer (48px) */}
+        <div className="px-4 h-[48px] border-t border-black/[0.06] flex items-center justify-between text-[10px] text-[#5A554E] font-bold uppercase tracking-wider min-w-0">
+          <span className="shrink-0">{org.members?.length || 0} members</span>
+          <span className="text-[#FD5C05] group-hover:translate-x-0.5 transition-transform flex items-center gap-1 font-black shrink-0">
+            JOIN ORGANIZATION <ArrowRight className="h-3 w-3" />
           </span>
         </div>
-      </div>
-    </motion.div>
-  );
+      </motion.article>
+    );
+  };
 
   const getPromoImage = (category: string) => {
     const cat = category.toLowerCase();
@@ -490,6 +461,24 @@ export default function ExplorePage() {
         )}
       </div>
 
+      {/* Org Mode Active Context Banner */}
+      {activeProfile?.type === 'organization' && (
+        <div className="bg-white rounded-2xl border border-[#FD5C05]/20 p-4 shadow-xs flex items-center justify-between gap-3 text-left">
+          <div className="flex items-center gap-3">
+            <div className="h-9 w-9 rounded-xl bg-[#FD5C05] text-white flex items-center justify-center font-black text-xs shrink-0">
+              {activeProfile.name.substring(0, 2).toUpperCase()}
+            </div>
+            <div>
+              <p className="text-[9px] font-black uppercase text-[#FD5C05] tracking-wider">Active Org Profile</p>
+              <p className="text-xs font-black text-[#2A2621] uppercase tracking-tight">{activeProfile.name}</p>
+            </div>
+          </div>
+          <span className="text-[10px] text-[#5A554E] font-semibold hidden sm:inline">
+            Exploring campus organizations, partnerships & official experiences
+          </span>
+        </div>
+      )}
+
       {/* ── Dynamic Layout Transition ── */}
       <AnimatePresence mode="wait">
         {!isSearchActive ? (
@@ -545,14 +534,74 @@ export default function ExplorePage() {
             </div>
 
             {/* 4. Campus Organizations */}
-            <div className="space-y-1.5">
+            <div className="space-y-2.5">
               {renderSectionHeader('Campus Organizations', 'Organizations', <Shield className="h-4 w-4" />, false)}
-              {organizations.length > 0 ? (
+              
+              {/* Organization Filter Controls Bar */}
+              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 bg-white rounded-2xl p-3 border border-black/[0.06] shadow-2xs">
+                {/* Status Filters */}
+                <div className="flex items-center gap-1.5 flex-wrap text-[9.5px]">
+                  <span className="font-extrabold uppercase text-[#5A554E] mr-1">Status:</span>
+                  <button
+                    onClick={() => setExploreOrgStatusFilter('all')}
+                    className={`px-2.5 py-1 rounded-full font-black uppercase tracking-wider transition-all border-none cursor-pointer ${
+                      exploreOrgStatusFilter === 'all'
+                        ? 'bg-[#2A2621] text-white shadow-xs'
+                        : 'bg-[#F8F6F0] text-[#5A554E] hover:bg-black/[0.06]'
+                    }`}
+                  >
+                    All ({organizations.length})
+                  </button>
+                  <button
+                    onClick={() => setExploreOrgStatusFilter('verified')}
+                    className={`px-2.5 py-1 rounded-full font-black uppercase tracking-wider transition-all border-none cursor-pointer flex items-center gap-1 ${
+                      exploreOrgStatusFilter === 'verified'
+                        ? 'bg-emerald-600 text-white shadow-xs'
+                        : 'bg-emerald-500/10 text-emerald-700 hover:bg-emerald-500/20'
+                    }`}
+                  >
+                    <CheckCircle2 className="h-3 w-3" /> Certified ({organizations.filter(o => o.verified).length})
+                  </button>
+                  <button
+                    onClick={() => setExploreOrgStatusFilter('unverified')}
+                    className={`px-2.5 py-1 rounded-full font-black uppercase tracking-wider transition-all border-none cursor-pointer flex items-center gap-1 ${
+                      exploreOrgStatusFilter === 'unverified'
+                        ? 'bg-amber-600 text-white shadow-xs'
+                        : 'bg-amber-500/10 text-amber-800 hover:bg-amber-500/20'
+                    }`}
+                  >
+                    <XCircle className="h-3 w-3" /> Non-Certified ({organizations.filter(o => !o.verified).length})
+                  </button>
+                </div>
+
+                {/* Type Filters */}
+                <div className="flex items-center gap-1.5 overflow-x-auto scrollbar-none max-w-full text-[9px]">
+                  <span className="font-extrabold uppercase text-[#5A554E] shrink-0 mr-1">Type:</span>
+                  {['all', 'academic', 'cultural', 'student government', 'social', 'sports', 'career'].map((cat) => {
+                    const isActive = exploreOrgTypeFilter === cat;
+                    return (
+                      <button
+                        key={cat}
+                        onClick={() => setExploreOrgTypeFilter(cat)}
+                        className={`px-2.5 py-1 rounded-full font-black uppercase tracking-wider shrink-0 transition-all border-none cursor-pointer ${
+                          isActive
+                            ? 'bg-[#FD5C05] text-white shadow-xs'
+                            : 'bg-[#F8F6F0] text-[#5A554E] hover:bg-black/[0.06]'
+                        }`}
+                      >
+                        {cat === 'all' ? 'All Types' : cat.toUpperCase()}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {filteredExploreOrgs.length > 0 ? (
                 <div className="flex gap-3 overflow-x-auto pb-2 pt-0.5 scrollbar-none select-none scroll-smooth">
-                  {organizations.map(org => renderOrganizationCard(org))}
+                  {filteredExploreOrgs.map(org => renderOrganizationCard(org))}
                 </div>
               ) : (
-                <p className="text-xs text-[#5A554E] italic pl-1">No organizations found.</p>
+                <p className="text-xs text-[#5A554E] italic pl-1 py-3">No campus organizations match the selected filters.</p>
               )}
             </div>
 

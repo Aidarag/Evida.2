@@ -23,11 +23,13 @@ import {
   Shield,
   Camera,
   Tag,
-  Home
+  Home,
+  Plus
 } from 'lucide-react';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import VerifiedBadge from '@/components/ui/VerifiedBadge';
+import EventCard from '@/components/student/EventCard';
 import { Event, Promotion } from '@/lib/types';
 import EvidaLogo from '@/components/ui/EvidaLogo';
 
@@ -40,11 +42,12 @@ const EvidaLogoIcon = ({ className = 'h-3 w-3' }: { className?: string }) => {
 };
 
 export default function StudentDashboardPage() {
-  const { currentUser } = useUser();
+  const { currentUser, activeProfile, setActiveProfile } = useUser();
   const { events, promotions, organizations, notifications, saveToggle, rsvpToggle } = useEvents();
   const router = useRouter();
 
   const [activeFeed, setActiveFeed] = useState<'official' | 'student'>('official');
+  const [orgDashboardTab, setOrgDashboardTab] = useState<'org-events' | 'campus-feed'>('org-events');
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [likedEvents, setLikedEvents] = useState<Set<string>>(new Set());
@@ -164,12 +167,28 @@ export default function StudentDashboardPage() {
   // Base list of rsvp and saved events for stats cards
   const rsvpEventsList = approvedEvents.filter(e => currentUser ? e.attendees.includes(currentUser.name) && (e.ownershipType === 'school' || e.ownershipType === 'organization') : false);
   const savedEventsList = approvedEvents.filter(e => currentUser ? (e.savedBy?.includes(currentUser.name) || (currentUser.username ? e.savedBy?.includes(currentUser.username) : false)) && (e.ownershipType === 'school' || e.ownershipType === 'organization') : false);
+  const isOrgMode = activeProfile.type === 'organization';
+  const activeOrg = isOrgMode ? organizations.find(o => o.id === activeProfile.orgId) : null;
+  const activeOrgName = isOrgMode ? (activeOrg ? activeOrg.name : activeProfile.name) : '';
+  const myOrgEvents = isOrgMode ? events.filter(e => e.organizationId === activeProfile.orgId || e.organizationName === activeOrgName) : [];
+
   const matchesCategory = useCallback((item: Event | Promotion) => {
     if (selectedCategory === 'All') return true;
     const cat = item.category?.toLowerCase() || '';
     const title = item.title.toLowerCase();
     const sel = selectedCategory.toLowerCase();
     const isPromo = !('ownershipType' in item);
+
+    if (isOrgMode) {
+      if (sel === 'academic') return cat.includes('academ') || title.includes('stem') || title.includes('expo') || title.includes('study') || title.includes('calculus');
+      if (sel === 'social') return cat.includes('social') || cat.includes('party') || title.includes('social') || title.includes('welcome') || title.includes('rally');
+      if (sel === 'sports') return cat.includes('sport') || cat.includes('athlet') || title.includes('opener') || title.includes('game');
+      if (sel === 'career') return cat.includes('career') || cat.includes('job') || title.includes('fair') || title.includes('career');
+      if (sel === 'culture') return cat.includes('culture') || cat.includes('art') || title.includes('show') || title.includes('yard');
+      if (sel === 'workshops') return cat.includes('workshop') || title.includes('workshop');
+      if (sel === 'parties') return cat.includes('party') || title.includes('rave');
+      return cat.includes(sel) || title.includes(sel);
+    }
 
     if (activeFeed === 'official') {
       if (sel === 'livingstone college') {
@@ -216,7 +235,7 @@ export default function StudentDashboardPage() {
       }
       return true;
     }
-  }, [activeFeed, selectedCategory]);
+  }, [activeFeed, isOrgMode, selectedCategory]);
 
   const feedItems = useMemo(() => {
     if (activeFeed === 'official') {
@@ -272,6 +291,15 @@ export default function StudentDashboardPage() {
     });
   }, [feedItems, searchQuery, matchQuery, matchesCategory]);
 
+  const filteredOrgEvents = useMemo(() => {
+    if (!isOrgMode) return [];
+    return myOrgEvents.filter(e => {
+      const matchesSearch = matchQuery([e.title, e.description, e.location, e.category], searchQuery);
+      if (!matchesSearch) return false;
+      return matchesCategory(e);
+    });
+  }, [isOrgMode, myOrgEvents, searchQuery, matchQuery, matchesCategory]);
+
   const sortedFilteredItems = useMemo(() => {
     return [...filteredItems].sort((a, b) => {
       // 1. Featured pins at top
@@ -311,7 +339,20 @@ export default function StudentDashboardPage() {
     { name: 'Parties', icon: Wine },
   ];
 
-  const currentCategories = activeFeed === 'official' ? officialCategories : studentCategories;
+  const orgCategories = [
+    { name: 'All', icon: Compass },
+    { name: 'Academic', icon: GraduationCap },
+    { name: 'Social', icon: Users },
+    { name: 'Sports', icon: Trophy },
+    { name: 'Career', icon: Briefcase },
+    { name: 'Culture', icon: Sparkles },
+    { name: 'Workshops', icon: Cpu },
+    { name: 'Parties', icon: Wine },
+  ];
+
+  const currentCategories = isOrgMode
+    ? orgCategories
+    : (activeFeed === 'official' ? officialCategories : studentCategories);
 
   // ── Actions ──
   const handleLike = (eventId: string) => {
@@ -343,38 +384,113 @@ export default function StudentDashboardPage() {
   return (
     <div className="max-w-5xl mx-auto px-4 py-4 pb-28 md:pb-12 space-y-4">
 
-      {/* ── Header & Search ── */}
-      <div className="border-b border-black/[0.04] pb-4 space-y-3.5 text-left">
-        <div>
-          <h1 className="font-black text-2xl md:text-3xl text-[#2A2621] tracking-tight" style={{ fontFamily: 'var(--font-display)' }}>
-            Yo {currentUser.name.split(' ')[0]}!
-          </h1>
-          <p className="text-xs text-[#5A554E] font-semibold mt-1">
-            What's happening on campus today?
-          </p>
-        </div>
+      {/* ── Organization Mode Banner Header ── */}
+      {isOrgMode && (
+        <div className="bg-white rounded-3xl border border-[#FD5C05]/20 p-5 md:p-6 shadow-sm text-left space-y-4 relative overflow-hidden">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div className="flex items-center gap-3.5 min-w-0">
+              <div className="h-12 w-12 rounded-2xl bg-[#FD5C05] text-white flex items-center justify-center font-black text-lg shadow-sm shrink-0">
+                {activeOrgName.substring(0, 2).toUpperCase()}
+              </div>
+              <div className="min-w-0">
+                <div className="flex items-center gap-2">
+                  <span className="bg-[#FD5C05]/10 text-[#FD5C05] text-[9px] font-black uppercase tracking-wider px-2.5 py-0.5 rounded-full border border-[#FD5C05]/20 shrink-0">
+                    Active Organization Profile
+                  </span>
+                  {activeOrg?.verified && <VerifiedBadge className="h-4 w-4 shrink-0" />}
+                </div>
+                <h1 className="text-xl md:text-2xl font-black text-[#2A2621] uppercase tracking-tight mt-1 truncate" style={{ fontFamily: 'var(--font-display)' }}>
+                  {activeOrgName}
+                </h1>
+                <p className="text-xs text-[#5A554E] font-medium">Managed as officer by {currentUser.name}</p>
+              </div>
+            </div>
 
-        {/* Search Bar */}
-        <div className="relative max-w-xl">
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-[#5A554E] pointer-events-none" />
-          <input
-            ref={searchInputRef}
-            type="text"
-            value={searchQuery}
-            onChange={e => setSearchQuery(e.target.value)}
-            placeholder="Search events, organizations, or services…"
-            className="w-full pl-10 pr-10 py-2.5 rounded-xl bg-white border border-black/[0.06] text-xs text-[#2A2621] placeholder-[#5A554E]/60 focus:outline-none focus:border-[#FD5C05]/40 shadow-sm font-medium"
-          />
-          {searchQuery && (
+            <div className="flex flex-wrap items-center gap-2 shrink-0">
+              <button
+                onClick={() => router.push('/student/create')}
+                className="px-4 py-2 bg-[#FD5C05] hover:bg-[#CC3D00] text-white text-xs font-black uppercase tracking-wider rounded-xl transition-all shadow-sm flex items-center gap-1.5 border-none cursor-pointer"
+              >
+                <Plus className="h-4 w-4" /> Create Event
+              </button>
+              {activeOrg && (
+                <button
+                  onClick={() => router.push(`/student/organizations/${activeOrg.id}`)}
+                  className="px-4 py-2 bg-[#2A2621] hover:bg-black text-white text-xs font-black uppercase tracking-wider rounded-xl transition-all shadow-sm flex items-center gap-1.5 border-none cursor-pointer"
+                >
+                  <Home className="h-3.5 w-3.5" /> Org Page
+                </button>
+              )}
+              <button
+                onClick={() => setActiveProfile({ type: 'student' })}
+                className="px-3 py-2 bg-black/[0.04] hover:bg-black/10 text-[#2A2621] text-xs font-bold uppercase tracking-wider rounded-xl transition-all border-none cursor-pointer"
+                title="Switch back to Student Personal Profile"
+              >
+                Switch to Personal
+              </button>
+            </div>
+          </div>
+
+          {/* Org Workspace Tabs Toggle */}
+          <div className="flex items-center gap-2 border-t border-black/[0.05] pt-3 text-xs font-bold">
             <button
-              onClick={() => setSearchQuery('')}
-              className="absolute right-3 top-1/2 -translate-y-1/2 h-6 w-6 rounded-full bg-black/[0.06] flex items-center justify-center hover:bg-black/10 cursor-pointer"
+              onClick={() => setOrgDashboardTab('org-events')}
+              className={`px-3.5 py-1.5 rounded-xl transition-all cursor-pointer ${
+                orgDashboardTab === 'org-events'
+                  ? 'bg-[#FD5C05]/10 text-[#FD5C05] font-black'
+                  : 'text-[#5A554E] hover:bg-black/[0.04]'
+              }`}
             >
-              <X className="h-3.5 w-3.5 text-[#5A554E]" />
+              {activeOrgName} Events ({myOrgEvents.length})
             </button>
-          )}
+            <button
+              onClick={() => setOrgDashboardTab('campus-feed')}
+              className={`px-3.5 py-1.5 rounded-xl transition-all cursor-pointer ${
+                orgDashboardTab === 'campus-feed'
+                  ? 'bg-[#FD5C05]/10 text-[#FD5C05] font-black'
+                  : 'text-[#5A554E] hover:bg-black/[0.04]'
+              }`}
+            >
+              Campus Feed Preview
+            </button>
+          </div>
         </div>
-      </div>
+      )}
+
+      {/* ── Student Personal Welcome Header ── */}
+      {!isOrgMode && (
+        <div className="border-b border-black/[0.04] pb-4 space-y-3.5 text-left">
+          <div>
+            <h1 className="font-black text-2xl md:text-3xl text-[#2A2621] tracking-tight" style={{ fontFamily: 'var(--font-display)' }}>
+              Yo {currentUser.name.split(' ')[0]}!
+            </h1>
+            <p className="text-xs text-[#5A554E] font-semibold mt-1">
+              What's happening on campus today?
+            </p>
+          </div>
+
+          {/* Search Bar */}
+          <div className="relative max-w-xl">
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-[#5A554E] pointer-events-none" />
+            <input
+              ref={searchInputRef}
+              type="text"
+              value={searchQuery}
+              onChange={e => setSearchQuery(e.target.value)}
+              placeholder="Search events, organizations, or services…"
+              className="w-full pl-10 pr-10 py-2.5 rounded-xl bg-white border border-black/[0.06] text-xs text-[#2A2621] placeholder-[#5A554E]/60 focus:outline-none focus:border-[#FD5C05]/40 shadow-sm font-medium"
+            />
+            {searchQuery && (
+              <button
+                onClick={() => setSearchQuery('')}
+                className="absolute right-3 top-1/2 -translate-y-1/2 h-6 w-6 rounded-full bg-black/[0.06] flex items-center justify-center hover:bg-black/10 cursor-pointer"
+              >
+                <X className="h-3.5 w-3.5 text-[#5A554E]" />
+              </button>
+            )}
+          </div>
+        </div>
+      )}
 
       {/* ── Segmented Feed Toggle & Filter Controls ── */}
       <div className="bg-white/40 border border-black/[0.03] rounded-2xl p-3 space-y-2.5 shadow-sm">
@@ -450,23 +566,28 @@ export default function StudentDashboardPage() {
       {/* ── Main Dashboard Layout ── */}
       <div className="max-w-5xl mx-auto space-y-5">
           <div className="text-left space-y-1">
-            <h2 className="font-black tracking-tight text-[#2A2621] flex items-center gap-1.5" style={{ fontFamily: 'var(--font-display)' }}>
-              {activeFeed === 'official' ? 'Livingstone College' : 'For You'}
+            <h2 className="font-black tracking-tight text-[#2A2621] flex items-center gap-1.5 uppercase" style={{ fontFamily: 'var(--font-display)' }}>
+              {isOrgMode && orgDashboardTab === 'org-events'
+                ? `${activeOrgName} Experiences`
+                : (activeFeed === 'official' ? 'Livingstone College' : 'For You')
+              }
             </h2>
             <p className="text-xs font-bold text-[#5A554E] uppercase tracking-wider">
-              {activeFeed === 'official' 
-                ? 'Official school and organization events.' 
-                : 'Student-created promotions and community activities.'
+              {isOrgMode && orgDashboardTab === 'org-events'
+                ? `Experiences created and hosted by ${activeOrgName}.`
+                : (activeFeed === 'official' 
+                  ? 'Official school and organization events.' 
+                  : 'Student-created promotions and community activities.')
               }
             </p>
             <span className="text-[10px] font-extrabold text-[#5A554E] block pt-1">
-              Showing {sortedFilteredItems.length} {activeFeed === 'official' ? 'events' : 'postings'}
+              Showing {(isOrgMode && orgDashboardTab === 'org-events' ? filteredOrgEvents : sortedFilteredItems).length} events
             </span>
           </div>
 
-          {sortedFilteredItems.length > 0 ? (
+          {(isOrgMode && orgDashboardTab === 'org-events' ? filteredOrgEvents : sortedFilteredItems).length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-              {sortedFilteredItems.map((item) => {
+              {(isOrgMode && orgDashboardTab === 'org-events' ? filteredOrgEvents : sortedFilteredItems).map((item) => {
                 const isPromo = !('ownershipType' in item);
                 const event = isPromo ? null : (item as any);
                 const promo = isPromo ? (item as any) : null;
@@ -483,184 +604,18 @@ export default function StudentDashboardPage() {
 
                 const cardId = item.id === 'evt-career-night' ? 'event-card-evt-career-night' : `event-card-${item.id}`;
                 return (
-                  <motion.div
+                  <EventCard
                     key={item.id}
-                    id={cardId}
-                    initial={{ opacity: 0, y: 15 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    data-tour="event-card"
-                    className="bg-white rounded-3xl border border-black/[0.04] shadow-sm hover:shadow-md transition-all flex flex-col justify-between overflow-hidden group relative"
-                  >
-                    {/* Event/Promo Image Banner */}
-                    <div
-                       className="relative h-36 w-full bg-[#2A2621] overflow-hidden cursor-pointer"
-                      onClick={() => {
-                        if (isPromo && promo) {
-                          window.location.href = `mailto:${promo.contactInfo}?subject=Inquiry regarding: ${promo.title}`;
-                        } else if (event) {
-                          router.push(`/events/${event.id}`);
-                        }
-                      }}
-                    >
-                      <img
-                        src={getEventImg(coverImgUrl, item.id)}
-                        alt={item.title}
-                        className="absolute inset-0 h-full w-full object-cover group-hover:scale-105 transition-transform duration-700 opacity-90"
-                      />
-                      {/* Dark overlay gradient */}
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
-
-                      {/* Left Badge: Category */}
-                      <div className="absolute top-4 left-4 z-10">
-                        <span className="rounded-full bg-white/90 border border-[#D8D2BC]/40 px-2.5 py-1 text-[8px] font-extrabold uppercase text-[#2A2621] shadow-sm">
-                          {isPromo ? 'PROMOTION' : (event?.category || '')}
-                        </span>
-                      </div>
-
-                      {/* Right Badge: Cost */}
-                      <div className="absolute top-4 right-12 z-10">
-                        <span className="rounded-full bg-[#FD5C05] text-white font-black px-2.5 py-1 text-[8px] uppercase shadow-sm">
-                          {isPromo ? 'STUDENT SERVICE' : (event?.free ? 'FREE' : 'TICKETED')}
-                        </span>
-                      </div>
-
-                      {/* Bookmark Button */}
-                      <button
-                        type="button"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          e.preventDefault();
-                          saveToggle(item.id);
-                        }}
-                        className="absolute top-3.5 right-3.5 z-20 cursor-pointer focus:outline-none p-1 group"
-                        title={isSaved ? "Unsave Event" : "Save Event"}
-                      >
-                        <Bookmark 
-                          className={`h-5 w-5 transition-all duration-150 ease-in-out ${
-                            isSaved 
-                              ? 'fill-[#FD5C05] text-[#FD5C05]' 
-                              : 'text-white hover:text-[#FD5C05]/90 drop-shadow-[0_1px_2px_rgba(0,0,0,0.5)]'
-                          }`} 
-                        />
-                      </button>
-
-                      {/* Bottom Overlay: Title preview */}
-                      <div className="absolute bottom-4 left-4 right-4 z-10">
-                        <span className="text-[9px] font-bold text-white/80 uppercase tracking-wider block drop-shadow-sm">
-                          {isPromo ? item.organizer : (event?.organizationName || event?.organizer || '')}
-                        </span>
-                      </div>
-                    </div>
-
-                    {/* Content Section */}
-                    <div className="p-5 flex-1 flex flex-col justify-between space-y-4 text-left">
-                      <div className="space-y-2">
-                        {/* Host details & verified green checkmark */}
-                        <div className="flex items-center gap-1.5">
-                          <p
-                            onClick={() => !isPromo && event?.organizationId && router.push(`/student/organizations/${event.organizationId}`)}
-                            className={`text-[10px] font-extrabold text-[#5A554E] uppercase tracking-wider flex items-center leading-none ${(!isPromo && event?.organizationId) ? 'cursor-pointer hover:underline' : ''}`}
-                          >
-                            {isPromo ? item.organizer : (event?.organizationName || event?.organizer || '')}
-                            {!isPromo && event?.organizationId && organizations.find(o => o.id === event.organizationId)?.verified && (
-                              <VerifiedBadge className="h-3.5 w-3.5 ml-1" />
-                            )}
-                          </p>
-                        </div>
-
-                        {/* Event Title */}
-                        <h3
-                          onClick={() => {
-                            if (isPromo && promo) {
-                              window.location.href = `mailto:${promo.contactInfo}?subject=Inquiry regarding: ${promo.title}`;
-                            } else if (event) {
-                              router.push(`/events/${event.id}`);
-                            }
-                          }}
-                          className="text-base font-bold text-[#2A2621] tracking-tight leading-snug line-clamp-1 hover:text-[#FD5C05] transition-colors cursor-pointer uppercase"
-                          style={{ fontFamily: 'var(--font-display)' }}
-                        >
-                          {item.title}
-                        </h3>
-
-                        {/* Description */}
-                        <p className="text-xs text-[#5A554E] leading-relaxed line-clamp-2">
-                          {item.description}
-                        </p>
-                      </div>
-
-                      {/* Event/Promo Details: Date & Time, Location/Contact */}
-                      <div className="space-y-2 pt-3 border-t border-black/[0.04]">
-                        <div className="flex items-center gap-2 text-[10px] font-extrabold text-[#2A2621]/80 uppercase">
-                          <Calendar className="h-3.5 w-3.5 text-[#2A2621]" />
-                          <span>{monthName} {day} {!isPromo && event && `• ${event.time}`}</span>
-                        </div>
-                        <div className="flex items-center gap-2 text-[10px] font-bold text-[#5A554E] uppercase truncate">
-                          {isPromo && promo ? (
-                            <>
-                              <Mail className="h-3.5 w-3.5 text-[#5A554E]" />
-                              <span className="truncate">{promo.contactInfo}</span>
-                            </>
-                          ) : (
-                            <>
-                              <MapPin className="h-3.5 w-3.5 text-[#5A554E]" />
-                              <span className="truncate">{event?.location || ''}</span>
-                            </>
-                          )}
-                        </div>
-                      </div>
-
-                      {/* Attendees Avatars Preview */}
-                      {!isPromo && event && event.attendees && event.attendees.length > 0 && (
-                        <div className="flex items-center gap-2 pt-1">
-                          <div className="flex -space-x-1.5">
-                            {event.attendees.slice(0, 3).map((name: string, i: number) => (
-                              <div
-                                key={i}
-                                className="h-5 w-5 rounded-full border border-white bg-slate-200 flex items-center justify-center text-[7px] font-black text-gray-700"
-                              >
-                                {name.substring(0, 2).toUpperCase()}
-                              </div>
-                            ))}
-                          </div>
-                          <span className="text-[10px] text-[#5A554E] font-semibold">
-                            {event.attendees.length} attending
-                          </span>
-                        </div>
-                      )}
-
-                      {/* Footer Actions (Direct Interaction) */}
-                      <div className="pt-3 border-t border-black/[0.04] flex items-center justify-between gap-2.5">
-                        {isPromo && promo ? (
-                          <a
-                            href={`mailto:${promo.contactInfo}?subject=Inquiry regarding: ${promo.title}`}
-                            className="flex-1 py-2 rounded-xl text-[10px] font-black uppercase tracking-wider bg-[#2A2621] text-white hover:bg-[#2a2a2a] transition-all flex items-center justify-center gap-1.5 cursor-pointer text-center animate-fade-in"
-                          >
-                            <Mail className="h-3.5 w-3.5" />
-                            Email Organizer
-                          </a>
-                        ) : (
-                          event && (
-                            <div className="flex-1 relative">
-                              <Link
-                                href={isPreview ? `/events/${event.id}?preview=true` : `/events/${event.id}`}
-                                className={`w-full py-2 rounded-xl text-[10px] font-black uppercase tracking-wider flex items-center justify-center gap-1.5 cursor-pointer text-center transition-all duration-300 ${
-                                  isPreview && (onboardingStep === 1 || onboardingStep === 0) && event.id === 'evt-career-night'
-                                    ? 'bg-[#FD5C05] text-white ring-2 ring-[#FD5C05] shadow-[0_0_16px_rgba(253,92,5,0.5)] animate-pulse font-black'
-                                    : 'bg-[#2A2621] text-white hover:bg-[#2a2a2a]'
-                                }`}
-                              >
-                                <span>View Event</span>
-                                {isPreview && (onboardingStep === 1 || onboardingStep === 0) && event.id === 'evt-career-night' && (
-                                  <span className="inline-block animate-bounce text-xs ml-1 text-[#FD5C05] font-black font-mono">{"(->)"}</span>
-                                )}
-                              </Link>
-                            </div>
-                          )
-                        )}
-                      </div>
-                    </div>
-                  </motion.div>
+                    event={item}
+                    onClick={() => {
+                      if (isPromo && promo) {
+                        window.location.href = `mailto:${promo.contactInfo}?subject=Inquiry regarding: ${promo.title}`;
+                      } else if (event) {
+                        router.push(`/events/${event.id}`);
+                      }
+                    }}
+                    className="w-full sm:w-full"
+                  />
                 );
               })}
             </div>

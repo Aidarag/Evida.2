@@ -23,6 +23,7 @@ interface EventContextType {
   suspendOrg: (id: string) => Promise<void>;
   requestInfoOrg: (id: string, note: string) => Promise<void>;
   createOrg: (orgData: unknown) => Promise<unknown>;
+  deleteOrg: (id: string) => Promise<boolean>;
   markNotificationRead: (id: string) => Promise<void>;
   clearNotification: (id: string) => Promise<void>;
   resetDatabase: () => Promise<void>;
@@ -31,7 +32,7 @@ interface EventContextType {
 const EventContext = createContext<EventContextType | undefined>(undefined);
 
 export function EventProvider({ children }: { children: ReactNode }) {
-  const { currentUser, setCurrentUser } = useUser();
+  const { currentUser, setCurrentUser, activeProfile, setActiveProfile } = useUser();
   const [events, setEvents] = useState<Event[]>([]);
   const [organizations, setOrganizations] = useState<Organization[]>([]);
   const [notifications, setNotifications] = useState<Notification[]>([]);
@@ -439,6 +440,31 @@ export function EventProvider({ children }: { children: ReactNode }) {
     }
   }, [currentUser, setCurrentUser, fetchData]);
 
+  const deleteOrg = useCallback(async (id: string) => {
+    try {
+      const res = await fetch(`/api/organizations?id=${id}`, { method: 'DELETE' });
+      if (res.ok) {
+        if (activeProfile.type === 'organization' && activeProfile.orgId === id) {
+          setActiveProfile({ type: 'student' });
+        }
+        if (currentUser) {
+          const updatedUserOrgs = (currentUser.organizations || []).filter(oId => oId !== id);
+          const updatedUser = { ...currentUser, organizations: updatedUserOrgs };
+          setCurrentUser(updatedUser);
+          if (typeof window !== 'undefined') {
+            localStorage.setItem('evida-user', JSON.stringify(updatedUser));
+          }
+        }
+        await fetchData();
+        return true;
+      }
+      return false;
+    } catch (e) {
+      console.error(e);
+      return false;
+    }
+  }, [activeProfile, setActiveProfile, currentUser, setCurrentUser, fetchData]);
+
   const markNotificationRead = useCallback(async (id: string) => {
     if (!currentUser) return;
     // 1. Optimistic Update
@@ -516,6 +542,7 @@ export function EventProvider({ children }: { children: ReactNode }) {
         suspendOrg,
         requestInfoOrg,
         createOrg,
+        deleteOrg,
         markNotificationRead,
         clearNotification,
         resetDatabase,

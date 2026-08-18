@@ -4,7 +4,7 @@ import React from 'react';
 import { createPortal } from 'react-dom';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Home, Compass, Plus, User, Settings, BarChart3, Shield, Star, ClipboardList, Building2, Menu, X, Calendar, ChevronDown, ChevronLeft, ChevronRight, Bell, Bookmark, Megaphone, Users, Sparkles } from 'lucide-react';
+import { Home, Compass, Plus, User, Settings, BarChart3, Shield, Star, ClipboardList, Building2, Menu, X, Calendar, ChevronDown, ChevronLeft, ChevronRight, Bell, Bookmark, Megaphone, Users, Sparkles, ArrowLeft, ArrowRight, LogOut } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useUser } from '@/lib/context/UserContext';
 import { useEvents } from '@/lib/context/EventContext';
@@ -92,8 +92,8 @@ export function DesktopNav({
             )}
 
             {/* Logo */}
-            <Link href="/" className="flex items-center gap-2 group">
-              <EvidaLogo size={28} lightMode={true} />
+            <Link href="/" className="flex items-center group">
+              <EvidaLogo size={32} lightMode={true} />
             </Link>
             
             {/* Public links */}
@@ -214,6 +214,7 @@ export function DesktopNav({
 // ─────────────────────────────────────────────────
 export const MobileBottomNav = React.memo(function MobileBottomNav({ variant = 'student' }: { variant?: 'student' | 'school' }) {
   const pathname = usePathname();
+  const { activeProfile } = useUser();
   const [isPreview, setIsPreview] = React.useState(false);
 
   React.useEffect(() => {
@@ -225,12 +226,16 @@ export const MobileBottomNav = React.memo(function MobileBottomNav({ variant = '
     }
   }, []);
 
+  const profileHref = activeProfile?.type === 'organization' && activeProfile.orgId
+    ? `/student/organizations/${activeProfile.orgId}`
+    : '/student/profile';
+
   const studentTabs = [
     { href: '/student/dashboard', icon: Home, label: 'Home' },
     { href: '/student/explore', icon: Compass, label: 'Explore', disabledInPreview: true },
     { href: '/student/create', icon: Plus, label: 'Create', isSpecial: true, disabledInPreview: true },
     { href: '/student/calendar', icon: Calendar, label: 'Calendar', disabledInPreview: true },
-    { href: '/student/profile', icon: User, label: 'Profile', disabledInPreview: true },
+    { href: profileHref, icon: User, label: activeProfile?.type === 'organization' ? 'Org Profile' : 'Profile', disabledInPreview: true },
   ];
 
   const schoolTabs = [
@@ -333,19 +338,24 @@ export function DesktopSidebar({
   onChangeState?: (state: 'expanded' | 'collapsed' | 'hidden') => void;
 }) {
   const pathname = usePathname();
+  const { logout, activeProfile } = useUser();
+
+  const profileHref = activeProfile?.type === 'organization' && activeProfile.orgId
+    ? `/student/organizations/${activeProfile.orgId}`
+    : '/student/profile';
 
   const studentLinks = [
     { href: '/student/dashboard', icon: Home, label: 'Home' },
     { href: '/student/explore', icon: Compass, label: 'Explore' },
     { href: '/student/calendar', icon: Calendar, label: 'Calendar' },
-    { href: '/student/profile', icon: User, label: 'Profile' },
+    { href: profileHref, icon: User, label: activeProfile?.type === 'organization' ? 'Org Profile' : 'Profile' },
     { href: '/student/create', icon: Plus, label: 'Create Event' },
   ];
 
   const schoolLinks = [
     { href: '/school/dashboard', icon: Home, label: 'Overview' },
     { href: '/school/review', icon: ClipboardList, label: 'Review Queue' },
-    { href: '/school/featured', icon: Star, label: 'Featured Events' },
+    { href: '/school/analytics', icon: BarChart3, label: 'Analytics' },
     { href: '/school/organizations', icon: Building2, label: 'Organizations' },
   ];
 
@@ -437,7 +447,7 @@ export function DesktopSidebar({
       </div>
 
       <div className="space-y-3">
-        <div className="border-t border-black/[0.04] pt-4">
+        <div className="border-t border-black/[0.04] pt-4 space-y-1">
           {variant === 'student' ? (
             <Link 
               href="/school/dashboard" 
@@ -461,6 +471,17 @@ export function DesktopSidebar({
               {state !== 'collapsed' && <span>Student Portal</span>}
             </Link>
           )}
+
+          <button 
+            onClick={logout}
+            title={state === 'collapsed' ? "Sign Out" : undefined}
+            className={`w-full flex items-center rounded-xl text-xs text-red-600 hover:bg-red-50 hover:text-red-700 transition-colors cursor-pointer border-none bg-transparent ${
+              state === 'collapsed' ? 'justify-center p-2.5 w-10 h-10 mx-auto' : 'gap-3 px-4 py-2.5'
+            }`}
+          >
+            <LogOut className="h-4 w-4 shrink-0 text-red-500" />
+            {state !== 'collapsed' && <span className="font-extrabold">Sign Out</span>}
+          </button>
         </div>
       </div>
     </aside>
@@ -480,18 +501,24 @@ export function TabletDrawerSidebar({
   onClose: () => void; 
 }) {
   const pathname = usePathname();
+  const { logout, activeProfile } = useUser();
+
+  const profileHref = activeProfile?.type === 'organization' && activeProfile.orgId
+    ? `/student/organizations/${activeProfile.orgId}`
+    : '/student/profile';
+
   const studentLinks = [
     { href: '/student/dashboard', icon: Home, label: 'Home' },
     { href: '/student/explore', icon: Compass, label: 'Explore' },
     { href: '/student/calendar', icon: Calendar, label: 'Calendar' },
-    { href: '/student/profile', icon: User, label: 'Profile' },
+    { href: profileHref, icon: User, label: activeProfile?.type === 'organization' ? 'Org Profile' : 'Profile' },
     { href: '/student/create', icon: Plus, label: 'Create Event' },
   ];
 
   const schoolLinks = [
     { href: '/school/dashboard', icon: Home, label: 'Overview' },
     { href: '/school/review', icon: ClipboardList, label: 'Review Queue' },
-    { href: '/school/featured', icon: Star, label: 'Featured Events' },
+    { href: '/school/analytics', icon: BarChart3, label: 'Analytics' },
     { href: '/school/organizations', icon: Building2, label: 'Organizations' },
   ];
 
@@ -517,7 +544,7 @@ export function TabletDrawerSidebar({
             animate={{ x: 0 }}
             exit={{ x: '-100%' }}
             transition={{ type: 'spring', damping: 25, stiffness: 220 }}
-            className="fixed top-0 left-0 bottom-0 z-55 w-64 bg-[#D8D2BC] border-r border-black/[0.04] flex flex-col justify-between p-6 shadow-2xl lg:hidden text-left"
+            className="fixed top-0 left-0 bottom-0 z-55 w-64 bg-[#FAF9F5] border-r border-black/[0.04] flex flex-col justify-between p-6 shadow-2xl lg:hidden text-left"
           >
             <div className="space-y-4">
               {/* Drawer Header with Close Button */}
@@ -562,7 +589,7 @@ export function TabletDrawerSidebar({
             </div>
 
             <div className="space-y-3">
-              <div className="border-t border-black/[0.04] pt-4">
+              <div className="border-t border-black/[0.04] pt-4 space-y-1">
                 {variant === 'student' ? (
                   <Link 
                     href="/school/dashboard" 
@@ -582,6 +609,16 @@ export function TabletDrawerSidebar({
                     Student Portal
                   </Link>
                 )}
+                <button 
+                  onClick={() => {
+                    onClose();
+                    logout();
+                  }}
+                  className="w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-xs font-extrabold text-red-600 hover:bg-red-50 transition-colors cursor-pointer border-none bg-transparent"
+                >
+                  <LogOut className="h-4 w-4 text-red-500" />
+                  <span>Sign Out</span>
+                </button>
               </div>
             </div>
           </motion.aside>
@@ -606,23 +643,9 @@ function getTailwindBgColor(color: string) {
 
 export function ProfileSwitcher() {
   const router = useRouter();
-  const { currentUser, activeProfile, setActiveProfile } = useUser();
-  const { organizations, createOrg } = useEvents();
+  const { currentUser, activeProfile, setActiveProfile, logout } = useUser();
+  const { organizations } = useEvents();
   const [dropdownOpen, setDropdownOpen] = React.useState(false);
-  const [createModalOpen, setCreateModalOpen] = React.useState(false);
-  const [onboardingStep, setOnboardingStep] = React.useState<number>(1);
-  const [mounted, setMounted] = React.useState(false);
-
-  React.useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  // Form states for creating org
-  const [orgName, setOrgName] = React.useState('');
-  const [orgDesc, setOrgDesc] = React.useState('');
-  const [orgColor, setOrgColor] = React.useState('indigo');
-  const [orgCategory, setOrgCategory] = React.useState('');
-  const [isSubmitting, setIsSubmitting] = React.useState(false);
 
   const dropdownRef = React.useRef<HTMLDivElement>(null);
 
@@ -639,50 +662,36 @@ export function ProfileSwitcher() {
   if (!currentUser) return null;
 
   // Filter organizations the user is member of/officer of
-  const myOrgs = organizations.filter(org => currentUser.organizations?.includes(org.id));
+  const myOrgs = organizations.filter(org => {
+    if (!currentUser) return false;
+    const isIdMatch = (currentUser.organizations || []).includes(org.id);
+    const isMemberName = org.members?.some(m => m?.toLowerCase() === currentUser.name?.toLowerCase());
+    const isMemberUsername = Boolean(currentUser.username && org.members?.some(m => m?.toLowerCase() === currentUser.username?.toLowerCase()));
+    const isCreator = Boolean(
+      org.creatorUsername && (
+        org.creatorUsername.toLowerCase() === currentUser.username?.toLowerCase() ||
+        org.creatorUsername.toLowerCase() === currentUser.name?.toLowerCase()
+      )
+    );
+    const hasRole = Boolean(
+      (currentUser.name && org.memberRoles?.[currentUser.name]) ||
+      (currentUser.username && org.memberRoles?.[currentUser.username])
+    );
+    return isIdMatch || isMemberName || isMemberUsername || isCreator || hasRole;
+  });
 
   const handleSwitchToStudent = () => {
     setActiveProfile({ type: 'student' });
     setDropdownOpen(false);
+    router.push('/student/dashboard');
+    router.refresh();
   };
 
   const handleSwitchToOrg = (orgId: string, name: string) => {
     setActiveProfile({ type: 'organization', orgId, name });
-    router.push(`/organization/${orgId}/dashboard`);
     setDropdownOpen(false);
-  };
-
-  const handleCreateOrg = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!orgName.trim() || !orgDesc.trim()) return;
-    setIsSubmitting(true);
-    try {
-      const newOrg = (await createOrg({
-        name: orgName.trim(),
-        description: orgDesc.trim(),
-        category: orgCategory || 'Social',
-        logoColor: orgColor
-      })) as any;
-      if (newOrg) {
-        // Automatically switch active profile to the new organization!
-        setActiveProfile({
-          type: 'organization',
-          orgId: newOrg.id,
-          name: newOrg.name
-        });
-        router.push(`/organization/${newOrg.id}/dashboard`);
-        setCreateModalOpen(false);
-        setOnboardingStep(1);
-        setOrgName('');
-        setOrgDesc('');
-        setOrgColor('indigo');
-        setOrgCategory('');
-      }
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setIsSubmitting(false);
-    }
+    router.push(`/student/organizations/${orgId}`);
+    router.refresh();
   };
 
   return (
@@ -705,7 +714,7 @@ export function ProfileSwitcher() {
         ) : (
           <>
             <div
-              className="h-7 w-7 rounded-full flex items-center justify-center text-white text-[10px] font-black select-none shrink-0 shadow-sm"
+              className="h-7 w-7 rounded-full flex items-center justify-center text-white text-[10px] font-black shrink-0 shadow-sm"
               style={{
                 backgroundColor:
                   activeProfile.orgId &&
@@ -793,364 +802,33 @@ export function ProfileSwitcher() {
               })}
             </div>
 
-            {/* Action options */}
-            {myOrgs.length === 0 && (
-              <div className="p-1.5 space-y-1">
-                <button
-                  onClick={() => {
-                    setDropdownOpen(false);
-                    setOnboardingStep(1);
-                    setCreateModalOpen(true);
-                  }}
-                  className="w-full text-left flex items-center gap-2 px-3 py-2 rounded-xl hover:bg-[#EAE4CF]/20 text-[#2A2621] font-bold text-xs cursor-pointer transition-all"
-                >
-                  <Plus className="h-4 w-4 text-[#FD5C05] stroke-[3]" />
-                  <span className="truncate">Create Organization</span>
-                </button>
-              </div>
-            )}
+            {/* Always visible Create Organization & Sign Out Actions */}
+            <div className="p-1.5 space-y-1">
+              <button
+                onClick={() => {
+                  setDropdownOpen(false);
+                  router.push('/student/organizations/create');
+                }}
+                className="w-full text-left flex items-center gap-2 px-3 py-2 rounded-xl hover:bg-[#FD5C05]/10 text-[#FD5C05] font-extrabold text-xs cursor-pointer transition-all"
+              >
+                <Plus className="h-4 w-4 text-[#FD5C05] stroke-[3]" />
+                <span className="truncate">Create New Organization</span>
+              </button>
+
+              <button
+                onClick={() => {
+                  setDropdownOpen(false);
+                  logout();
+                }}
+                className="w-full text-left flex items-center gap-2 px-3 py-2 rounded-xl text-red-600 hover:bg-red-50 font-extrabold text-xs cursor-pointer transition-all border-none bg-transparent"
+              >
+                <LogOut className="h-4 w-4 text-red-500" />
+                <span className="truncate">Sign Out</span>
+              </button>
+            </div>
           </motion.div>
         )}
       </AnimatePresence>
-
-      {/* Register Organization Modal Overlay / Onboarding Step-by-Step */}
-      {createModalOpen && mounted && createPortal(
-        <div className="fixed inset-0 z-[9999] flex items-center justify-center sm:p-4 p-0 bg-black/80 backdrop-blur-md animate-fade-in text-left">
-          <AnimatePresence mode="wait">
-            {onboardingStep === 1 && (
-              <motion.div
-                key="step1"
-                initial={{ opacity: 0, y: 15 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -15 }}
-                onClick={() => setOnboardingStep(2)}
-                className="bg-[#08080C] border border-white/[0.08] w-full sm:max-w-sm rounded-none sm:rounded-[32px] p-7 shadow-2xl relative text-white flex flex-col justify-between h-full sm:h-[490px] cursor-pointer select-none overflow-y-auto"
-              >
-                <div className="flex justify-end items-center">
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setCreateModalOpen(false);
-                      setOnboardingStep(1);
-                    }}
-                    className="h-8 w-8 rounded-full bg-white/5 flex items-center justify-center text-white/60 hover:text-white transition-colors cursor-pointer border-none"
-                    title="Close"
-                  >
-                    ✕
-                  </button>
-                </div>
-
-                <div className="space-y-4 my-auto">
-                  <span className="text-[#FD5C05] text-[10px] font-black uppercase tracking-widest block">
-                    Exclusive Feature
-                  </span>
-                  <h3 className="text-2xl font-black tracking-tight leading-tight uppercase font-sans">
-                    Create Your Organization
-                  </h3>
-                  <p className="text-xs text-white/65 leading-relaxed font-semibold">
-                    Give your club, student organization, campus department, or initiative an official home at Livingstone College on Evida.
-                  </p>
-                  
-                  <div className="space-y-3 pt-4 border-t border-white/5">
-                    {[
-                      { Icon: Calendar, text: 'Create official campus events' },
-                      { Icon: Megaphone, text: 'Share announcements and promotions' },
-                      { Icon: Users, text: 'Recruit and manage members' },
-                      { Icon: Sparkles, text: 'Build your campus presence' },
-                    ].map((item, idx) => (
-                      <div key={idx} className="flex items-center gap-3 text-xs">
-                        <item.Icon className="h-4 w-4 text-[#FD5C05] shrink-0" />
-                        <span className="font-semibold text-white/85">{item.text}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                <div className="flex flex-col items-center gap-2 pt-4">
-                  <div className="flex gap-1.5 justify-center mb-1">
-                    <span className="h-1.5 w-1.5 rounded-full bg-[#FD5C05]" />
-                    <span className="h-1.5 w-1.5 rounded-full bg-white/20" />
-                    <span className="h-1.5 w-1.5 rounded-full bg-white/20" />
-                  </div>
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-white/40 animate-pulse">
-                    Tap to continue
-                  </span>
-                </div>
-              </motion.div>
-            )}
-
-            {onboardingStep === 2 && (
-              <motion.div
-                key="step2"
-                initial={{ opacity: 0, y: 15 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -15 }}
-                onClick={() => setOnboardingStep(3)}
-                className="bg-[#08080C] border border-white/[0.08] w-full sm:max-w-sm rounded-none sm:rounded-[32px] p-7 shadow-2xl relative text-white flex flex-col justify-between h-full sm:h-[490px] cursor-pointer select-none overflow-y-auto"
-              >
-                <div className="flex justify-between items-center">
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setOnboardingStep(1);
-                    }}
-                    className="text-xs font-black uppercase text-white/40 hover:text-white transition-colors cursor-pointer border-none bg-transparent"
-                  >
-                    ← Back
-                  </button>
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setCreateModalOpen(false);
-                      setOnboardingStep(1);
-                    }}
-                    className="h-8 w-8 rounded-full bg-white/5 flex items-center justify-center text-white/60 hover:text-white transition-colors cursor-pointer border-none"
-                    title="Close"
-                  >
-                    ✕
-                  </button>
-                </div>
-
-                <div className="space-y-4 my-auto">
-                  <span className="text-[#FD5C05] text-[10px] font-black uppercase tracking-widest block">
-                    Exclusive Feature
-                  </span>
-                  <h3 className="text-2xl font-black tracking-tight leading-tight uppercase font-sans">
-                    Officially Recognized
-                  </h3>
-                  <p className="text-xs text-white/65 leading-relaxed font-semibold">
-                    Organizations approved by Livingstone College receive an Official Evida Verification Badge.
-                  </p>
-
-                  <div className="relative py-3.5 px-4 bg-[#111116] border border-white/5 rounded-2xl flex flex-col gap-2.5 text-[10px] font-sans text-left mt-2">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="h-7 w-7 rounded-lg bg-[#FD5C05] flex items-center justify-center text-[10px] font-black text-white shrink-0">
-                          BB
-                        </div>
-                        <div>
-                          <div className="flex items-center gap-1">
-                            <span className="font-extrabold text-[10px] text-white">Blue Bears Tech</span>
-                            <span className="h-3.5 w-3.5 bg-[#FD5C05] text-white rounded-full flex items-center justify-center text-[7px] font-black shadow-sm" title="Verified Organization">✓</span>
-                          </div>
-                          <span className="text-[7.5px] text-white/50 font-semibold uppercase tracking-wider block">@bluebearstech</span>
-                        </div>
-                      </div>
-                      <span className="text-[7.5px] text-[#FD5C05] font-bold uppercase tracking-wider bg-[#FD5C05]/10 px-2 py-0.5 rounded border border-[#FD5C05]/20 shrink-0">
-                        Official Group
-                      </span>
-                    </div>
-                    <div className="border-t border-white/5 pt-2.5 space-y-1">
-                      <p className="font-bold text-[9px] text-white/95 leading-normal">Join Livingstone College's Blue Bears Tech Club for our weekly campus workshop! 🎉</p>
-                      <p className="text-[9px] text-white/70 leading-normal">Building software, design systems, and campus events together.</p>
-                      <div className="h-16 w-full rounded-xl bg-[#1c1c26] flex flex-col items-center justify-center text-[8px] font-extrabold text-white/40 uppercase tracking-widest relative overflow-hidden mt-1.5 border border-white/5">
-                        <span className="relative z-15 text-white/90">Free Blue Bears Swag & Refreshments</span>
-                        <span className="text-[6.5px] text-[#FD5C05] block mt-0.5 tracking-wider">Livingstone Student Center</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="flex flex-col items-center gap-2 pt-4">
-                  <div className="flex gap-1.5 justify-center mb-1">
-                    <span className="h-1.5 w-1.5 rounded-full bg-white/20" />
-                    <span className="h-1.5 w-1.5 rounded-full bg-[#FD5C05]" />
-                    <span className="h-1.5 w-1.5 rounded-full bg-white/20" />
-                  </div>
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-white/40 animate-pulse">
-                    Tap to continue
-                  </span>
-                </div>
-              </motion.div>
-            )}
-
-            {onboardingStep === 3 && (
-              <motion.div
-                key="step3"
-                initial={{ opacity: 0, y: 15 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -15 }}
-                className="bg-[#08080C] border border-white/[0.08] w-full sm:max-w-sm rounded-none sm:rounded-[32px] p-7 shadow-2xl relative text-white flex flex-col justify-between h-full sm:h-[490px] select-none overflow-y-auto"
-              >
-                <div className="flex justify-between items-center">
-                  <button
-                    onClick={() => setOnboardingStep(2)}
-                    className="text-xs font-black uppercase text-white/40 hover:text-white transition-colors cursor-pointer border-none bg-transparent"
-                  >
-                    ← Back
-                  </button>
-                  <button
-                    onClick={() => {
-                      setCreateModalOpen(false);
-                      setOnboardingStep(1);
-                    }}
-                    className="h-8 w-8 rounded-full bg-white/5 flex items-center justify-center text-white/60 hover:text-white transition-colors cursor-pointer border-none"
-                    title="Close"
-                  >
-                    ✕
-                  </button>
-                </div>
-
-                <div className="space-y-4 my-auto text-left">
-                  <span className="text-[#FD5C05] text-[10px] font-black uppercase tracking-widest block">
-                    Easy as 1, 2... That's it!
-                  </span>
-                  <h3 className="text-2xl font-black tracking-tight leading-tight uppercase font-sans">
-                    Ready to verify?
-                  </h3>
-                  
-                  <div className="space-y-3.5 pt-2 text-xs">
-                    <div className="flex gap-2.5">
-                      <span className="font-black text-[#FD5C05]">1.</span>
-                      <p className="font-semibold text-white/80 leading-relaxed">Your organization must belong to Livingstone College.</p>
-                    </div>
-                    <div className="flex gap-2.5">
-                      <span className="font-black text-[#FD5C05]">2.</span>
-                      <p className="font-semibold text-white/80 leading-relaxed">A campus administrator will review your request in the queue.</p>
-                    </div>
-                    <div className="flex gap-2.5">
-                      <span className="font-black text-[#FD5C05]">3.</span>
-                      <p className="font-semibold text-white/80 leading-relaxed">Once approved, your organization will receive an Official Evida Verification Badge.</p>
-                    </div>
-                  </div>
-
-                  <p className="text-[10px] text-white/45 italic leading-relaxed pt-2">
-                    Livingstone College verifies organizations on Evida to ensure students can trust official campus events.
-                  </p>
-                </div>
-
-                <div className="flex flex-col items-center gap-3 w-full pt-4">
-                  <div className="flex gap-1.5 justify-center mb-1">
-                    <span className="h-1.5 w-1.5 rounded-full bg-white/20" />
-                    <span className="h-1.5 w-1.5 rounded-full bg-white/20" />
-                    <span className="h-1.5 w-1.5 rounded-full bg-[#FD5C05]" />
-                  </div>
-
-                  <button
-                    onClick={() => setOnboardingStep(4)}
-                    className="w-full py-3.5 rounded-full bg-gradient-to-r from-[#FD5C05] to-[#FC7C0B] hover:opacity-95 text-white text-xs font-black uppercase tracking-widest transition-all shadow-lg shadow-[#FD5C05]/20 active:scale-95 duration-150 cursor-pointer border-none"
-                  >
-                    Create Organization
-                  </button>
-                </div>
-              </motion.div>
-            )}
-
-            {onboardingStep === 4 && (
-              <motion.div
-                key="step4"
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                className="bg-[#D8D2BC] border border-[#2A2621]/10 w-full sm:max-w-md rounded-none sm:rounded-3xl p-6 shadow-xl space-y-5 h-full sm:h-auto overflow-y-auto"
-              >
-                <div className="flex justify-between items-center">
-                  <button
-                    onClick={() => setOnboardingStep(3)}
-                    className="text-xs font-black uppercase text-[#5A554E] hover:text-[#2A2621] transition-colors cursor-pointer border-none bg-transparent"
-                  >
-                    ← Back
-                  </button>
-                  <button
-                    onClick={() => {
-                      setCreateModalOpen(false);
-                      setOnboardingStep(1);
-                    }}
-                    className="h-8 w-8 rounded-full bg-[#EAE4CF] flex items-center justify-center text-[#2A2621]/60 hover:text-[#2A2621] transition-colors cursor-pointer border-none"
-                    title="Close"
-                  >
-                    ✕
-                  </button>
-                </div>
-
-                <div className="space-y-1 text-left">
-                  <h3 className="text-lg font-black text-[#2A2621] uppercase tracking-tight" style={{ fontFamily: 'var(--font-display)' }}>
-                    Create Org Profile
-                  </h3>
-                  <p className="text-xs text-[#5A554E] font-medium leading-relaxed">
-                    Establish a new organization identity to manage events, announcements, and officers.
-                  </p>
-                </div>
-
-                <form onSubmit={handleCreateOrg} className="space-y-4">
-                  <div className="space-y-1.5 text-left">
-                    <label className="block text-[10px] font-bold text-[#5A554E] uppercase tracking-widest">
-                      Organization Name
-                    </label>
-                    <input
-                      type="text"
-                      required
-                      placeholder="e.g. Blue Bears Coding Club"
-                      value={orgName}
-                      onChange={e => setOrgName(e.target.value)}
-                      className="w-full bg-white border border-black/[0.06] rounded-xl px-3.5 py-2.5 text-xs text-[#2A2621] focus:outline-none focus:border-[#FD5C05]"
-                    />
-                  </div>
-
-                  <div className="space-y-1.5 text-left">
-                    <label className="block text-[10px] font-bold text-[#5A554E] uppercase tracking-widest">
-                      Organization Category
-                    </label>
-                    <select
-                      required
-                      value={orgCategory}
-                      onChange={e => setOrgCategory(e.target.value)}
-                      className="w-full bg-white border border-black/[0.06] rounded-xl px-3.5 py-2.5 text-xs text-[#2A2621] focus:outline-none focus:border-[#FD5C05]"
-                    >
-                      <option value="" disabled>Select category</option>
-                      <option value="Academic">Academic</option>
-                      <option value="Sports">Sports</option>
-                      <option value="Social">Social</option>
-                      <option value="Professional">Professional</option>
-                      <option value="Cultural">Cultural</option>
-                      <option value="Community Service">Community Service</option>
-                      <option value="Arts">Arts</option>
-                      <option value="Technology">Technology</option>
-                      <option value="Religious">Religious</option>
-                    </select>
-                  </div>
-
-                  <div className="space-y-1.5 text-left">
-                    <label className="block text-[10px] font-bold text-[#5A554E] uppercase tracking-widest">
-                      Description
-                    </label>
-                    <textarea
-                      required
-                      rows={3}
-                      placeholder="Describe your organization's mission, goals, and target audience..."
-                      value={orgDesc}
-                      onChange={e => setOrgDesc(e.target.value)}
-                      className="w-full bg-white border border-black/[0.06] rounded-xl px-3.5 py-2.5 text-xs text-[#2A2621] focus:outline-none focus:border-[#FD5C05] resize-none"
-                    />
-                  </div>
-
-
-
-                  <div className="pt-3 border-t border-black/[0.04] flex gap-3.5 justify-end">
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setCreateModalOpen(false);
-                        setOnboardingStep(1);
-                      }}
-                      className="px-4 py-2 text-xs font-bold uppercase tracking-wider text-[#5A554E] hover:text-[#2A2621] border-none bg-transparent"
-                    >
-                      Cancel
-                    </button>
-                    <button
-                      type="submit"
-                      disabled={isSubmitting}
-                      className="bg-[#FD5C05] text-white hover:bg-[#CC3D00] px-5 py-2.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all disabled:opacity-55 cursor-pointer border-none shadow-md shadow-[#FD5C05]/20"
-                    >
-                      {isSubmitting ? 'Creating...' : 'Create Profile'}
-                    </button>
-                  </div>
-                </form>
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </div>,
-        document.body
-      )}
     </div>
   );
 }
@@ -1205,7 +883,7 @@ export function NotificationBell() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 8, scale: 0.95 }}
             transition={{ duration: 0.15 }}
-            className="absolute right-0 mt-2.5 w-80 rounded-2xl bg-white border border-black/[0.06] shadow-lg z-50 overflow-hidden divide-y divide-black/[0.04] text-left font-sans"
+            className="fixed sm:absolute top-16 sm:top-full left-4 right-4 sm:left-auto sm:right-0 mt-2.5 sm:w-80 rounded-2xl bg-white border border-black/[0.08] shadow-2xl z-50 overflow-hidden divide-y divide-black/[0.04] text-left font-sans"
           >
             {/* Header */}
             <div className="p-3 bg-[#EAE4CF]/20 flex items-center justify-between">

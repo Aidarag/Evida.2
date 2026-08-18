@@ -250,6 +250,17 @@ function CreateListingPageContent() {
                 <p className="text-xs font-semibold text-[#5A554E] leading-relaxed">
                   Events are activities people attend. Promotions help students discover your services, business, or initiative.
                 </p>
+                {activeProfile.type === 'organization' && (
+                  <div className="bg-white rounded-2xl border border-[#FD5C05]/20 p-3.5 shadow-xs flex items-center gap-3 text-left mt-2">
+                    <div className="h-8 w-8 rounded-xl bg-[#FD5C05] text-white flex items-center justify-center font-black text-xs shrink-0">
+                      {activeProfile.name.substring(0, 2).toUpperCase()}
+                    </div>
+                    <div>
+                      <p className="text-[9px] font-black uppercase text-[#FD5C05] tracking-wider">Publishing as Active Organization</p>
+                      <p className="text-xs font-black text-[#2A2621] uppercase">{activeProfile.name}</p>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
 
