@@ -7,6 +7,42 @@ export const metadata: Metadata = {
   title: 'Evida — The Digital Home of Campus Life',
   description:
     'Discover, create, attend, and remember campus experiences in one place. Evida helps students discover campus events and helps schools manage engagement.',
+  icons: {
+    icon: [
+      { url: '/favicon.ico', sizes: 'any' },
+      { url: '/favicon.svg', type: 'image/svg+xml' },
+      { url: '/favicon-32x32.png', type: 'image/png', sizes: '32x32' },
+      { url: '/favicon-16x16.png', type: 'image/png', sizes: '16x16' },
+    ],
+    shortcut: '/favicon.ico',
+    apple: [
+      { url: '/apple-touch-icon.png', sizes: '180x180', type: 'image/png' },
+    ],
+  },
+  openGraph: {
+    title: 'Evida — The Digital Home of Campus Life',
+    description:
+      'Discover, create, attend, and remember campus experiences in one place.',
+    url: 'https://evida.app',
+    siteName: 'Evida',
+    images: [
+      {
+        url: '/og-image.jpg',
+        width: 1200,
+        height: 675,
+        alt: 'Evida App Preview — The Digital Home of Campus Life',
+      },
+    ],
+    locale: 'fr_FR',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Evida — The Digital Home of Campus Life',
+    description:
+      'Discover, create, attend, and remember campus experiences in one place.',
+    images: ['/og-image.jpg'],
+  },
 };
 
 export default function RootLayout({
