@@ -471,8 +471,11 @@ export default function OrganizationProfilePage() {
           description: editDesc.trim(),
           aboutUs: editAbout.trim(),
           category: editCategory,
-          logoColor: editColor,
-          website: editWebsite.trim(),
+          website: editWebsite.trim()
+            ? (editWebsite.trim().startsWith('http://') || editWebsite.trim().startsWith('https://')
+                ? editWebsite.trim()
+                : `https://${editWebsite.trim()}`)
+            : '',
           email: editEmail.trim(),
           joinSetting: editJoinSetting
         })
@@ -729,8 +732,19 @@ export default function OrganizationProfilePage() {
                   
                   <div className="pt-4 border-t border-black/[0.04] grid gap-3 sm:grid-cols-2 text-xs">
                     <div className="flex items-center gap-2 text-[#5A554E]">
-                      <Globe className="h-4 w-4 text-[#2A2621]" />
-                      <span>{org.website || `${org.name.toLowerCase().replace(/[^a-z0-9]/g, '')}.evida.app`}</span>
+                      <Globe className="h-4 w-4 text-[#2A2621] shrink-0" />
+                      {org.website ? (
+                        <a
+                          href={org.website.startsWith('http') ? org.website : `https://${org.website}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="hover:text-[#FD5C05] hover:underline truncate transition-colors"
+                        >
+                          {org.website.replace(/^https?:\/\//, '')}
+                        </a>
+                      ) : (
+                        <span>{`${org.name.toLowerCase().replace(/[^a-z0-9]/g, '')}.evida.app`}</span>
+                      )}
                     </div>
                     <div className="flex items-center gap-2 text-[#5A554E]">
                       <Mail className="h-4 w-4 text-[#2A2621]" />
@@ -971,8 +985,19 @@ export default function OrganizationProfilePage() {
                   <p className="font-extrabold text-[#FD5C05] uppercase">{org.category || 'Social'}</p>
                 </div>
                 <div className="space-y-1">
-                  <p className="text-[10px] font-bold text-[#5A554E] uppercase tracking-wide">Contact Website</p>
-                  <p className="font-extrabold text-[#2A2621]">{org.website || `${org.name.toLowerCase().replace(/[^a-z0-9]/g, '')}.evida.app`}</p>
+                  <p className="text-[10px] font-bold text-[#5A554E] uppercase tracking-wide">Contact / Social Media</p>
+                  {org.website ? (
+                    <a
+                      href={org.website.startsWith('http') ? org.website : `https://${org.website}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="font-extrabold text-[#2A2621] hover:text-[#FD5C05] hover:underline block truncate transition-colors"
+                    >
+                      {org.website.replace(/^https?:\/\//, '')}
+                    </a>
+                  ) : (
+                    <p className="font-extrabold text-[#2A2621]">{`${org.name.toLowerCase().replace(/[^a-z0-9]/g, '')}.evida.app`}</p>
+                  )}
                 </div>
                 <div className="space-y-1">
                   <p className="text-[10px] font-bold text-[#5A554E] uppercase tracking-wide">Contact Email</p>
@@ -1072,9 +1097,10 @@ export default function OrganizationProfilePage() {
                     </div>
 
                     <div className="space-y-1.5">
-                      <label className="block text-[10px] font-bold text-[#5A554E] uppercase tracking-wider">Website URL</label>
+                      <label className="block text-[10px] font-bold text-[#5A554E] uppercase tracking-wider">Contact / Social Media URL</label>
                       <input
                         type="text"
+                        placeholder="e.g. instagram.com/club, linktr.ee/club, or website"
                         value={editWebsite}
                         onChange={e => setEditWebsite(e.target.value)}
                         className="w-full bg-[#F8F6F0] border border-black/[0.08] rounded-xl px-3.5 py-2.5 text-xs text-[#2A2621] focus:outline-none focus:border-[#FD5C05]"

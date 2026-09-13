@@ -49,6 +49,11 @@ export default function CreateOrganizationPage() {
     setIsSubmitting(true);
     try {
       const cleanSlug = orgName.toLowerCase().replace(/[^a-z0-9]/g, '');
+      const rawUrl = orgWebsite.trim();
+      const formattedWebsite = rawUrl
+        ? (rawUrl.startsWith('http://') || rawUrl.startsWith('https://') ? rawUrl : `https://${rawUrl}`)
+        : `https://${cleanSlug || 'org'}.evida.app`;
+
       const newOrg = (await createOrg({
         name: orgName.trim(),
         description: orgDesc.trim(),
@@ -56,7 +61,7 @@ export default function CreateOrganizationPage() {
         category: orgCategory,
         logoColor: orgColor,
         email: orgEmail.trim() || `contact@${cleanSlug || 'org'}.org`,
-        website: orgWebsite.trim() || `https://${cleanSlug || 'org'}.evida.app`,
+        website: formattedWebsite,
         joinSetting
       })) as any;
 
@@ -265,11 +270,11 @@ export default function CreateOrganizationPage() {
 
                   <div className="space-y-1.5">
                     <label className="block text-xs font-bold uppercase tracking-wider text-[#5A554E]">
-                      Website URL
+                      Contact / Social Media URL
                     </label>
                     <input
                       type="text"
-                      placeholder={`https://${orgName.toLowerCase().replace(/[^a-z0-9]/g, '') || 'club'}.evida.app`}
+                      placeholder="e.g. instagram.com/club, linktr.ee/club, or website"
                       value={orgWebsite}
                       onChange={e => setOrgWebsite(e.target.value)}
                       className="w-full bg-[#F8F6F0] border border-black/[0.08] rounded-xl px-4 py-3 text-xs font-semibold text-[#2A2621] focus:outline-none focus:border-[#FD5C05] focus:bg-white transition-all shadow-xs"
@@ -337,7 +342,7 @@ export default function CreateOrganizationPage() {
 
                   <div className="pt-3 border-t border-black/[0.04] grid gap-2 sm:grid-cols-2 text-[10px] font-semibold text-[#5A554E]">
                     <div className="flex items-center gap-1.5"><Mail className="h-3.5 w-3.5 text-[#2A2621]" /> {orgEmail || 'Email configured'}</div>
-                    <div className="flex items-center gap-1.5"><Globe className="h-3.5 w-3.5 text-[#2A2621]" /> {orgWebsite || 'Website configured'}</div>
+                    <div className="flex items-center gap-1.5"><Globe className="h-3.5 w-3.5 text-[#2A2621]" /> {orgWebsite || 'Contact / Social link configured'}</div>
                   </div>
                 </div>
 
