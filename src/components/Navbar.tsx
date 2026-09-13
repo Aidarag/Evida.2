@@ -4,7 +4,7 @@ import React from 'react';
 import { createPortal } from 'react-dom';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Home, Compass, Plus, User, Settings, BarChart3, Shield, Star, ClipboardList, Building2, Menu, X, Calendar, ChevronDown, ChevronLeft, ChevronRight, Bell, Bookmark, Megaphone, Users, Sparkles, ArrowLeft, ArrowRight, LogOut } from 'lucide-react';
+import { Home, Plus, User, Settings, BarChart3, Shield, Star, ClipboardList, Building2, Menu, X, Calendar, ChevronDown, ChevronLeft, ChevronRight, Bell, Bookmark, Megaphone, Users, Sparkles, ArrowLeft, ArrowRight, LogOut } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useUser } from '@/lib/context/UserContext';
 import { useEvents } from '@/lib/context/EventContext';
@@ -92,7 +92,10 @@ export function DesktopNav({
             )}
 
             {/* Logo */}
-            <Link href="/" className="flex items-center group">
+            <Link 
+              href={variant === 'student' ? '/student/dashboard' : variant === 'school' ? '/school/dashboard' : '/'} 
+              className="flex items-center group"
+            >
               <EvidaLogo size={32} lightMode={true} />
             </Link>
             
@@ -232,9 +235,8 @@ export const MobileBottomNav = React.memo(function MobileBottomNav({ variant = '
 
   const studentTabs = [
     { href: '/student/dashboard', icon: Home, label: 'Home' },
-    { href: '/student/explore', icon: Compass, label: 'Explore', disabledInPreview: true },
-    { href: '/student/create', icon: Plus, label: 'Create', isSpecial: true, disabledInPreview: true },
     { href: '/student/calendar', icon: Calendar, label: 'Calendar', disabledInPreview: true },
+    { href: '/student/create', icon: Plus, label: 'Create', isSpecial: true, disabledInPreview: true },
     { href: profileHref, icon: User, label: activeProfile?.type === 'organization' ? 'Org Profile' : 'Profile', disabledInPreview: true },
   ];
 
@@ -253,7 +255,7 @@ export const MobileBottomNav = React.memo(function MobileBottomNav({ variant = '
         initial={{ y: 20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-        className="grid grid-cols-5 items-center w-full px-1"
+        className={`grid ${tabs.length === 4 ? 'grid-cols-4' : 'grid-cols-5'} items-center w-full px-1`}
       >
         {tabs.map((tab: any) => {
           const isActive = pathname === tab.href || pathname.startsWith(tab.href + '/');
@@ -346,7 +348,6 @@ export function DesktopSidebar({
 
   const studentLinks = [
     { href: '/student/dashboard', icon: Home, label: 'Home' },
-    { href: '/student/explore', icon: Compass, label: 'Explore' },
     { href: '/student/calendar', icon: Calendar, label: 'Calendar' },
     { href: profileHref, icon: User, label: activeProfile?.type === 'organization' ? 'Org Profile' : 'Profile' },
     { href: '/student/create', icon: Plus, label: 'Create Event' },
@@ -354,8 +355,7 @@ export function DesktopSidebar({
 
   const schoolLinks = [
     { href: '/school/dashboard', icon: Home, label: 'Overview' },
-    { href: '/school/review', icon: ClipboardList, label: 'Review Queue' },
-    { href: '/school/analytics', icon: BarChart3, label: 'Analytics' },
+    { href: '/school/review', icon: ClipboardList, label: 'Review Events' },
     { href: '/school/organizations', icon: Building2, label: 'Organizations' },
   ];
 
@@ -509,7 +509,6 @@ export function TabletDrawerSidebar({
 
   const studentLinks = [
     { href: '/student/dashboard', icon: Home, label: 'Home' },
-    { href: '/student/explore', icon: Compass, label: 'Explore' },
     { href: '/student/calendar', icon: Calendar, label: 'Calendar' },
     { href: profileHref, icon: User, label: activeProfile?.type === 'organization' ? 'Org Profile' : 'Profile' },
     { href: '/student/create', icon: Plus, label: 'Create Event' },
@@ -517,8 +516,7 @@ export function TabletDrawerSidebar({
 
   const schoolLinks = [
     { href: '/school/dashboard', icon: Home, label: 'Overview' },
-    { href: '/school/review', icon: ClipboardList, label: 'Review Queue' },
-    { href: '/school/analytics', icon: BarChart3, label: 'Analytics' },
+    { href: '/school/review', icon: ClipboardList, label: 'Review Events' },
     { href: '/school/organizations', icon: Building2, label: 'Organizations' },
   ];
 

@@ -20,6 +20,8 @@ interface EventContextType {
   deleteEvent: (id: string) => Promise<boolean>;
   reviewEvent: (id: string, status: 'approved' | 'rejected', feedback?: string) => Promise<void>;
   toggleVerifyOrg: (id: string) => Promise<void>;
+  approveOrg: (id: string) => Promise<void>;
+  refuseOrg: (id: string, reason?: string) => Promise<void>;
   suspendOrg: (id: string) => Promise<void>;
   requestInfoOrg: (id: string, note: string) => Promise<void>;
   createOrg: (orgData: unknown) => Promise<unknown>;
@@ -381,6 +383,32 @@ export function EventProvider({ children }: { children: ReactNode }) {
     }
   }, [fetchData]);
 
+  const approveOrg = useCallback(async (id: string) => {
+    try {
+      const res = await fetch('/api/organizations', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'approve', id }),
+      });
+      if (res.ok) await fetchData();
+    } catch (e) {
+      console.error(e);
+    }
+  }, [fetchData]);
+
+  const refuseOrg = useCallback(async (id: string, reason?: string) => {
+    try {
+      const res = await fetch('/api/organizations', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'refuse', id, reason }),
+      });
+      if (res.ok) await fetchData();
+    } catch (e) {
+      console.error(e);
+    }
+  }, [fetchData]);
+
   // Suspend an organization (prevent it from being shown publicly)
   const suspendOrg = useCallback(async (id: string) => {
     try {
@@ -539,6 +567,8 @@ export function EventProvider({ children }: { children: ReactNode }) {
         deleteEvent,
         reviewEvent,
         toggleVerifyOrg,
+        approveOrg,
+        refuseOrg,
         suspendOrg,
         requestInfoOrg,
         createOrg,

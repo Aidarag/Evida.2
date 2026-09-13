@@ -96,7 +96,7 @@ export default function ReviewQueuePage() {
 
         <div>
           <h1 className="text-2xl sm:text-3xl md:text-4xl font-black text-[#2A2621] uppercase tracking-tight" style={{ fontFamily: 'var(--font-display)' }}>
-            Review Queue
+            Review Events
           </h1>
           <p className="text-xs sm:text-sm text-[#5A554E] font-medium leading-relaxed mt-1">
             Review and approve pending student experiences and event submissions.

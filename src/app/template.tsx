@@ -28,7 +28,7 @@ export default function Template({ children }: { children: React.ReactNode }) {
       const initialSplashDone = sessionStorage.getItem('evida_initial_splash_done');
       const forceRedirectSplash = sessionStorage.getItem('evida_force_redirect_splash');
 
-      if (!initialSplashDone) {
+      if (pathname === '/' || !initialSplashDone) {
         setShowSplash(true);
         sessionStorage.setItem('evida_initial_splash_done', 'true');
       } else if (forceRedirectSplash === 'true') {

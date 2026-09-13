@@ -970,6 +970,9 @@
       "name": "Student Government Association",
       "description": "Advocating for student voices, allocating funding for student events, and governing campus regulations.",
       "verified": true,
+      "verificationStatus": "verified",
+      "verifiedAt": "2026-08-15T12:00:00.000Z",
+      "category": "Student Government",
       "members": [
         "Alex Rivera",
         "David Kim"
@@ -984,6 +987,9 @@
       "name": "STEM Club",
       "description": "A coalition of science, math, and engineering students hosting build workshops and guest tech lectures.",
       "verified": true,
+      "verificationStatus": "verified",
+      "verifiedAt": "2026-08-18T09:30:00.000Z",
+      "category": "Academic",
       "members": [
         "Sarah Jenkins",
         "Alex Rivera"
@@ -998,6 +1004,9 @@
       "name": "Black Student Union",
       "description": "Empowering Black students, promoting academic excellence, and hosting cultural showcases.",
       "verified": true,
+      "verificationStatus": "verified",
+      "verifiedAt": "2026-08-20T14:15:00.000Z",
+      "category": "Cultural",
       "members": [
         "Alex Rivera"
       ],
@@ -1011,10 +1020,13 @@
       "name": "Career Development Center",
       "description": "Providing resume workshops, career counseling, and hosting employer recruitment events.",
       "verified": true,
+      "verificationStatus": "verified",
+      "verifiedAt": "2026-08-22T11:45:00.000Z",
+      "category": "Career",
       "members": [
         "Sarah Jenkins"
       ],
-      "logoColor": "cream",
+      "logoColor": "teal",
       "views": 120,
       "saves": 18,
       "rsvps": 60
@@ -1022,12 +1034,17 @@
     {
       "id": "org-1785461919046",
       "name": "Blue bears coding",
-      "description": "Enjoy vibecoding",
+      "description": "Enjoy vibecoding, student hackathons, and software engineering meetups.",
       "verified": false,
+      "verificationStatus": "refused",
+      "category": "Academic",
       "members": [
         "Michael Chen"
       ],
-      "logoColor": "indigo"
+      "logoColor": "indigo",
+      "verifiedAt": "2026-09-13T03:49:58.298Z",
+      "refusalReason": "Requires signed faculty advisor charter and updated club constitution.",
+      "refusedAt": "2026-09-13T03:50:21.028Z"
     }
   ],
   "users": [

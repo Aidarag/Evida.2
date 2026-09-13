@@ -78,11 +78,15 @@ export default function LoginPage() {
             transition={{ duration: 0.5, ease: "easeOut" }}
             className="w-full max-w-md z-10 flex flex-col items-center relative animate-fade-in"
           >
-            {/* Back to Home Button */}
+            {/* Back to Get Started Screen */}
             {step === 'role-selection' && (
-              <Link href="/" className="absolute top-[-44px] left-2 text-[#5A554E] hover:text-[#2A2621] flex items-center gap-2 transition-colors font-bold text-xs uppercase tracking-wider">
-                <ArrowLeft className="h-4 w-4" /> Back to Home
-              </Link>
+              <button
+                type="button"
+                onClick={() => setShowSplash(true)}
+                className="absolute top-[-44px] left-2 text-[#5A554E] hover:text-[#2A2621] flex items-center gap-2 transition-colors font-bold text-xs uppercase tracking-wider cursor-pointer"
+              >
+                <ArrowLeft className="h-4 w-4" /> Back
+              </button>
             )}
 
             <Card glass className="p-8 max-sm:p-5 max-sm:rounded-[28px] space-y-6 overflow-hidden relative w-full" hover={false}>
@@ -147,7 +151,7 @@ export default function LoginPage() {
                               </div>
                               <div>
                                 <p className="text-sm font-bold text-[#2A2621] uppercase tracking-wide">School / Administration</p>
-                                <p className="text-xs text-[#5A554E] mt-0.5 max-w-[220px]">Review event request queues, view analytics, and verify hosts.</p>
+                                <p className="text-xs text-[#5A554E] mt-0.5 max-w-[220px]">Review event requests, manage organizations, and verify hosts.</p>
                               </div>
                             </div>
                             <ArrowRight className="h-5 w-5 text-[#5A554E] group-hover:text-[#2A2621] group-hover:translate-x-1 transition-all" />

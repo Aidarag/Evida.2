@@ -214,7 +214,7 @@ export default function StudentDashboardPage() {
       }
       return true;
     } else {
-      // Student Feed (For You Page Categories)
+      // Student Feed (Promotion Categories)
       if (sel === 'food') {
         return cat.includes('food') || cat.includes('bake') || cat.includes('bbq') || title.includes('food') || title.includes('cookout') || title.includes('cookie') || title.includes('bake') || title.includes('dining');
       }
@@ -530,7 +530,7 @@ export default function StudentDashboardPage() {
               />
             )}
             <span className={`relative z-10 transition-colors duration-300 ${activeFeed === 'student' ? 'text-white font-black' : 'text-[#5A554E]'}`}>
-              For You
+              Promotion
             </span>
           </button>
         </div>
@@ -569,7 +569,7 @@ export default function StudentDashboardPage() {
             <h2 className="font-black tracking-tight text-[#2A2621] flex items-center gap-1.5 uppercase" style={{ fontFamily: 'var(--font-display)' }}>
               {isOrgMode && orgDashboardTab === 'org-events'
                 ? `${activeOrgName} Experiences`
-                : (activeFeed === 'official' ? 'Livingstone College' : 'For You')
+                : (activeFeed === 'official' ? 'Livingstone College' : 'Promotion')
               }
             </h2>
             <p className="text-xs font-bold text-[#5A554E] uppercase tracking-wider">

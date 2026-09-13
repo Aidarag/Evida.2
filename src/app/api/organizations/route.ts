@@ -24,6 +24,34 @@ export async function POST(request: Request) {
       const isVerified = !db.organizations[idx].verified;
       db.organizations[idx].verified = isVerified;
       db.organizations[idx].verificationStatus = isVerified ? 'verified' : 'unverified';
+      if (isVerified) {
+        db.organizations[idx].verifiedAt = new Date().toISOString();
+        delete db.organizations[idx].refusalReason;
+        delete db.organizations[idx].refusedAt;
+      }
+      await writeDBAsync(db);
+      return NextResponse.json(db.organizations[idx]);
+    }
+
+    if (action === 'approve') {
+      const idx = db.organizations.findIndex((o) => o.id === id);
+      if (idx === -1) return NextResponse.json({ error: 'Organization not found' }, { status: 404 });
+      db.organizations[idx].verified = true;
+      db.organizations[idx].verificationStatus = 'verified';
+      db.organizations[idx].verifiedAt = new Date().toISOString();
+      delete db.organizations[idx].refusalReason;
+      delete db.organizations[idx].refusedAt;
+      await writeDBAsync(db);
+      return NextResponse.json(db.organizations[idx]);
+    }
+
+    if (action === 'refuse') {
+      const idx = db.organizations.findIndex((o) => o.id === id);
+      if (idx === -1) return NextResponse.json({ error: 'Organization not found' }, { status: 404 });
+      db.organizations[idx].verified = false;
+      db.organizations[idx].verificationStatus = 'refused';
+      db.organizations[idx].refusalReason = body.reason || 'Does not meet institutional registration requirements.';
+      db.organizations[idx].refusedAt = new Date().toISOString();
       await writeDBAsync(db);
       return NextResponse.json(db.organizations[idx]);
     }

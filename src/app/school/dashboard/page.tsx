@@ -3,16 +3,13 @@
 import React from 'react';
 import { useUser } from '@/lib/context/UserContext';
 import { useEvents } from '@/lib/context/EventContext';
-import { useRouter } from 'next/navigation';
-import { ClipboardList, Star, Building2, BarChart3, Clock, CheckCircle, XCircle, AlertTriangle } from 'lucide-react';
+import { ClipboardList, Building2, Clock, CheckCircle, XCircle } from 'lucide-react';
 import Link from 'next/link';
-import Button from '@/components/ui/Button';
 import Card from '@/components/ui/Card';
 
 export default function SchoolDashboardPage() {
   const { currentUser } = useUser();
   const { events, organizations } = useEvents();
-  const router = useRouter();
 
   if (!currentUser) return null;
 
@@ -37,7 +34,7 @@ export default function SchoolDashboardPage() {
 
       {/* Account Verification & Review Metrics */}
       <div className="grid md:grid-cols-3 gap-6">
-        <Link href="/school/organizations" className="block">
+        <Link href="/school/organizations/approvals?tab=approved" className="block no-underline">
           <Card className="p-6 flex flex-col justify-between h-40 border-l-4 border-l-emerald-500 hover:shadow-md transition-all cursor-pointer">
             <div className="flex justify-between items-start">
               <div className="h-10 w-10 rounded-full bg-emerald-500/10 flex items-center justify-center text-emerald-600">
@@ -54,14 +51,14 @@ export default function SchoolDashboardPage() {
           </Card>
         </Link>
 
-        <Link href="/school/organizations" className="block">
-          <Card className="p-6 flex flex-col justify-between h-40 border-l-4 border-l-amber-500 hover:shadow-md transition-all cursor-pointer">
+        <Link href="/school/organizations/approvals?tab=refused" className="block no-underline">
+          <Card className="p-6 flex flex-col justify-between h-40 border-l-4 border-l-rose-500 hover:shadow-md transition-all cursor-pointer">
             <div className="flex justify-between items-start">
-              <div className="h-10 w-10 rounded-full bg-amber-500/10 flex items-center justify-center text-amber-600">
+              <div className="h-10 w-10 rounded-full bg-rose-500/10 flex items-center justify-center text-rose-600">
                 <XCircle className="h-5 w-5" />
               </div>
-              <span className="rounded-full bg-amber-500/10 text-amber-800 px-3 py-1 text-[10px] font-black uppercase tracking-wider">
-                Non-Certified ✕
+              <span className="rounded-full bg-rose-500/10 text-rose-700 px-3 py-1 text-[10px] font-black uppercase tracking-wider">
+                Refused / Non-Certified ✕
               </span>
             </div>
             <div>
@@ -93,11 +90,11 @@ export default function SchoolDashboardPage() {
         {/* Quick Links */}
         <div className="space-y-4">
           <h2 className="text-xl font-bold text-[#2A2621]" style={{ fontFamily: 'var(--font-display)' }}>System Modules</h2>
-          <div className="grid grid-cols-3 gap-4">
+          <div className="grid grid-cols-2 gap-4">
              <Link href="/school/review">
               <Card className="p-5 flex flex-col items-center justify-center text-center gap-3 h-32 hover:border-[#FD5C05]/40 transition-colors">
                 <ClipboardList className="h-6 w-6 text-[#2A2621]/70" />
-                <span className="text-sm font-bold text-[#2A2621]">Review Queue</span>
+                <span className="text-sm font-bold text-[#2A2621]">Review Events</span>
               </Card>
             </Link>
             <Link href="/school/organizations">
@@ -107,12 +104,6 @@ export default function SchoolDashboardPage() {
                 )}
                 <Building2 className="h-6 w-6 text-[#2A2621]/70" />
                 <span className="text-sm font-bold text-[#2A2621]">Organizations</span>
-              </Card>
-            </Link>
-            <Link href="/school/analytics">
-              <Card className="p-5 flex flex-col items-center justify-center text-center gap-3 h-32 hover:border-[#FD5C05]/40 transition-colors">
-                <BarChart3 className="h-6 w-6 text-[#2A2621]/70" />
-                <span className="text-sm font-bold text-[#2A2621]">Analytics</span>
               </Card>
             </Link>
           </div>

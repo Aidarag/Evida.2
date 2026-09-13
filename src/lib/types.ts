@@ -42,7 +42,10 @@ export interface Organization {
   aboutUs?: string;
   category?: string;
   verified: boolean;
-  verificationStatus?: 'unverified' | 'pending' | 'verified';
+  verificationStatus?: 'unverified' | 'pending' | 'verified' | 'refused';
+  refusalReason?: string;
+  refusedAt?: string;
+  verifiedAt?: string;
   rosterType?: 'members' | 'team';
   members: string[]; // student names
   teamRoster?: { name: string; role: string; avatar?: string }[];

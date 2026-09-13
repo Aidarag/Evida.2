@@ -1,11 +1,12 @@
 'use client';
 
 import React, { useState } from 'react';
+import Link from 'next/link';
 import { useEvents } from '@/lib/context/EventContext';
 import { useUser } from '@/lib/context/UserContext';
 import Card from '@/components/ui/Card';
 import VerifiedBadge from '@/components/ui/VerifiedBadge';
-import { Building2, Search, CheckCircle2, XCircle, ShieldCheck, HelpCircle, Ban, Send, Users, Sparkles, Building, Trash2 } from 'lucide-react';
+import { Building2, Search, CheckCircle2, XCircle, ShieldCheck, HelpCircle, Ban, Send, Building, Trash2 } from 'lucide-react';
 
 function getTailwindBgColor(color: string) {
   const mapping: Record<string, string> = {
@@ -68,18 +69,44 @@ export default function OrganizationsPage() {
     <div className="p-4 sm:p-6 md:p-10 space-y-6 max-w-6xl mx-auto font-sans text-[#2A2621] text-left">
       
       {/* Header */}
-      <div className="bg-white rounded-[28px] border border-black/[0.06] p-6 sm:p-8 shadow-sm flex flex-col md:flex-row gap-6 justify-between md:items-end">
-        <div className="space-y-2">
-          <span className="bg-[#FD5C05]/10 text-[#FD5C05] text-[9.5px] font-black uppercase tracking-widest px-3 py-1 rounded-full border border-[#FD5C05]/20 flex items-center gap-1.5 w-fit">
-            <Building2 className="h-3.5 w-3.5" /> Campus Directory
-          </span>
-          <h1 className="text-2xl sm:text-3xl font-black text-[#2A2621] uppercase tracking-tight" style={{ fontFamily: 'var(--font-display)' }}>
-            Organizations Management
-          </h1>
-          <p className="text-xs sm:text-sm text-[#5A554E] font-medium leading-relaxed">
-            Manage, verify, and monitor student organizations registered at Livingstone College.
-          </p>
+      <div className="bg-white rounded-[28px] border border-black/[0.06] p-6 sm:p-8 shadow-sm space-y-6">
+        
+        {/* Sub-navigation tabs */}
+        <div className="flex flex-wrap items-center justify-between gap-4 border-b border-black/[0.05] pb-5">
+          <div className="flex items-center gap-2">
+            <span className="px-4 py-2 rounded-full text-xs font-black uppercase tracking-wider bg-[#FD5C05]/10 text-[#FD5C05] border border-[#FD5C05]/20 flex items-center gap-1.5">
+              <Building2 className="h-3.5 w-3.5" /> Campus Directory
+            </span>
+            <span className="text-[#D8D2BC]">/</span>
+            <Link
+              href="/school/organizations/approvals"
+              className="px-4 py-2 rounded-full text-xs font-black uppercase tracking-wider text-[#5A554E] hover:text-[#2A2621] hover:bg-black/[0.04] transition-all flex items-center gap-1.5 no-underline group"
+            >
+              <ShieldCheck className="h-3.5 w-3.5 text-emerald-600 group-hover:scale-110 transition-transform" />
+              Approved & Refused Status
+              <span className="ml-1 px-2 py-0.5 rounded-full text-[9px] bg-emerald-500/10 text-emerald-700 font-extrabold">
+                {organizations.filter(o => o.verified || o.verificationStatus === 'verified').length} Approved
+              </span>
+            </Link>
+          </div>
+
+          <Link
+            href="/school/organizations/approvals"
+            className="text-xs font-bold text-[#FD5C05] hover:underline flex items-center gap-1 no-underline"
+          >
+            Review Approvals & Refusals →
+          </Link>
         </div>
+
+        <div className="flex flex-col md:flex-row gap-6 justify-between md:items-end">
+          <div className="space-y-2">
+            <h1 className="text-2xl sm:text-3xl font-black text-[#2A2621] uppercase tracking-tight" style={{ fontFamily: 'var(--font-display)' }}>
+              Organizations Management
+            </h1>
+            <p className="text-xs sm:text-sm text-[#5A554E] font-medium leading-relaxed">
+              Manage, verify, and monitor student organizations registered at Livingstone College.
+            </p>
+          </div>
 
         <div className="w-full md:w-80">
           <div className="relative">
@@ -93,6 +120,7 @@ export default function OrganizationsPage() {
             />
           </div>
         </div>
+      </div>
       </div>
 
       {/* ── Organization Filters Bar (Certified/Non-certified + Org Types) ── */}
