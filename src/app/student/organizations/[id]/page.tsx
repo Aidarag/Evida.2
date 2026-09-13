@@ -10,6 +10,7 @@ import EventCard from '@/components/student/EventCard';
 import Link from 'next/link';
 
 const ORG_BANNERS = [
+  '/evida-banner.png',
   '/pexels-cottonbro-5989925.jpg',
   '/pexels-gu-ko-2150570603-31827067.jpg',
   '/pexels-rdne-7648057.jpg',

@@ -30,6 +30,7 @@ const initialOrganizations: Organization[] = [
     name: 'STEM Club',
     description: 'A coalition of science, math, and engineering students hosting build workshops and guest tech lectures.',
     verified: true,
+    coverImage: '/evida-banner.png',
     members: ['Sarah Jenkins', 'Alex Rivera'],
     logoColor: 'emerald',
     views: 242,
