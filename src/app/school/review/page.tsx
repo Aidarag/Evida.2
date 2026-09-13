@@ -6,7 +6,7 @@ import { useUser } from '@/lib/context/UserContext';
 import { Event, Organization } from '@/lib/types';
 import Card from '@/components/ui/Card';
 import VerifiedBadge from '@/components/ui/VerifiedBadge';
-import { ClipboardList, Check, X, Calendar, MapPin, Users, AlertTriangle, ShieldCheck, HelpCircle, Ban, Send, Sparkles, Clock, Building, Trash2, CheckCircle2, XCircle } from 'lucide-react';
+import { ClipboardList, Check, X, Calendar, MapPin, Users, AlertTriangle, ShieldCheck, HelpCircle, Ban, Send, Sparkles, Clock, Building, Trash2, CheckCircle2, XCircle, Search } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 function getTailwindBgColor(color: string) {
@@ -26,6 +26,7 @@ function getTailwindBgColor(color: string) {
 export default function ReviewQueuePage() {
   const { events, organizations, reviewEvent, toggleVerifyOrg, suspendOrg, requestInfoOrg, deleteOrg } = useEvents();
   const { currentUser } = useUser();
+  const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState<'all' | 'verified' | 'unverified'>('all');
   const [categoryFilter, setCategoryFilter] = useState<string>('all');
   const [orgRequestInfoModal, setOrgRequestInfoModal] = useState(false);
@@ -43,7 +44,25 @@ export default function ReviewQueuePage() {
   const unverifiedCount = pendingEvents.length - verifiedCount;
   
   const displayEvents = pendingEvents.filter(event => {
-    // 1. Host Verification Status Filter (Certified vs Non-Certified)
+    // 1. Search Query Filter
+    if (searchQuery.trim()) {
+      const q = searchQuery.toLowerCase().trim();
+      const orgName = event.organizationId
+        ? (organizations.find(o => o.id === event.organizationId)?.name || '').toLowerCase()
+        : '';
+      const matchesSearch =
+        (event.title || '').toLowerCase().includes(q) ||
+        (event.description || '').toLowerCase().includes(q) ||
+        (event.location || '').toLowerCase().includes(q) ||
+        (event.category || '').toLowerCase().includes(q) ||
+        (event.organizer || '').toLowerCase().includes(q) ||
+        (event.organizationName || '').toLowerCase().includes(q) ||
+        orgName.includes(q);
+
+      if (!matchesSearch) return false;
+    }
+
+    // 2. Host Verification Status Filter (Certified vs Non-Certified)
     const isOrgVerified = event.organizationId
       ? organizations.find(o => o.id === event.organizationId)?.verified || false
       : false;
@@ -51,7 +70,7 @@ export default function ReviewQueuePage() {
     if (statusFilter === 'verified' && !isOrgVerified) return false;
     if (statusFilter === 'unverified' && isOrgVerified) return false;
 
-    // 2. Category / Type Filter
+    // 3. Category / Type Filter
     if (categoryFilter !== 'all') {
       const cat = (event.category || '').toLowerCase();
       const title = (event.title || '').toLowerCase();
@@ -84,7 +103,7 @@ export default function ReviewQueuePage() {
     <div className="p-4 sm:p-6 md:p-10 space-y-6 max-w-6xl mx-auto font-sans text-[#2A2621] text-left">
       
       {/* ── Page Header ── */}
-      <div className="space-y-4 bg-white rounded-[28px] border border-black/[0.06] p-6 sm:p-8 shadow-sm">
+      <div className="space-y-5 bg-white rounded-[28px] border border-black/[0.06] p-6 sm:p-8 shadow-sm">
         <div className="flex items-center justify-between">
           <span className="bg-[#FD5C05]/10 text-[#FD5C05] text-[9.5px] font-black uppercase tracking-widest px-3 py-1 rounded-full border border-[#FD5C05]/20 flex items-center gap-1.5">
             <ShieldCheck className="h-3.5 w-3.5" /> School Administration
@@ -94,13 +113,37 @@ export default function ReviewQueuePage() {
           </span>
         </div>
 
-        <div>
-          <h1 className="text-2xl sm:text-3xl md:text-4xl font-black text-[#2A2621] uppercase tracking-tight" style={{ fontFamily: 'var(--font-display)' }}>
-            Review Events
-          </h1>
-          <p className="text-xs sm:text-sm text-[#5A554E] font-medium leading-relaxed mt-1">
-            Review and approve pending student experiences and event submissions.
-          </p>
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
+          <div>
+            <h1 className="text-2xl sm:text-3xl md:text-4xl font-black text-[#2A2621] uppercase tracking-tight" style={{ fontFamily: 'var(--font-display)' }}>
+              Review Events
+            </h1>
+            <p className="text-xs sm:text-sm text-[#5A554E] font-medium leading-relaxed mt-1">
+              Review and approve pending student experiences and event submissions.
+            </p>
+          </div>
+
+          <div className="w-full md:w-80 shrink-0">
+            <div className="relative">
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-[#5A554E]" />
+              <input
+                type="text"
+                placeholder="Search events, hosts, locations..."
+                className="w-full bg-[#F8F6F0] border border-black/[0.08] rounded-full pl-11 pr-9 py-2.5 text-xs text-[#2A2621] font-semibold focus:outline-none focus:border-[#FD5C05] focus:bg-white transition-all shadow-xs"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
+              {searchQuery && (
+                <button
+                  type="button"
+                  onClick={() => setSearchQuery('')}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 h-5 w-5 rounded-full bg-black/[0.06] hover:bg-black/[0.12] flex items-center justify-center text-[#5A554E] text-[10px] cursor-pointer border-none transition-colors"
+                >
+                  ✕
+                </button>
+              )}
+            </div>
+          </div>
         </div>
       </div>
 
@@ -166,10 +209,15 @@ export default function ReviewQueuePage() {
 
       {/* ── Pending Event Submissions Section ── */}
       <div className="space-y-4">
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between flex-wrap gap-2">
           <h2 className="text-xl font-black text-[#2A2621] uppercase tracking-tight" style={{ fontFamily: 'var(--font-display)' }}>
             Event Submissions ({displayEvents.length})
           </h2>
+          {searchQuery && (
+            <span className="text-xs font-bold text-[#5A554E]">
+              Filtered by: <span className="text-[#FD5C05]">"{searchQuery}"</span>
+            </span>
+          )}
         </div>
 
         <AnimatePresence mode="popLayout">
@@ -242,7 +290,23 @@ export default function ReviewQueuePage() {
               <div className="h-14 w-14 rounded-2xl bg-[#FD5C05]/10 text-[#FD5C05] flex items-center justify-center">
                 <ClipboardList className="h-7 w-7" />
               </div>
-              <h3 className="text-base font-extrabold text-[#2A2621] uppercase tracking-tight">Queue is Empty</h3>
+              <h3 className="text-base font-extrabold text-[#2A2621] uppercase tracking-tight">
+                {searchQuery ? 'No Matching Events Found' : 'Queue is Empty'}
+              </h3>
+              <p className="text-xs text-[#5A554E] max-w-sm font-medium">
+                {searchQuery
+                  ? `No pending event submissions match "${searchQuery}". Try a different keyword or reset filters.`
+                  : 'All student submissions have been reviewed and processed.'}
+              </p>
+              {searchQuery && (
+                <button
+                  type="button"
+                  onClick={() => setSearchQuery('')}
+                  className="mt-2 px-4 py-2 bg-[#FD5C05]/10 hover:bg-[#FD5C05]/20 text-[#FD5C05] text-xs font-bold rounded-xl transition-colors cursor-pointer border-none"
+                >
+                  Clear Search
+                </button>
+              )}
             </div>
           )}
         </AnimatePresence>
