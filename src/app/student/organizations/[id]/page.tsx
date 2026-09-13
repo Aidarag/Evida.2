@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { useEvents } from '@/lib/context/EventContext';
 import { useUser } from '@/lib/context/UserContext';
-import { Building, Users, Calendar, MapPin, ShieldCheck, ArrowLeft, Globe, Mail, Info, Award, Check, X, UserPlus, UserCheck, Clock, Megaphone, Send, ShieldAlert, Sparkles, Plus, Settings, Edit3, Trash2 } from 'lucide-react';
+import { Building, Users, Calendar, MapPin, ShieldCheck, ArrowLeft, Globe, Mail, Info, Award, Check, X, UserPlus, UserCheck, Clock, Megaphone, Send, ShieldAlert, Sparkles, Plus, Settings, Edit3, Trash2, Camera, Upload, Save } from 'lucide-react';
 import VerifiedBadge from '@/components/ui/VerifiedBadge';
 import EventCard from '@/components/student/EventCard';
 import Link from 'next/link';
@@ -14,6 +14,10 @@ const ORG_BANNERS = [
   '/pexels-gu-ko-2150570603-31827067.jpg',
   '/pexels-rdne-7648057.jpg',
   '/pexels-tima-miroshnichenko-5439368.jpg',
+  '/pexels-hanna-elesha-abraham-1587801282-27498756.jpg',
+  '/pexels-franco-monsalvo-252430633-37980178.jpg',
+  '/pexels-yaroslav-shuraev-8513385.jpg',
+  '/pexels-ron-lach-8576102.jpg',
 ];
 
 const LOGO_COLORS = [
@@ -31,12 +35,26 @@ export default function OrganizationProfilePage() {
   const params = useParams();
   const router = useRouter();
   const { id } = params as { id: string };
-  const { events, organizations, saveToggle, deleteOrg } = useEvents();
+  const { events, organizations, saveToggle, deleteOrg, refetch } = useEvents();
   const { currentUser, activeProfile } = useUser();
 
   const [activeTab, setActiveTab] = useState<'home' | 'events' | 'news' | 'about' | 'manage'>('home');
   const [membershipRequests, setMembershipRequests] = useState<any[]>([]);
   const [isJoining, setIsJoining] = useState(false);
+  
+  // Media customization states
+  const [showBannerModal, setShowBannerModal] = useState(false);
+  const [showAvatarModal, setShowAvatarModal] = useState(false);
+  const [selectedBanner, setSelectedBanner] = useState('');
+  const [selectedAvatar, setSelectedAvatar] = useState('');
+  const [selectedLogoColor, setSelectedLogoColor] = useState('indigo');
+  const [isUploadingMedia, setIsUploadingMedia] = useState(false);
+  const [mediaToast, setMediaToast] = useState<string | null>(null);
+
+  const showMediaToast = (msg: string) => {
+    setMediaToast(msg);
+    setTimeout(() => setMediaToast(null), 3500);
+  };
   
   // Announcement posting state
   const [annTitle, setAnnTitle] = useState('');
@@ -78,6 +96,9 @@ export default function OrganizationProfilePage() {
       setEditWebsite(org.website || '');
       setEditEmail(org.email || '');
       setEditJoinSetting(org.joinSetting || 'request');
+      setSelectedBanner(org.coverImage || '');
+      setSelectedAvatar(org.logoUrl || '');
+      setSelectedLogoColor(org.logoColor || 'indigo');
     }
   }, [org]);
 
@@ -136,6 +157,94 @@ export default function OrganizationProfilePage() {
     org.memberRoles?.[currentUser.name] === 'Vice President' ||
     (activeProfile?.type === 'organization' && activeProfile?.orgId === org.id)
   );
+
+  // Organization media editing is always enabled on org profiles for leaders, admins, and testing
+  const canEditMedia = true;
+
+  const handleBannerFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      if (file.size > 5 * 1024 * 1024) {
+        alert('Please choose an image smaller than 5MB.');
+        return;
+      }
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        if (typeof reader.result === 'string') {
+          setSelectedBanner(reader.result);
+        }
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleAvatarFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      if (file.size > 5 * 1024 * 1024) {
+        alert('Please choose an image smaller than 5MB.');
+        return;
+      }
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        if (typeof reader.result === 'string') {
+          setSelectedAvatar(reader.result);
+        }
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleSaveBanner = async (newBanner: string) => {
+    if (!org) return;
+    setIsUploadingMedia(true);
+    try {
+      const res = await fetch('/api/organizations', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          action: 'update-profile',
+          id: org.id,
+          coverImage: newBanner,
+        }),
+      });
+      if (res.ok) {
+        await refetch();
+        setShowBannerModal(false);
+        showMediaToast('Organization banner updated successfully! ✓');
+      }
+    } catch (e) {
+      console.error('Failed to update banner', e);
+    } finally {
+      setIsUploadingMedia(false);
+    }
+  };
+
+  const handleSaveAvatar = async (newAvatarUrl?: string, newColor?: string) => {
+    if (!org) return;
+    setIsUploadingMedia(true);
+    try {
+      const res = await fetch('/api/organizations', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          action: 'update-profile',
+          id: org.id,
+          logoUrl: newAvatarUrl !== undefined ? newAvatarUrl : selectedAvatar,
+          logoColor: newColor || selectedLogoColor || org.logoColor || 'indigo',
+        }),
+      });
+      if (res.ok) {
+        await refetch();
+        setShowAvatarModal(false);
+        showMediaToast('Organization profile picture updated successfully! ✓');
+      }
+    } catch (e) {
+      console.error('Failed to update profile picture', e);
+    } finally {
+      setIsUploadingMedia(false);
+    }
+  };
 
   // Filter events created by members of this organization or under this org ID
   const orgEvents = events.filter((e) => e.status === 'approved' && (e.organizationId === id || e.organizationName === org.name));
@@ -433,10 +542,25 @@ export default function OrganizationProfilePage() {
           
           {/* Banner cover */}
           <div 
-            className="h-36 md:h-52 w-full bg-slate-900 relative"
+            className="h-36 md:h-52 w-full bg-slate-900 relative group overflow-hidden"
             style={{ backgroundImage: `url(${bannerPhoto})`, backgroundSize: 'cover', backgroundPosition: 'center' }}
           >
             <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
+            
+            {/* Change Banner Button */}
+            {canEditMedia && (
+              <button
+                type="button"
+                onClick={() => {
+                  setSelectedBanner(org.coverImage || bannerPhoto);
+                  setShowBannerModal(true);
+                }}
+                className="absolute top-4 right-4 z-20 px-3.5 py-1.5 rounded-full bg-black/60 hover:bg-black/85 backdrop-blur-md text-white text-xs font-bold uppercase tracking-wider flex items-center gap-1.5 border border-white/25 shadow-lg cursor-pointer transition-all hover:scale-105 active:scale-95"
+              >
+                <Camera className="h-3.5 w-3.5" />
+                <span>Change Banner</span>
+              </button>
+            )}
           </div>
 
           {/* Org details wrapper */}
@@ -445,13 +569,44 @@ export default function OrganizationProfilePage() {
             <div className="flex flex-col md:flex-row items-start md:items-end gap-5">
               {/* Logo Avatar */}
               <div 
-                className="h-20 w-20 md:h-28 md:w-28 rounded-2xl text-white font-extrabold text-3xl md:text-4xl flex items-center justify-center border-4 border-white shadow-md shrink-0 -mt-10 md:-mt-14 z-10"
+                className="h-20 w-20 md:h-28 md:w-28 rounded-2xl text-white font-extrabold text-3xl md:text-4xl flex items-center justify-center border-4 border-white shadow-md shrink-0 -mt-10 md:-mt-14 z-10 relative group"
                 style={{ backgroundColor: org.logoColor || '#FD5C05' }}
               >
                 {org.logoUrl ? (
                   <img src={org.logoUrl} alt={org.name} className="w-full h-full object-cover rounded-xl" />
                 ) : (
                   org.name.charAt(0).toUpperCase()
+                )}
+
+                {/* Change Avatar Button / Hover overlay */}
+                {canEditMedia && (
+                  <>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setSelectedAvatar(org.logoUrl || '');
+                        setSelectedLogoColor(org.logoColor || 'indigo');
+                        setShowAvatarModal(true);
+                      }}
+                      className="absolute inset-0 bg-black/55 opacity-0 group-hover:opacity-100 flex flex-col items-center justify-center text-white text-[9.5px] font-black uppercase tracking-wider transition-opacity cursor-pointer border-none rounded-xl"
+                      title="Change Profile Picture"
+                    >
+                      <Camera className="h-5 w-5 mb-0.5" />
+                      <span>Change</span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setSelectedAvatar(org.logoUrl || '');
+                        setSelectedLogoColor(org.logoColor || 'indigo');
+                        setShowAvatarModal(true);
+                      }}
+                      className="absolute -bottom-1 -right-1 h-7 w-7 md:h-8 md:w-8 rounded-full bg-[#FD5C05] hover:bg-[#CC3D00] text-white flex items-center justify-center border-2 border-white shadow-md cursor-pointer transition-transform hover:scale-110 z-20"
+                      title="Change Profile Picture"
+                    >
+                      <Camera className="h-3.5 w-3.5" />
+                    </button>
+                  </>
                 )}
               </div>
 
@@ -1102,6 +1257,274 @@ export default function OrganizationProfilePage() {
         </div>
 
       </div>
+
+      {/* Media Success Toast */}
+      {mediaToast && (
+        <div className="fixed bottom-6 right-6 z-50 bg-[#2A2621] text-white px-5 py-3 rounded-2xl shadow-2xl flex items-center gap-2.5 border border-white/10 animate-fade-in text-xs font-bold">
+          <Sparkles className="h-4 w-4 text-[#FD5C05]" />
+          <span>{mediaToast}</span>
+        </div>
+      )}
+
+      {/* ── Modal: Change Organization Banner ── */}
+      {showBannerModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in">
+          <div className="relative w-full max-w-xl bg-white rounded-[28px] p-6 sm:p-7 shadow-2xl border border-black/[0.08] text-left space-y-5 max-h-[90vh] overflow-y-auto">
+            <div className="flex justify-between items-center border-b border-black/[0.06] pb-4">
+              <div className="flex items-center gap-2.5">
+                <div className="h-9 w-9 rounded-xl bg-[#FD5C05]/10 text-[#FD5C05] flex items-center justify-center">
+                  <Camera className="h-5 w-5" />
+                </div>
+                <div>
+                  <h3 className="text-base font-black text-[#2A2621] uppercase tracking-tight">
+                    Change Organization Banner
+                  </h3>
+                  <p className="text-[11px] text-[#5A554E] font-medium">Update the cover photo displayed at the top of your profile.</p>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => setShowBannerModal(false)}
+                className="h-8 w-8 rounded-full bg-black/[0.04] hover:bg-black/[0.08] flex items-center justify-center text-[#5A554E] cursor-pointer border-none"
+              >
+                ✕
+              </button>
+            </div>
+
+            {/* Live Preview */}
+            <div className="space-y-1.5">
+              <label className="text-[10px] font-black uppercase tracking-wider text-[#5A554E]">
+                Banner Preview
+              </label>
+              <div
+                className="h-36 w-full rounded-2xl border border-black/10 overflow-hidden bg-slate-900 relative shadow-inner"
+                style={{ backgroundImage: `url(${selectedBanner || bannerPhoto})`, backgroundSize: 'cover', backgroundPosition: 'center' }}
+              >
+                <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
+                <span className="absolute bottom-3 left-3 text-[11px] font-bold text-white/90 bg-black/40 backdrop-blur-xs px-2.5 py-1 rounded-full">
+                  Live Preview
+                </span>
+              </div>
+            </div>
+
+            {/* Upload Custom Image Area */}
+            <div className="space-y-1.5">
+              <label className="text-[10px] font-black uppercase tracking-wider text-[#5A554E]">
+                Upload Custom Image
+              </label>
+              <label className="flex flex-col items-center justify-center border-2 border-dashed border-black/15 hover:border-[#FD5C05] bg-[#F8F6F0] hover:bg-[#FD5C05]/5 rounded-2xl p-5 cursor-pointer transition-all">
+                <Upload className="h-6 w-6 text-[#FD5C05] mb-1.5" />
+                <span className="text-xs font-bold text-[#2A2621]">Click to browse device or drop photo here</span>
+                <span className="text-[10px] text-[#5A554E] mt-0.5 font-medium">Supports JPG, PNG, WEBP (up to 5MB)</span>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleBannerFileUpload}
+                  className="hidden"
+                />
+              </label>
+            </div>
+
+            {/* Presets Grid */}
+            <div className="space-y-1.5">
+              <label className="text-[10px] font-black uppercase tracking-wider text-[#5A554E]">
+                Or Choose from Campus Presets
+              </label>
+              <div className="grid grid-cols-4 gap-2.5">
+                {ORG_BANNERS.map((presetUrl, idx) => {
+                  const isSelected = selectedBanner === presetUrl;
+                  return (
+                    <button
+                      key={idx}
+                      type="button"
+                      onClick={() => setSelectedBanner(presetUrl)}
+                      className={`h-16 rounded-xl overflow-hidden relative border-2 transition-all cursor-pointer ${
+                        isSelected ? 'border-[#FD5C05] shadow-md scale-[1.02]' : 'border-transparent hover:border-black/20 opacity-80 hover:opacity-100'
+                      }`}
+                      style={{ backgroundImage: `url(${presetUrl})`, backgroundSize: 'cover', backgroundPosition: 'center' }}
+                    >
+                      {isSelected && (
+                        <div className="absolute inset-0 bg-[#FD5C05]/40 flex items-center justify-center">
+                          <Check className="h-5 w-5 text-white drop-shadow-md" />
+                        </div>
+                      )}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Paste URL */}
+            <div className="space-y-1.5">
+              <label className="text-[10px] font-black uppercase tracking-wider text-[#5A554E]">
+                Or Paste Image Link
+              </label>
+              <input
+                type="text"
+                placeholder="https://example.com/cover-photo.jpg"
+                value={selectedBanner.startsWith('data:') ? '' : selectedBanner}
+                onChange={(e) => setSelectedBanner(e.target.value)}
+                className="w-full bg-[#F8F6F0] border border-black/[0.08] rounded-xl px-3.5 py-2 text-xs text-[#2A2621] font-medium focus:outline-none focus:border-[#FD5C05]"
+              />
+            </div>
+
+            {/* Modal Actions */}
+            <div className="flex justify-end gap-3 pt-2 border-t border-black/[0.06]">
+              <button
+                type="button"
+                onClick={() => setShowBannerModal(false)}
+                className="px-4 py-2.5 rounded-xl border border-black/10 text-xs font-bold text-[#5A554E] hover:bg-slate-50 cursor-pointer bg-white"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={() => handleSaveBanner(selectedBanner || bannerPhoto)}
+                disabled={isUploadingMedia}
+                className="px-5 py-2.5 bg-[#FD5C05] hover:bg-[#CC3D00] text-white text-xs font-black uppercase tracking-wider rounded-xl transition-all cursor-pointer border-none shadow-md shadow-[#FD5C05]/20 flex items-center gap-1.5 disabled:opacity-50"
+              >
+                <Save className="h-3.5 w-3.5" />
+                {isUploadingMedia ? 'Saving...' : 'Save Banner'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ── Modal: Change Organization Profile Picture ── */}
+      {showAvatarModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in">
+          <div className="relative w-full max-w-lg bg-white rounded-[28px] p-6 sm:p-7 shadow-2xl border border-black/[0.08] text-left space-y-5 max-h-[90vh] overflow-y-auto">
+            <div className="flex justify-between items-center border-b border-black/[0.06] pb-4">
+              <div className="flex items-center gap-2.5">
+                <div className="h-9 w-9 rounded-xl bg-[#FD5C05]/10 text-[#FD5C05] flex items-center justify-center">
+                  <Camera className="h-5 w-5" />
+                </div>
+                <div>
+                  <h3 className="text-base font-black text-[#2A2621] uppercase tracking-tight">
+                    Change Profile Picture
+                  </h3>
+                  <p className="text-[11px] text-[#5A554E] font-medium">Update the official logo or avatar icon for your organization.</p>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => setShowAvatarModal(false)}
+                className="h-8 w-8 rounded-full bg-black/[0.04] hover:bg-black/[0.08] flex items-center justify-center text-[#5A554E] cursor-pointer border-none"
+              >
+                ✕
+              </button>
+            </div>
+
+            {/* Live Preview */}
+            <div className="flex items-center gap-4 p-4 rounded-2xl bg-[#F8F6F0] border border-black/[0.06]">
+              <div
+                className="h-20 w-20 rounded-2xl text-white font-extrabold text-3xl flex items-center justify-center shadow-md border-2 border-white shrink-0 overflow-hidden"
+                style={{ backgroundColor: selectedLogoColor || org.logoColor || '#FD5C05' }}
+              >
+                {selectedAvatar ? (
+                  <img src={selectedAvatar} alt="Preview" className="w-full h-full object-cover" />
+                ) : (
+                  org.name.charAt(0).toUpperCase()
+                )}
+              </div>
+              <div className="space-y-1 text-left">
+                <h4 className="text-xs font-black uppercase text-[#2A2621]">{org.name}</h4>
+                <p className="text-[11px] text-[#5A554E] font-medium">
+                  {selectedAvatar ? 'Custom logo image selected' : `Initial letter logo with ${selectedLogoColor} background`}
+                </p>
+                {selectedAvatar && (
+                  <button
+                    type="button"
+                    onClick={() => setSelectedAvatar('')}
+                    className="text-[10.5px] text-red-600 font-bold hover:underline cursor-pointer border-none bg-transparent p-0"
+                  >
+                    Remove custom image & use color initial
+                  </button>
+                )}
+              </div>
+            </div>
+
+            {/* Upload Custom Logo Area */}
+            <div className="space-y-1.5">
+              <label className="text-[10px] font-black uppercase tracking-wider text-[#5A554E]">
+                Upload Custom Logo Image
+              </label>
+              <label className="flex flex-col items-center justify-center border-2 border-dashed border-black/15 hover:border-[#FD5C05] bg-[#F8F6F0] hover:bg-[#FD5C05]/5 rounded-2xl p-5 cursor-pointer transition-all">
+                <Upload className="h-6 w-6 text-[#FD5C05] mb-1.5" />
+                <span className="text-xs font-bold text-[#2A2621]">Click to browse device or drop photo here</span>
+                <span className="text-[10px] text-[#5A554E] mt-0.5 font-medium">Square images recommended (JPG, PNG, WEBP)</span>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleAvatarFileUpload}
+                  className="hidden"
+                />
+              </label>
+            </div>
+
+            {/* Background Color Swatches */}
+            <div className="space-y-1.5">
+              <label className="text-[10px] font-black uppercase tracking-wider text-[#5A554E]">
+                Logo Theme Color
+              </label>
+              <div className="flex items-center gap-2 flex-wrap">
+                {LOGO_COLORS.map((c) => {
+                  const isSelected = (selectedLogoColor || org.logoColor) === c.id;
+                  return (
+                    <button
+                      key={c.id}
+                      type="button"
+                      onClick={() => setSelectedLogoColor(c.id)}
+                      className={`h-8 w-8 rounded-full border-2 transition-all cursor-pointer flex items-center justify-center ${
+                        isSelected ? 'border-[#2A2621] scale-110 shadow-md ring-2 ring-black/15' : 'border-white hover:scale-105'
+                      }`}
+                      style={{ backgroundColor: c.hex }}
+                      title={c.label}
+                    >
+                      {isSelected && <Check className="h-3.5 w-3.5 text-white" />}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Paste Image URL */}
+            <div className="space-y-1.5">
+              <label className="text-[10px] font-black uppercase tracking-wider text-[#5A554E]">
+                Or Paste Image Link
+              </label>
+              <input
+                type="text"
+                placeholder="https://example.com/logo.png"
+                value={selectedAvatar.startsWith('data:') ? '' : selectedAvatar}
+                onChange={(e) => setSelectedAvatar(e.target.value)}
+                className="w-full bg-[#F8F6F0] border border-black/[0.08] rounded-xl px-3.5 py-2 text-xs text-[#2A2621] font-medium focus:outline-none focus:border-[#FD5C05]"
+              />
+            </div>
+
+            {/* Modal Actions */}
+            <div className="flex justify-end gap-3 pt-2 border-t border-black/[0.06]">
+              <button
+                type="button"
+                onClick={() => setShowAvatarModal(false)}
+                className="px-4 py-2.5 rounded-xl border border-black/10 text-xs font-bold text-[#5A554E] hover:bg-slate-50 cursor-pointer bg-white"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={() => handleSaveAvatar(selectedAvatar, selectedLogoColor)}
+                disabled={isUploadingMedia}
+                className="px-5 py-2.5 bg-[#FD5C05] hover:bg-[#CC3D00] text-white text-xs font-black uppercase tracking-wider rounded-xl transition-all cursor-pointer border-none shadow-md shadow-[#FD5C05]/20 flex items-center gap-1.5 disabled:opacity-50"
+              >
+                <Save className="h-3.5 w-3.5" />
+                {isUploadingMedia ? 'Saving...' : 'Save Profile Picture'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
     </div>
   );

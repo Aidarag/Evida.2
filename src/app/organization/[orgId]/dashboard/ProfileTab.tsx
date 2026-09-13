@@ -3,10 +3,21 @@
 import React, { useState, useEffect } from 'react';
 import { useEvents } from '@/lib/context/EventContext';
 import VerifiedBadge from '@/components/ui/VerifiedBadge';
-import { Building, Shield, Save, PlusCircle, Users, Calendar } from 'lucide-react';
+import { Building, Shield, Save, PlusCircle, Users, Calendar, Camera, Upload, Check } from 'lucide-react';
 import { Organization } from '@/lib/types';
 import CreateEventModal from '@/components/student/CreateEventModal';
 import { useUser } from '@/lib/context/UserContext';
+
+const LOGO_COLORS = [
+  { id: 'indigo', hex: '#6366f1', label: 'Indigo' },
+  { id: 'sky', hex: '#0ea5e9', label: 'Sky' },
+  { id: 'emerald', hex: '#10b981', label: 'Emerald' },
+  { id: 'violet', hex: '#8b5cf6', label: 'Violet' },
+  { id: 'amber', hex: '#f59e0b', label: 'Amber' },
+  { id: 'rose', hex: '#f43f5e', label: 'Rose' },
+  { id: 'teal', hex: '#14b8a6', label: 'Teal' },
+  { id: 'orange', hex: '#FD5C05', label: 'Orange' },
+];
 
 export default function ProfileTab({ orgId }: { orgId: string }) {
   const { organizations, events, refetch } = useEvents();
@@ -19,6 +30,9 @@ export default function ProfileTab({ orgId }: { orgId: string }) {
   const [aboutUs, setAboutUs] = useState('');
   const [category, setCategory] = useState('Academic');
   const [rosterType, setRosterType] = useState<'members' | 'team'>('members');
+  const [coverImage, setCoverImage] = useState(org?.coverImage || '');
+  const [logoUrl, setLogoUrl] = useState(org?.logoUrl || '');
+  const [logoColor, setLogoColor] = useState(org?.logoColor || 'indigo');
   const [isSaving, setIsSaving] = useState(false);
   const [isRequestingVerify, setIsRequestingVerify] = useState(false);
   const [savedSuccess, setSavedSuccess] = useState(false);
@@ -31,6 +45,9 @@ export default function ProfileTab({ orgId }: { orgId: string }) {
       setAboutUs(org.aboutUs || org.description || '');
       setCategory(org.category || 'Academic');
       setRosterType(org.rosterType || (org.category === 'Sports' || org.category === 'Athletics' ? 'team' : 'members'));
+      setCoverImage(org.coverImage || '');
+      setLogoUrl(org.logoUrl || '');
+      setLogoColor(org.logoColor || 'indigo');
     }
   }, [org]);
 
@@ -44,6 +61,40 @@ export default function ProfileTab({ orgId }: { orgId: string }) {
   }
 
   const orgEvents = events.filter((e) => e.organizationId === orgId || e.organizationName === org.name);
+
+  const handleBannerUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      if (file.size > 5 * 1024 * 1024) {
+        alert('Please choose an image under 5MB.');
+        return;
+      }
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        if (typeof reader.result === 'string') {
+          setCoverImage(reader.result);
+        }
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleLogoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      if (file.size > 5 * 1024 * 1024) {
+        alert('Please choose an image under 5MB.');
+        return;
+      }
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        if (typeof reader.result === 'string') {
+          setLogoUrl(reader.result);
+        }
+      };
+      reader.readAsDataURL(file);
+    }
+  };
 
   const handleSaveProfile = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -60,6 +111,9 @@ export default function ProfileTab({ orgId }: { orgId: string }) {
           aboutUs,
           category,
           rosterType,
+          coverImage,
+          logoUrl,
+          logoColor,
         }),
       });
 
@@ -102,8 +156,15 @@ export default function ProfileTab({ orgId }: { orgId: string }) {
       {/* Profile Header & Verification Status */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-6 bg-slate-50 border border-black/[0.06] rounded-2xl">
         <div className="flex items-center gap-4">
-          <div className="h-14 w-14 rounded-2xl bg-[#FD5C05] text-white text-2xl font-black flex items-center justify-center shadow-md">
-            {org.name.charAt(0).toUpperCase()}
+          <div 
+            className="h-14 w-14 rounded-2xl text-white text-2xl font-black flex items-center justify-center shadow-md overflow-hidden"
+            style={{ backgroundColor: org.logoColor ? (org.logoColor.startsWith('#') ? org.logoColor : '#FD5C05') : '#FD5C05' }}
+          >
+            {org.logoUrl ? (
+              <img src={org.logoUrl} alt={org.name} className="w-full h-full object-cover" />
+            ) : (
+              org.name.charAt(0).toUpperCase()
+            )}
           </div>
           <div>
             <h2 className="text-xl font-extrabold text-[#2A2621] uppercase tracking-tight flex items-center gap-1.5" style={{ fontFamily: 'var(--font-display)' }}>
@@ -155,6 +216,115 @@ export default function ProfileTab({ orgId }: { orgId: string }) {
               Changes Saved Successfully ✓
             </span>
           )}
+        </div>
+
+        {/* Visual Branding Section: Banner & Profile Picture */}
+        <div className="space-y-4 pb-4 border-b border-black/[0.04]">
+          <h4 className="text-xs font-black text-[#5A554E] uppercase tracking-wider">Visual Branding & Media</h4>
+          <div className="grid gap-6 md:grid-cols-2">
+            
+            {/* Profile Picture Card */}
+            <div className="p-4 rounded-xl border border-black/[0.08] bg-slate-50 space-y-3">
+              <label className="block text-[11px] font-bold text-[#5A554E] uppercase tracking-wide">
+                Profile Picture / Logo
+              </label>
+              <div className="flex items-center gap-4">
+                <div
+                  className="h-16 w-16 rounded-2xl text-white font-extrabold text-2xl flex items-center justify-center border-2 border-white shadow-md shrink-0 overflow-hidden relative"
+                  style={{ backgroundColor: logoColor || '#FD5C05' }}
+                >
+                  {logoUrl ? (
+                    <img src={logoUrl} alt="Logo preview" className="w-full h-full object-cover" />
+                  ) : (
+                    name ? name.charAt(0).toUpperCase() : 'O'
+                  )}
+                </div>
+                <div className="space-y-1.5 flex-1">
+                  <label className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#FD5C05] hover:bg-[#CC3D00] text-white rounded-lg text-xs font-bold uppercase tracking-wider transition-all cursor-pointer shadow-xs">
+                    <Camera className="h-3.5 w-3.5" />
+                    <span>Upload Picture</span>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={handleLogoUpload}
+                      className="hidden"
+                    />
+                  </label>
+                  {logoUrl && (
+                    <button
+                      type="button"
+                      onClick={() => setLogoUrl('')}
+                      className="block text-[10px] text-red-600 font-bold hover:underline cursor-pointer border-none bg-transparent p-0"
+                    >
+                      Reset to letter logo
+                    </button>
+                  )}
+                </div>
+              </div>
+
+              {/* Logo Color Selection */}
+              <div className="pt-2 border-t border-black/[0.04] space-y-1">
+                <span className="text-[10px] font-bold text-[#5A554E] uppercase">Logo Theme Color</span>
+                <div className="flex items-center gap-1.5 flex-wrap">
+                  {LOGO_COLORS.map((c) => (
+                    <button
+                      key={c.id}
+                      type="button"
+                      onClick={() => setLogoColor(c.id)}
+                      className={`h-6 w-6 rounded-full border-2 transition-transform cursor-pointer flex items-center justify-center ${
+                        logoColor === c.id ? 'border-[#2A2621] scale-110 shadow-xs' : 'border-white'
+                      }`}
+                      style={{ backgroundColor: c.hex }}
+                      title={c.label}
+                    >
+                      {logoColor === c.id && <Check className="h-3 w-3 text-white" />}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* Banner Cover Card */}
+            <div className="p-4 rounded-xl border border-black/[0.08] bg-slate-50 space-y-3">
+              <label className="block text-[11px] font-bold text-[#5A554E] uppercase tracking-wide">
+                Cover Banner Photo
+              </label>
+              <div
+                className="h-20 w-full rounded-xl border border-black/10 overflow-hidden bg-slate-900 relative shadow-inner flex items-center justify-center"
+                style={{
+                  backgroundImage: coverImage ? `url(${coverImage})` : undefined,
+                  backgroundSize: 'cover',
+                  backgroundPosition: 'center',
+                }}
+              >
+                {!coverImage && (
+                  <span className="text-[10px] text-slate-400 font-medium">Default Campus Cover Active</span>
+                )}
+              </div>
+              <div className="flex items-center justify-between gap-2 pt-1">
+                <label className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#FD5C05] hover:bg-[#CC3D00] text-white rounded-lg text-xs font-bold uppercase tracking-wider transition-all cursor-pointer shadow-xs">
+                  <Camera className="h-3.5 w-3.5" />
+                  <span>Upload Banner</span>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleBannerUpload}
+                    className="hidden"
+                  />
+                </label>
+                {coverImage && (
+                  <button
+                    type="button"
+                    onClick={() => setCoverImage('')}
+                    className="text-[10px] text-red-600 font-bold hover:underline cursor-pointer border-none bg-transparent p-0"
+                  >
+                    Reset Banner
+                  </button>
+                )}
+              </div>
+            </div>
+
+          </div>
         </div>
 
         <div className="grid gap-6 md:grid-cols-2">
