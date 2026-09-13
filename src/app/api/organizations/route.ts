@@ -77,6 +77,7 @@ export async function POST(request: Request) {
       if (body.coverImage !== undefined) org.coverImage = body.coverImage;
       if (body.website !== undefined) org.website = body.website;
       if (body.email !== undefined) org.email = body.email;
+      if (body.advisorName !== undefined) org.advisorName = body.advisorName;
       if (body.joinSetting) org.joinSetting = body.joinSetting;
       if (body.rosterType) org.rosterType = body.rosterType;
       if (body.teamRoster) org.teamRoster = body.teamRoster;
@@ -192,6 +193,7 @@ export async function POST(request: Request) {
       joinSetting: body.joinSetting || 'request',
       website: body.website || `https://${cleanSlug || 'org'}.evida.app`,
       email: body.email || `contact@${cleanSlug || 'org'}.org`,
+      advisorName: body.advisorName || '',
       creatorUsername: member,
       announcements: [
         {

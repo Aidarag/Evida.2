@@ -54,6 +54,7 @@ export interface Organization {
   coverImage?: string;
   website?: string;
   email?: string;
+  advisorName?: string;
   joinSetting?: 'direct' | 'request';
   creatorUsername?: string;
   schoolId?: string;

@@ -31,6 +31,7 @@ export default function CreateOrganizationPage() {
   const [orgCategory, setOrgCategory] = useState('Social');
   const [orgDesc, setOrgDesc] = useState('');
   const [orgAbout, setOrgAbout] = useState('');
+  const [advisorName, setAdvisorName] = useState('');
   const [orgColor, setOrgColor] = useState('indigo');
   const [orgEmail, setOrgEmail] = useState('');
   const [orgWebsite, setOrgWebsite] = useState('');
@@ -58,6 +59,7 @@ export default function CreateOrganizationPage() {
         name: orgName.trim(),
         description: orgDesc.trim(),
         aboutUs: orgAbout.trim() || orgDesc.trim(),
+        advisorName: advisorName.trim(),
         category: orgCategory,
         logoColor: orgColor,
         email: orgEmail.trim() || `contact@${cleanSlug || 'org'}.org`,
@@ -188,6 +190,19 @@ export default function CreateOrganizationPage() {
                     <option value="Technology">Technology</option>
                     <option value="Religious">Religious</option>
                   </select>
+                </div>
+
+                <div className="space-y-1.5">
+                  <label className="block text-xs font-bold uppercase tracking-wider text-[#5A554E]">
+                    Advisor Name
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="e.g. Dr. Jane Smith, Faculty Advisor"
+                    value={advisorName}
+                    onChange={e => setAdvisorName(e.target.value)}
+                    className="w-full bg-[#F8F6F0] border border-black/[0.08] rounded-xl px-4 py-3 text-xs font-semibold text-[#2A2621] focus:outline-none focus:border-[#FD5C05] focus:bg-white transition-all shadow-xs"
+                  />
                 </div>
 
                 <div className="space-y-1.5">
@@ -343,6 +358,9 @@ export default function CreateOrganizationPage() {
                   <div className="pt-3 border-t border-black/[0.04] grid gap-2 sm:grid-cols-2 text-[10px] font-semibold text-[#5A554E]">
                     <div className="flex items-center gap-1.5"><Mail className="h-3.5 w-3.5 text-[#2A2621]" /> {orgEmail || 'Email configured'}</div>
                     <div className="flex items-center gap-1.5"><Globe className="h-3.5 w-3.5 text-[#2A2621]" /> {orgWebsite || 'Contact / Social link configured'}</div>
+                    {advisorName && (
+                      <div className="flex items-center gap-1.5 sm:col-span-2"><Users className="h-3.5 w-3.5 text-[#2A2621]" /> Advisor: <span className="text-[#2A2621] font-bold">{advisorName}</span></div>
+                    )}
                   </div>
                 </div>
 

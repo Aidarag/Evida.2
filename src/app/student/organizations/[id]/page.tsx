@@ -82,6 +82,7 @@ export default function OrganizationProfilePage() {
   const [editAbout, setEditAbout] = useState(org?.aboutUs || '');
   const [editCategory, setEditCategory] = useState(org?.category || 'Social');
   const [editColor, setEditColor] = useState(org?.logoColor || 'indigo');
+  const [editAdvisorName, setEditAdvisorName] = useState(org?.advisorName || '');
   const [editWebsite, setEditWebsite] = useState(org?.website || '');
   const [editEmail, setEditEmail] = useState(org?.email || '');
   const [editJoinSetting, setEditJoinSetting] = useState<'direct' | 'request'>(org?.joinSetting || 'request');
@@ -94,6 +95,7 @@ export default function OrganizationProfilePage() {
       setEditAbout(org.aboutUs || org.description || '');
       setEditCategory(org.category || 'Social');
       setEditColor(org.logoColor || 'indigo');
+      setEditAdvisorName(org.advisorName || '');
       setEditWebsite(org.website || '');
       setEditEmail(org.email || '');
       setEditJoinSetting(org.joinSetting || 'request');
@@ -471,6 +473,8 @@ export default function OrganizationProfilePage() {
           description: editDesc.trim(),
           aboutUs: editAbout.trim(),
           category: editCategory,
+          logoColor: editColor,
+          advisorName: editAdvisorName.trim(),
           website: editWebsite.trim()
             ? (editWebsite.trim().startsWith('http://') || editWebsite.trim().startsWith('https://')
                 ? editWebsite.trim()
@@ -985,6 +989,10 @@ export default function OrganizationProfilePage() {
                   <p className="font-extrabold text-[#FD5C05] uppercase">{org.category || 'Social'}</p>
                 </div>
                 <div className="space-y-1">
+                  <p className="text-[10px] font-bold text-[#5A554E] uppercase tracking-wide">Advisor Name</p>
+                  <p className="font-extrabold text-[#2A2621]">{org.advisorName || 'Not specified'}</p>
+                </div>
+                <div className="space-y-1">
                   <p className="text-[10px] font-bold text-[#5A554E] uppercase tracking-wide">Contact / Social Media</p>
                   {org.website ? (
                     <a
@@ -1082,6 +1090,17 @@ export default function OrganizationProfilePage() {
                       value={editAbout}
                       onChange={e => setEditAbout(e.target.value)}
                       className="w-full bg-[#F8F6F0] border border-black/[0.08] rounded-xl px-3.5 py-2.5 text-xs text-[#2A2621] focus:outline-none focus:border-[#FD5C05] resize-none"
+                    />
+                  </div>
+
+                  <div className="space-y-1.5">
+                    <label className="block text-[10px] font-bold text-[#5A554E] uppercase tracking-wider">Advisor Name</label>
+                    <input
+                      type="text"
+                      placeholder="e.g. Dr. Jane Smith, Faculty Advisor"
+                      value={editAdvisorName}
+                      onChange={e => setEditAdvisorName(e.target.value)}
+                      className="w-full bg-[#F8F6F0] border border-black/[0.08] rounded-xl px-3.5 py-2.5 text-xs text-[#2A2621] focus:outline-none focus:border-[#FD5C05]"
                     />
                   </div>
 
