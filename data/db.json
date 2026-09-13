@@ -1046,6 +1046,36 @@
       "verifiedAt": "2026-09-13T03:49:58.298Z",
       "refusalReason": "Requires signed faculty advisor charter and updated club constitution.",
       "refusedAt": "2026-09-13T03:50:21.028Z"
+    },
+    {
+      "id": "org-1789339896565",
+      "name": "AI & Robotics Club",
+      "description": "Empowering students through cutting-edge AI and robotics projects.",
+      "aboutUs": "The AI & Robotics Club brings together students interested in artificial intelligence, machine learning, and hardware engineering.",
+      "category": "Social",
+      "verified": false,
+      "verificationStatus": "unverified",
+      "members": [
+        "Dean Dean"
+      ],
+      "memberRoles": {
+        "Dean Dean": "President"
+      },
+      "logoColor": "indigo",
+      "joinSetting": "request",
+      "website": "https://instagram.com/airobotics",
+      "email": "contact@airobotics.org",
+      "advisorName": "Dr. Alan Turing",
+      "creatorUsername": "Dean Dean",
+      "announcements": [
+        {
+          "id": "ann-1789339896565",
+          "title": "Welcome to AI & Robotics Club! 🎉",
+          "content": "We are excited to launch our official presence on Evida! Join our organization to get access to member updates, exclusive events, and announcements.",
+          "date": "Sep 13, 2026",
+          "author": "Dean Dean"
+        }
+      ]
     }
   ],
   "users": [
@@ -1116,7 +1146,9 @@
       "email": "dean.williams@university.edu",
       "password": "demo123",
       "role": "admin",
-      "organizations": [],
+      "organizations": [
+        "org-1789339896565"
+      ],
       "major": "Higher Ed Administration",
       "gradYear": "N/A",
       "graduationYear": "N/A",

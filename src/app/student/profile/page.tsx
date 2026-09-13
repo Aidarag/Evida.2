@@ -1118,7 +1118,7 @@ function StudentProfilePageContent() {
                           className="flex items-center gap-1.5 px-3 py-1.5 bg-[#FD5C05]/10 hover:bg-[#FD5C05]/20 text-[#FD5C05] text-[10px] font-extrabold uppercase rounded-xl transition-colors cursor-pointer"
                         >
                           <Plus className="h-3.5 w-3.5" />
-                          Create Group
+                          Create Organization
                         </button>
                       )}
                     </div>
