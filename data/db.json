@@ -1076,6 +1076,37 @@
           "author": "Dean Dean"
         }
       ]
+    },
+    {
+      "id": "org-1789344908044",
+      "name": "Robotics & AI Society",
+      "description": "Advancing robotics and artificial intelligence research at Livingstone College.Advan",
+      "aboutUs": "cing robotics and artificial intelligence research at Livingstone College.",
+      "category": "Social",
+      "verified": false,
+      "verificationStatus": "unverified",
+      "members": [
+        "Dean Williams"
+      ],
+      "memberRoles": {
+        "Dean Williams": "President"
+      },
+      "logoColor": "indigo",
+      "logoUrl": "https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=150&auto=format&fit=crop&q=80",
+      "joinSetting": "request",
+      "website": "https://roboticsaisociety.evida.app",
+      "email": "contact@roboticsaisociety.org",
+      "advisorName": "",
+      "creatorUsername": "Dean Williams",
+      "announcements": [
+        {
+          "id": "ann-1789344908044",
+          "title": "Welcome to Robotics & AI Society! 🎉",
+          "content": "We are excited to launch our official presence on Evida! Join our organization to get access to member updates, exclusive events, and announcements.",
+          "date": "Sep 13, 2026",
+          "author": "Dean Williams"
+        }
+      ]
     }
   ],
   "users": [

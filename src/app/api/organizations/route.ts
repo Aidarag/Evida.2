@@ -190,6 +190,8 @@ export async function POST(request: Request) {
       members: member ? [member] : [],
       memberRoles: member ? { [member]: 'President' } : {},
       logoColor: logoColor || 'indigo',
+      logoUrl: body.logoUrl || undefined,
+      coverImage: body.coverImage || undefined,
       joinSetting: body.joinSetting || 'request',
       website: body.website || `https://${cleanSlug || 'org'}.evida.app`,
       email: body.email || `contact@${cleanSlug || 'org'}.org`,

@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useEvents } from '@/lib/context/EventContext';
 import { useUser } from '@/lib/context/UserContext';
-import { ArrowLeft, Building2, Calendar, Megaphone, Users, Sparkles, Check, Globe, Mail, ShieldCheck, ArrowRight, Info } from 'lucide-react';
+import { ArrowLeft, Building2, Calendar, Megaphone, Users, Sparkles, Check, Globe, Mail, ShieldCheck, ArrowRight, Info, Camera, Upload } from 'lucide-react';
 import Card from '@/components/ui/Card';
 
 const LOGO_COLORS = [
@@ -32,12 +32,30 @@ export default function CreateOrganizationPage() {
   const [orgDesc, setOrgDesc] = useState('');
   const [orgAbout, setOrgAbout] = useState('');
   const [advisorName, setAdvisorName] = useState('');
+  const [logoUrl, setLogoUrl] = useState('');
   const [orgColor, setOrgColor] = useState('indigo');
   const [orgEmail, setOrgEmail] = useState('');
   const [orgWebsite, setOrgWebsite] = useState('');
   const [joinSetting, setJoinSetting] = useState<'direct' | 'request'>('request');
 
   if (!currentUser) return null;
+
+  const handleLogoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      if (file.size > 5 * 1024 * 1024) {
+        alert('Please choose an image under 5MB.');
+        return;
+      }
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        if (typeof reader.result === 'string') {
+          setLogoUrl(reader.result);
+        }
+      };
+      reader.readAsDataURL(file);
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -62,6 +80,7 @@ export default function CreateOrganizationPage() {
         advisorName: advisorName.trim(),
         category: orgCategory,
         logoColor: orgColor,
+        logoUrl: logoUrl.trim() || undefined,
         email: orgEmail.trim() || `contact@${cleanSlug || 'org'}.org`,
         website: formattedWebsite,
         joinSetting
@@ -247,6 +266,66 @@ export default function CreateOrganizationPage() {
             {/* STEP 2: Branding & Contact */}
             {step === 2 && (
               <div className="space-y-5 animate-fade-in">
+                {/* Organization Logo & Visual Identity */}
+                <div className="p-4 sm:p-5 rounded-2xl bg-[#F8F6F0] border border-black/[0.06] space-y-3.5">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <label className="block text-xs font-black uppercase tracking-wider text-[#2A2621]">
+                        Organization Logo
+                      </label>
+                      <p className="text-[11px] text-[#5A554E] font-medium mt-0.5">
+                        Upload your official organization logo or provide an image link.
+                      </p>
+                    </div>
+                    {logoUrl && (
+                      <button
+                        type="button"
+                        onClick={() => setLogoUrl('')}
+                        className="text-[11px] text-rose-600 font-bold hover:underline cursor-pointer border-none bg-transparent p-0"
+                      >
+                        Remove Logo
+                      </button>
+                    )}
+                  </div>
+
+                  <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+                    {/* Live Logo Avatar Preview */}
+                    <div
+                      className="h-16 w-16 rounded-2xl text-white font-extrabold text-2xl flex items-center justify-center border-2 border-white shadow-md shrink-0 overflow-hidden relative"
+                      style={{ backgroundColor: selectedHex }}
+                    >
+                      {logoUrl ? (
+                        <img src={logoUrl} alt="Logo preview" className="w-full h-full object-cover" />
+                      ) : (
+                        orgName ? orgName.charAt(0).toUpperCase() : 'O'
+                      )}
+                    </div>
+
+                    <div className="flex-1 w-full space-y-2">
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <label className="inline-flex items-center gap-1.5 px-3.5 py-2 bg-[#FD5C05] hover:bg-[#CC3D00] text-white rounded-xl text-xs font-bold uppercase tracking-wider transition-all cursor-pointer shadow-xs">
+                          <Camera className="h-3.5 w-3.5" />
+                          <span>Upload Image</span>
+                          <input
+                            type="file"
+                            accept="image/*"
+                            onChange={handleLogoUpload}
+                            className="hidden"
+                          />
+                        </label>
+                        <span className="text-[11px] text-[#5A554E] font-medium">or paste image link below</span>
+                      </div>
+                      <input
+                        type="text"
+                        placeholder="https://example.com/logo.png"
+                        value={logoUrl.startsWith('data:') ? '' : logoUrl}
+                        onChange={(e) => setLogoUrl(e.target.value)}
+                        className="w-full bg-white border border-black/[0.08] rounded-xl px-3.5 py-2.5 text-xs font-medium text-[#2A2621] focus:outline-none focus:border-[#FD5C05] shadow-xs"
+                      />
+                    </div>
+                  </div>
+                </div>
+
                 <div className="space-y-2">
                   <label className="block text-xs font-bold uppercase tracking-wider text-[#5A554E]">
                     Choose Theme Logo Color
@@ -338,10 +417,14 @@ export default function CreateOrganizationPage() {
                 <div className="p-5 bg-gradient-to-b from-[#FDFBF7] to-white border border-[#FD5C05]/20 rounded-2xl space-y-4 shadow-xs">
                   <div className="flex items-center gap-3">
                     <div
-                      className="h-12 w-12 rounded-2xl text-white font-black text-xl flex items-center justify-center shadow-xs shrink-0"
+                      className="h-12 w-12 rounded-2xl text-white font-black text-xl flex items-center justify-center shadow-xs shrink-0 overflow-hidden"
                       style={{ backgroundColor: selectedHex }}
                     >
-                      {orgName ? orgName.charAt(0).toUpperCase() : 'O'}
+                      {logoUrl ? (
+                        <img src={logoUrl} alt={orgName} className="w-full h-full object-cover" />
+                      ) : (
+                        orgName ? orgName.charAt(0).toUpperCase() : 'O'
+                      )}
                     </div>
                     <div>
                       <h3 className="font-extrabold text-base text-[#2A2621] uppercase tracking-tight">{orgName || 'Organization Name'}</h3>

@@ -711,18 +711,25 @@ export function ProfileSwitcher() {
           </>
         ) : (
           <>
-            <div
-              className="h-7 w-7 rounded-full flex items-center justify-center text-white text-[10px] font-black shrink-0 shadow-sm"
-              style={{
-                backgroundColor:
-                  activeProfile.orgId &&
-                  organizations.find(o => o.id === activeProfile.orgId)?.logoColor
-                    ? getTailwindBgColor(organizations.find(o => o.id === activeProfile.orgId)?.logoColor || 'indigo')
-                    : '#FD5C05'
-              }}
-            >
-              {activeProfile.name.substring(0, 2).toUpperCase()}
-            </div>
+            {(() => {
+              const activeOrg = activeProfile.orgId ? organizations.find(o => o.id === activeProfile.orgId) : null;
+              return (
+                <div
+                  className="h-7 w-7 rounded-full flex items-center justify-center text-white text-[10px] font-black shrink-0 shadow-sm overflow-hidden"
+                  style={{
+                    backgroundColor: activeOrg?.logoColor
+                      ? getTailwindBgColor(activeOrg.logoColor)
+                      : '#FD5C05'
+                  }}
+                >
+                  {activeOrg?.logoUrl ? (
+                    <img src={activeOrg.logoUrl} alt={activeProfile.name} className="w-full h-full object-cover" />
+                  ) : (
+                    activeProfile.name.substring(0, 2).toUpperCase()
+                  )}
+                </div>
+              );
+            })()}
             <div className="hidden sm:block min-w-0 pr-1 select-none text-left">
               <p className="text-[9.5px] font-bold text-[#2A2621] leading-none whitespace-nowrap truncate max-w-[110px]">{activeProfile.name}</p>
               <p className="text-[8px] text-[#FD5C05] font-black leading-none uppercase tracking-widest flex items-center gap-0.5 mt-0.5">
@@ -785,10 +792,14 @@ export function ProfileSwitcher() {
                     }`}
                   >
                     <div
-                      className="h-6 w-6 rounded-full flex items-center justify-center text-white text-[9px] font-black shrink-0"
+                      className="h-6 w-6 rounded-full flex items-center justify-center text-white text-[9px] font-black shrink-0 overflow-hidden"
                       style={{ backgroundColor: getTailwindBgColor(org.logoColor) }}
                     >
-                      {org.name.substring(0, 2).toUpperCase()}
+                      {org.logoUrl ? (
+                        <img src={org.logoUrl} alt={org.name} className="w-full h-full object-cover" />
+                      ) : (
+                        org.name.substring(0, 2).toUpperCase()
+                      )}
                     </div>
                     <div className="min-w-0 flex-1">
                       <p className="truncate leading-tight">{org.name}</p>

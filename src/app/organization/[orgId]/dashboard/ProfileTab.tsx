@@ -239,26 +239,35 @@ export default function ProfileTab({ orgId }: { orgId: string }) {
                     name ? name.charAt(0).toUpperCase() : 'O'
                   )}
                 </div>
-                <div className="space-y-1.5 flex-1">
-                  <label className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#FD5C05] hover:bg-[#CC3D00] text-white rounded-lg text-xs font-bold uppercase tracking-wider transition-all cursor-pointer shadow-xs">
-                    <Camera className="h-3.5 w-3.5" />
-                    <span>Upload Picture</span>
-                    <input
-                      type="file"
-                      accept="image/*"
-                      onChange={handleLogoUpload}
-                      className="hidden"
-                    />
-                  </label>
-                  {logoUrl && (
-                    <button
-                      type="button"
-                      onClick={() => setLogoUrl('')}
-                      className="block text-[10px] text-red-600 font-bold hover:underline cursor-pointer border-none bg-transparent p-0"
-                    >
-                      Reset to letter logo
-                    </button>
-                  )}
+                <div className="space-y-2 flex-1">
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <label className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#FD5C05] hover:bg-[#CC3D00] text-white rounded-lg text-xs font-bold uppercase tracking-wider transition-all cursor-pointer shadow-xs">
+                      <Camera className="h-3.5 w-3.5" />
+                      <span>Upload Picture</span>
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={handleLogoUpload}
+                        className="hidden"
+                      />
+                    </label>
+                    {logoUrl && (
+                      <button
+                        type="button"
+                        onClick={() => setLogoUrl('')}
+                        className="text-[10px] text-red-600 font-bold hover:underline cursor-pointer border-none bg-transparent p-0"
+                      >
+                        Reset to letter logo
+                      </button>
+                    )}
+                  </div>
+                  <input
+                    type="text"
+                    placeholder="or paste logo image URL (https://...)"
+                    value={logoUrl.startsWith('data:') ? '' : logoUrl}
+                    onChange={(e) => setLogoUrl(e.target.value)}
+                    className="w-full bg-white border border-black/[0.08] rounded-xl px-3 py-1.5 text-xs text-[#2A2621] font-medium focus:outline-none focus:border-[#FD5C05]"
+                  />
                 </div>
               </div>
 

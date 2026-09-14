@@ -1136,10 +1136,14 @@ function StudentProfilePageContent() {
                             >
                               <div className="flex items-center gap-3.5 min-w-0">
                                 <div 
-                                  className="h-12 w-12 rounded-xl flex items-center justify-center font-black text-white text-xs shrink-0 shadow-sm transition-transform group-hover:scale-105"
+                                  className="h-12 w-12 rounded-xl flex items-center justify-center font-black text-white text-xs shrink-0 shadow-sm transition-transform group-hover:scale-105 overflow-hidden"
                                   style={{ backgroundColor: org.logoColor || '#2A2621' }}
                                 >
-                                  {org.name.substring(0, 2).toUpperCase()}
+                                  {org.logoUrl ? (
+                                    <img src={org.logoUrl} alt={org.name} className="w-full h-full object-cover" />
+                                  ) : (
+                                    org.name.substring(0, 2).toUpperCase()
+                                  )}
                                 </div>
                                 <div className="min-w-0 text-left">
                                   <p className="font-bold text-[#2A2621] text-xs uppercase tracking-tight group-hover:text-[#FD5C05] transition-colors truncate">
@@ -1189,10 +1193,14 @@ function StudentProfilePageContent() {
                             >
                               <div className="flex items-center gap-3.5 min-w-0">
                                 <div 
-                                  className="h-12 w-12 rounded-xl flex items-center justify-center font-black text-white text-xs shrink-0 shadow-sm transition-transform group-hover:scale-105"
+                                  className="h-12 w-12 rounded-xl flex items-center justify-center font-black text-white text-xs shrink-0 shadow-sm transition-transform group-hover:scale-105 overflow-hidden"
                                   style={{ backgroundColor: org.logoColor || '#2A2621' }}
                                 >
-                                  {org.name.substring(0, 2).toUpperCase()}
+                                  {org.logoUrl ? (
+                                    <img src={org.logoUrl} alt={org.name} className="w-full h-full object-cover" />
+                                  ) : (
+                                    org.name.substring(0, 2).toUpperCase()
+                                  )}
                                 </div>
                                 <div className="min-w-0 text-left">
                                   <p className="font-bold text-[#2A2621] text-xs uppercase tracking-tight group-hover:text-[#FD5C05] transition-colors truncate">

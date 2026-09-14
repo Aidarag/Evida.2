@@ -465,10 +465,14 @@ function ApprovalsContent() {
                   <div className="flex items-start justify-between gap-4">
                     <div className="flex items-center gap-3.5">
                       <div
-                        className="h-13 w-13 rounded-2xl text-white font-black text-lg flex items-center justify-center shadow-sm shrink-0"
+                        className="h-13 w-13 rounded-2xl text-white font-black text-lg flex items-center justify-center shadow-sm shrink-0 overflow-hidden"
                         style={{ backgroundColor: bgHex }}
                       >
-                        {org.name.charAt(0).toUpperCase()}
+                        {org.logoUrl ? (
+                          <img src={org.logoUrl} alt={org.name} className="w-full h-full object-cover" />
+                        ) : (
+                          org.name.charAt(0).toUpperCase()
+                        )}
                       </div>
                       <div className="space-y-0.5">
                         <div className="flex items-center gap-1.5 flex-wrap">

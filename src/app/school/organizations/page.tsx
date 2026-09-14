@@ -193,10 +193,14 @@ export default function OrganizationsPage() {
                 <div className="flex items-start justify-between gap-4">
                   <div className="flex items-center gap-4">
                     <div
-                      className="h-14 w-14 rounded-2xl text-white font-black text-xl flex items-center justify-center shadow-sm shrink-0"
+                      className="h-14 w-14 rounded-2xl text-white font-black text-xl flex items-center justify-center shadow-sm shrink-0 overflow-hidden"
                       style={{ backgroundColor: bgHex }}
                     >
-                      {org.name.charAt(0).toUpperCase()}
+                      {org.logoUrl ? (
+                        <img src={org.logoUrl} alt={org.name} className="w-full h-full object-cover" />
+                      ) : (
+                        org.name.charAt(0).toUpperCase()
+                      )}
                     </div>
                     <div className="space-y-1">
                       <div className="flex items-center gap-1.5">
