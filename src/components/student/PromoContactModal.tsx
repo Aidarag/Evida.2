@@ -223,6 +223,36 @@ export default function PromoContactModal({ promo, isOpen, onClose }: PromoConta
                   </button>
                 </div>
 
+                {/* Service Flyer / Image Preview */}
+                {(promo.flyerImage || promo.image) && (
+                  <div className="rounded-2xl overflow-hidden h-40 w-full bg-slate-100 border border-black/[0.06] shadow-inner">
+                    <img
+                      src={promo.flyerImage || promo.image}
+                      alt={promo.title}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                )}
+
+                {/* Badges: Category & Price */}
+                <div className="flex items-center gap-2">
+                  <span className="px-2.5 py-1 text-[9px] font-black uppercase tracking-wider bg-[#FD5C05] text-white rounded-full shadow-xs">
+                    {promo.isFree ? 'FREE' : (promo.price || 'PAID')}
+                  </span>
+                  {promo.category && (
+                    <span className="px-2.5 py-1 text-[9px] font-black uppercase tracking-wider bg-black/5 text-[#2A2621] rounded-full border border-black/10">
+                      {promo.category}
+                    </span>
+                  )}
+                </div>
+
+                {/* Description */}
+                {promo.description && (
+                  <p className="text-xs text-[#5A554E] leading-relaxed font-semibold">
+                    {promo.description}
+                  </p>
+                )}
+
                 {/* How would you like to connect? */}
                 <div className="space-y-2">
                   <p className="text-[10px] font-black uppercase tracking-widest text-[#5A554E]">

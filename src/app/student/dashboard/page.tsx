@@ -30,6 +30,7 @@ import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import VerifiedBadge from '@/components/ui/VerifiedBadge';
 import EventCard from '@/components/student/EventCard';
+import PromoContactModal from '@/components/student/PromoContactModal';
 import { Event, Promotion } from '@/lib/types';
 import EvidaLogo from '@/components/ui/EvidaLogo';
 
@@ -52,6 +53,7 @@ export default function StudentDashboardPage() {
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [likedEvents, setLikedEvents] = useState<Set<string>>(new Set());
   const [shareToast, setShareToast] = useState(false);
+  const [selectedPromo, setSelectedPromo] = useState<Promotion | null>(null);
   const searchInputRef = React.useRef<HTMLInputElement>(null);
 
   // ── Onboarding Preview States & Effects ──
@@ -220,22 +222,25 @@ export default function StudentDashboardPage() {
     } else {
       // Student Feed (Promotion Categories)
       if (sel === 'food') {
-        return cat.includes('food') || cat.includes('bake') || cat.includes('bbq') || title.includes('food') || title.includes('cookout') || title.includes('cookie') || title.includes('bake') || title.includes('dining');
+        return cat.includes('food') || cat.includes('bake') || cat.includes('bbq') || title.includes('food') || title.includes('cookout') || title.includes('cookie') || title.includes('bake') || title.includes('dining') || title.includes('acai') || title.includes('bowl') || title.includes('juice') || title.includes('smoothie');
       }
       if (sel === 'hair/braiding services') {
-        return cat.includes('beauty') || cat.includes('hair') || title.includes('hair') || title.includes('braid') || title.includes('style');
+        return cat.includes('beauty') || cat.includes('hair') || cat.includes('nail') || title.includes('hair') || title.includes('braid') || title.includes('style') || title.includes('nail') || title.includes('fade') || title.includes('cut');
       }
       if (sel === 'sales') {
-        return cat.includes('sale') || cat.includes('market') || cat.includes('clothing') || title.includes('sale') || title.includes('cloth') || title.includes('shirt') || title.includes('shop');
+        return cat.includes('sale') || cat.includes('market') || cat.includes('clothing') || title.includes('sale') || title.includes('cloth') || title.includes('shirt') || title.includes('shop') || title.includes('plant') || title.includes('candle') || title.includes('sneaker');
       }
       if (sel === 'tutoring') {
-        return cat.includes('tutor') || cat.includes('teach') || cat.includes('class') || cat.includes('academic') || title.includes('tutor') || title.includes('study');
+        return cat.includes('tutor') || cat.includes('teach') || cat.includes('class') || cat.includes('academic') || title.includes('tutor') || title.includes('study') || title.includes('resume') || title.includes('prep') || title.includes('chem') || title.includes('exam') || title.includes('screen') || title.includes('repair') || title.includes('fluency') || title.includes('calculus');
+      }
+      if (sel === 'creative & media' || sel === 'creative') {
+        return cat.includes('creative') || cat.includes('photo') || cat.includes('media') || title.includes('photo') || title.includes('portrait') || title.includes('video') || title.includes('sound') || title.includes('reel') || title.includes('drone');
       }
       if (sel === 'community events') {
-        return cat.includes('community') || cat.includes('initiative') || cat.includes('volunteer') || title.includes('community') || title.includes('charity');
+        return cat.includes('community') || cat.includes('initiative') || cat.includes('volunteer') || title.includes('community') || title.includes('charity') || title.includes('bike') || title.includes('move') || title.includes('wash') || title.includes('car');
       }
       if (sel === 'parties') {
-        return cat.includes('party') || cat.includes('social') || title.includes('party') || title.includes('rave');
+        return cat.includes('party') || cat.includes('social') || title.includes('party') || title.includes('rave') || title.includes('jam') || title.includes('music') || title.includes('dj');
       }
       return true;
     }
@@ -339,6 +344,7 @@ export default function StudentDashboardPage() {
     { name: 'Hair/braiding services', icon: Sparkles },
     { name: 'Sales', icon: Tag },
     { name: 'Tutoring', icon: GraduationCap },
+    { name: 'Creative & Media', icon: Camera },
     { name: 'Community events', icon: Users },
     { name: 'Parties', icon: Wine },
   ];
@@ -613,19 +619,7 @@ export default function StudentDashboardPage() {
                     event={item}
                     onClick={() => {
                       if (isPromo && promo) {
-                        const method = promo.contactMethod || promo.preferredContactMethod;
-                        const val = (promo.contactValue || promo.contactInfo || '').trim();
-                        if (method === 'phone' || /^[\d\s\-\+\(\)\.]{7,}$/.test(val)) {
-                          window.location.href = `tel:${val.replace(/\D/g, '')}`;
-                        } else if (method === 'snapchat') {
-                          const handle = val.startsWith('@') ? val.slice(1) : val.replace(/.*snapchat\.com\/add\//i, '');
-                          window.open(`https://snapchat.com/add/${handle}`, '_blank');
-                        } else if (method === 'instagram' || val.startsWith('@')) {
-                          const handle = val.startsWith('@') ? val.slice(1) : val.replace(/.*instagram\.com\//i, '');
-                          window.open(`https://instagram.com/${handle}`, '_blank');
-                        } else {
-                          window.location.href = `mailto:${promo.contactInfo}?subject=Inquiry regarding: ${promo.title}`;
-                        }
+                        setSelectedPromo(promo);
                       } else if (event) {
                         router.push(`/events/${event.id}`);
                       }
@@ -657,6 +651,12 @@ export default function StudentDashboardPage() {
           </motion.div>
         )}
       </AnimatePresence>
+
+      <PromoContactModal
+        promo={selectedPromo}
+        isOpen={!!selectedPromo}
+        onClose={() => setSelectedPromo(null)}
+      />
 
     </div>
   );

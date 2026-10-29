@@ -67,8 +67,9 @@ const EventCardInner = React.memo(function EventCardInner({
   const promoContact = isPromo ? getPromoContact(event as Promotion) : null;
 
   // Cover image with fallback
+  const promoImg = isPromo ? ((event as Promotion).image || (event as Promotion).flyerImage) : null;
   const coverImage = isPromo
-    ? '/pexels-markus-winkler-1430818-12199407.jpg'
+    ? (promoImg || '/pexels-markus-winkler-1430818-12199407.jpg')
     : (event.coverImage || '/pexels-hanna-elesha-abraham-1587801282-27498756.jpg');
 
   const isGradient = coverImage ? coverImage.includes('from-') : false;
@@ -82,17 +83,20 @@ const EventCardInner = React.memo(function EventCardInner({
   const month = dateObj.toLocaleDateString('en-US', { month: 'short' }).toUpperCase();
   const day = dateObj.getDate();
   const rawDateStr = `${month} ${day}`;
-  const timeStr = !isPromo && (event as Event).time ? (event as Event).time : '18:00';
-  const fullDateTime = `${rawDateStr} • ${timeStr}`.substring(0, 22);
+  const timeStr = !isPromo && (event as Event).time ? (event as Event).time : 'ACTIVE';
+  const fullDateTime = isPromo ? `${rawDateStr} • SERVICE` : `${rawDateStr} • ${timeStr}`.substring(0, 22);
 
   // Category Badge (Max 20 characters)
-  const rawCategory = isPromo ? 'Students Services' : ((event as Event).category || 'Social');
+  const promoCat = isPromo ? (event as Promotion).category : null;
+  const rawCategory = isPromo
+    ? (promoCat ? (promoCat === 'academic' ? 'TUTORING' : promoCat.toUpperCase()) : 'SERVICES')
+    : ((event as Event).category || 'Social');
   const categoryText = rawCategory.toUpperCase().substring(0, 20);
 
   // Price Badge (Max 8 characters)
   const priceText = !isPromo
     ? ((event as Event).free ? 'FREE' : `$${(event as Event).price || 'TICKETED'}`).substring(0, 8)
-    : 'SERVICE';
+    : ((event as Promotion).isFree ? 'FREE' : ((event as Promotion).price || 'SERVICE')).substring(0, 8);
 
   // Organization Name (Max 30 characters)
   const orgNameRaw = !isPromo
