@@ -294,7 +294,9 @@ export default function CreateEventModal({
               >
                 <option value="indoor">Indoor (Room, Hall)</option>
                 <option value="outdoor">Outdoor (Quad, Field)</option>
-                <option value="offcampus">Off-Campus</option>
+                {(currentUser.role !== 'student' && ownershipType !== 'student') && (
+                  <option value="offcampus">Off-Campus</option>
+                )}
               </select>
             </div>
           </div>

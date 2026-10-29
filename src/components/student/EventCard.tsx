@@ -1,14 +1,40 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Bookmark, MapPin, Users, ArrowRight } from 'lucide-react';
+import { Bookmark, MapPin, Users, ArrowRight, Phone } from 'lucide-react';
 import { Event, Promotion } from '@/lib/types';
 import { motion } from 'framer-motion';
 import { useEvents } from '@/lib/context/EventContext';
 import { useUser } from '@/lib/context/UserContext';
 import VerifiedBadge from '@/components/ui/VerifiedBadge';
+import { InstagramIcon, SnapchatIcon } from '@/components/ui/SocialIcons';
 
-interface EventCardProps {
+export function getPromoContact(promo: Promotion): { method: 'phone' | 'instagram' | 'snapchat'; value: string } | null {
+  const method = promo.contactMethod || (promo.preferredContactMethod as any);
+  const val = (promo.contactValue || promo.contactInfo || '').trim();
+  if (!val) return null;
+
+  if (method === 'phone') {
+    return { method: 'phone', value: val };
+  }
+  if (method === 'instagram') {
+    return { method: 'instagram', value: val.startsWith('@') ? val : `@${val.replace(/.*instagram\.com\//i, '')}` };
+  }
+  if (method === 'snapchat') {
+    return { method: 'snapchat', value: val.startsWith('@') ? val : `@${val.replace(/.*snapchat\.com\/add\//i, '')}` };
+  }
+
+  // Fallback heuristics
+  if (/^[\d\s\-\+\(\)\.]{7,}$/.test(val)) {
+    return { method: 'phone', value: val };
+  }
+  if (/snap/i.test(val)) {
+    return { method: 'snapchat', value: val.startsWith('@') ? val : `@${val.replace(/.*snapchat\.com\/add\//i, '')}` };
+  }
+  return { method: 'instagram', value: val.startsWith('@') ? val : `@${val.replace(/.*instagram\.com\//i, '')}` };
+}
+
+export interface EventCardProps {
   event: Event | Promotion;
   onClick: () => void;
   onSave?: (e: React.MouseEvent) => void;
@@ -38,6 +64,7 @@ const EventCardInner = React.memo(function EventCardInner({
   const [saveLoading, setSaveLoading] = useState(false);
 
   const isPromo = !('ownershipType' in event);
+  const promoContact = isPromo ? getPromoContact(event as Promotion) : null;
 
   // Cover image with fallback
   const coverImage = isPromo
@@ -58,14 +85,14 @@ const EventCardInner = React.memo(function EventCardInner({
   const timeStr = !isPromo && (event as Event).time ? (event as Event).time : '18:00';
   const fullDateTime = `${rawDateStr} • ${timeStr}`.substring(0, 22);
 
-  // Category Badge (Max 16 characters)
-  const rawCategory = isPromo ? 'Promotion' : ((event as Event).category || 'Social');
-  const categoryText = rawCategory.toUpperCase().substring(0, 16);
+  // Category Badge (Max 20 characters)
+  const rawCategory = isPromo ? 'Students Services' : ((event as Event).category || 'Social');
+  const categoryText = rawCategory.toUpperCase().substring(0, 20);
 
   // Price Badge (Max 8 characters)
   const priceText = !isPromo
     ? ((event as Event).free ? 'FREE' : `$${(event as Event).price || 'TICKETED'}`).substring(0, 8)
-    : 'PROMO';
+    : 'SERVICE';
 
   // Organization Name (Max 30 characters)
   const orgNameRaw = !isPromo
@@ -179,20 +206,34 @@ const EventCardInner = React.memo(function EventCardInner({
               <span>{(event as Event).attendees.length}</span>
             </span>
           )}
+          {isPromo && orgName && (
+            <span className="text-[9.5px] font-medium text-[#5A554E]/70 truncate max-w-[100px]">
+              by {orgName}
+            </span>
+          )}
         </div>
       </div>
 
-      {/* 3. FOOTER (Row 3: 50px - Independent Grid row with View Event CTA) */}
+      {/* 3. FOOTER (Row 3: 50px - Independent Grid row with View Promotion / View Event CTA) */}
       <div className="event-card__footer h-[50px] px-[18px] flex items-center justify-between border-t border-black/[0.06] min-w-0">
-        {/* Organization Name */}
-        <div className="event-card__organization flex-1 min-w-0 text-[11px] leading-[14px] font-bold text-[#5A554E] whitespace-nowrap overflow-hidden text-ellipsis flex items-center gap-1 pr-2">
-          <span className="truncate">{orgName}</span>
-          {isOrgVerified && <VerifiedBadge className="h-3.5 w-3.5 shrink-0 text-[#FD5C05]" />}
-        </div>
+        {/* Organization Name (for events) OR Contact Method with Icon (for promotions) */}
+        {isPromo && promoContact ? (
+          <div className="event-card__contact flex-1 min-w-0 flex items-center gap-1.5 text-[11px] leading-[14px] font-bold text-[#5A554E] whitespace-nowrap overflow-hidden text-ellipsis pr-2">
+            {promoContact.method === 'phone' && <Phone className="h-3.5 w-3.5 shrink-0 text-[#FD5C05]" />}
+            {promoContact.method === 'instagram' && <InstagramIcon className="h-3.5 w-3.5 shrink-0 text-[#FD5C05]" />}
+            {promoContact.method === 'snapchat' && <SnapchatIcon className="h-3.5 w-3.5 shrink-0 text-[#FD5C05]" />}
+            <span className="truncate">{promoContact.value}</span>
+          </div>
+        ) : (
+          <div className="event-card__organization flex-1 min-w-0 text-[11px] leading-[14px] font-bold text-[#5A554E] whitespace-nowrap overflow-hidden text-ellipsis flex items-center gap-1 pr-2">
+            <span className="truncate">{orgName}</span>
+            {isOrgVerified && <VerifiedBadge className="h-3.5 w-3.5 shrink-0 text-[#FD5C05]" />}
+          </div>
+        )}
 
-        {/* View Event Action CTA Button Link (Replaces duplicate FREE badge!) */}
+        {/* View Promotion / View Event Action CTA Button Link */}
         <div className="event-card__action shrink-0 flex items-center gap-1 text-[10.5px] font-black uppercase tracking-wider text-[#FD5C05] group-hover:text-[#CC3D00] transition-colors">
-          <span>View Event</span>
+          <span>{isPromo ? 'View Promotion' : 'View Event'}</span>
           <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1" />
         </div>
       </div>

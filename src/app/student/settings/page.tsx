@@ -493,7 +493,7 @@ export default function StudentSettingsPage() {
                   {([
                     { key: 'going', label: 'Attended Tab', desc: 'Lists events you have attended or plan to attend' },
                     { key: 'saved', label: 'Saved Tab', desc: 'Lists events you have saved for later' },
-                    { key: 'hosted', label: 'Hosted Tab', desc: 'Lists events and promotions you host' },
+                    { key: 'hosted', label: 'Hosted Tab', desc: 'Lists events and students services you host' },
                     { key: 'organizations', label: 'Organizations Tab', desc: 'Lists organizations you manage or belong to' }
                   ] as const).map(setting => {
                     const currentVal = currentUser.privacy?.[setting.key] || (setting.key === 'saved' || setting.key === 'organizations' ? 'private' : 'public');

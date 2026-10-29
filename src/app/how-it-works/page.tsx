@@ -140,7 +140,7 @@ export default function HowItWorksPage() {
             <ul className="space-y-3 text-xs font-semibold">
               <li><Link href="/student/dashboard" className="hover:text-white transition-colors">Explore Events</Link></li>
               <li><Link href="/student/create" className="hover:text-white transition-colors">Create Event</Link></li>
-              <li><Link href="/student/create" className="hover:text-white transition-colors">Create Promotion</Link></li>
+              <li><Link href="/student/create" className="hover:text-white transition-colors">Create Students Services</Link></li>
               <li><Link href="/student/dashboard" className="hover:text-white transition-colors">Student Dashboard</Link></li>
               <li><Link href="/school/dashboard" className="hover:text-white transition-colors">School Dashboard</Link></li>
             </ul>

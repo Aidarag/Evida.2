@@ -5,7 +5,8 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { useUser } from '@/lib/context/UserContext';
 import { useEvents } from '@/lib/context/EventContext';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Calendar, Tag, ArrowRight, ArrowLeft, Check, Users, User, Shield, Sparkles, Zap, Clock, Image as ImageIcon, Info, Megaphone, Ticket, CircleDollarSign, CreditCard } from 'lucide-react';
+import { Calendar, Tag, ArrowRight, ArrowLeft, Check, Users, User, Shield, Sparkles, Zap, Clock, Image as ImageIcon, Info, Megaphone, Ticket, CircleDollarSign, CreditCard, Phone } from 'lucide-react';
+import { InstagramIcon, SnapchatIcon } from '@/components/ui/SocialIcons';
 import Button from '@/components/ui/Button';
 import Card from '@/components/ui/Card';
 import Input from '@/components/ui/Input';
@@ -52,6 +53,8 @@ function CreateListingPageContent() {
     description: '',
     category: 'academic',
     organizerName: '',
+    contactMethod: 'phone' as 'phone' | 'instagram' | 'snapchat',
+    contactValue: '',
     contactInfo: '',
     flyerImageDataUrl: '',
     isFree: true,
@@ -103,6 +106,14 @@ function CreateListingPageContent() {
     setStep(4);
   }, [events, searchParams]);
 
+  useEffect(() => {
+    const typeParam = searchParams.get('type');
+    if (typeParam === 'promotion' || typeParam === 'services') {
+      setCreateType('promotion');
+      setStep(4);
+    }
+  }, [searchParams]);
+
   if (!currentUser) return null;
 
   // Filter organizations the user is member of
@@ -125,7 +136,7 @@ function CreateListingPageContent() {
     } else if (step === 3) {
       setStep(1);
     } else {
-      setStep(s => - 1);
+      setStep(s => s - 1);
     }
   };
 
@@ -188,6 +199,12 @@ function CreateListingPageContent() {
 
   const handlePromoSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    const contactVal = (promoForm.contactValue || promoForm.contactInfo || '').trim();
+    if (!contactVal) {
+      showToast('Please provide your contact method details.', 'error');
+      return;
+    }
+
     setIsSubmitting(true);
 
     try {
@@ -199,7 +216,9 @@ function CreateListingPageContent() {
           description: promoForm.description,
           category: promoForm.category,
           organizer: activeProfile.type === 'organization' ? activeProfile.name : (promoForm.organizerName || currentUser!.name),
-          contactInfo: promoForm.contactInfo,
+          contactMethod: promoForm.contactMethod,
+          contactValue: contactVal,
+          contactInfo: contactVal,
           flyerImage: promoForm.flyerImageDataUrl || undefined,
           isFree: promoForm.isFree,
           price: promoForm.isFree ? 'Free' : (promoForm.price || 'Paid'),
@@ -209,15 +228,15 @@ function CreateListingPageContent() {
       setIsSubmitting(false);
 
       if (res.ok) {
-        showToast('Promotion submitted! It will appear after review.');
+        showToast('Students Services submitted! It will appear after review.');
         setTimeout(() => router.push('/student/my-events'), 1500);
       } else {
         const data = await res.json();
-        showToast(`Failed to create promotion: ${data.error || 'Unknown error'}`, 'error');
+        showToast(`Failed to create students services: ${data.error || 'Unknown error'}`, 'error');
       }
     } catch {
       setIsSubmitting(false);
-      showToast('Failed to submit promotion. Please try again.', 'error');
+      showToast('Failed to submit students services. Please try again.', 'error');
     }
   };
 
@@ -248,7 +267,7 @@ function CreateListingPageContent() {
                   What would you like to create?
                 </h1>
                 <p className="text-xs font-semibold text-[#5A554E] leading-relaxed">
-                  Events are activities people attend. Promotions help students discover your services, business, or initiative.
+                  Events are activities people attend. Students Services helps students discover your services, business, or initiative.
                 </p>
                 {activeProfile.type === 'organization' && (
                   <div className="bg-white rounded-2xl border border-[#FD5C05]/20 p-3.5 shadow-xs flex items-center gap-3 text-left mt-2">
@@ -326,7 +345,7 @@ function CreateListingPageContent() {
                   <Tag className="h-8 w-8" />
                 </div>
                 <div className="w-full text-center space-y-4">
-                  <h3 className="text-xl font-black text-[#2A2621] uppercase tracking-wider" style={{ fontFamily: 'var(--font-display)' }}>Promote</h3>
+                  <h3 className="text-xl font-black text-[#2A2621] uppercase tracking-wider" style={{ fontFamily: 'var(--font-display)' }}>Students Services</h3>
                   <p className="text-xs text-[#5A554E] leading-relaxed font-semibold">
                     Share a service, business, or initiative with the campus community.
                   </p>
@@ -429,7 +448,7 @@ function CreateListingPageContent() {
                 </div>
                 <div>
                   <h3 className="text-md font-bold text-[#2A2621] uppercase tracking-wider">My Events</h3>
-                  <p className="text-xs text-[#5A554E] mt-0.5">Create personal student events — share instantly or request school facilities.</p>
+                  <p className="text-xs text-[#5A554E] mt-0.5">Create personal student events — request school facilities.</p>
                 </div>
                 <ArrowRight className="h-5 w-5 text-[#5A554E] ml-auto group-hover:text-[#2A2621] group-hover:translate-x-1 transition-all" />
               </button>
@@ -478,41 +497,24 @@ function CreateListingPageContent() {
               <h1 className="text-3xl font-extrabold text-[#2A2621] tracking-tight" style={{ fontFamily: 'var(--font-display)' }}>
                 Select Event Type
               </h1>
-              <p className="text-sm text-[#5A554E]">Choose the format that best fits your student activity.</p>
+              <p className="text-sm text-[#5A554E]">Student events are hosted on campus and submitted for review.</p>
             </div>
 
-            <div className="grid md:grid-cols-2 gap-6">
-              {/* Without Facilities — Share Immediately */}
-              <Card 
-                onClick={() => { setEventSubtype('quick'); handleNext(); }}
-                className="p-6 flex flex-col items-center text-center gap-4 hover:border-[var(--color-evida-lime)]/50 cursor-pointer group"
-              >
-                <div className="h-12 w-12 rounded-xl bg-[var(--color-evida-lime)]/10 text-[var(--color-evida-lime)] flex items-center justify-center group-hover:scale-105 transition-transform shrink-0">
-                  <Zap className="h-5 w-5" />
-                </div>
-                <div>
-                  <h3 className="text-lg font-bold text-[#2A2621] uppercase tracking-wide">Off Campus</h3>
-                  <p className="text-xs text-[#5A554E] mt-2 leading-relaxed">
-                    Not using any school spaces or resources. Your event will be shared with the campus community immediately.
-                  </p>
-                  <span className="inline-block mt-3 text-[9px] font-extrabold uppercase tracking-widest text-emerald-700 bg-emerald-100 border border-emerald-200 rounded-full px-3 py-0.5">Instant Share</span>
-                </div>
-              </Card>
-
-              {/* With Facilities — Needs School Review */}
+            <div className="max-w-md mx-auto w-full">
+              {/* On Campus — Needs School Review (Off Campus hidden for students) */}
               <Card 
                 onClick={() => { setEventSubtype('standard'); handleNext(); }}
-                className="p-6 flex flex-col items-center text-center gap-4 hover:border-[var(--color-evida-blue)]/50 cursor-pointer group"
+                className="p-8 flex flex-col items-center text-center gap-5 hover:border-[#FD5C05] hover:scale-[1.02] active:scale-[0.99] cursor-pointer group relative overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 rounded-[28px] bg-white border border-black/[0.05]"
               >
-                <div className="h-12 w-12 rounded-xl bg-[var(--color-evida-blue)]/10 text-[var(--color-evida-blue)] flex items-center justify-center group-hover:scale-105 transition-transform shrink-0">
-                  <Clock className="h-5 w-5" />
+                <div className="h-16 w-16 rounded-2xl bg-[#FD5C05]/10 text-[#FD5C05] flex items-center justify-center group-hover:scale-105 transition-transform mt-2">
+                  <Clock className="h-8 w-8" />
                 </div>
-                <div>
-                  <h3 className="text-lg font-bold text-[#2A2621] uppercase tracking-wide">On Campus</h3>
-                  <p className="text-xs text-[#5A554E] mt-2 leading-relaxed">
-                    Requesting campus rooms, fields, or school resources. Your event will be submitted for school review before publishing.
+                <div className="w-full text-center space-y-3">
+                  <h3 className="text-xl font-black text-[#2A2621] uppercase tracking-wider" style={{ fontFamily: 'var(--font-display)' }}>On Campus</h3>
+                  <p className="text-xs text-[#5A554E] leading-relaxed font-semibold">
+                    Request campus rooms, fields, or school spaces. Your event will be submitted for school review before publishing.
                   </p>
-                  <span className="inline-block mt-3 text-[9px] font-extrabold uppercase tracking-widest text-amber-700 bg-amber-100 border border-amber-200 rounded-full px-3 py-0.5">Requires Review</span>
+                  <span className="inline-block mt-2 text-[9px] font-extrabold uppercase tracking-widest text-[#FD5C05] bg-[#FD5C05]/10 border border-[#FD5C05]/20 rounded-full px-3 py-1">Requires Review</span>
                 </div>
               </Card>
             </div>
@@ -545,11 +547,13 @@ function CreateListingPageContent() {
               <div>
                 <span className="text-[10px] font-bold text-gray-500 uppercase tracking-widest block text-left">
                   {createType === 'promotion' 
-                    ? 'Promotion Campaign' 
-                    : `${creatorEntity === 'student' ? 'My Event' : 'Organization Event'} — ${eventSubtype === 'quick' ? 'Off Campus' : 'On Campus'}`}
+                    ? 'Students Services' 
+                    : creatorEntity === 'student' 
+                    ? 'My Event — On Campus' 
+                    : `${creatorEntity === 'organization' ? 'Organization Event' : 'School Event'} — ${eventSubtype === 'quick' ? 'Off Campus' : 'On Campus'}`}
                 </span>
                 <h1 className="font-extrabold text-[#2A2621] tracking-wide text-left" style={{ fontFamily: 'var(--font-display)' }}>
-                  {createType === 'promotion' ? 'Create Promotion' : 'Event Details'}
+                  {createType === 'promotion' ? 'Create Students Services' : 'Event Details'}
                 </h1>
               </div>
             </div>
@@ -817,7 +821,7 @@ function CreateListingPageContent() {
                 <form onSubmit={handlePromoSubmit} className="space-y-6">
                   <div className="space-y-4">
                     <Input 
-                      label="Promotion Title" 
+                      label="Students Services Title" 
                       placeholder="e.g. Professional Portrait Mini Sessions"
                       value={promoForm.title}
                       onChange={e => setPromoForm({...promoForm, title: e.target.value})}
@@ -837,7 +841,7 @@ function CreateListingPageContent() {
 
                     <div className="grid grid-cols-2 gap-4">
                       <div className="space-y-1.5">
-                        <label className="block text-[10px] font-bold text-[#5A554E] uppercase tracking-widest">Promotion Category</label>
+                        <label className="block text-[10px] font-bold text-[#5A554E] uppercase tracking-widest">Students Services Category</label>
                         <select 
                           className="w-full rounded-xl bg-white border-2 border-black/[0.08] px-4 py-3 text-xs text-[#2A2621] focus:outline-none focus:border-[#FD5C05] font-medium cursor-pointer"
                           value={promoForm.category}
@@ -871,13 +875,59 @@ function CreateListingPageContent() {
                       )}
                     </div>
 
-                    <Input 
-                      label="Contact Details (Email / Social Media link)" 
-                      placeholder="e.g. alex.morgan@gmail.com or @alex_portraits"
-                      value={promoForm.contactInfo}
-                      onChange={e => setPromoForm({...promoForm, contactInfo: e.target.value})}
-                      required
-                    />
+                    {/* Contact Method Selector: Phone Number, Instagram, or Snapchat */}
+                    <div className="space-y-2 text-left">
+                      <label className="block text-[10px] font-bold text-[#5A554E] uppercase tracking-widest flex items-center justify-between">
+                        <span>Contact Method <span className="text-[#FD5C05] font-black">*</span></span>
+                        <span className="text-[9px] font-semibold text-[#FD5C05] uppercase tracking-wider">Choose One</span>
+                      </label>
+                      <div className="grid grid-cols-3 gap-2">
+                        {[
+                          { id: 'phone' as const, label: 'Phone Number', icon: Phone },
+                          { id: 'instagram' as const, label: 'Instagram', icon: InstagramIcon },
+                          { id: 'snapchat' as const, label: 'Snapchat', icon: SnapchatIcon },
+                        ].map((m) => {
+                          const isSelected = promoForm.contactMethod === m.id;
+                          const IconComp = m.icon;
+                          return (
+                            <button
+                              key={m.id}
+                              type="button"
+                              onClick={() => setPromoForm(prev => ({ ...prev, contactMethod: m.id }))}
+                              className={`flex flex-col sm:flex-row items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl border text-xs font-bold transition-all cursor-pointer ${
+                                isSelected
+                                  ? 'bg-[#FD5C05] text-white border-[#FD5C05] shadow-xs'
+                                  : 'bg-white text-[#5A554E] border-black/10 hover:border-[#FD5C05]/40 hover:bg-[#F8F6F0]'
+                              }`}
+                            >
+                              <IconComp className={`h-4 w-4 shrink-0 ${isSelected ? 'text-white' : 'text-[#FD5C05]'}`} />
+                              <span className="truncate">{m.label}</span>
+                            </button>
+                          );
+                        })}
+                      </div>
+
+                      {/* Contact Value Input */}
+                      <Input 
+                        label={
+                          promoForm.contactMethod === 'phone'
+                            ? 'Phone Number'
+                            : promoForm.contactMethod === 'instagram'
+                            ? 'Instagram Handle'
+                            : 'Snapchat Username'
+                        }
+                        placeholder={
+                          promoForm.contactMethod === 'phone'
+                            ? 'e.g. (555) 234-5678'
+                            : promoForm.contactMethod === 'instagram'
+                            ? 'e.g. @yourhandle'
+                            : 'e.g. username'
+                        }
+                        value={promoForm.contactValue}
+                        onChange={e => setPromoForm(prev => ({ ...prev, contactValue: e.target.value, contactInfo: e.target.value }))}
+                        required
+                      />
+                    </div>
 
                     {/* Flyer Upload Section */}
                     <div className="space-y-1.5 text-left">
@@ -981,7 +1031,7 @@ function CreateListingPageContent() {
 
                   <div className="pt-6 border-t border-[#D8D2BC]/30 flex justify-end">
                     <Button type="submit" disabled={isSubmitting} variant="neon" icon={<Check className="h-4 w-4" />}>
-                      {isSubmitting ? 'Submitting...' : 'Submit Promotion'}
+                      {isSubmitting ? 'Submitting...' : 'Submit Students Services'}
                     </Button>
                   </div>
                 </form>

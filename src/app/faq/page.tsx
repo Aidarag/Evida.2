@@ -20,8 +20,8 @@ const faqData: FAQItem[] = [
     answer: "Student-owned events are categorized dynamically by our smart routing engine. Small gatherings (like study groups under 15 attendees) are fast-tracked for immediate scheduling, while larger events requesting student government funding or university buses are routed to the administrative moderation queue."
   },
   {
-    question: "What is the difference between an Event and a Promotion?",
-    answer: "Events are active student listings with a specific date, time, and campus location (such as yard shows, matches, or workshops). Promotions are advertisements for student-led services or initiatives (such as tutoring, freelance photography, food sales, or club recruitment) and are moderated under service guidelines."
+    question: "What is the difference between an Event and Students Services?",
+    answer: "Events are active student listings with a specific date, time, and campus location (such as yard shows, matches, or workshops). Students Services are listings for student-led services or initiatives (such as tutoring, freelance photography, food sales, or club recruitment) and are moderated under campus guidelines."
   },
   {
     question: "Who can host official school-owned events?",

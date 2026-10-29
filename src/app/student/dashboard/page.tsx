@@ -63,6 +63,10 @@ export default function StudentDashboardPage() {
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const urlParams = new URLSearchParams(window.location.search);
+      const feedParam = urlParams.get('feed') || urlParams.get('tab');
+      if (feedParam === 'services' || feedParam === 'student' || feedParam === 'promotions') {
+        setActiveFeed('student');
+      }
       const isPreviewMode = urlParams.get('preview') === 'true' || sessionStorage.getItem('evida_preview') === 'true';
       setIsPreview(isPreviewMode);
       if (isPreviewMode) {
@@ -530,7 +534,7 @@ export default function StudentDashboardPage() {
               />
             )}
             <span className={`relative z-10 transition-colors duration-300 ${activeFeed === 'student' ? 'text-white font-black' : 'text-[#5A554E]'}`}>
-              Promotion
+              Students Services
             </span>
           </button>
         </div>
@@ -569,7 +573,7 @@ export default function StudentDashboardPage() {
             <h2 className="font-black tracking-tight text-[#2A2621] flex items-center gap-1.5 uppercase" style={{ fontFamily: 'var(--font-display)' }}>
               {isOrgMode && orgDashboardTab === 'org-events'
                 ? `${activeOrgName} Experiences`
-                : (activeFeed === 'official' ? 'Livingstone College' : 'Promotion')
+                : (activeFeed === 'official' ? 'Livingstone College' : 'Students Services')
               }
             </h2>
             <p className="text-xs font-bold text-[#5A554E] uppercase tracking-wider">
@@ -577,7 +581,7 @@ export default function StudentDashboardPage() {
                 ? `Experiences created and hosted by ${activeOrgName}.`
                 : (activeFeed === 'official' 
                   ? 'Official school and organization events.' 
-                  : 'Student-created promotions and community activities.')
+                  : 'Student-created services and community activities.')
               }
             </p>
             <span className="text-[10px] font-extrabold text-[#5A554E] block pt-1">
@@ -609,7 +613,19 @@ export default function StudentDashboardPage() {
                     event={item}
                     onClick={() => {
                       if (isPromo && promo) {
-                        window.location.href = `mailto:${promo.contactInfo}?subject=Inquiry regarding: ${promo.title}`;
+                        const method = promo.contactMethod || promo.preferredContactMethod;
+                        const val = (promo.contactValue || promo.contactInfo || '').trim();
+                        if (method === 'phone' || /^[\d\s\-\+\(\)\.]{7,}$/.test(val)) {
+                          window.location.href = `tel:${val.replace(/\D/g, '')}`;
+                        } else if (method === 'snapchat') {
+                          const handle = val.startsWith('@') ? val.slice(1) : val.replace(/.*snapchat\.com\/add\//i, '');
+                          window.open(`https://snapchat.com/add/${handle}`, '_blank');
+                        } else if (method === 'instagram' || val.startsWith('@')) {
+                          const handle = val.startsWith('@') ? val.slice(1) : val.replace(/.*instagram\.com\//i, '');
+                          window.open(`https://instagram.com/${handle}`, '_blank');
+                        } else {
+                          window.location.href = `mailto:${promo.contactInfo}?subject=Inquiry regarding: ${promo.title}`;
+                        }
                       } else if (event) {
                         router.push(`/events/${event.id}`);
                       }

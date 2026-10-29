@@ -183,7 +183,7 @@ export default function ReviewQueue({
           { id: 'fast', label: 'Fast Track Queue', color: 'border-emerald-500/40 text-emerald-400' },
           { id: 'standard', label: 'Standard Queue', color: 'border-indigo-500/40 text-indigo-400' },
           { id: 'complex', label: 'Complex Queue', color: 'border-amber-500/40 text-amber-400' },
-          { id: 'promotions', label: 'Promotions Ads', color: 'border-violet-500/40 text-violet-400' },
+          { id: 'promotions', label: 'Students Services', color: 'border-violet-500/40 text-violet-400' },
         ].map((tab) => {
           const count = getQueueCount(tab.id as any);
           const isActive = activeQueue === tab.id;
@@ -261,8 +261,8 @@ export default function ReviewQueue({
           pendingPromos.length === 0 ? (
             <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-white/10 bg-slate-900/10 py-12 text-center">
               <CheckCircle className="h-8 w-8 text-emerald-500/80 mb-2" />
-              <p className="text-xs font-semibold text-slate-300">Promotions Queue cleared!</p>
-              <p className="text-[10px] text-slate-500 mt-0.5">All student advertisements have been reviewed.</p>
+              <p className="text-xs font-semibold text-slate-300">Students Services Queue cleared!</p>
+              <p className="text-[10px] text-slate-500 mt-0.5">All student services have been reviewed.</p>
             </div>
           ) : (
             pendingPromos.map((promo) => (

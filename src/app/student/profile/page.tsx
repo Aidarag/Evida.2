@@ -1065,10 +1065,10 @@ function StudentProfilePageContent() {
                     )}
                   </div>
 
-                  {/* Published Promotions */}
+                  {/* Published Students Services */}
                   <div className="space-y-4">
                     <h3 className="text-sm font-black uppercase tracking-wider text-[#2A2621]">
-                      {isOwner ? "Promotions Published By You" : `Promotions Published By ${profileUser.name}`} ({hostedPromos.length})
+                      {isOwner ? "Students Services Published By You" : `Students Services Published By ${profileUser.name}`} ({hostedPromos.length})
                     </h3>
                     {hostedPromos.length > 0 ? (
                       <div className="grid gap-4 sm:grid-cols-2">
@@ -1093,7 +1093,7 @@ function StudentProfilePageContent() {
                       <div className="bg-white rounded-2xl p-8 border border-black/[0.04] text-center">
                         <Sparkles className="h-10 w-10 text-[#FD5C05]/20 mx-auto mb-2" />
                         <p className="text-xs text-[#5A554E]">
-                          {isOwner ? "You haven't published any promotions yet." : `${profileUser.name} hasn't published any promotions yet.`}
+                          {isOwner ? "You haven't published any students services yet." : `${profileUser.name} hasn't published any students services yet.`}
                         </p>
                       </div>
                     )}

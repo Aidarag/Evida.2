@@ -242,8 +242,8 @@ export const MobileBottomNav = React.memo(function MobileBottomNav({ variant = '
 
   const schoolTabs = [
     { href: '/school/dashboard', icon: Home, label: 'Overview' },
+    { href: '/school/analytics', icon: BarChart3, label: 'Analytics' },
     { href: '/school/review', icon: ClipboardList, label: 'Review' },
-    { href: '/school/featured', icon: Star, label: 'Featured' },
     { href: '/school/organizations', icon: Building2, label: 'Orgs' },
   ];
 
@@ -355,6 +355,7 @@ export function DesktopSidebar({
 
   const schoolLinks = [
     { href: '/school/dashboard', icon: Home, label: 'Overview' },
+    { href: '/school/analytics', icon: BarChart3, label: 'Analytics' },
     { href: '/school/review', icon: ClipboardList, label: 'Review Events' },
     { href: '/school/organizations', icon: Building2, label: 'Organizations' },
   ];
@@ -516,6 +517,7 @@ export function TabletDrawerSidebar({
 
   const schoolLinks = [
     { href: '/school/dashboard', icon: Home, label: 'Overview' },
+    { href: '/school/analytics', icon: BarChart3, label: 'Analytics' },
     { href: '/school/review', icon: ClipboardList, label: 'Review Events' },
     { href: '/school/organizations', icon: Building2, label: 'Organizations' },
   ];

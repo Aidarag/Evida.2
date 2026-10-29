@@ -69,7 +69,7 @@ export default function AboutPage() {
             <ul className="space-y-3 text-xs font-semibold">
               <li><Link href="/student/dashboard" className="hover:text-white transition-colors">Explore Events</Link></li>
               <li><Link href="/student/create" className="hover:text-white transition-colors">Create Event</Link></li>
-              <li><Link href="/student/create" className="hover:text-white transition-colors">Create Promotion</Link></li>
+              <li><Link href="/student/create" className="hover:text-white transition-colors">Create Students Services</Link></li>
               <li><Link href="/student/dashboard" className="hover:text-white transition-colors">Student Dashboard</Link></li>
               <li><Link href="/school/dashboard" className="hover:text-white transition-colors">School Dashboard</Link></li>
             </ul>
@@ -88,7 +88,7 @@ export default function AboutPage() {
           <div className="md:col-span-3 space-y-4 text-left">
             <h4 className="text-white font-bold uppercase tracking-widest text-[10px] mb-4">Newsletter</h4>
             <p className="text-white/40 text-xs leading-relaxed font-light">
-              Stay updated on the latest campus events and club promotions.
+              Stay updated on the latest campus events and students services.
             </p>
             <form onSubmit={(e) => e.preventDefault()} className="flex flex-col sm:flex-row gap-2 pt-2">
               <input 

@@ -73,7 +73,7 @@ export default function AppShowcase() {
           icon: Calendar
         },
         {
-          name: 'Promotion',
+          name: 'Students Services',
           desc: 'Something a student wants to advertise (moderated separately).',
           examples: ['Tutoring services', 'Photography business', 'Food sales', 'Student initiatives'],
           color: '#2A2621',
@@ -413,7 +413,7 @@ export default function AppShowcase() {
                     <div className="grid grid-cols-2 gap-2.5 my-4">
                       {[
                         { label: 'Event', icon: Calendar, active: true },
-                        { label: 'Promotion', icon: Megaphone, active: false },
+                        { label: 'Students Services', icon: Megaphone, active: false },
                         { label: 'Tutoring', icon: BookOpen, active: false },
                         { label: 'Student Org', icon: Users, active: false },
                         { label: 'Creative Biz', icon: Camera, active: false },

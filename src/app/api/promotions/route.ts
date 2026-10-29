@@ -20,6 +20,7 @@ export async function POST(request: Request) {
       category, 
       organizer, 
       contactInfo, 
+      contactMethod,
       flyerImage, 
       image, 
       isFree, 
@@ -29,9 +30,13 @@ export async function POST(request: Request) {
       socialLink 
     } = body;
 
-    if (!title || !description || !category || !organizer || !contactInfo) {
+    const resolvedValue = (contactValue || contactInfo || '').trim();
+
+    if (!title || !description || !category || !organizer || !resolvedValue) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
     }
+
+    const resolvedMethod = (contactMethod || preferredContactMethod || 'phone') as 'phone' | 'instagram' | 'snapchat';
 
     const db = await readDBAsync();
 
@@ -43,9 +48,10 @@ export async function POST(request: Request) {
       status: 'pending',
       date: new Date().toISOString().split('T')[0],
       organizer,
-      contactInfo,
-      preferredContactMethod,
-      contactValue,
+      contactInfo: resolvedValue,
+      contactMethod: resolvedMethod,
+      contactValue: resolvedValue,
+      preferredContactMethod: resolvedMethod,
       socialLink,
       flyerImage: flyerImage || image || undefined,
       image: flyerImage || image || undefined,

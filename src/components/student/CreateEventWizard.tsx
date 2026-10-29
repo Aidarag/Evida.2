@@ -321,7 +321,9 @@ export default function CreateEventWizard({
                 >
                   <option value="indoor">Indoor Venue</option>
                   <option value="outdoor">Outdoor Field/Plaza</option>
-                  <option value="offcampus">Off-Campus Site</option>
+                  {(currentUser.role !== 'student' && ownershipType !== 'student') && (
+                    <option value="offcampus">Off-Campus Site</option>
+                  )}
                 </select>
               </div>
             </div>

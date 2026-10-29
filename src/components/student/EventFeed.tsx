@@ -97,7 +97,7 @@ export default function EventFeed({
               className="flex items-center gap-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 border border-white/10 px-4 py-2.5 text-xs font-bold text-white transition-all hover:scale-[1.02] cursor-pointer"
             >
               <Sparkles className="h-4 w-4 text-violet-400" />
-              Create Promotion
+              Create Students Services
             </button>
           </div>
         </div>
@@ -144,7 +144,7 @@ export default function EventFeed({
                 : 'border-transparent text-[#5A554E] hover:text-slate-200'
             }`}
           >
-            Promotions & Ads
+            Students Services
           </button>
         </div>
 
@@ -178,7 +178,7 @@ export default function EventFeed({
                     : 'bg-transparent text-[#5A554E] border-transparent hover:text-slate-200'
                 }`}
               >
-                {type === 'all' ? 'All' : `${type}`}
+                {type === 'all' ? 'All' : type === 'promotion' ? 'Students Services' : `${type}`}
               </button>
             ))}
           </div>
@@ -324,7 +324,7 @@ export default function EventFeed({
         filteredPromos.length === 0 ? (
           <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-white/10 bg-slate-900/10 py-16 text-center">
             <Sparkles className="h-10 w-10 text-slate-600 mb-3" />
-            <p className="text-sm font-semibold text-slate-300">No student promotions listed yet</p>
+            <p className="text-sm font-semibold text-slate-300">No students services listed yet</p>
             <p className="mt-1 text-xs text-slate-500">
               Be the first to list a tutoring service, bake sale, or photography gig!
             </p>

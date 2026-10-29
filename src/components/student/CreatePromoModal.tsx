@@ -19,7 +19,7 @@ export default function CreatePromoModal({
 }: CreatePromoModalProps) {
   const [title, setTitle] = useState('');
   const [category, setCategory] = useState<'academic' | 'jobs' | 'creative' | 'food' | 'beauty' | 'marketplace' | 'housing' | 'sports' | 'projects' | 'other'>('food');
-  const [preferredContactMethod, setPreferredContactMethod] = useState<'instagram' | 'email' | 'phone' | 'link'>('instagram');
+  const [preferredContactMethod, setPreferredContactMethod] = useState<'phone' | 'instagram' | 'snapchat'>('phone');
   const [contactValue, setContactValue] = useState('');
   const [socialLink, setSocialLink] = useState('');
   const [description, setDescription] = useState('');
@@ -45,6 +45,7 @@ export default function CreatePromoModal({
         description,
         category,
         contactInfo: contactValue,
+        contactMethod: preferredContactMethod,
         preferredContactMethod,
         contactValue,
         socialLink: socialLink.trim() || undefined,
@@ -59,7 +60,7 @@ export default function CreatePromoModal({
       // Reset fields
       setTitle('');
       setCategory('food');
-      setPreferredContactMethod('instagram');
+      setPreferredContactMethod('phone');
       setContactValue('');
       setSocialLink('');
       setDescription('');
@@ -96,7 +97,7 @@ export default function CreatePromoModal({
           <div>
             <h2 className="text-xl font-bold tracking-tight text-white flex items-center gap-2">
               <Sparkles className="h-5 w-5 text-violet-400" />
-              Post Campus Promotion
+              Post Students Services
             </h2>
             <p className="mt-1 text-xs text-[#5A554E]">
               Advertise your peer tutoring, food/BBQ sales, hair/beauty services, or photography business.
@@ -138,32 +139,31 @@ export default function CreatePromoModal({
             </div>
           </div>
 
-          {/* Preferred Contact Method */}
+          {/* Contact Method (Choose one: Phone Number, Instagram, Snapchat) */}
           <div className="grid gap-4 sm:grid-cols-2">
             <div className="space-y-1.5">
-              <label className="text-xs font-bold text-[#5A554E] uppercase tracking-wide">Preferred Contact Method *</label>
+              <label className="text-xs font-bold text-[#5A554E] uppercase tracking-wide">Contact Method *</label>
               <select
                 value={preferredContactMethod}
                 onChange={(e) => setPreferredContactMethod(e.target.value as any)}
                 className="w-full rounded-xl border border-white/10 bg-slate-900/50 py-2 px-3 text-xs text-white focus:border-indigo-500 focus:outline-none"
               >
-                <option value="instagram">Instagram Handle</option>
-                <option value="email">Email Address</option>
-                <option value="phone">Phone / WhatsApp</option>
-                <option value="link">Website / Booking Link</option>
+                <option value="phone">Phone Number</option>
+                <option value="instagram">Instagram</option>
+                <option value="snapchat">Snapchat</option>
               </select>
             </div>
 
             <div className="space-y-1.5">
               <label className="text-xs font-bold text-[#5A554E] uppercase tracking-wide">
-                {preferredContactMethod === 'instagram' ? 'Instagram Handle *' : preferredContactMethod === 'email' ? 'Email Address *' : preferredContactMethod === 'phone' ? 'Phone Number *' : 'Website URL *'}
+                {preferredContactMethod === 'phone' ? 'Phone Number *' : preferredContactMethod === 'instagram' ? 'Instagram Handle *' : 'Snapchat Username *'}
               </label>
               <input
                 type="text"
                 required
                 value={contactValue}
                 onChange={(e) => setContactValue(e.target.value)}
-                placeholder={preferredContactMethod === 'instagram' ? '@yourname' : preferredContactMethod === 'email' ? 'name@school.edu' : preferredContactMethod === 'phone' ? '(555) 000-0000' : 'https://yourshop.com'}
+                placeholder={preferredContactMethod === 'phone' ? '(555) 000-0000' : preferredContactMethod === 'instagram' ? '@yourname' : 'snap_user'}
                 className="w-full rounded-xl border border-white/10 bg-slate-900/50 py-2 px-3 text-xs text-white placeholder-slate-600 focus:border-indigo-500 focus:outline-none"
               />
             </div>
@@ -285,7 +285,7 @@ export default function CreatePromoModal({
 
           {/* Disclaimer */}
           <div className="rounded-xl border border-amber-500/10 bg-amber-500/5 p-3 text-[11px] text-[#5A554E] leading-relaxed">
-            Note: Promotions are moderated separately from events. All advertisements are screened for campus guidelines before appearing on the public feed.
+            Note: Students Services are moderated separately from events. All advertisements are screened for campus guidelines before appearing on the public feed.
           </div>
 
           {/* Footer Submit */}
@@ -302,7 +302,7 @@ export default function CreatePromoModal({
               disabled={submitting}
               className="rounded-xl bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 py-2.5 px-5 text-xs font-bold text-white shadow-lg shadow-indigo-500/20 transition-all cursor-pointer"
             >
-              {submitting ? 'Submitting...' : 'Post Promotion'}
+              {submitting ? 'Submitting...' : 'Post Students Services'}
             </button>
           </div>
         </form>

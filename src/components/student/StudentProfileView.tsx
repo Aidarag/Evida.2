@@ -147,13 +147,13 @@ export default function StudentProfileView({
         <div className="rounded-2xl glass-card p-6 border border-white/5 space-y-4">
           <h4 className="text-xs font-bold text-[#5A554E] uppercase tracking-wider flex items-center gap-1.5">
             <Sparkles className="h-4 w-4 text-violet-400" />
-            Promotions & Peer Services Posted
+            Students Services Posted
           </h4>
 
           <div className="space-y-3 max-h-72 overflow-y-auto pr-1">
             {userCreatedPromos.length === 0 ? (
               <div className="text-center py-8 text-xs text-slate-500 italic">
-                You haven't posted any promotions yet.
+                You haven't posted any students services yet.
               </div>
             ) : (
               userCreatedPromos.map((promo) => (

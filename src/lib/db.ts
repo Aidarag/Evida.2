@@ -1025,7 +1025,9 @@ const initialPromotions: Promotion[] = [
     status: 'approved',
     date: '2026-06-25',
     organizer: 'Sarah Jenkins',
-    contactInfo: 's.jenkins@university.edu'
+    contactMethod: 'phone',
+    contactValue: '(555) 234-5678',
+    contactInfo: '(555) 234-5678'
   },
   {
     id: 'promo-2',
@@ -1035,7 +1037,21 @@ const initialPromotions: Promotion[] = [
     status: 'approved',
     date: '2026-06-26',
     organizer: 'David Kim',
-    contactInfo: 'david.k@university.edu'
+    contactMethod: 'instagram',
+    contactValue: '@davidkim.photo',
+    contactInfo: '@davidkim.photo'
+  },
+  {
+    id: 'promo-3',
+    title: 'Campus Hair Braiding & Styling',
+    description: 'Clean box braids, twists, and festival hair styling right on campus. Affordable rates with student discount.',
+    category: 'beauty',
+    status: 'approved',
+    date: '2026-06-27',
+    organizer: 'Maya Lin',
+    contactMethod: 'snapchat',
+    contactValue: 'maya_braids',
+    contactInfo: 'maya_braids'
   }
 ];
 

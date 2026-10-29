@@ -4,16 +4,7 @@ import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Mail, Phone, MessageCircle, Globe, AtSign } from 'lucide-react';
 import { Promotion } from '@/lib/types';
-
-function InstagramIcon({ className = "h-5 w-5" }: { className?: string }) {
-  return (
-    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
-      <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
-      <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
-    </svg>
-  );
-}
+import { InstagramIcon, SnapchatIcon } from '@/components/ui/SocialIcons';
 
 interface PromoContactModalProps {
   promo: Promotion | null;
@@ -22,7 +13,7 @@ interface PromoContactModalProps {
 }
 
 type ContactMethod = {
-  type: 'email' | 'phone' | 'instagram' | 'link' | 'text';
+  type: 'email' | 'phone' | 'instagram' | 'snapchat' | 'link' | 'text';
   label: string;
   value: string;
   href: string;
@@ -35,12 +26,23 @@ type ContactMethod = {
 function parseContactMethods(promo: Promotion): ContactMethod[] {
   const methods: ContactMethod[] = [];
   
-  // 1. Check preferred contact method from new options first
-  if (promo.preferredContactMethod && promo.contactValue) {
-    const method = promo.preferredContactMethod;
-    const val = promo.contactValue.trim();
+  // 1. Check contactMethod or preferredContactMethod first
+  const method = promo.contactMethod || promo.preferredContactMethod;
+  const val = (promo.contactValue || promo.contactInfo || '').trim();
 
-    if (method === 'instagram') {
+  if (method && val) {
+    if (method === 'snapchat') {
+      const handle = val.startsWith('@') ? val.slice(1) : val.replace(/.*snapchat\.com\/add\//i, '');
+      methods.push({
+        type: 'snapchat',
+        label: 'Snapchat',
+        value: val.startsWith('@') ? val : `@${handle}`,
+        href: `https://snapchat.com/add/${handle}`,
+        icon: <SnapchatIcon className="h-5 w-5" />,
+        color: 'text-amber-500',
+        bgColor: 'bg-amber-50 hover:bg-amber-100 border-amber-200',
+      });
+    } else if (method === 'instagram') {
       const handle = val.startsWith('@') ? val.slice(1) : val.replace(/.*instagram\.com\//i, '');
       methods.push({
         type: 'instagram',
@@ -51,16 +53,6 @@ function parseContactMethods(promo: Promotion): ContactMethod[] {
         color: 'text-pink-600',
         bgColor: 'bg-pink-50 hover:bg-pink-100 border-pink-200',
       });
-    } else if (method === 'email') {
-      methods.push({
-        type: 'email',
-        label: 'Email',
-        value: val,
-        href: `mailto:${val}?subject=Inquiry regarding: ${encodeURIComponent(promo.title)}`,
-        icon: <Mail className="h-5 w-5" />,
-        color: 'text-blue-600',
-        bgColor: 'bg-blue-50 hover:bg-blue-100 border-blue-200',
-      });
     } else if (method === 'phone') {
       methods.push({
         type: 'phone',
@@ -70,6 +62,16 @@ function parseContactMethods(promo: Promotion): ContactMethod[] {
         icon: <Phone className="h-5 w-5" />,
         color: 'text-emerald-600',
         bgColor: 'bg-emerald-50 hover:bg-emerald-100 border-emerald-200',
+      });
+    } else if (method === 'email') {
+      methods.push({
+        type: 'email',
+        label: 'Email',
+        value: val,
+        href: `mailto:${val}?subject=Inquiry regarding: ${encodeURIComponent(promo.title)}`,
+        icon: <Mail className="h-5 w-5" />,
+        color: 'text-blue-600',
+        bgColor: 'bg-blue-50 hover:bg-blue-100 border-blue-200',
       });
     } else if (method === 'link') {
       const url = val.startsWith('http') ? val : `https://${val}`;
@@ -157,6 +159,7 @@ const methodIconColors: Record<string, string> = {
   email: 'bg-blue-500',
   phone: 'bg-emerald-500',
   instagram: 'bg-gradient-to-br from-pink-500 via-rose-500 to-orange-400',
+  snapchat: 'bg-amber-400',
   link: 'bg-purple-500',
   text: 'bg-[#FD5C05]',
 };
@@ -269,7 +272,7 @@ export default function PromoContactModal({ promo, isOpen, onClose }: PromoConta
 
                 {/* Footer note */}
                 <p className="text-[10px] text-[#5A554E]/70 text-center leading-relaxed">
-                  This is a student-run promotion. Evida is not responsible for external transactions.
+                  This is a student-run service. Evida is not responsible for external transactions.
                 </p>
               </div>
             </div>

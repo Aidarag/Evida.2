@@ -877,10 +877,10 @@ export default function LandingPage({
                 </div>
                 <div className="space-y-1">
                   <h3 className="text-sm font-extrabold text-[#2A2621] group-hover:text-[#FD5C05] transition-colors duration-300 leading-snug">
-                    Promotions
+                    Students Services
                   </h3>
                   <h4 className="text-[10px] font-bold text-[#5A554E]/60 uppercase tracking-wider">
-                    Promote what you do.
+                    Discover & offer campus services.
                   </h4>
                 </div>
                 <p className="text-xs text-[#5A554E] leading-relaxed font-medium">
