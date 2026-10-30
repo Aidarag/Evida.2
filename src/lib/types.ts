@@ -140,3 +140,39 @@ export interface MembershipRequest {
   status: 'pending' | 'approved' | 'rejected';
   createdAt: string;
 }
+
+export interface Opportunity {
+  id: string;
+  title: string;
+  department: string;
+  organizationName?: string;
+  type: 'Campus Job' | 'Internship' | 'Fellowship' | 'Leadership' | 'Grant' | 'Research';
+  compensation: string;
+  deadline: string;
+  location: string;
+  description: string;
+  requirements: string[];
+  image?: string;
+  applyUrl?: string;
+  contactEmail?: string;
+  postedAt: string;
+  featured?: boolean;
+}
+
+export interface CampusBuzzPost {
+  id: string;
+  authorName: string;
+  authorHandle: string;
+  authorAvatar?: string;
+  authorInitial?: string;
+  campus: string;
+  tag: 'DM Me' | 'Question' | 'Shoutout' | 'Housing' | 'Study Pod' | 'Lost & Found' | 'Campus Life';
+  content: string;
+  image?: string;
+  timestamp: string;
+  likes: number;
+  replies: number;
+  isLiked?: boolean;
+  contactMethod?: 'instagram' | 'snapchat' | 'phone';
+  contactValue?: string;
+}

@@ -4,7 +4,7 @@ import React from 'react';
 import { createPortal } from 'react-dom';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Home, Plus, User, Settings, BarChart3, Shield, Star, ClipboardList, Building2, Menu, X, Calendar, ChevronDown, ChevronLeft, ChevronRight, Bell, Bookmark, Megaphone, Users, Sparkles, ArrowLeft, ArrowRight, LogOut } from 'lucide-react';
+import { Home, Plus, User, Settings, BarChart3, Shield, Star, ClipboardList, Building2, Menu, X, Calendar, ChevronDown, ChevronLeft, ChevronRight, Bell, Bookmark, Megaphone, Users, Sparkles, ArrowLeft, ArrowRight, LogOut, Compass } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useUser } from '@/lib/context/UserContext';
 import { useEvents } from '@/lib/context/EventContext';
@@ -235,8 +235,9 @@ export const MobileBottomNav = React.memo(function MobileBottomNav({ variant = '
 
   const studentTabs = [
     { href: '/student/dashboard', icon: Home, label: 'Home' },
-    { href: '/student/calendar', icon: Calendar, label: 'Calendar', disabledInPreview: true },
+    { href: '/student/explore', icon: Compass, label: 'Explore' },
     { href: '/student/create', icon: Plus, label: 'Create', isSpecial: true, disabledInPreview: true },
+    { href: '/student/calendar', icon: Calendar, label: 'Calendar', disabledInPreview: true },
     { href: profileHref, icon: User, label: activeProfile?.type === 'organization' ? 'Org Profile' : 'Profile', disabledInPreview: true },
   ];
 
@@ -348,6 +349,7 @@ export function DesktopSidebar({
 
   const studentLinks = [
     { href: '/student/dashboard', icon: Home, label: 'Home' },
+    { href: '/student/explore', icon: Compass, label: 'Explore' },
     { href: '/student/calendar', icon: Calendar, label: 'Calendar' },
     { href: profileHref, icon: User, label: activeProfile?.type === 'organization' ? 'Org Profile' : 'Profile' },
     { href: '/student/create', icon: Plus, label: 'Create Event' },
@@ -510,6 +512,7 @@ export function TabletDrawerSidebar({
 
   const studentLinks = [
     { href: '/student/dashboard', icon: Home, label: 'Home' },
+    { href: '/student/explore', icon: Compass, label: 'Explore' },
     { href: '/student/calendar', icon: Calendar, label: 'Calendar' },
     { href: profileHref, icon: User, label: activeProfile?.type === 'organization' ? 'Org Profile' : 'Profile' },
     { href: '/student/create', icon: Plus, label: 'Create Event' },

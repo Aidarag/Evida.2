@@ -469,36 +469,13 @@ export default function StudentDashboardPage() {
 
       {/* ── Student Personal Welcome Header ── */}
       {!isOrgMode && (
-        <div className="border-b border-black/[0.04] pb-4 space-y-3.5 text-left">
-          <div>
-            <h1 className="font-black text-2xl md:text-3xl text-[#2A2621] tracking-tight" style={{ fontFamily: 'var(--font-display)' }}>
-              Yo {currentUser.name.split(' ')[0]}!
-            </h1>
-            <p className="text-xs text-[#5A554E] font-semibold mt-1">
-              What's happening on campus today?
-            </p>
-          </div>
-
-          {/* Search Bar */}
-          <div className="relative max-w-xl">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-[#5A554E] pointer-events-none" />
-            <input
-              ref={searchInputRef}
-              type="text"
-              value={searchQuery}
-              onChange={e => setSearchQuery(e.target.value)}
-              placeholder="Search events, organizations, or services…"
-              className="w-full pl-10 pr-10 py-2.5 rounded-xl bg-white border border-black/[0.06] text-xs text-[#2A2621] placeholder-[#5A554E]/60 focus:outline-none focus:border-[#FD5C05]/40 shadow-sm font-medium"
-            />
-            {searchQuery && (
-              <button
-                onClick={() => setSearchQuery('')}
-                className="absolute right-3 top-1/2 -translate-y-1/2 h-6 w-6 rounded-full bg-black/[0.06] flex items-center justify-center hover:bg-black/10 cursor-pointer"
-              >
-                <X className="h-3.5 w-3.5 text-[#5A554E]" />
-              </button>
-            )}
-          </div>
+        <div className="border-b border-black/[0.04] pb-3 text-left">
+          <h1 className="font-black text-2xl md:text-3xl text-[#2A2621] tracking-tight" style={{ fontFamily: 'var(--font-display)' }}>
+            Yo {currentUser.name.split(' ')[0]}!
+          </h1>
+          <p className="text-sm md:text-base text-[#5A554E] font-medium mt-1">
+            What's happening on campus today?
+          </p>
         </div>
       )}
 
